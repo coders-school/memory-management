@@ -13,9 +13,8 @@ public:
     {}
     shared_ptr<Node> next;
     shared_ptr<Node> prev;
-    //Node* next;
+
     int value;
-    virtual ~Node() {};
 };
 
 class List
@@ -24,18 +23,16 @@ public:
     List();
     void add(shared_ptr<Node> node);
     shared_ptr<Node> get(const int value);
-    void addFirstElements(shared_ptr<Node> node); // add first elements
-   // ~List(){clean()};
+    void addFirstElements(shared_ptr<Node> node);
 private:
     shared_ptr<Node> first;
-    //Node* first;
+
 };
 
 List::List() :
     first(nullptr)
 {}
 
-//void List::add(Node* node)
 void List::add(shared_ptr<Node> node)
 {
     if(!first)
@@ -56,8 +53,7 @@ void List::add(shared_ptr<Node> node)
 void List::addFirstElements(shared_ptr<Node> node)
 {
     auto temp = make_shared<Node>(node->value);
-    //<Node> current;
-    //int v = 0;
+
      if(!first)
     {
         first = temp;
