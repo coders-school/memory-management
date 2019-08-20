@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 
 using namespace std;
 
@@ -7,29 +8,35 @@ class Node
 public:
     Node(const int v) :
         next(nullptr),
+        prev(nullptr),
         value(v)
     {}
-
-    Node* next;
+    shared_ptr<Node> next;
+    shared_ptr<Node> prev;
+    //Node* next;
     int value;
+    virtual ~Node() {};
 };
 
 class List
 {
 public:
     List();
-    void add(Node* node);
-    Node* get(const int value);
-
+    void add(shared_ptr<Node> node);
+    shared_ptr<Node> get(const int value);
+    void addFirstElements(shared_ptr<Node> node); // add first elements
+   // ~List(){clean()};
 private:
-    Node* first;
+    shared_ptr<Node> first;
+    //Node* first;
 };
 
 List::List() :
     first(nullptr)
 {}
 
-void List::add(Node* node)
+//void List::add(Node* node)
+void List::add(shared_ptr<Node> node)
 {
     if(!first)
     {
@@ -37,7 +44,7 @@ void List::add(Node* node)
     }
     else
     {
-        Node* current = first;
+        shared_ptr<Node> current = first;
         while(current->next)
         {
             current = current->next;
@@ -46,7 +53,26 @@ void List::add(Node* node)
     }
 }
 
-Node* List::get(const int value)
+void List::addFirstElements(shared_ptr<Node> node)
+{
+    auto temp = make_shared<Node>(node->value);
+    //<Node> current;
+    //int v = 0;
+     if(!first)
+    {
+        first = temp;
+    }
+    else
+    {
+        first->prev = temp;
+        temp->next = first;
+        first = temp;
+    }
+    
+}
+
+
+shared_ptr<Node> List::get(const int value)
 {
     if(!first)
     {
@@ -55,7 +81,7 @@ Node* List::get(const int value)
     }
     else
     {
-        Node* current = first;
+        shared_ptr<Node> current = first;
         do
         {
             if(current->value == value)
@@ -74,21 +100,27 @@ Node* List::get(const int value)
     }
 }
 
+
 int main()
 {
     List lista;
-    Node* node4 = new Node(4);
-    Node* node7 = new Node(7);
-
+    shared_ptr<Node> node2 {new Node(2)};
+    shared_ptr<Node> node4 {new Node(4)};
+    shared_ptr<Node> node7 {new Node(7)};
+    auto tempValue = make_shared<Node>(3);
+    lista.addFirstElements(tempValue);
     lista.add(node4);
-    lista.add(new Node(2));
+    lista.add(make_shared<Node>(2));
     lista.add(node7);
-    lista.add(new Node(9));
+    lista.add(make_shared<Node>(9));
+
+
+    
     auto node = lista.get(1);
 
     if (node)
         cout << node->value << '\n';
-
     return 0;
+    
 }
 
