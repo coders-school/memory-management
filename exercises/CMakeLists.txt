@@ -3,6 +3,7 @@ project(memory_management)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_BUILD_TYPE Debug)
 
 add_compile_options(-Wall -Wextra -Werror -pedantic -pedantic-errors -g)
 
