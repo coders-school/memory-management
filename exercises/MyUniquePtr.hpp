@@ -14,13 +14,12 @@ public:
     : m_ptr(ptr) 
     {};
 
-    MyUniquePtr(const MyUniquePtr&) = delete;
+    explicit MyUniquePtr(const MyUniquePtr&) = delete;
 
-    MyUniquePtr(MyUniquePtr&& ptr) = default;
-/*
-    MyUniquePtr(MyUniquePtr&& ptr) : m_ptr(ptr.release())
-    {};
-*/
+    //MyUniquePtr(MyUniquePtr&& ptr) = default;
+
+    explicit MyUniquePtr(MyUniquePtr&& ptr) : m_ptr(ptr.release()){};
+
     ~MyUniquePtr()
     {
         if(m_ptr) 
@@ -32,13 +31,13 @@ public:
 
     MyUniquePtr& operator=(const MyUniquePtr&) = delete;
 
-    MyUniquePtr& operator=(MyUniquePtr&& ptr) = default;
-/*
+    //MyUniquePtr& operator=(MyUniquePtr&& ptr) = default;
+
     MyUniquePtr& operator=(MyUniquePtr&& ptr) {
         m_ptr = ptr.release();
         return *this;
     };
-*/
+
     ptrType* operator->() const noexcept {
         return m_ptr;
     }

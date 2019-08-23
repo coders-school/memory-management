@@ -9,9 +9,7 @@ class testClassInt
 public:
     int m_a;
 
-    testClassInt(int a) : m_a(a) {
-        std::cout << m_a << std::endl;
-    }
+    testClassInt(int a) : m_a(a) {}
 };
 
 void assertMyUniquePtrCanbeMoved()
@@ -21,7 +19,7 @@ void assertMyUniquePtrCanbeMoved()
     MyUniquePtr<int> myUniqueptr2(std::move(myUniqueptr));
 
     assert(myUniqueptr2.get() == intPtr);
-    //assert(myUniqueptr.get() == nullptr);
+    assert(myUniqueptr.get() == nullptr);
 
     myUniqueptr = std::move(myUniqueptr2);
 
@@ -76,14 +74,11 @@ void assertMyUniquePtrCanReleaseOwnership()
 
 void assertMyUniquePtrCanResetStoredPointer()
 {
-    testClassInt* t1 = new testClassInt(1);
-    testClassInt* t2 = new testClassInt(10);
-
-    MyUniquePtr<testClassInt> ptr(t1);
-    MyUniquePtr<testClassInt> ptr2(t2);
+    MyUniquePtr<testClassInt> ptr(new testClassInt(1));
     assert(ptr->m_a == 1);
 
-    std::unique_ptr<int>a;
+    ptr.reset(new testClassInt(10));
+    assert(ptr->m_a == 10);
 
 }
 
