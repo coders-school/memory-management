@@ -15,6 +15,7 @@ public:
     shared_ptr<Node> prev;
 
     int value;
+    virtual ~Node() {};
 };
 
 class List
@@ -22,22 +23,38 @@ class List
 public:
     List();
     void add(shared_ptr<Node> node);
-    shared_ptr<Node> get(const int value);
+    shared_ptr<Node> getFirst(const int value);
+    shared_ptr<Node> getLast(const int value);
     void addFirstElements(shared_ptr<Node> node);
+    ~List();
+    
 private:
     shared_ptr<Node> first;
-
+    shared_ptr<Node> last;
+    
 };
 
 List::List() :
-    first(nullptr)
+    first(nullptr),
+    last(nullptr)
 {}
+
+List::~List()
+{
+    while (last->prev) {
+    shared_ptr<Node> current = last->prev;
+    last = nullptr;
+    current->next = nullptr;
+    last = current;
+}
+}
 
 void List::add(shared_ptr<Node> node)
 {
     if(!first)
     {
         first = node;
+        last = first;
     }
     else
     {
@@ -47,6 +64,9 @@ void List::add(shared_ptr<Node> node)
             current = current->next;
         }
         current->next = node;
+
+        last = node;
+        last->prev = current;
     }
 }
 
@@ -60,7 +80,6 @@ void List::addFirstElements(shared_ptr<Node> node)
     }
     else
     {
-        first->prev = temp;
         temp->next = first;
         first = temp;
     }
@@ -68,7 +87,7 @@ void List::addFirstElements(shared_ptr<Node> node)
 }
 
 
-shared_ptr<Node> List::get(const int value)
+shared_ptr<Node> List::getFirst(const int value)
 {
     if(!first)
     {
@@ -96,6 +115,33 @@ shared_ptr<Node> List::get(const int value)
     }
 }
 
+shared_ptr<Node> List::getLast(const int value)
+{
+    if(!first)
+    {
+        cout << "List is empty!" << endl;
+        return nullptr;
+    }
+    else
+    {
+        shared_ptr<Node> current = last;
+        do
+        {
+            if(current->value == value)
+            {
+                cout << "Found value " << current->value << endl;
+                return current;
+            }
+            else
+            {
+                cout << "Going through " << current->value << endl;
+                current = current->prev;
+            }
+        } while(current);
+        cout << "Not found: value " << value << endl;
+        return nullptr;
+    }
+}
 
 int main()
 {
@@ -108,14 +154,21 @@ int main()
     lista.add(node4);
     lista.add(make_shared<Node>(2));
     lista.add(node7);
+    lista.addFirstElements(make_shared<Node>(5));
     lista.add(make_shared<Node>(9));
 
 
     
-    auto node = lista.get(1);
+    auto node = lista.getFirst(1);
 
     if (node)
         cout << node->value << '\n';
+
+    node = lista.getLast(2);
+
+    if (node)
+        cout << node->value << '\n';
+
     return 0;
     
 }
