@@ -10,6 +10,11 @@ public:
         value(v)
     {}
 
+    ~Node()
+    {
+        delete next;
+    }
+
     Node* next;
     int value;
 };
@@ -18,8 +23,13 @@ class List
 {
 public:
     List();
+    ~List()
+    {
+        delete first;
+    }
     void add(Node* node);
     Node* get(const int value);
+    void clear(Node* first);
 
 private:
     Node* first;
@@ -71,6 +81,23 @@ Node* List::get(const int value)
         } while(current);
         cout << "Not found: value " << value << endl;
         return nullptr;
+    }
+}
+
+// Opcjonalnie?
+// Rozwiązanie podstawowe w destruktorach List i Node
+void List::clear(Node* first)
+{
+    if(!first)
+    {
+    }
+    else
+    {
+        Node* current = first->next;
+        do
+        {
+            delete first;
+        } while(current);
     }
 }
 
