@@ -25,7 +25,7 @@ class List
 public:
     List();
 
-    void add(std::unique_ptr<Node>& node);
+    void add(std::unique_ptr<Node> node);
     Node* get(const int value);
 
 private:
@@ -36,7 +36,7 @@ List::List() :
     first(nullptr)
 {}
 
-void List::add(std::unique_ptr<Node>& ptrNode)
+void List::add(std::unique_ptr<Node> ptrNode)
 {
     if(ptrNode == nullptr) {
         return;
@@ -107,11 +107,12 @@ int main()
     std::unique_ptr<Node> node9(new Node(9));
 
 
-    lista.add(node4);
-    lista.add(node4);
-    lista.add(node2);
-    lista.add(node7);
-    lista.add(node9);
+    lista.add(std::move(node4));
+    lista.add(std::move(node4));
+    lista.add(std::move(node2));
+    lista.add(std::move(node7));
+    lista.add(std::move(node9));
+    lista.add(std::make_unique<Node>(10));
 
     try
     {

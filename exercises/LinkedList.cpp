@@ -6,88 +6,94 @@ LinkedList::LinkedList() :
 {}
 
 
-
-void LinkedList::addToTheEnd(std::shared_ptr<Node> node)
+void LinkedList::addToTheEnd(std::unique_ptr<Node> node)
 {
+    if(!node) {
+        return;
+    }
 
     if(!addIfFirst(node))
     {
-        std::shared_ptr<Node> current = first;
-        if(isNodePresent(node)) {
-            return;
-        }
+        std::shared_ptr<std::unique_ptr<Node>>& current = first;
 
-        while(current->next) {
-            current = current->next;
+        while(current) {
+            current = current->get()->next;
         }
+        
+        node->previous = current;
 
-        node->previous = std::weak_ptr<Node>(current);
-        current->next = std::shared_ptr<Node>(node);
-        last = current->next;
+        std::shared_ptr<std::unique_ptr<Node>> temp = std::make_shared<std::unique_ptr<Node>>(std::move(node));
+        current.swap(temp);
+        last = current;
     }
 }
 
-void LinkedList::addToTheFront(std::shared_ptr<Node> node)
+
+void LinkedList::addToTheFront(std::unique_ptr<Node> node)
 {
+    if(!node) {
+        return;
+    }
+
     if(addIfFirst(node)) {
         return;
     }
-    if(isNodePresent(node)) {
-        return;
-    }
 
-    node->next = first;
-    first->previous = std::weak_ptr<Node>(node);
-    first = node;    
+    std::shared_ptr<std::unique_ptr<Node>> temp = std::make_shared<std::unique_ptr<Node>>(std::move(node));
+    
+    temp->get()->next = first;
+    first->get()->previous = temp; 
+    first = temp;
 }
 
-std::shared_ptr<Node> LinkedList::frontSearch(const int value)
+
+std::shared_ptr<std::unique_ptr<Node>> LinkedList::frontSearch(const int value)
 {
     assertListNotEmpty();
 
-    std::shared_ptr<Node> current = first;
+    std::shared_ptr<std::unique_ptr<Node>> current = first;
     do
     {
-        if(current->value == value)
+        if(current->get()->value == value)
         {
-            std::cout << "Found value " << current->value << std::endl;
+            std::cout << "Found value " << current->get()->value << std::endl;
             return current;
         }
         else
         {
-            std::cout << "Going through " << current->value << std::endl;
-            current = current->next;
+            std::cout << "Going through " << current->get()->value << std::endl;
+            current = current->get()->next;
         }
     } while(current);
 
     
     std::cout << "Not found: value " << value << std::endl;
-    return std::shared_ptr<Node>(nullptr);
+    return nullptr;
 }
 
-std::shared_ptr<Node> LinkedList::backSearch(const int value)
+std::shared_ptr<std::unique_ptr<Node>> LinkedList::backSearch(const int value)
 {
     assertListNotEmpty();
     
-    std::shared_ptr<Node> current = last.lock();
+   std::shared_ptr<std::unique_ptr<Node>> current = last.lock();
 
     do
     {
-        if(current->value == value)
+        if(current->get()->value == value)
         {
-            std::cout << "Found value " << current->value << std::endl;
+            std::cout << "Found value " << current->get()->value << std::endl;
             return current;
         }
         else
         {
-            std::cout << "Going through " << current->value << std::endl;
-            current = current->previous.lock();
+            std::cout << "Going through " << current->get()->value << std::endl;
+            current = current->get()->previous.lock();
         }
 
     }while(current);
 
     std::cout << "Not found: value " << value << std::endl;
-    return std::shared_ptr<Node>(nullptr);
+    return nullptr;
 }
 
 void LinkedList::assertListNotEmpty()
@@ -97,30 +103,15 @@ void LinkedList::assertListNotEmpty()
     }
 }
 
-bool LinkedList::addIfFirst(std::shared_ptr<Node> node)
+bool LinkedList::addIfFirst(std::unique_ptr<Node>& node)
 {
     if(!first)
     {
-        first = std::shared_ptr<Node>(node);
-        last = std::weak_ptr<Node>(first);
+        first = std::make_shared<std::unique_ptr<Node>>(std::move(node));
+        last = std::weak_ptr<std::unique_ptr<Node>>(first);
         return true;
     }
     return false;
-}
-
-bool LinkedList::isNodePresent(std::shared_ptr<Node> node)
-{
-        std::shared_ptr<Node> current = first;
-
-        while(current)
-        {
-            if(current == node) {
-                std::cout << "Node " << node->value << " has been added" << std::endl;
-                return true;
-            }
-            current = current->next;
-        }
-        return false;
 }
 
 int main()
@@ -139,13 +130,13 @@ int main()
         std::cerr << e.what() << '\n';
     }
 
-    std::shared_ptr<Node> node7(new Node(7));
+    std::unique_ptr<Node> node7(new Node(7));
 
-    lista.addToTheEnd(std::make_shared<Node>(4));
-    lista.addToTheFront(std::make_shared<Node>(2)); //add to the fornt
-    lista.addToTheEnd(node7);
-    lista.addToTheEnd(node7); // Message that this node is present
-    lista.addToTheEnd(std::make_shared<Node>(9));
+    lista.addToTheEnd(std::make_unique<Node>(4));
+    lista.addToTheFront(std::make_unique<Node>(2)); //add to the fornt
+    lista.addToTheEnd(std::move(node7));
+    lista.addToTheEnd(std::move(node7)); // Message that this node is present
+    lista.addToTheEnd(std::make_unique<Node>(9));
 
     try
     {
@@ -156,23 +147,21 @@ int main()
         auto nodeB2 = lista.backSearch(4);
 
         if (node)
-            std::cout << node->value << '\n';
+            std::cout << node->get()->value << '\n';
 
         if (node2)
-            std::cout << node2->value << '\n';
+            std::cout << node2->get()->value << '\n';
 
         if (nodeB)
-            std::cout << nodeB->value << '\n';
+            std::cout << nodeB->get()->value << '\n';
 
         if (nodeB2)
-            std::cout << nodeB2->value << '\n';
+            std::cout << nodeB2->get()->value << '\n';
 
         return 0;
     }
     catch(const EmptyListError& e) {
         std::cerr << e.what() << '\n';
     }
-    
-
 }
 
