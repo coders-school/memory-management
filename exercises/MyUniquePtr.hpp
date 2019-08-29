@@ -1,8 +1,7 @@
 #pragma once
 
-#include <type_traits>
 #include <iostream>
-#include <algorithm>
+#include <utility>
 
 template<class ptrType>
 class MyUniquePtr
@@ -14,19 +13,14 @@ public:
     : m_ptr(ptr) 
     {};
 
-    explicit MyUniquePtr(const MyUniquePtr&) = delete;
+    MyUniquePtr(const MyUniquePtr&) = delete;
 
     //MyUniquePtr(MyUniquePtr&& ptr) = default;
 
     explicit MyUniquePtr(MyUniquePtr&& ptr) : m_ptr(ptr.release()){};
 
-    ~MyUniquePtr()
-    {
-        if(m_ptr) 
-        {
-            std::cout << "Variable destructor called" << std::endl;
-            delete m_ptr;
-        };
+    ~MyUniquePtr() {
+        delete m_ptr;
     }
 
     MyUniquePtr& operator=(const MyUniquePtr&) = delete;
@@ -34,7 +28,7 @@ public:
     //MyUniquePtr& operator=(MyUniquePtr&& ptr) = default;
 
     MyUniquePtr& operator=(MyUniquePtr&& ptr) {
-        m_ptr = ptr.release();
+        m_ptr = std::exchange(ptr.m_ptr, nullptr);
         return *this;
     };
 
@@ -47,9 +41,7 @@ public:
     }
 
     ptrType* release() noexcept {
-        ptrType* t = m_ptr;
-        m_ptr = nullptr;
-        return t;
+        return std::exchange(m_ptr, nullptr);
     }
 
     ptrType* get() const noexcept {

@@ -1,7 +1,6 @@
 #include "MyUniquePtr.hpp"
-#include <iostream>
+
 #include <cassert>
-#include <memory>
 
 class testClassInt
 {
@@ -11,6 +10,14 @@ public:
 
     testClassInt(int a) : m_a(a) {}
 };
+
+void assertMyUniquePtrCanHoldVariable()
+{
+    int* intPtr = new int(1);
+    MyUniquePtr<int> myUniqueptr(intPtr);
+
+    assert(myUniqueptr.get() == intPtr);
+}
 
 void assertMyUniquePtrCanbeMoved()
 {
@@ -22,14 +29,6 @@ void assertMyUniquePtrCanbeMoved()
     assert(myUniqueptr.get() == nullptr);
 
     myUniqueptr = std::move(myUniqueptr2);
-
-    assert(myUniqueptr.get() == intPtr);
-}
-
-void assertMyUniquePtrCanHoldVariable()
-{
-    int* intPtr = new int(1);
-    MyUniquePtr<int> myUniqueptr(intPtr);
 
     assert(myUniqueptr.get() == intPtr);
 }

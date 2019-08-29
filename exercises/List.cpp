@@ -24,13 +24,9 @@ class List
 {
 public:
     List();
-    
-    ~List(){};
 
-
-    void add(Node* node);
+    void add(std::unique_ptr<Node>& node);
     Node* get(const int value);
-    bool IsPresent(Node* current, Node* testNode);
 
 private:
     unique_ptr<Node> first;
@@ -40,11 +36,15 @@ List::List() :
     first(nullptr)
 {}
 
-void List::add(Node* node)
+void List::add(std::unique_ptr<Node>& ptrNode)
 {
+    if(ptrNode == nullptr) {
+        return;
+    }
+
     if(!first)
     {
-        first = unique_ptr<Node>(node);
+        first = unique_ptr<Node>(ptrNode.release());
     }
     else
     {
@@ -53,24 +53,17 @@ void List::add(Node* node)
         while(current->next.get())
         {
             current = current->next.get();
-            if(IsPresent(current, node)) {
-                return;
-            }
         }
-        
-        if(IsPresent(current, node)) {
-            return;
-        }
-        current->next = unique_ptr<Node>(node);
+
+        current->next = unique_ptr<Node>(ptrNode.release());
     }
 }
 
 Node* List::get(const int value)
 {
-    if(!first.get())
+    if(!first)
     {
         throw EmptyListError("List is empty!");
-        return nullptr;
     }
     else
     {
@@ -93,16 +86,6 @@ Node* List::get(const int value)
     }
 }
 
-bool List::IsPresent(Node* current, Node* testNode)
-{
-        
-    if(current == testNode)
-    {
-        std::cout << "Node " << testNode << " has been added" << std::endl;
-        return true;
-    }
-    return false;
-}
 
 int main()
 {
@@ -118,14 +101,17 @@ int main()
     }
 
 
-    Node* node4 = new Node(4);
-    Node* node7 = new Node(7);
+    std::unique_ptr<Node> node4(new Node(4));
+    std::unique_ptr<Node> node7(new Node(7));
+    std::unique_ptr<Node> node2(new Node(2));
+    std::unique_ptr<Node> node9(new Node(9));
+
 
     lista.add(node4);
     lista.add(node4);
-    lista.add(new Node(2));
+    lista.add(node2);
     lista.add(node7);
-    lista.add(new Node(9));
+    lista.add(node9);
 
     try
     {

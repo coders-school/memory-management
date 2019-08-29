@@ -22,21 +22,18 @@ class LinkedList
 {
 public:
     LinkedList();
-    
-    ~LinkedList(){};
 
-    
+    void addToTheEnd(std::shared_ptr<Node> node);
+    void addToTheFront(std::shared_ptr<Node> node);
 
-    void addToTheEnd(Node* node);
-    void addToTheFront(Node* node);
-    std::weak_ptr<Node> frontSearch(const int value);
-    std::weak_ptr<Node> backSearch(const int value);
+    std::shared_ptr<Node> frontSearch(const int value);
+    std::shared_ptr<Node> backSearch(const int value);
     
 
 private:
-    void isListEmpty();
-    bool addIfFirst(Node* node);
-    bool isNodePresent(Node* node);
+    void assertListNotEmpty();
+    bool addIfFirst(std::shared_ptr<Node> node);
+    bool isNodePresent(std::shared_ptr<Node> node);
 
     std::shared_ptr<Node> first;
     std::weak_ptr<Node> last;

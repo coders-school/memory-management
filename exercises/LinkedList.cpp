@@ -7,27 +7,27 @@ LinkedList::LinkedList() :
 
 
 
-void LinkedList::addToTheEnd(Node* node)
+void LinkedList::addToTheEnd(std::shared_ptr<Node> node)
 {
 
     if(!addIfFirst(node))
     {
-        std::weak_ptr<Node> current = first;
+        std::shared_ptr<Node> current = first;
         if(isNodePresent(node)) {
             return;
         }
 
-        while(current.lock()->next) {
-            current = std::weak_ptr<Node>(current.lock()->next);
+        while(current->next) {
+            current = current->next;
         }
 
         node->previous = std::weak_ptr<Node>(current);
-        current.lock()->next = std::shared_ptr<Node>(node);
-        last = current.lock()->next;
+        current->next = std::shared_ptr<Node>(node);
+        last = current->next;
     }
 }
 
-void LinkedList::addToTheFront(Node* node)
+void LinkedList::addToTheFront(std::shared_ptr<Node> node)
 {
     if(addIfFirst(node)) {
         return;
@@ -35,71 +35,69 @@ void LinkedList::addToTheFront(Node* node)
     if(isNodePresent(node)) {
         return;
     }
-    
-    std::shared_ptr<Node> temp = first;
-    first.reset(node);
-    temp.get()->previous = std::weak_ptr<Node>(first);
-    first.get()->next = temp;
-    
+
+    node->next = first;
+    first->previous = std::weak_ptr<Node>(node);
+    first = node;    
 }
 
-std::weak_ptr<Node> LinkedList::frontSearch(const int value)
+std::shared_ptr<Node> LinkedList::frontSearch(const int value)
 {
-    isListEmpty();
+    assertListNotEmpty();
 
-    std::weak_ptr<Node> current = first;
+    std::shared_ptr<Node> current = first;
     do
     {
-        if(current.lock()->value == value)
+        if(current->value == value)
         {
-            std::cout << "Found value " << current.lock()->value << std::endl;
-            return current.lock();
+            std::cout << "Found value " << current->value << std::endl;
+            return current;
         }
         else
         {
-            std::cout << "Going through " << current.lock()->value << std::endl;
-            current = current.lock()->next;
+            std::cout << "Going through " << current->value << std::endl;
+            current = current->next;
         }
-    } while(current.lock());
+    } while(current);
 
     
     std::cout << "Not found: value " << value << std::endl;
-    return std::weak_ptr<Node>();
+    return std::shared_ptr<Node>(nullptr);
 }
 
-std::weak_ptr<Node> LinkedList::backSearch(const int value)
+std::shared_ptr<Node> LinkedList::backSearch(const int value)
 {
-    isListEmpty();
+    assertListNotEmpty();
     
-    std::weak_ptr<Node> current = last;
+    std::shared_ptr<Node> current = last.lock();
 
     do
     {
-        if(current.lock()->value == value)
+        if(current->value == value)
         {
-            std::cout << "Found value " << current.lock()->value << std::endl;
-            return current.lock();
+            std::cout << "Found value " << current->value << std::endl;
+            return current;
         }
         else
         {
-            std::cout << "Going through " << current.lock()->value << std::endl;
-            current = current.lock()->previous;
+            std::cout << "Going through " << current->value << std::endl;
+            current = current->previous.lock();
         }
 
-    }while(current.lock());
+    }while(current);
 
     std::cout << "Not found: value " << value << std::endl;
-    return std::weak_ptr<Node>();;
+    return std::shared_ptr<Node>(nullptr);
 }
 
-void LinkedList::isListEmpty()
+void LinkedList::assertListNotEmpty()
 {
-    if(!first.get()) {
+    if(!first) {
         throw EmptyListError("List is empty!");
     }
 }
 
-bool LinkedList::addIfFirst(Node* node)
+bool LinkedList::addIfFirst(std::shared_ptr<Node> node)
 {
     if(!first)
     {
@@ -110,17 +108,17 @@ bool LinkedList::addIfFirst(Node* node)
     return false;
 }
 
-bool LinkedList::isNodePresent(Node* node)
+bool LinkedList::isNodePresent(std::shared_ptr<Node> node)
 {
-        std::weak_ptr<Node> current = first;
+        std::shared_ptr<Node> current = first;
 
-        while(current.lock())
+        while(current)
         {
-            if(current.lock().get() == node) {
-                std::cout << "Node " << node << " has been added" << std::endl;
+            if(current == node) {
+                std::cout << "Node " << node->value << " has been added" << std::endl;
                 return true;
             }
-            current = std::weak_ptr<Node>(current.lock()->next);
+            current = current->next;
         }
         return false;
 }
@@ -141,14 +139,13 @@ int main()
         std::cerr << e.what() << '\n';
     }
 
-    Node* node4 = new Node(4);
-    Node* node7 = new Node(7);
+    std::shared_ptr<Node> node7(new Node(7));
 
-    lista.addToTheEnd(node4);
-    lista.addToTheFront(new Node(2)); //add to the fornt
+    lista.addToTheEnd(std::make_shared<Node>(4));
+    lista.addToTheFront(std::make_shared<Node>(2)); //add to the fornt
     lista.addToTheEnd(node7);
     lista.addToTheEnd(node7); // Message that this node is present
-    lista.addToTheEnd(new Node(9));
+    lista.addToTheEnd(std::make_shared<Node>(9));
 
     try
     {
@@ -158,17 +155,17 @@ int main()
         auto nodeB = lista.backSearch(1);
         auto nodeB2 = lista.backSearch(4);
 
-        if (node.lock())
-            std::cout << node.lock()->value << '\n';
+        if (node)
+            std::cout << node->value << '\n';
 
-        if (node2.lock())
-            std::cout << node2.lock()->value << '\n';
+        if (node2)
+            std::cout << node2->value << '\n';
 
-        if (nodeB.lock())
-            std::cout << nodeB.lock()->value << '\n';
+        if (nodeB)
+            std::cout << nodeB->value << '\n';
 
-        if (nodeB2.lock())
-            std::cout << nodeB2.lock()->value << '\n';
+        if (nodeB2)
+            std::cout << nodeB2->value << '\n';
 
         return 0;
     }
