@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 
 using namespace std;
 
@@ -10,12 +11,7 @@ public:
         value(v)
     {}
 
-    ~Node()
-    {
-        delete next;
-    }
-
-    Node* next;
+    shared_ptr<Node> next;
     int value;
 };
 
@@ -23,23 +19,18 @@ class List
 {
 public:
     List();
-    ~List()
-    {
-        delete first;
-    }
-    void add(Node* node);
-    Node* get(const int value);
-    void clear(Node* first);
+    void add(shared_ptr<Node> node);
+    shared_ptr<Node> get(const int value);
 
 private:
-    Node* first;
+    shared_ptr<Node> first;
 };
 
 List::List() :
     first(nullptr)
 {}
 
-void List::add(Node* node)
+void List::add(shared_ptr<Node> node)
 {
     if(!first)
     {
@@ -47,7 +38,7 @@ void List::add(Node* node)
     }
     else
     {
-        Node* current = first;
+        shared_ptr<Node> current = first;
         while(current->next)
         {
             current = current->next;
@@ -56,7 +47,7 @@ void List::add(Node* node)
     }
 }
 
-Node* List::get(const int value)
+shared_ptr<Node> List::get(const int value)
 {
     if(!first)
     {
@@ -65,7 +56,7 @@ Node* List::get(const int value)
     }
     else
     {
-        Node* current = first;
+        shared_ptr<Node> current = first;
         do
         {
             if(current->value == value)
@@ -84,33 +75,16 @@ Node* List::get(const int value)
     }
 }
 
-// Opcjonalnie?
-// Rozwiązanie podstawowe w destruktorach List i Node
-void List::clear(Node* first)
-{
-    if(!first)
-    {
-    }
-    else
-    {
-        Node* current = first->next;
-        do
-        {
-            delete first;
-        } while(current);
-    }
-}
-
 int main()
 {
     List lista;
-    Node* node4 = new Node(4);
-    Node* node7 = new Node(7);
+    shared_ptr<Node> node4 {new Node(4)};
+    shared_ptr<Node> node7 {new Node(7)};
 
     lista.add(node4);
-    lista.add(new Node(2));
+    lista.add(make_shared<Node>(2));
     lista.add(node7);
-    lista.add(new Node(9));
+    lista.add(make_shared<Node>(9));
     auto node = lista.get(1);
 
     if (node)
