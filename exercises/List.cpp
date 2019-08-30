@@ -11,6 +11,7 @@ public:
         value(v)
     {}
     std::shared_ptr<Node> next;
+    std::shared_ptr<Node> prev;
     int value;
 };
 
@@ -20,11 +21,13 @@ public:
     List();
     void add(std::shared_ptr<Node> node);
     std::shared_ptr<Node> get(const int value);
-    void insertingAtTheBeginning(const int d);
-    void searchingNthFromEnd(const int number);
+    std::shared_ptr<Node> insertAtTheBeginning(const int d);
+    std::shared_ptr<Node> searchNthFromEnd(const int number);
+    std::shared_ptr<Node> searchElement(int number);
 private:
     std::shared_ptr<Node> first;
     std::shared_ptr<Node> head;
+    std::shared_ptr<Node> tail;
 };
 
 List::List() :
@@ -36,6 +39,7 @@ void List::add(std::shared_ptr<Node> node)
     if(!first)
     {
         first = node;
+        head = first->prev;
     }
     else
     {
@@ -45,6 +49,9 @@ void List::add(std::shared_ptr<Node> node)
             current = current->next;
         }
         current->next = node;
+        node->prev = current;
+        tail = node;
+        cout<<"Prev: "<<node->prev->value<<endl;
     }
 }
 
@@ -77,26 +84,30 @@ std::shared_ptr<Node> List::get(const int value)
 }
 
 // wstawianie elementów na początku listy
- void List::insertingAtTheBeginning(const int d)
+std::shared_ptr<Node>  List::insertAtTheBeginning(const int d)
  {
-         if(!first)
+    if(!first)
     {
         std::shared_ptr<Node> temp{new Node(d)};
         first = temp;
+        first->prev = head;
+        first->next = nullptr;
     }
     else
     {
         std::shared_ptr<Node> temp{new Node(d)};
-        temp->value = d;
         temp->next = first;
         first = temp;
+        first->prev = head;
     }
+    return first;
+    
 }
 
 
 //wyszukiwanie elementów od końca
 
-void List::searchingNthFromEnd(const int number)
+std::shared_ptr<Node>  List::searchNthFromEnd(const int number)
 {
     int length = 0;
     std::shared_ptr<Node> temp = first;
@@ -125,8 +136,40 @@ void List::searchingNthFromEnd(const int number)
         std::cout << temp->value << std::endl;
 
     }
+    return temp;
 
 
+}
+
+// szukanie elementu od konca 
+std::shared_ptr<Node>  List::searchElement(const int number)
+ {
+    int length = 0;
+    std::shared_ptr<Node> temp = first;
+    while (temp != NULL)
+        {
+            temp = temp->next;
+            length++;
+        }  
+    temp=tail;
+
+    if (length == 0)
+    {
+        cout << "List is empty!" << endl;
+        return nullptr;
+    }
+    else
+    {
+        while(temp->value != number && length>1)
+        {
+            temp = temp->prev;
+            length--;
+        }
+        if(temp->value == number)
+            return temp;
+        else
+            return nullptr;      
+    } 
 }
 
 int main()
@@ -135,10 +178,13 @@ int main()
     std::shared_ptr<Node> node4 {new Node(4)};
     std::shared_ptr<Node> node7 {new Node(7)};
 
+    lista.add(std::make_shared<Node>(5));
     lista.add(node4);
     lista.add(std::make_shared<Node>(2));
     lista.add(node7);
-    lista.insertingAtTheBeginning(5);
+   // lista.insertAtTheBeginning(5);   <- funkcja "serchElement" nie działa wraz z elementami
+   //                                     wstawianymi przy uzyciu "insertAtTheBeginning" ale
+   //                                     nie jestem w stanie odkryć gdzie jest bład
     lista.add(std::make_shared<Node>(9));
 
     auto node = lista.get(1);
@@ -147,11 +193,8 @@ int main()
         cout << node->value << '\n';
 
 
-    lista.searchingNthFromEnd(4);
-    lista.searchingNthFromEnd(3);
-    lista.searchingNthFromEnd(2);
-    lista.searchingNthFromEnd(1);
-    lista.searchingNthFromEnd(0);
+    lista.searchElement(5);
+ 
 
 
     return 0;

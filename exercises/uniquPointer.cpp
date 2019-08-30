@@ -1,22 +1,8 @@
-class ReferenceCounter
-{
-private:
-    int counter;
-
-public:
-    void increase() { counter++; }
-
-    // Decrement and release reference count
-    int release() { return --counter; }
-};
-
-
 template <class T>
 class UniquePtr {
 private:
     T* pointer = nullptr;
-    ReferenceCounter* reference = nullptr;
-
+   
 public:
     UniquePtr();
     UniquePtr(T* object);
@@ -33,46 +19,32 @@ public:
 // constructor
 template <class T>
 UniquePtr<T>::UniquePtr()
-    :pointer(nullptr), reference(nullptr){
-        reference = new ReferenceCounter();
-        reference->increase();
-    }
+    :pointer(nullptr)
+    {std::cout<<"konstruktor"<<std::endl;}
 
 template <class T>
 UniquePtr<T>::UniquePtr(T* object)
-    :pointer(object), reference(nullptr){
-        reference = new ReferenceCounter();
-        reference->increase();
-    }
-
+    :pointer(object)
+    {}
 
 // copy constructor
 template <class T>
 UniquePtr<T>::UniquePtr(const UniquePtr<T>& object)
-    :pointer(object.pointer), reference(object.reference){
-        reference->increase();
-    }
+    :pointer(object.pointer)
+    {}
 
 
 // destructor
 template <class T>
 UniquePtr<T>::~UniquePtr() {
-    if(reference->release() == 0){
-        this->release();
-    }
-
+    this->release();
 }
 
 // operators
 template <class T>
 UniquePtr<T> &UniquePtr<T>::operator=(const UniquePtr<T>& object){
     if(this != &object){
-        if(reference->release() == 0){
-             this->release();
-        }
         pointer = object.pointer;
-        reference = object.reference;
-        reference->increase();
     }
     return *this;
 }
@@ -95,7 +67,6 @@ void UniquePtr<T>::get()const{
 template <class T>
 void UniquePtr<T>::release(){
     delete this->pointer;
-    delete this->reference;
 }
 
 
