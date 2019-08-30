@@ -25,6 +25,11 @@ public:
         return *pointer;
     }
 
+    T* get()
+    {
+        return pointer;
+    }
+
 private:
     T* pointer;
 };
