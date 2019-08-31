@@ -7,10 +7,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_compile_options()
 
 set(SRC_LIST
-    A.hpp
-    A.cpp
-    smartPtr.hpp
-    main.cpp
+    src/A.hpp
+    src/A.cpp
+    src/smartPtr.hpp
+    src/main.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SRC_LIST})
