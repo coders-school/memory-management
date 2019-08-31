@@ -36,6 +36,27 @@ public:
     {
         return pointer;
     }
+    
+    void reset()
+    {
+        if(pointer)
+        {
+            delete pointer;
+        }
+    }
+
+    void reset(T* input)
+    {
+        if (pointer)
+        {
+            delete pointer;
+            pointer = input;
+        } 
+        else
+        {
+            pointer = input;
+        }
+    }
 
 private:
     T* pointer;

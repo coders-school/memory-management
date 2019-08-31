@@ -26,5 +26,18 @@ int main()
     assert(smartPtr3->member == 7);
     smartPtr3->foo(); 
 
+    smartPointer<int> smartPtr11(new int(11));
+    smartPointer<int> smartPtr12(new int(12));
+    smartPointer<int> smartPtr13(new int(13));
+    smartPointer<int> smartPtr14(new int(14));
+
+    std::cout << "*(smartPtr11.get()) before reset: " << *(smartPtr11.get()) << '\n';
+    smartPtr11.reset();
+    std::cout << "*(smartPtr11.get()) after reset: " << *(smartPtr11.get()) << '\n';
+
+    std::cout << "*(smartPtr13.get()) before: " << *(smartPtr13.get()) << '\n';
+    smartPtr13.reset(new int(113));
+    std::cout << "*(smartPtr13.get()) after reset: " << *(smartPtr13.get()) << '\n';
+
     return 0;
 }
