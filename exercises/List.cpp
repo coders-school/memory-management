@@ -59,7 +59,7 @@ shared_ptr<Node> DoubleList::get(const int value)
         shared_ptr<Node> current = last;
         do
         {
-        auto weakPrev = (current->prev).lock();
+            auto weakPrev = (current->prev).lock();
             if(current->value == value)
             {
                 cout << "Found value " << current->value << endl;
