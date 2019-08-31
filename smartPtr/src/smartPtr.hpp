@@ -39,7 +39,7 @@ public:
     
     void reset()
     {
-        if(pointer)
+        if (pointer)
         {
             delete pointer;
             pointer = nullptr;
