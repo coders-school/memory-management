@@ -2,6 +2,12 @@
 #include <iostream>
 #include <assert.h>
 
+struct A {
+    A(int inputData) : member(inputData) { }  
+    void foo() { std::cout << "The glorious integer: " << member << '\n'; }
+    int member;
+};
+
 int main()
 {
     smartPointer<int> smartPtr1(new int{5});
@@ -20,6 +26,10 @@ int main()
         
     // copy not allowed
     // smartPtr1 = smartPtr2;
+
+    smartPointer<A> smartPtr3(new A(7));
+    assert(smartPtr3->member == 7);
+    smartPtr3->foo(); 
 
     return 0;
 }
