@@ -8,11 +8,11 @@ class Node
 public:
     Node(const int v) :
         next(nullptr),
-        prev(nullptr),
         value(v)
     {}
 
-    shared_ptr<Node> next, prev;
+    shared_ptr<Node> next;
+    weak_ptr<Node> prev;
     int value;
 };
 
@@ -59,6 +59,7 @@ shared_ptr<Node> DoubleList::get(const int value)
         shared_ptr<Node> current = last;
         do
         {
+        auto weakPrev = (current->prev).lock();
             if(current->value == value)
             {
                 cout << "Found value " << current->value << endl;
@@ -67,7 +68,7 @@ shared_ptr<Node> DoubleList::get(const int value)
             else
             {
                 cout << "Going through " << current->value << endl;
-                current = current->prev;
+                current = weakPrev;
             }
         } while(current);
         cout << "Not found: value " << value << endl;
@@ -77,7 +78,7 @@ shared_ptr<Node> DoubleList::get(const int value)
 
 int main()
 {
-    DoubleList list;
+    DoubleList list; 
     shared_ptr<Node> node4 {new Node(4)};
     shared_ptr<Node> node7 {new Node(7)};
 
@@ -89,7 +90,7 @@ int main()
 
     if (node)
         cout << node->value << '\n';
-
+    
     return 0;
 }
 
