@@ -1,12 +1,7 @@
+#include "A.hpp"
 #include "smartPtr.hpp"
 #include <iostream>
 #include <assert.h>
-
-struct A {
-    A(int inputData) : member(inputData) { }  
-    void foo() { std::cout << "The glorious integer: " << member << '\n'; }
-    int member;
-};
 
 int main()
 {
