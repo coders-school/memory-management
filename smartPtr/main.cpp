@@ -18,10 +18,10 @@ int main()
     assert(*smartPtr2==5);
     std::cout << "*smartPtr2: " << *smartPtr2 << '\n';
     
-    int* regularPtr1 = smartPtr1.get();
-    assert(regularPtr1==smartPtr1.get());
+    int* regularPtr1 = smartPtr2.get();
+    assert(regularPtr1==smartPtr2.get());
     assert(*regularPtr1==5);
-    std::cout << "*(smartPtr1.get()): " << *(smartPtr1.get()) << '\n'
+    std::cout << "*(smartPtr2.get()): " << *(smartPtr2.get()) << '\n'
         << "*regularPtr1: " << *regularPtr1 << '\n'; 
         
     // copy not allowed

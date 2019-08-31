@@ -13,7 +13,9 @@ public:
 
     smartPointer(smartPointer&& input) noexcept :
         pointer(std::move(input.pointer))
-    { }
+    { 
+        input.pointer = nullptr;
+    }
 
     ~smartPointer()
     {
