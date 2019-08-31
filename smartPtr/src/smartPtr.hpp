@@ -42,20 +42,15 @@ public:
         if(pointer)
         {
             delete pointer;
+            pointer = nullptr;
         }
     }
 
     void reset(T* input)
     {
         if (pointer)
-        {
             delete pointer;
-            pointer = input;
-        } 
-        else
-        {
-            pointer = input;
-        }
+        pointer = input;
     }
 
 private:
