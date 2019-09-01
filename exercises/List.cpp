@@ -8,11 +8,11 @@ class Node
 public:
     Node(const int v) :
         next(nullptr),
-        prev(nullptr),
         value(v)
     {}
+
     shared_ptr<Node> next;
-    shared_ptr<Node> prev;
+    weak_ptr<Node> prev;
 
     int value;
     virtual ~Node() {};
@@ -26,8 +26,8 @@ public:
     shared_ptr<Node> getFirst(const int value);
     shared_ptr<Node> getLast(const int value);
     void addFirstElements(shared_ptr<Node> node);
-    ~List();
-    
+
+
 private:
     shared_ptr<Node> first;
     shared_ptr<Node> last;
@@ -39,15 +39,6 @@ List::List() :
     last(nullptr)
 {}
 
-List::~List()
-{
-    while (last->prev) {
-    shared_ptr<Node> current = last->prev;
-    last = nullptr;
-    current->next = nullptr;
-    last = current;
-}
-}
 
 void List::add(shared_ptr<Node> node)
 {
@@ -135,7 +126,7 @@ shared_ptr<Node> List::getLast(const int value)
             else
             {
                 cout << "Going through " << current->value << endl;
-                current = current->prev;
+                current = current->prev.lock();
             }
         } while(current);
         cout << "Not found: value " << value << endl;
