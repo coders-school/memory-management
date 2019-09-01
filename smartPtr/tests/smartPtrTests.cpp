@@ -177,7 +177,60 @@ TEST_F(smartPointerTests, checkIfGetMethodReturnsUnderlyingPointer)
     ASSERT_TRUE(rPtrDouble1==sPtrDouble1.get());
     ASSERT_TRUE(rPtrString1==sPtrString1.get());
     ASSERT_TRUE(rPtrA1==sPtrA1.get());  
-}   
+}
+
+TEST_F(smartPointerTests, boolOperatorTest)
+{
+    // ARRANGE
+    smartPointer<bool> sPtrBool2(new bool(bool2));
+    smartPointer<char> sPtrChar2(new char(char2));
+    smartPointer<int> sPtrInt2(new int(int2));
+    smartPointer<float> sPtrFloat2(new float(flt2));
+    smartPointer<double> sPtrDouble2(new double(dbl2));
+    smartPointer<std::string> sPtrString2(new std::string(str2));
+    smartPointer<A> sPtrA2(new A(AInt2));  
+    smartPointer<bool> sPtrBool1(std::move(sPtrBool2));
+    smartPointer<char> sPtrChar1(std::move(sPtrChar2));
+    smartPointer<int> sPtrInt1(std::move(sPtrInt2));
+    smartPointer<float> sPtrFloat1(std::move(sPtrFloat2));
+    smartPointer<double> sPtrDouble1(std::move(sPtrDouble2));
+    smartPointer<std::string> sPtrString1(std::move(sPtrString2));
+    smartPointer<A> sPtrA1(std::move(sPtrA2));
+    
+    // ACT
+    bool bBool1 = sPtrBool1;
+    bool bChar1 = sPtrChar1;
+    bool bInt1 = sPtrInt1;
+    bool bFloat1 = sPtrFloat1;
+    bool bDouble1 = sPtrDouble1;
+    bool bString1 = sPtrString1;
+    bool bA1 = sPtrA1;
+    bool bBool2 = sPtrBool2;
+    bool bChar2 = sPtrChar2;
+    bool bInt2 = sPtrInt2;
+    bool bFloat2 = sPtrFloat2;
+    bool bDouble2 = sPtrDouble2;
+    bool bString2 = sPtrString2;
+    bool bA2 = sPtrA2;
+
+    // ASSERT
+    ASSERT_TRUE(bBool1);
+    ASSERT_TRUE(bChar1);
+    ASSERT_TRUE(bInt1);
+    ASSERT_TRUE(bFloat1);
+    ASSERT_TRUE(bDouble1);
+    ASSERT_TRUE(bString1);
+    ASSERT_TRUE(bA1);
+    ASSERT_FALSE(bBool2);
+    ASSERT_FALSE(bChar2);
+    ASSERT_FALSE(bInt2);
+    ASSERT_FALSE(bFloat2);
+    ASSERT_FALSE(bDouble2);
+    ASSERT_FALSE(bString2);
+    ASSERT_FALSE(bA2);        
+}
+
+
 
 
 
