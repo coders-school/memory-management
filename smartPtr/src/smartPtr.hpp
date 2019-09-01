@@ -48,7 +48,7 @@ public:
 
     void reset()
     {
-        relase();
+        release();
     }
 
     void reset(T* input)
