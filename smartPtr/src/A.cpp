@@ -14,7 +14,8 @@ bool operator==(const A &a1, const A &a2)
     return a1.member == a2.member;
 }
 
-int A::bar(int input)
+int A::bar()
 {
-    return input*2;
+    member *= 2;
+    return member;
 }
