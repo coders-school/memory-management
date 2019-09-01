@@ -123,16 +123,17 @@ TEST_F(smartPointerTests, canUseArrowOperatorOnUnderlyingClassInstance)
     const int input1 = 31;
     const int input2 = 37;
     int output1, output2;
-    A testInstanceA1(input1);
-    A testInstanceA2(input2);
+    smartPointer<A> sPtrA1(new A(input1));
+    smartPointer<A> sPtrA2(new A(input2));
 
     // ACT
-    output1 = testInstanceA1.bar();
-    output2 = testInstanceA2.bar();
+    output1 = sPtrA1->bar();
+    output2 = sPtrA2->bar();
 
     // ASSERT:
     ASSERT_TRUE(2*input1==output1);
     ASSERT_TRUE(2*input2==output2);
 }
+
 
 
