@@ -1,10 +1,13 @@
 #include <iostream>
 #include <memory>
-#include<typeinfo>
+#include <typeinfo>
+#include <algorithm>
 
+namespace UP{
 template <typename T>
 class UniquePtr {
     T* data;
+
     
     public:
 
@@ -14,8 +17,6 @@ class UniquePtr {
             ~UniquePtr(){
                 delete data;
             }
-            UniquePtr(UniquePtr const&) = delete;
-            UniquePtr& operator=(UniquePtr const&) = delete;
 
             T* operator->() const {return data;}
             T& operator*() const {return data;}
@@ -36,9 +37,14 @@ class UniquePtr {
             }
 
 };
-
+}
 
 int main ()
 {
+    UP::UniquePtr<int> up1(new int(5));
+    UP::UniquePtr<int> up2(new int(6));
+    //std::cout << up1 << '\n';
+    up1 = std::move(up2);
+    
     return 0;
 }
