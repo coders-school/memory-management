@@ -29,8 +29,8 @@ public:
     
     void SetUp()
     {    
-        A A1(19);
-        A A2(23);
+        const A A1(19);
+        const A A2(23);
     }
     
     void TearDown()
@@ -38,7 +38,7 @@ public:
     }
 };
 
-TEST_F(smartPointerTests, canProperlyConstructSmartPtr)
+TEST_F(smartPointerTests, canProperlyConstructAndDereferenceSmartPtr)
 {
     smartPointer<bool> sPtrBool1(new bool(bool1));
     smartPointer<char> sPtrChar1(new char(char1));
@@ -86,3 +86,37 @@ TEST_F(smartPointerTests, canConstructSmartPtrWithMoveConstructor)
     ASSERT_TRUE(*sPtrString1 == str2);
     ASSERT_TRUE(*sPtrA1 == A(AInt2));
 }
+
+TEST_F(smartPointerTests, canChangeSmartPtrValueWithDereferenceOperator)
+{
+    // ARRANGE
+    smartPointer<bool> sPtrBool1(new bool(bool1));
+    smartPointer<char> sPtrChar1(new char(char1));
+    smartPointer<int> sPtrInt1(new int(int1));
+    smartPointer<float> sPtrFloat1(new float(flt1));
+    smartPointer<double> sPtrDouble1(new double(dbl1));
+    smartPointer<std::string> sPtrString1(new std::string(str1));
+    smartPointer<A> sPtrA1(new A(AInt1));
+    A A2(23);
+
+    // ACT
+    *sPtrBool1 = bool2;
+    *sPtrChar1 = char2;
+    *sPtrInt1 = int2;
+    *sPtrFloat1 = flt2;
+    *sPtrDouble1 = dbl2;
+    *sPtrString1 = str2;
+    *sPtrA1 = A2;
+
+    // ASSERT:
+    ASSERT_TRUE(*sPtrBool1==bool2);
+    ASSERT_TRUE(*sPtrChar1==char2);
+    ASSERT_TRUE(*sPtrInt1==int2);
+    ASSERT_TRUE(*sPtrFloat1==flt2);
+    ASSERT_TRUE(*sPtrDouble1==dbl2);
+    ASSERT_TRUE(*sPtrString1==str2);
+    ASSERT_TRUE(*sPtrA1==A2);
+}
+
+
+
