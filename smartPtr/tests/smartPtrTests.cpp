@@ -3,9 +3,9 @@
 #include "smartPtr.hpp"
 #include "A.hpp"
 
-class smartPointerTests : public ::testing::Test {
+class SmartPointerTests : public ::testing::Test {
 public:
-    smartPointerTests() :
+    SmartPointerTests() :
         bool1(true),
         char1('a'), 
         int1(11), 
@@ -42,7 +42,7 @@ public:
     {
     }
     
-    ~smartPointerTests()
+    ~SmartPointerTests()
     {
     }
    
@@ -64,24 +64,24 @@ public:
     int AInt2;
     A A2;
     
-    smartPointer<bool> sPtrBool1;
-    smartPointer<char> sPtrChar1;
-    smartPointer<int> sPtrInt1;
-    smartPointer<float> sPtrFloat1;
-    smartPointer<double> sPtrDouble1;
-    smartPointer<std::string> sPtrString1;
-    smartPointer<A> sPtrA1;
+    SmartPointer<bool> sPtrBool1;
+    SmartPointer<char> sPtrChar1;
+    SmartPointer<int> sPtrInt1;
+    SmartPointer<float> sPtrFloat1;
+    SmartPointer<double> sPtrDouble1;
+    SmartPointer<std::string> sPtrString1;
+    SmartPointer<A> sPtrA1;
     
-    smartPointer<bool> sPtrBool2;
-    smartPointer<char> sPtrChar2;
-    smartPointer<int> sPtrInt2;
-    smartPointer<float> sPtrFloat2;
-    smartPointer<double> sPtrDouble2;
-    smartPointer<std::string> sPtrString2;
-    smartPointer<A> sPtrA2;      
+    SmartPointer<bool> sPtrBool2;
+    SmartPointer<char> sPtrChar2;
+    SmartPointer<int> sPtrInt2;
+    SmartPointer<float> sPtrFloat2;
+    SmartPointer<double> sPtrDouble2;
+    SmartPointer<std::string> sPtrString2;
+    SmartPointer<A> sPtrA2;      
 };
 
-TEST_F(smartPointerTests, canProperlyConstructAndDereferenceSmartPtr)
+TEST_F(SmartPointerTests, canProperlyConstructAndDereferenceSmartPtr)
 {
     // ARRANGE (done in initialization list) 
     // ACT (done in initialization list) 
@@ -95,17 +95,17 @@ TEST_F(smartPointerTests, canProperlyConstructAndDereferenceSmartPtr)
     ASSERT_TRUE(*sPtrA1 == A(AInt1));
 }
 
-TEST_F(smartPointerTests, canConstructSmartPtrWithMoveConstructor)
+TEST_F(SmartPointerTests, canConstructSmartPtrWithMoveConstructor)
 {
     // ARRANGE (done in initialization list) 
     // ACT
-    smartPointer<bool> sPtrBool3(std::move(sPtrBool2));
-    smartPointer<char> sPtrChar3(std::move(sPtrChar2));
-    smartPointer<int> sPtrInt3(std::move(sPtrInt2));
-    smartPointer<float> sPtrFloat3(std::move(sPtrFloat2));
-    smartPointer<double> sPtrDouble3(std::move(sPtrDouble2));
-    smartPointer<std::string> sPtrString3(std::move(sPtrString2));
-    smartPointer<A> sPtrA3(std::move(sPtrA2));
+    SmartPointer<bool> sPtrBool3(std::move(sPtrBool2));
+    SmartPointer<char> sPtrChar3(std::move(sPtrChar2));
+    SmartPointer<int> sPtrInt3(std::move(sPtrInt2));
+    SmartPointer<float> sPtrFloat3(std::move(sPtrFloat2));
+    SmartPointer<double> sPtrDouble3(std::move(sPtrDouble2));
+    SmartPointer<std::string> sPtrString3(std::move(sPtrString2));
+    SmartPointer<A> sPtrA3(std::move(sPtrA2));
 
     // ASSERT
     ASSERT_TRUE(*sPtrBool3 == bool2);
@@ -117,7 +117,7 @@ TEST_F(smartPointerTests, canConstructSmartPtrWithMoveConstructor)
     ASSERT_TRUE(*sPtrA3 == A(AInt2));
 }
 
-TEST_F(smartPointerTests, canChangeSmartPtrValueWithDereferenceOperator)
+TEST_F(SmartPointerTests, canChangeSmartPtrValueWithDereferenceOperator)
 {
     // ARRANGE (done in initialization list)
     // ACT
@@ -139,14 +139,14 @@ TEST_F(smartPointerTests, canChangeSmartPtrValueWithDereferenceOperator)
     ASSERT_TRUE(*sPtrA1==A2);
 }
 
-TEST_F(smartPointerTests, canUseArrowOperatorOnUnderlyingClassInstance)
+TEST_F(SmartPointerTests, canUseArrowOperatorOnUnderlyingClassInstance)
 {
     // ARRANGE
     const int input1 = 31;
     const int input2 = 37;
     int output1, output2;
-    smartPointer<A> APointer1 (new A(input1));
-    smartPointer<A> APointer2 (new A(input2));
+    SmartPointer<A> APointer1 (new A(input1));
+    SmartPointer<A> APointer2 (new A(input2));
 
     // ACT
     output1 = APointer1->bar();
@@ -157,7 +157,7 @@ TEST_F(smartPointerTests, canUseArrowOperatorOnUnderlyingClassInstance)
     ASSERT_TRUE(2*input2==output2);
 }
 
-TEST_F(smartPointerTests, checkIfGetMethodReturnsUnderlyingPointer)
+TEST_F(SmartPointerTests, checkIfGetMethodReturnsUnderlyingPointer)
 {
     // ARRANGE (partially done in initialization list)
     bool* rPtrBool1 = nullptr;
@@ -187,16 +187,16 @@ TEST_F(smartPointerTests, checkIfGetMethodReturnsUnderlyingPointer)
     ASSERT_TRUE(rPtrA1==sPtrA1.get());  
 }
 
-TEST_F(smartPointerTests, boolOperatorTest)
+TEST_F(SmartPointerTests, boolOperatorTest)
 {
     // ARRANGE (partially done in initialization list)
-    smartPointer<bool> sPtrBool3(std::move(sPtrBool1));
-    smartPointer<char> sPtrChar3(std::move(sPtrChar1));
-    smartPointer<int> sPtrInt3(std::move(sPtrInt1));
-    smartPointer<float> sPtrFloat3(std::move(sPtrFloat1));
-    smartPointer<double> sPtrDouble3(std::move(sPtrDouble1));
-    smartPointer<std::string> sPtrString3(std::move(sPtrString1));
-    smartPointer<A> sPtrA3(std::move(sPtrA1));
+    SmartPointer<bool> sPtrBool3(std::move(sPtrBool1));
+    SmartPointer<char> sPtrChar3(std::move(sPtrChar1));
+    SmartPointer<int> sPtrInt3(std::move(sPtrInt1));
+    SmartPointer<float> sPtrFloat3(std::move(sPtrFloat1));
+    SmartPointer<double> sPtrDouble3(std::move(sPtrDouble1));
+    SmartPointer<std::string> sPtrString3(std::move(sPtrString1));
+    SmartPointer<A> sPtrA3(std::move(sPtrA1));
     
     // ACT
     bool bBool1 = sPtrBool1;
@@ -231,7 +231,7 @@ TEST_F(smartPointerTests, boolOperatorTest)
     ASSERT_FALSE(bA1);        
 }
 
-TEST_F(smartPointerTests, checkIfReleaseSetsUnderlyingPointerNullptr)
+TEST_F(SmartPointerTests, checkIfReleaseSetsUnderlyingPointerNullptr)
 { 
     // ARRANGE (done in initialization list)
     // ACT
@@ -253,7 +253,7 @@ TEST_F(smartPointerTests, checkIfReleaseSetsUnderlyingPointerNullptr)
     ASSERT_FALSE(sPtrA1);
 }
 
-TEST_F(smartPointerTests, checkIfResetReplacesManagedObject)
+TEST_F(SmartPointerTests, checkIfResetReplacesManagedObject)
 {
     // ARRANGE (done in initialization list)
     // ACT

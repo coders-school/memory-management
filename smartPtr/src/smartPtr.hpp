@@ -2,22 +2,22 @@
 #include <utility>
 
 template <typename T>
-class smartPointer{
+class SmartPointer{
 public:
-    smartPointer(const smartPointer& input) = delete;
+    SmartPointer(const SmartPointer& input) = delete;
     
-    smartPointer(T* input)
+    SmartPointer(T* input)
     {
         pointer = input;
     }
 
-    smartPointer(smartPointer&& input) noexcept :
+    SmartPointer(SmartPointer&& input) noexcept :
         pointer(std::move(input.pointer))
     { 
         input.pointer = nullptr;
     }
 
-    ~smartPointer()
+    ~SmartPointer()
     {
         delete pointer;
     }
