@@ -11,6 +11,12 @@ public:
     ~smartPointerTests()
     {
     }
+    void SetUp()
+    {    
+    }
+    void TearDown()
+    {  
+    }
 
     bool bool1 = true;
     bool bool2 = false;
@@ -26,16 +32,6 @@ public:
     std::string str2 = "Consectetur adipiscing elit";
     int AInt1 = 17;
     int AInt2 = 29;
-    
-    void SetUp()
-    {    
-        const A A1(19);
-        const A A2(23);
-    }
-    
-    void TearDown()
-    {  
-    }
 };
 
 TEST_F(smartPointerTests, canProperlyConstructAndDereferenceSmartPtr)
