@@ -230,6 +230,41 @@ TEST_F(smartPointerTests, boolOperatorTest)
     ASSERT_FALSE(bA2);        
 }
 
+TEST_F(smartPointerTests, checkIfReleaseSetsUnderlyingPointerNullptr)
+{ 
+    // ARRANGE
+    smartPointer<bool> sPtrBool1(new bool(bool1));
+    smartPointer<char> sPtrChar1(new char(char1));
+    smartPointer<int> sPtrInt1(new int(int1));
+    smartPointer<float> sPtrFloat1(new float(flt1));
+    smartPointer<double> sPtrDouble1(new double(dbl1));
+    smartPointer<std::string> sPtrString1(new std::string(str1));
+    smartPointer<A> sPtrA1(new A(AInt1));
+
+    // ACT
+    sPtrBool1.release();
+    sPtrChar1.release();
+    sPtrInt1.release();
+    sPtrFloat1.release();
+    sPtrDouble1.release();
+    sPtrString1.release();
+    sPtrA1.release();
+    
+    // ASSERT
+    ASSERT_FALSE(sPtrBool1);
+    ASSERT_FALSE(sPtrChar1);
+    ASSERT_FALSE(sPtrInt1);
+    ASSERT_FALSE(sPtrFloat1);
+    ASSERT_FALSE(sPtrDouble1);
+    ASSERT_FALSE(sPtrString1);
+    ASSERT_FALSE(sPtrA1);
+}
+
+
+
+
+
+
 
 
 
