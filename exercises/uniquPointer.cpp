@@ -1,87 +1,118 @@
-template <class T>
+#include <iostream>
+#include <cassert>
+
+
+template <class uniqPtrType>
 class UniquePtr {
 private:
-    T* pointer = nullptr;
+    uniqPtrType* pointer = nullptr;
    
 public:
     UniquePtr();
-    UniquePtr(T* object);
-    UniquePtr(const UniquePtr<T>& object);
+    UniquePtr(uniqPtrType* object);
+    UniquePtr(const UniquePtr<uniqPtrType>& object) = delete;
+    UniquePtr(UniquePtr<uniqPtrType> && object);
     ~UniquePtr();
-    UniquePtr<T>& operator=(const UniquePtr<T>& object);
-    T& operator*();
-    T* operator->();
-    void get()const;
-    void release();
-    void reset(T* object);
+    UniquePtr<uniqPtrType>& operator=(const UniquePtr<uniqPtrType>& object) = delete;
+    UniquePtr<uniqPtrType>& operator=(UniquePtr<uniqPtrType>&& object);
+    uniqPtrType& operator*();
+    uniqPtrType* operator->();
+    uniqPtrType* get()const;
+    uniqPtrType* release();
+    void reset(uniqPtrType* object);
 };
 
 // constructor
-template <class T>
-UniquePtr<T>::UniquePtr()
+template <class uniqPtrType>
+UniquePtr<uniqPtrType>::UniquePtr()
     :pointer(nullptr)
     {std::cout<<"konstruktor"<<std::endl;}
 
-template <class T>
-UniquePtr<T>::UniquePtr(T* object)
+
+template <class uniqPtrType>
+UniquePtr<uniqPtrType>::UniquePtr(uniqPtrType* object)
     :pointer(object)
     {}
 
 // copy constructor
-template <class T>
-UniquePtr<T>::UniquePtr(const UniquePtr<T>& object)
+/* DO USUNIECIA
+template <class uniqPtrType>
+UniquePtr<uniqPtrType>::UniquePtr(const UniquePtr<uniqPtrType>& object)
     :pointer(object.pointer)
+    {}
+*/
+template <class uniqPtrType>
+UniquePtr<uniqPtrType>::UniquePtr(UniquePtr<uniqPtrType> && object) 
+    :pointer(std::move(object.pointer))
     {}
 
 
 // destructor
-template <class T>
-UniquePtr<T>::~UniquePtr() {
-    this->release();
+template <class uniqPtrType>
+UniquePtr<uniqPtrType>::~UniquePtr() {
+    delete this->pointer;
 }
 
 // operators
-template <class T>
-UniquePtr<T> &UniquePtr<T>::operator=(const UniquePtr<T>& object){
+/* DO USUNIECIA
+template <class uniqPtrType>
+UniquePtr<uniqPtrType> &UniquePtr<uniqPtrType>::operator=(const UniquePtr<uniqPtrType>& object)
+{
     if(this != &object){
         pointer = object.pointer;
     }
     return *this;
 }
+*/
 
-template <class T>
-T& UniquePtr<T>::operator*() {
+template <class uniqPtrType>
+UniquePtr<uniqPtrType> &UniquePtr<uniqPtrType>::operator=(UniquePtr<uniqPtrType>&& object)
+{
+    if(this != &object){
+        pointer = object.pointer;
+        object.pointer = nullptr;
+    }
+    return *this;
+}
+
+template <class uniqPtrType>
+uniqPtrType& UniquePtr<uniqPtrType>::operator*() 
+{
     return *(this->pointer);
 }
 
-template <class T>
-T* UniquePtr<T>::operator->(){
+template <class uniqPtrType>
+uniqPtrType* UniquePtr<uniqPtrType>::operator->()
+{
     return this->pointer;
 }
 
-template <class T>
-void UniquePtr<T>::get()const{
+template <class uniqPtrType>
+uniqPtrType *UniquePtr<uniqPtrType>::get()const
+{
     return this->pointer;
 }
 
-template <class T>
-void UniquePtr<T>::release(){
-    delete this->pointer;
+template <class uniqPtrType>
+uniqPtrType *UniquePtr<uniqPtrType>::release()
+{
+    pointer = nullptr;
+    return this->pointer;
 }
 
 
-template <class T>
-void UniquePtr<T>::reset(T* object){
-    if((this->pointer) != object){
-        this->pointer.release();
-        this->pointer = object;
-    }
+template <class uniqPtrType>
+void UniquePtr<uniqPtrType>::reset(uniqPtrType* object)
+{
+    pointer = object.pointer;
+    delete object;
 }
+
 int main(){
 
+   
+   UniquePtr<int> myPointer( new int(1));
 
-    UniquePtr<int> myPointer( new int() );
-    UniquePtr<int> newPointer = myPointer;
 
     return 0;
 }
