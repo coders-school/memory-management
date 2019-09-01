@@ -116,3 +116,23 @@ TEST_F(smartPointerTests, canChangeSmartPtrValueWithDereferenceOperator)
     ASSERT_TRUE(*sPtrString1==str2);
     ASSERT_TRUE(*sPtrA1==A2);
 }
+
+TEST_F(smartPointerTests, canUseArrowOperatorOnUnderlyingClassInstance)
+{
+    // ARRANGE
+    const int input1 = 31;
+    const int input2 = 37;
+    int output1, output2;
+    A testInstanceA1(input1);
+    A testInstanceA2(input2);
+
+    // ACT
+    output1 = testInstanceA1.bar();
+    output2 = testInstanceA2.bar();
+
+    // ASSERT:
+    ASSERT_TRUE(2*input1==output1);
+    ASSERT_TRUE(2*input2==output2);
+}
+
+
