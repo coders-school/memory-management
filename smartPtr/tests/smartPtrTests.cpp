@@ -260,14 +260,32 @@ TEST_F(smartPointerTests, checkIfReleaseSetsUnderlyingPointerNullptr)
     ASSERT_FALSE(sPtrA1);
 }
 
+TEST_F(smartPointerTests, checkIfResetReplacesManagedObject)
+{
+    // ARRANGE
+    smartPointer<bool> sPtrBool1(new bool(bool1));
+    smartPointer<char> sPtrChar1(new char(char1));
+    smartPointer<int> sPtrInt1(new int(int1));
+    smartPointer<float> sPtrFloat1(new float(flt1));
+    smartPointer<double> sPtrDouble1(new double(dbl1));
+    smartPointer<std::string> sPtrString1(new std::string(str1));
+    smartPointer<A> sPtrA1(new A(AInt1));
+    
+    // ACT
+    sPtrBool1.reset(new bool(bool2));
+    sPtrChar1.reset(new char(char2));
+    sPtrInt1.reset(new int(int2));
+    sPtrFloat1.reset(new float(flt2));
+    sPtrDouble1.reset(new double(dbl2));
+    sPtrString1.reset(new std::string(str2));
+    sPtrA1.reset(new A(AInt2));
 
-
-
-
-
-
-
-
-
-
-
+    // ASSERT
+    ASSERT_TRUE(*sPtrBool1==bool2);
+    ASSERT_TRUE(*sPtrChar1==char2);
+    ASSERT_TRUE(*sPtrInt1==int2);
+    ASSERT_TRUE(*sPtrFloat1==flt2);
+    ASSERT_TRUE(*sPtrDouble1==dbl2);
+    ASSERT_TRUE(*sPtrString1==str2);
+    ASSERT_TRUE(*sPtrA1==AInt2);
+}
