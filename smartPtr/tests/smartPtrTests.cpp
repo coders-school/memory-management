@@ -135,5 +135,51 @@ TEST_F(smartPointerTests, canUseArrowOperatorOnUnderlyingClassInstance)
     ASSERT_TRUE(2*input2==output2);
 }
 
+TEST_F(smartPointerTests, checkIfGetMethodReturnsUnderlyingPointer)
+{
+    // ARRANGE
+    smartPointer<bool> sPtrBool1(new bool(bool1));
+    smartPointer<char> sPtrChar1(new char(char1));
+    smartPointer<int> sPtrInt1(new int(int1));
+    smartPointer<float> sPtrFloat1(new float(flt1));
+    smartPointer<double> sPtrDouble1(new double(dbl1));
+    smartPointer<std::string> sPtrString1(new std::string(str1));
+    smartPointer<A> sPtrA1(new A(AInt1));
+    bool* rPtrBool1 = nullptr;
+    char* rPtrChar1 = nullptr;
+    int* rPtrInt1 = nullptr;
+    float* rPtrFloat1 = nullptr;
+    double* rPtrDouble1 = nullptr;
+    std::string* rPtrString1 = nullptr;
+    A* rPtrA1 = nullptr;
+
+    // ACT
+    rPtrBool1 = sPtrBool1.get();
+    rPtrChar1 = sPtrChar1.get();
+    rPtrInt1 = sPtrInt1.get();
+    rPtrFloat1 = sPtrFloat1.get();
+    rPtrDouble1 = sPtrDouble1.get();
+    rPtrString1 = sPtrString1.get();
+    rPtrA1 = sPtrA1.get();
+
+    // ASSERT
+    ASSERT_FALSE(nullptr==rPtrBool1);
+    ASSERT_FALSE(nullptr==rPtrChar1);
+    ASSERT_FALSE(nullptr==rPtrInt1);
+    ASSERT_FALSE(nullptr==rPtrFloat1);
+    ASSERT_FALSE(nullptr==rPtrDouble1);
+    ASSERT_FALSE(nullptr==rPtrString1);
+    ASSERT_FALSE(nullptr==rPtrA1);
+    ASSERT_TRUE(rPtrBool1==sPtrBool1.get());
+    ASSERT_TRUE(rPtrChar1==sPtrChar1.get());
+    ASSERT_TRUE(rPtrInt1==sPtrInt1.get());
+    ASSERT_TRUE(rPtrFloat1==sPtrFloat1.get());
+    ASSERT_TRUE(rPtrDouble1==sPtrDouble1.get());
+    ASSERT_TRUE(rPtrString1==sPtrString1.get());
+    ASSERT_TRUE(rPtrA1==sPtrA1.get());  
+}   
+
+
+
 
 
