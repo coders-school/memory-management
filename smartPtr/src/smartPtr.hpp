@@ -46,7 +46,6 @@ public:
         }
     }
 
-
     void reset()
     {
         relase();
@@ -58,12 +57,12 @@ public:
             delete pointer;
         pointer = input;
     }
+    
     operator bool()
     {
         return !(nullptr==pointer);
     }
     
-
 private:
     T* pointer;
 };
