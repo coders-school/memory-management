@@ -40,6 +40,8 @@ public:
 
 TEST_F(smartPointerTests, canProperlyConstructAndDereferenceSmartPtr)
 {
+    // ARRANGE
+    // ACT
     smartPointer<bool> sPtrBool1(new bool(bool1));
     smartPointer<char> sPtrChar1(new char(char1));
     smartPointer<int> sPtrInt1(new int(int1));
@@ -48,6 +50,7 @@ TEST_F(smartPointerTests, canProperlyConstructAndDereferenceSmartPtr)
     smartPointer<std::string> sPtrString1(new std::string(str1));
     smartPointer<A> sPtrA1(new A(AInt1));
     
+    // ASSERT
     ASSERT_TRUE(*sPtrBool1 == bool1);
     ASSERT_TRUE(*sPtrChar1 == char1);
     ASSERT_TRUE(*sPtrInt1 == int1);
@@ -117,6 +120,3 @@ TEST_F(smartPointerTests, canChangeSmartPtrValueWithDereferenceOperator)
     ASSERT_TRUE(*sPtrString1==str2);
     ASSERT_TRUE(*sPtrA1==A2);
 }
-
-
-
