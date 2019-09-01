@@ -36,8 +36,8 @@ public:
     {
         return pointer;
     }
-    
-    void reset()
+
+    void release()
     {
         if (pointer)
         {
@@ -46,12 +46,23 @@ public:
         }
     }
 
+
+    void reset()
+    {
+        relase();
+    }
+
     void reset(T* input)
     {
         if (pointer)
             delete pointer;
         pointer = input;
     }
+    operator bool()
+    {
+        return !(nullptr==pointer);
+    }
+    
 
 private:
     T* pointer;
