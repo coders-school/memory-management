@@ -3,7 +3,8 @@
 
 
 template <class uniqPtrType>
-class UniquePtr {
+class UniquePtr 
+{
 private:
     uniqPtrType* pointer = nullptr;
    
@@ -22,48 +23,28 @@ public:
     void reset(uniqPtrType* object);
 };
 
-// constructor
 template <class uniqPtrType>
 UniquePtr<uniqPtrType>::UniquePtr()
     :pointer(nullptr)
     {std::cout<<"konstruktor"<<std::endl;}
-
 
 template <class uniqPtrType>
 UniquePtr<uniqPtrType>::UniquePtr(uniqPtrType* object)
     :pointer(object)
     {}
 
-// copy constructor
-/* DO USUNIECIA
-template <class uniqPtrType>
-UniquePtr<uniqPtrType>::UniquePtr(const UniquePtr<uniqPtrType>& object)
-    :pointer(object.pointer)
-    {}
-*/
 template <class uniqPtrType>
 UniquePtr<uniqPtrType>::UniquePtr(UniquePtr<uniqPtrType> && object) 
     :pointer(std::move(object.pointer))
-    {}
+    {
+        object.pointer = nullptr;
+    }
 
-
-// destructor
 template <class uniqPtrType>
-UniquePtr<uniqPtrType>::~UniquePtr() {
+UniquePtr<uniqPtrType>::~UniquePtr() 
+{
     delete this->pointer;
 }
-
-// operators
-/* DO USUNIECIA
-template <class uniqPtrType>
-UniquePtr<uniqPtrType> &UniquePtr<uniqPtrType>::operator=(const UniquePtr<uniqPtrType>& object)
-{
-    if(this != &object){
-        pointer = object.pointer;
-    }
-    return *this;
-}
-*/
 
 template <class uniqPtrType>
 UniquePtr<uniqPtrType> &UniquePtr<uniqPtrType>::operator=(UniquePtr<uniqPtrType>&& object)
@@ -96,23 +77,88 @@ uniqPtrType *UniquePtr<uniqPtrType>::get()const
 template <class uniqPtrType>
 uniqPtrType *UniquePtr<uniqPtrType>::release()
 {
-    pointer = nullptr;
+    this-> pointer = nullptr;
     return this->pointer;
 }
-
 
 template <class uniqPtrType>
 void UniquePtr<uniqPtrType>::reset(uniqPtrType* object)
 {
-    pointer = object.pointer;
+    std::swap(pointer, object);
     delete object;
 }
 
+// tests
+
+void testMovePointer()
+{
+    int* testPointer = new int(123);
+    UniquePtr<int> myPointer(testPointer);
+    UniquePtr<int> newPointer(std::move(myPointer));
+    assert(newPointer.get() == testPointer);
+    std::cout<<" - TestMovePointer \t- passed."<<std::endl;
+}
+
+ class testClass
+{
+public:
+    bool printingFunction()
+    { 
+        return true;
+    }
+};
+
+void testStarOperator()
+{
+    UniquePtr<testClass> myPointer(new testClass());
+    assert((*myPointer).printingFunction());
+    std::cout<<" - TestStarOperator \t- passed."<<std::endl;   
+}
+
+void testArrowOperator()
+{
+    UniquePtr<testClass> myPointer(new testClass());
+    assert(myPointer->printingFunction());
+    std::cout<<" - TestArrowOperator \t- passed."<<std::endl;   
+}
+
+void testGetFunction()
+{
+    int* testPointer = new int(123);
+    UniquePtr<int> myPointer(testPointer);
+    assert(myPointer.get() == testPointer);
+    std::cout<<" - TestGetFunction \t- passed."<<std::endl;
+}
+
+void testReleaseFunction()
+{
+    int* testPointer = new int(123);
+    UniquePtr<int> myPointer(testPointer);
+    myPointer.release();
+    delete testPointer;
+    assert(myPointer.get() == nullptr);
+    std::cout<<" - TestReleaseFunction \t- passed."<<std::endl;
+}
+
+void testResetFunction()
+{
+    UniquePtr<int> myPointer(new int(123));
+    int* testPointer = new int(456);
+    myPointer.reset(testPointer);
+    assert(myPointer.get() == testPointer);
+    std::cout<<" - TestResetFunction \t- passed."<<std::endl;
+}
+
+
 int main(){
-
    
-   UniquePtr<int> myPointer( new int(1));
+   std::cout<<"Unique pointer implemetation:"<<std::endl;
+   testMovePointer();
+   testStarOperator();
+   testArrowOperator();
+   testGetFunction();
+   testReleaseFunction();
+   testResetFunction();
 
-
-    return 0;
+   return 0;
 }
