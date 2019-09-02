@@ -274,3 +274,25 @@ TEST_F(SmartPointerTests, checkIfResetReplacesManagedObject)
     ASSERT_TRUE(*sPtrString1==str2);
     ASSERT_TRUE(*sPtrA1==AInt2);
 }
+
+TEST_F(SmartPointerTests, IsMoveConstructorSettingNullptrOnInput)
+{
+    // ARRANGE (done in initialization list) 
+    // ACT
+    SmartPointer<bool> sPtrBool3(std::move(sPtrBool1));
+    SmartPointer<char> sPtrChar3(std::move(sPtrChar1));
+    SmartPointer<int> sPtrInt3(std::move(sPtrInt1));
+    SmartPointer<float> sPtrFloat3(std::move(sPtrFloat1));
+    SmartPointer<double> sPtrDouble3(std::move(sPtrDouble1));
+    SmartPointer<std::string> sPtrString3(std::move(sPtrString1));
+    SmartPointer<A> sPtrA3(std::move(sPtrA1));
+
+    // ASSERT
+    ASSERT_FALSE(sPtrBool1);
+    ASSERT_FALSE(sPtrChar1);
+    ASSERT_FALSE(sPtrInt1);
+    ASSERT_FALSE(sPtrFloat1);
+    ASSERT_FALSE(sPtrDouble1);
+    ASSERT_FALSE(sPtrString1);
+    ASSERT_FALSE(sPtrA1);
+}
