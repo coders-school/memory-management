@@ -20,8 +20,10 @@ class DoubleList
 {
 public:
     DoubleList();
-    void add(shared_ptr<Node> node);
-    shared_ptr<Node> get(const int value);
+    void addOnBegin(shared_ptr<Node> node);
+    void addOnEnd(shared_ptr<Node> node);
+    shared_ptr<Node> getFromBegin(const int value);
+    shared_ptr<Node> getFromEnd(const int value);
 
 private:
     shared_ptr<Node> first, last;
@@ -32,7 +34,7 @@ DoubleList::DoubleList() :
     last(nullptr)
 {}
 
-void DoubleList::add(shared_ptr<Node> node)
+void DoubleList::addOnBegin(shared_ptr<Node> node)
 {
     if(!first)
     {
@@ -47,7 +49,22 @@ void DoubleList::add(shared_ptr<Node> node)
     }
 }
 
-shared_ptr<Node> DoubleList::get(const int value)
+void DoubleList::addOnEnd(shared_ptr<Node> node)
+{
+    if(!first)
+    {
+        first = node;
+        last = node;
+    }
+    else
+    {
+        node->next = last;
+        last->next = node;
+        last = node;
+    }
+}
+
+shared_ptr<Node> DoubleList::getFromEnd(const int value)
 {
     if(!last)
     {
@@ -76,21 +93,72 @@ shared_ptr<Node> DoubleList::get(const int value)
     }
 }
 
+shared_ptr<Node> DoubleList::getFromBegin(const int value)
+{
+    if(!first)
+    {
+        cout << "List is empty!" << endl;
+        return nullptr;
+    }
+    else
+    {
+        shared_ptr<Node> current = first;
+        do
+        {
+            if(current->value == value)
+            {
+                cout << "Found value " << current->value << endl;
+                return current;
+            }
+            else
+            {
+                cout << "Going through " << current->value << endl;
+                current = current->next;
+            }
+        } while(current);
+        cout << "Not found: value " << value << endl;
+        return nullptr;
+    }
+}
+
 int main()
 {
-    DoubleList list; 
+    DoubleList list1;
+    std::cout<< "Adding nodes on begin. Getting nodes from end." << std::endl; 
     shared_ptr<Node> node4 {new Node(4)};
     shared_ptr<Node> node7 {new Node(7)};
-
-    list.add(node4);
-    list.add(make_shared<Node>(2));
-    list.add(node7);
-    list.add(make_shared<Node>(9));
-    auto node = list.get(9);
-
-    if (node)
-        cout << node->value << '\n';
-    
+    list1.addOnBegin(node4);
+    list1.addOnBegin(make_shared<Node>(2));
+    list1.addOnBegin(node7);
+    list1.addOnBegin(make_shared<Node>(9));
+    auto node1 = list1.getFromEnd(9);
+    if (node1)
+        cout << node1->value << '\n';
+   
+    std::cout<< "\nAdding nodes on end. Getting nodes from end." << std::endl; 
+    DoubleList list2;
+    shared_ptr<Node> node44 {new Node(44)};
+    shared_ptr<Node> node77 {new Node(77)};
+    list2.addOnEnd(node44);
+    list2.addOnEnd(make_shared<Node>(22));
+    list2.addOnEnd(node77);
+    list2.addOnEnd(make_shared<Node>(99));
+    auto node2 = list2.getFromEnd(99);
+    if (node2)
+        cout << node2->value << '\n';
+ 
     return 0;
 }
 
+/*
+Adding nodes on begin. Getting nodes from end.
+Going through 4
+Going through 2
+Going through 7
+Found value 9
+9
+
+Adding nodes on end. Getting nodes from end.
+Found value 99
+99
+*/
