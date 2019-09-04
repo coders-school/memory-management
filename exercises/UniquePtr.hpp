@@ -19,7 +19,7 @@ class UniquePtr {
             }
 
             T* operator->() const {return data;}
-            T& operator*() const {return data;}
+            T& operator*() const {return *data;}
 
             T*get() const {return data;}
 
@@ -30,8 +30,9 @@ class UniquePtr {
                 return result;
             }
 
-            void reset(T* data) noexcept(false)
+            void reset() noexcept(false)
             {
+                T* data = relase();
                 delete data;
             }
 
