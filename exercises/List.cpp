@@ -22,6 +22,7 @@ public:
     DoubleList();
     void addOnBegin(shared_ptr<Node> node);
     void addOnEnd(shared_ptr<Node> node);
+    bool checkIfDuplicate(const int value);
     shared_ptr<Node> getFromBegin(const int value);
     shared_ptr<Node> getFromEnd(const int value);
 
@@ -34,6 +35,18 @@ DoubleList::DoubleList() :
     last(nullptr)
 {}
 
+bool DoubleList::checkIfDuplicate(const int currentValue)
+{
+    shared_ptr<Node> current = first;
+    while(current)
+    {
+        if (current->value == currentValue)
+            return false;
+        current = current->next;
+    }
+    return true;
+}
+
 void DoubleList::addOnBegin(shared_ptr<Node> node)
 {
     if(!first)
@@ -43,9 +56,14 @@ void DoubleList::addOnBegin(shared_ptr<Node> node)
     }
     else
     {
-        node->next = first;
-        first->prev = node;
-        first = node;
+        if (checkIfDuplicate(node->value))
+        {
+            node->next = first;
+            first->prev = node;
+            first = node;
+        }
+        else
+            std::cout<<"Duplicate, node wasn't add."<<std::endl;
     }
 }
 
@@ -58,9 +76,14 @@ void DoubleList::addOnEnd(shared_ptr<Node> node)
     }
     else
     {
-        node->next = last;
-        last->next = node;
-        last = node;
+        if (checkIfDuplicate(node->value))
+        {
+            last->next = node;
+            node->prev = last;
+            last = node;
+        }
+        else
+            std::cout<<"Duplicate, node wasn't add."<<std::endl;
     }
 }
 
@@ -129,29 +152,36 @@ int main()
     shared_ptr<Node> node7 {new Node(7)};
     list1.addOnBegin(node4);
     list1.addOnBegin(make_shared<Node>(2));
+    list1.addOnBegin(make_shared<Node>(2));
+    list1.addOnBegin(make_shared<Node>(2));
     list1.addOnBegin(node7);
     list1.addOnBegin(make_shared<Node>(9));
     auto node1 = list1.getFromEnd(9);
     if (node1)
         cout << node1->value << '\n';
-   
+
     std::cout<< "\nAdding nodes on end. Getting nodes from end." << std::endl; 
     DoubleList list2;
     shared_ptr<Node> node44 {new Node(44)};
     shared_ptr<Node> node77 {new Node(77)};
     list2.addOnEnd(node44);
     list2.addOnEnd(make_shared<Node>(22));
+    list2.addOnEnd(make_shared<Node>(22));
+    list2.addOnEnd(make_shared<Node>(22));
     list2.addOnEnd(node77);
+    list2.addOnEnd(make_shared<Node>(99));
     list2.addOnEnd(make_shared<Node>(99));
     auto node2 = list2.getFromEnd(99);
     if (node2)
         cout << node2->value << '\n';
- 
+    
     return 0;
 }
 
 /*
 Adding nodes on begin. Getting nodes from end.
+Duplicate, node wasn't add.
+Duplicate, node wasn't add.
 Going through 4
 Going through 2
 Going through 7
@@ -159,6 +189,9 @@ Found value 9
 9
 
 Adding nodes on end. Getting nodes from end.
+Duplicate, node wasn't add.
+Duplicate, node wasn't add.
+Duplicate, node wasn't add.
 Found value 99
 99
 */
