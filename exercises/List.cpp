@@ -1,5 +1,6 @@
 #include <iostream>
 #include <memory>
+#include <stdexcept>
 
 using namespace std;
 
@@ -89,57 +90,71 @@ void DoubleList::addOnEnd(shared_ptr<Node> node)
 
 shared_ptr<Node> DoubleList::getFromEnd(const int value)
 {
-    if(!last)
+    try
     {
-        cout << "List is empty!" << endl;
-        return nullptr;
-    }
-    else
-    {
-        shared_ptr<Node> current = last;
-        do
+        if(!last)
         {
-            auto weakPrev = (current->prev).lock();
-            if(current->value == value)
+            throw(std::runtime_error("before get something add something."));
+        }
+        else
+        {
+            shared_ptr<Node> current = last;
+            do
             {
-                cout << "Found value " << current->value << endl;
-                return current;
-            }
-            else
-            {
-                cout << "Going through " << current->value << endl;
-                current = weakPrev;
-            }
-        } while(current);
-        cout << "Not found: value " << value << endl;
+                auto weakPrev = (current->prev).lock();
+                if(current->value == value)
+                {
+                    cout << "Found value " << current->value << endl;
+                    return current;
+                }
+                else
+                {
+                    cout << "Going through " << current->value << endl;
+                    current = weakPrev;
+                }
+            } while(current);
+            cout << "Not found: value " << value << endl;
+            return nullptr;
+        }
+    }
+    catch (std::exception& e)
+    {
+        std::cout<<"Empty list! " << e.what() << std::endl;
         return nullptr;
     }
 }
 
 shared_ptr<Node> DoubleList::getFromBegin(const int value)
 {
-    if(!first)
+    try
     {
-        cout << "List is empty!" << endl;
-        return nullptr;
-    }
-    else
-    {
-        shared_ptr<Node> current = first;
-        do
+        if(!first)
         {
-            if(current->value == value)
+            throw(std::runtime_error("before get something add something."));
+        }
+        else
+        {
+            shared_ptr<Node> current = first;
+            do
             {
-                cout << "Found value " << current->value << endl;
-                return current;
-            }
-            else
-            {
-                cout << "Going through " << current->value << endl;
-                current = current->next;
-            }
-        } while(current);
-        cout << "Not found: value " << value << endl;
+                if(current->value == value)
+                {
+                    cout << "Found value " << current->value << endl;
+                    return current;
+                }
+                else
+                {
+                    cout << "Going through " << current->value << endl;
+                    current = current->next;
+                }
+            } while(current);
+            cout << "Not found: value " << value << endl;
+            return nullptr;
+        }
+    }
+    catch (std::exception& e)
+    {
+        std::cout<<"Empty list! " << e.what() << std::endl;
         return nullptr;
     }
 }
@@ -174,7 +189,11 @@ int main()
     auto node2 = list2.getFromEnd(99);
     if (node2)
         cout << node2->value << '\n';
-    
+   
+    DoubleList list3;
+    std::cout << "\nGetting node from empty list." << std::endl;
+    auto node3 = list3.getFromEnd(1);
+ 
     return 0;
 }
 
@@ -194,4 +213,8 @@ Duplicate, node wasn't add.
 Duplicate, node wasn't add.
 Found value 99
 99
+
+Getting node from empty list.
+Empty list! before get something add something.
 */
+
