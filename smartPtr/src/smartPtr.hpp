@@ -11,10 +11,9 @@ public:
         pointer = input;
     }
 
-    SmartPointer(SmartPointer&& input) noexcept :
-        pointer(std::move(input.pointer))
+    SmartPointer(SmartPointer&& input) noexcept
     { 
-        input.pointer = nullptr;
+        pointer = std::exchange(input.pointer, nullptr);
     }
 
     ~SmartPointer()
