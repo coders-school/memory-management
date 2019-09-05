@@ -41,19 +41,18 @@ project(smartPtr)
 
 set(SRC_LIST
     src/smartPtr.hpp
-    src/main.cpp
 )
 
 include_directories(src)
-add_library(${PROJECT_NAME}-lib ${SRC_LIST})
-add_executable(${PROJECT_NAME} src/main.cpp)
-target_compile_options(${PROJECT_NAME} PUBLIC -Wall -Werror -Wpedantic -Wextra)
+# add_library(${PROJECT_NAME}-lib ${SRC_LIST})
+# add_executable(${PROJECT_NAME} src/main.cpp)
+# target_compile_options(${PROJECT_NAME} PUBLIC -Wall -Werror -Wpedantic -Wextra)
 
-if (UNIX)
-    target_link_libraries(${PROJECT_NAME} ${PROJECT_NAME}-lib pthread)
-else (UNIX)
-    target_link_libraries(${PROJECT_NAME} ${PROJECT_NAME}-lib)
-endif (UNIX)
+# if (UNIX)
+#     target_link_libraries(${PROJECT_NAME} ${PROJECT_NAME}-lib pthread)
+# else (UNIX)
+#     target_link_libraries(${PROJECT_NAME} ${PROJECT_NAME}-lib)
+# endif (UNIX)
 
 set(TEST_SRC_LIST
     tests/smartPtrTests.cpp
@@ -63,4 +62,4 @@ set(TEST_SRC_LIST
 link_libraries(gtest)
 add_executable(${PROJECT_NAME}-ut ${TEST_SRC_LIST})
 target_compile_options(${PROJECT_NAME}-ut PUBLIC -Wall -Werror -Wpedantic -Wextra)
-target_link_libraries(${PROJECT_NAME}-ut ${PROJECT_NAME}-lib)
+# target_link_libraries(${PROJECT_NAME}-ut ${PROJECT_NAME}-lib)
