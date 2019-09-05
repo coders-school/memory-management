@@ -1,16 +1,18 @@
-#include <gtest/gtest.h>
+#include <cstdio>
+#include "gtest/gtest.h"
 
-int main(int argc, char** argv)
-{
-    try {
-        testing::InitGoogleTest(&argc, argv);
-        auto code = RUN_ALL_TESTS();
-        return code;
-    }
-    catch (...)
-    {
-        return 0;
-    }
-    return 0;
+#ifdef ARDUINO
+void setup() {
+  testing::InitGoogleTest();
 }
 
+void loop() { RUN_ALL_TESTS(); }
+
+#else
+
+GTEST_API_ int main(int argc, char **argv) {
+  printf("Running main() from %s\n", __FILE__);
+  testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
+}
+#endif
