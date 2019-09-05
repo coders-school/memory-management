@@ -36,25 +36,22 @@ public:
         return pointer;
     }
 
-    void release()
+    T* release()
     {
-        if (pointer)
-        {
-            delete pointer;
-            pointer = nullptr;
-        }
+        return std::exchange(pointer, nullptr);
     }
 
     void reset()
     {
-        release();
+        if (pointer)
+            delete pointer;
     }
 
     void reset(T* input)
     {
-        if (pointer)
-            delete pointer;
-        pointer = input;
+        T* old_ptr = std::exchange(pointer, input);
+        if (old_ptr)
+            delete old_ptr;
     }
     
     operator bool()
