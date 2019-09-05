@@ -5,7 +5,9 @@ template <typename T>
 class SmartPointer{
 public:
     SmartPointer(const SmartPointer& input) = delete;
-    
+
+    SmartPointer& operator= (const SmartPointer&) = delete;
+
     SmartPointer(T* input)
     {
         pointer = input;
