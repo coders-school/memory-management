@@ -1,7 +1,29 @@
 #include <gtest/gtest.h>
 #include <string>
 #include "smartPtr.hpp"
-#include "A.hpp"
+
+struct A {
+    A(int inputData) : member(inputData) 
+    { }
+    
+    void foo() 
+    {
+        std::cout << "The glorious integer: " << member << '\n';
+    }
+        
+    int bar()
+    {
+        member *= 2;
+        return member;
+    }
+   
+    friend bool operator==(const A &a1, const A &a2)
+    {
+        return a1.member == a2.member;
+    }
+    
+    int member;
+};
 
 class SmartPointerTests : public ::testing::Test {
 public:

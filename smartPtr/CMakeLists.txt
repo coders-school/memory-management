@@ -40,8 +40,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 project(smartPtr)
 
 set(SRC_LIST
-    src/A.hpp
-    src/A.cpp
     src/smartPtr.hpp
     src/main.cpp
 )
