@@ -31,7 +31,7 @@ public:
         return pointer;
     }
 
-    T* get()
+    T* get() const
     {
         return pointer;
     }
@@ -54,7 +54,7 @@ public:
             delete old_ptr;
     }
     
-    operator bool()
+    operator bool() const
     {
         return !(nullptr==pointer);
     }
