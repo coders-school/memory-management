@@ -67,7 +67,29 @@ public:
     ~SmartPointerTests()
     {
     }
-   
+    
+    void SetUp()
+    {
+        rPtrBool1 = nullptr;
+        rPtrChar1 = nullptr;
+        rPtrInt1 = nullptr;
+        rPtrFloat1 = nullptr;
+        rPtrDouble1 = nullptr;
+        rPtrString1 = nullptr;
+        rPtrA1 = nullptr;
+    }
+
+    void TearDown()
+    {
+        delete rPtrBool1;
+        delete rPtrChar1;
+        delete rPtrInt1;
+        delete rPtrFloat1;
+        delete rPtrDouble1;
+        delete rPtrString1;
+        delete rPtrA1;
+    }
+
     bool bool1;
     char char1;
     int int1;
@@ -100,7 +122,15 @@ public:
     SmartPointer<float> sPtrFloat2;
     SmartPointer<double> sPtrDouble2;
     SmartPointer<std::string> sPtrString2;
-    SmartPointer<A> sPtrA2;      
+    SmartPointer<A> sPtrA2;     
+
+    bool* rPtrBool1 = nullptr;
+    char* rPtrChar1 = nullptr;
+    int* rPtrInt1 = nullptr;
+    float* rPtrFloat1 = nullptr;
+    double* rPtrDouble1 = nullptr;
+    std::string* rPtrString1 = nullptr;
+    A* rPtrA1 = nullptr;
 };
 
 TEST_F(SmartPointerTests, canProperlyConstructAndDereferenceSmartPtr)
@@ -253,17 +283,17 @@ TEST_F(SmartPointerTests, boolOperatorTest)
     ASSERT_FALSE(bA1);        
 }
 
-TEST_F(SmartPointerTests, checkIfReleaseSetsUnderlyingPointerNullptr)
+TEST_F(SmartPointerTests, checkIfReleaseMethodSetUnderlyingPointerNullptr)
 { 
-    // ARRANGE (done in initialization list)
+    // ARRANGE (done in initialization list nad SetUp() )
     // ACT
-    sPtrBool1.release();
-    sPtrChar1.release();
-    sPtrInt1.release();
-    sPtrFloat1.release();
-    sPtrDouble1.release();
-    sPtrString1.release();
-    sPtrA1.release();
+    rPtrBool1 = sPtrBool1.release();
+    rPtrChar1 = sPtrChar1.release();
+    rPtrInt1 = sPtrInt1.release();
+    rPtrFloat1 = sPtrFloat1.release();
+    rPtrDouble1 = sPtrDouble1.release();
+    rPtrString1 = sPtrString1.release();
+    rPtrA1 = sPtrA1.release();
     
     // ASSERT
     ASSERT_FALSE(sPtrBool1);
@@ -273,6 +303,28 @@ TEST_F(SmartPointerTests, checkIfReleaseSetsUnderlyingPointerNullptr)
     ASSERT_FALSE(sPtrDouble1);
     ASSERT_FALSE(sPtrString1);
     ASSERT_FALSE(sPtrA1);
+}
+
+TEST_F(SmartPointerTests, checkIfReleaseMethodReturnsManagedObject)
+{ 
+    // ARRANGE (done in initialization list nad SetUp() )
+    // ACT
+    rPtrBool1 = sPtrBool1.release();
+    rPtrChar1 = sPtrChar1.release();
+    rPtrInt1 = sPtrInt1.release();
+    rPtrFloat1 = sPtrFloat1.release();
+    rPtrDouble1 = sPtrDouble1.release();
+    rPtrString1 = sPtrString1.release();
+    rPtrA1 = sPtrA1.release();
+    
+    // ASSERT
+    ASSERT_EQ(*rPtrBool1, bool1);
+    ASSERT_EQ(*rPtrChar1, char1);
+    ASSERT_EQ(*rPtrInt1, int1);
+    ASSERT_EQ(*rPtrFloat1, flt1);
+    ASSERT_EQ(*rPtrDouble1, dbl1);
+    ASSERT_EQ(*rPtrString1, str1);
+    ASSERT_EQ(*rPtrA1, A1);
 }
 
 TEST_F(SmartPointerTests, checkIfResetReplacesManagedObject)
