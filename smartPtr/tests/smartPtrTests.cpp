@@ -370,3 +370,47 @@ TEST_F(SmartPointerTests, IsMoveConstructorSettingNullptrOnInput)
     ASSERT_FALSE(sPtrString1);
     ASSERT_FALSE(sPtrA1);
 }
+
+TEST_F(SmartPointerTests, IsMoveAssignmentOperatorSettingNullptrOnInput)
+{
+    // ARRANGE (done in initialization list) 
+    // ACT
+    SmartPointer<bool> sPtrBool3 = std::move(sPtrBool1);
+    SmartPointer<char> sPtrChar3 = std::move(sPtrChar1);
+    SmartPointer<int> sPtrInt3 = std::move(sPtrInt1);
+    SmartPointer<float> sPtrFloat3 = std::move(sPtrFloat1);
+    SmartPointer<double> sPtrDouble3 = std::move(sPtrDouble1);
+    SmartPointer<std::string> sPtrString3 = std::move(sPtrString1);
+    SmartPointer<A> sPtrA3 = std::move(sPtrA1);
+
+    // ASSERT
+    ASSERT_FALSE(sPtrBool1);
+    ASSERT_FALSE(sPtrChar1);
+    ASSERT_FALSE(sPtrInt1);
+    ASSERT_FALSE(sPtrFloat1);
+    ASSERT_FALSE(sPtrDouble1);
+    ASSERT_FALSE(sPtrString1);
+    ASSERT_FALSE(sPtrA1);
+}
+
+TEST_F(SmartPointerTests, IsMoveAssignmentOperatorInitializingNewSmartPtr)
+{
+    // ARRANGE (done in initialization list) 
+    // ACT
+    SmartPointer<bool> sPtrBool3 = std::move(sPtrBool1);
+    SmartPointer<char> sPtrChar3 = std::move(sPtrChar1);
+    SmartPointer<int> sPtrInt3 = std::move(sPtrInt1);
+    SmartPointer<float> sPtrFloat3 = std::move(sPtrFloat1);
+    SmartPointer<double> sPtrDouble3 = std::move(sPtrDouble1);
+    SmartPointer<std::string> sPtrString3 = std::move(sPtrString1);
+    SmartPointer<A> sPtrA3 = std::move(sPtrA1);
+
+    // ASSERT
+    ASSERT_TRUE(*sPtrBool3 ==bool1);
+    ASSERT_TRUE(*sPtrChar3 ==char1);
+    ASSERT_TRUE(*sPtrInt3 ==int1);
+    ASSERT_TRUE(*sPtrFloat3 ==flt1);
+    ASSERT_TRUE(*sPtrDouble3 ==dbl1);
+    ASSERT_TRUE(*sPtrString3 ==str1);
+    ASSERT_TRUE(*sPtrA3 == AInt1);
+}
