@@ -8,6 +8,11 @@ public:
 
     SmartPointer& operator= (const SmartPointer&) = delete;
 
+    SmartPointer& operator= (SmartPointer&& input)
+    {
+        pointer = std::exchange(input.pointer, nullptr);
+    }
+    
     SmartPointer(T* input)
     {
         pointer = input;
