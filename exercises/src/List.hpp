@@ -8,13 +8,17 @@ public:
     Node(const int v) :
         next(nullptr),
         value(v)
-
     {}
-
+    friend bool operator==(const Node &lhs, const Node &rhs);
     std::weak_ptr<Node> previous;
     std::shared_ptr<Node> next;
     int value;
 };
+
+bool operator==(const Node &lhs, const Node &rhs)
+{
+    return (lhs == rhs);
+}
 
 class List
 {
@@ -24,6 +28,8 @@ public:
     void add_front(std::shared_ptr<Node> node);
     std::shared_ptr<Node> find_back(const int value);
     std::shared_ptr<Node> get(const int value);
+    std::shared_ptr<Node> getFirst() const;
+    
 
 private:
     std::shared_ptr<Node> first;
@@ -34,6 +40,11 @@ List::List() :
     first(nullptr),
     last(nullptr)
 {}
+
+std::shared_ptr<Node> List::getFirst() const
+{
+    return first;
+}
 
 std::shared_ptr<Node> List::find_back(const int value)
 {
@@ -127,18 +138,3 @@ std::shared_ptr<Node> List::get(const int value)
         return nullptr;
     }
 }
-
-int main()
-{
-    List lista2;
-    auto node4 = std::make_shared<Node>(4);
-    auto node7 = std::make_shared<Node>(7);
-    lista2.add_front(node4);
-    lista2.add_front(std::make_shared<Node>(2));
-    lista2.add_front(node7);
-    lista2.add_front(std::make_shared<Node>(9));
-    lista2.find_back(1);
-
-    return 0;
-}
-
