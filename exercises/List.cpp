@@ -73,7 +73,7 @@ std::shared_ptr<Node> DoubleList::getFromEnd(const int value)
     {
         if(!last)
         {
-            throw(std::runtime_error("before get something add something."));
+            throw std::runtime_error("before get something add something.");
         }
         else
         {
@@ -109,7 +109,7 @@ shared_ptr<Node> DoubleList::getFromBegin(const int value)
     {
         if(!first)
         {
-            throw(std::runtime_error("before get something add something."));
+            throw std::runtime_error("before get something add something.");
         }
         else
         {
