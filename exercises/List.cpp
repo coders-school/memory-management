@@ -11,9 +11,9 @@ public:
         next(nullptr),
         value(v)
     {}
-
-    shared_ptr<Node> next;
-    weak_ptr<Node> prev;
+    
+    std::shared_ptr<Node> next;
+    std::weak_ptr<Node> prev;
     int value;
 };
 
@@ -21,14 +21,13 @@ class DoubleList
 {
 public:
     DoubleList();
-    void addOnBegin(shared_ptr<Node> node);
-    void addOnEnd(shared_ptr<Node> node);
-    bool checkIfDuplicate(const int value);
+    void addOnBegin(std::unique_ptr<Node> node);
+    void addOnEnd(std::unique_ptr<Node> node);
     shared_ptr<Node> getFromBegin(const int value);
     shared_ptr<Node> getFromEnd(const int value);
 
 private:
-    shared_ptr<Node> first, last;
+    std::shared_ptr<Node> first, last;
 };
 
 DoubleList::DoubleList() :
@@ -36,59 +35,39 @@ DoubleList::DoubleList() :
     last(nullptr)
 {}
 
-bool DoubleList::checkIfDuplicate(const int currentValue)
+void DoubleList::addOnBegin(std::unique_ptr<Node> node)
 {
-    shared_ptr<Node> current = first;
-    while(current)
-    {
-        if (current->value == currentValue)
-            return false;
-        current = current->next;
-    }
-    return true;
-}
-
-void DoubleList::addOnBegin(shared_ptr<Node> node)
-{
+    std::shared_ptr<Node> temp(std::move(node));
     if(!first)
     {
-        first = node;
-        last = node;
+        first = temp;
+        last = temp;
     }
     else
     {
-        if (checkIfDuplicate(node->value))
-        {
-            node->next = first;
-            first->prev = node;
-            first = node;
-        }
-        else
-            std::cout<<"Duplicate, node wasn't add."<<std::endl;
+        temp->next = first;
+        first->prev = temp;
+        first = temp;
     }
 }
 
-void DoubleList::addOnEnd(shared_ptr<Node> node)
+void DoubleList::addOnEnd(std::unique_ptr<Node> node)
 {
+    std::shared_ptr<Node> temp(std::move(node));
     if(!first)
     {
-        first = node;
-        last = node;
+        first = temp;
+        last = temp;
     }
     else
     {
-        if (checkIfDuplicate(node->value))
-        {
-            last->next = node;
-            node->prev = last;
-            last = node;
-        }
-        else
-            std::cout<<"Duplicate, node wasn't add."<<std::endl;
+        last->next = temp;
+        temp->prev = last;
+        last = temp;
     }
 }
 
-shared_ptr<Node> DoubleList::getFromEnd(const int value)
+std::shared_ptr<Node> DoubleList::getFromEnd(const int value)
 {
     try
     {
@@ -98,7 +77,7 @@ shared_ptr<Node> DoubleList::getFromEnd(const int value)
         }
         else
         {
-            shared_ptr<Node> current = last;
+            std::shared_ptr<Node> current = last;
             do
             {
                 auto weakPrev = (current->prev).lock();
@@ -134,7 +113,7 @@ shared_ptr<Node> DoubleList::getFromBegin(const int value)
         }
         else
         {
-            shared_ptr<Node> current = first;
+            std::shared_ptr<Node> current = first;
             do
             {
                 if(current->value == value)
@@ -163,29 +142,24 @@ int main()
 {
     DoubleList list1;
     std::cout<< "Adding nodes on begin. Getting nodes from end." << std::endl; 
-    shared_ptr<Node> node4 {new Node(4)};
-    shared_ptr<Node> node7 {new Node(7)};
-    list1.addOnBegin(node4);
-    list1.addOnBegin(make_shared<Node>(2));
-    list1.addOnBegin(make_shared<Node>(2));
-    list1.addOnBegin(make_shared<Node>(2));
-    list1.addOnBegin(node7);
-    list1.addOnBegin(make_shared<Node>(9));
+    std::unique_ptr<Node> node4 {new Node(4)};
+    std::unique_ptr<Node> node7 {new Node(7)};
+    list1.addOnBegin(std::move(node4));
+    list1.addOnBegin(std::make_unique<Node>(2));
+    list1.addOnBegin(std::move(node7));
+    list1.addOnBegin(std::make_unique<Node>(9));
     auto node1 = list1.getFromEnd(9);
     if (node1)
         cout << node1->value << '\n';
 
     std::cout<< "\nAdding nodes on end. Getting nodes from end." << std::endl; 
     DoubleList list2;
-    shared_ptr<Node> node44 {new Node(44)};
-    shared_ptr<Node> node77 {new Node(77)};
-    list2.addOnEnd(node44);
-    list2.addOnEnd(make_shared<Node>(22));
-    list2.addOnEnd(make_shared<Node>(22));
-    list2.addOnEnd(make_shared<Node>(22));
-    list2.addOnEnd(node77);
-    list2.addOnEnd(make_shared<Node>(99));
-    list2.addOnEnd(make_shared<Node>(99));
+    std::unique_ptr<Node> node44 {new Node(44)};
+    std::unique_ptr<Node> node77 {new Node(77)};
+    list2.addOnEnd(std::move(node44));
+    list2.addOnEnd(make_unique<Node>(22));
+    list2.addOnEnd(std::move(node77));
+    list2.addOnEnd(make_unique<Node>(99));
     auto node2 = list2.getFromEnd(99);
     if (node2)
         cout << node2->value << '\n';
@@ -199,8 +173,6 @@ int main()
 
 /*
 Adding nodes on begin. Getting nodes from end.
-Duplicate, node wasn't add.
-Duplicate, node wasn't add.
 Going through 4
 Going through 2
 Going through 7
@@ -208,9 +180,6 @@ Found value 9
 9
 
 Adding nodes on end. Getting nodes from end.
-Duplicate, node wasn't add.
-Duplicate, node wasn't add.
-Duplicate, node wasn't add.
 Found value 99
 99
 
