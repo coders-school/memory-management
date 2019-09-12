@@ -37,7 +37,7 @@ endif()
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-project(List)
+project(HomeWork)
 
 set(SRC_LIST
     src/List.cpp
