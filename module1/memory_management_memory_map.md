@@ -9,4 +9,4 @@
 <p style="text-align: center">
     <img height="200" data-src="img/memory.png" src="img/memory.png" alt="memory map" class="plain">
 </p>
-<!-- .element: class="fragment fade-in" --> 
+<!-- .element: class="fragment fade-in" -->

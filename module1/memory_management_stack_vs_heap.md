@@ -11,3 +11,4 @@
   * <!-- .element: class="fragment fade-in" --> no limit on memory size (OS-managed)
   * <!-- .element: class="fragment fade-in" --> memory may become fragmented
   * <!-- .element: class="fragment fade-in" --> manual memory management (allocation and deallocation)
+  
