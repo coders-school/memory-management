@@ -12,7 +12,7 @@
 * <!-- .element: class="fragment fade-in" --> Automatic deallocation when out of scope
 
 <img height="200" data-src="img/stack.png" src="img/stack.png" alt="stack" class="plain">
-<!-- .element: class="fragment fade-in" --> 
+<!-- .element: class="fragment fade-in" -->
 
 </div>
 <div class="col">
