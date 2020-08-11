@@ -6,17 +6,13 @@ ___
 
 ## `std::unique_ptr<>`
 
-<div>
-
-Traits:
+### Traits
 
 * <!-- .element: class="fragment fade-in" --> one object == one owner
 * <!-- .element: class="fragment fade-in" --> destructor destroys the object
 * <!-- .element: class="fragment fade-in" --> copying not allowed
 * <!-- .element: class="fragment fade-in" --> moving allowed
 * <!-- .element: class="fragment fade-in" --> can use custom deleter
-
-</div>
 
 <img data-src="img/uniqueptrinverted.png" alt="unique pointers" class="plain fragment fade-in">
 

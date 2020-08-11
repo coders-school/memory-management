@@ -6,7 +6,7 @@ ___
 
 ### `std::shared_ptr<>`
 
-Traits:
+### Traits
 
 * <!-- .element: class="fragment fade-in" --> one object == multiple owners
 * <!-- .element: class="fragment fade-in" --> last referrer destroys the object

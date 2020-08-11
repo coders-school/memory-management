@@ -12,7 +12,7 @@ ___
 
 ### `std::weak_ptr<>` to the rescue
 
-Traits:
+#### Traits
 
 * <!-- .element: class="fragment fade-in" --> does not own an object
 * <!-- .element: class="fragment fade-in" --> observes only
@@ -55,7 +55,7 @@ int main() {
 
 </div>
 
-<div class="col">
+<div class="col fragment fade-in">
 
 ```bash
 > ./a.out
@@ -108,10 +108,8 @@ int main () {
     child->parent = root;
 }
 ```
-<!-- .element: class="fragment fade-in" -->
 
-<div class="box fragment fade-in">
-
+```text
 ==148== All heap blocks were freed -- no leaks are possible
-
-</div>
+```
+<!-- .element: class="fragment fade-in" -->
