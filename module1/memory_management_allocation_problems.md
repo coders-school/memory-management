@@ -2,6 +2,8 @@
 
 # Dynamic allocation problems
 
+## Quiz
+
 ___
 
 ## What kind of problem is here? #1
