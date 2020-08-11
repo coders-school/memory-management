@@ -1,24 +1,10 @@
 <!-- .slide: data-background="#111111" -->
 
-## Dynamic allocation problems
-
-* <!-- .element: class="fragment fade-in" --> accessing out-of-bounds memory
-* <!-- .element: class="fragment fade-in" --> dangling pointer
-* <!-- .element: class="fragment fade-in" --> double deleting
-* <!-- .element: class="fragment fade-in" --> <code>null</code> pointer dereference
-* <!-- .element: class="fragment fade-in" --> freeing memory blocks that were not dynamically allocated
-* <!-- .element: class="fragment fade-in" --> freeing a portion of a dynamic block
-* <!-- .element: class="fragment fade-in" --> memory leak
-
-These problems can be addressed by ASAN (Address Sanitizer) or Valgrind.
-Unfortunately they do not work on Windows 😕
-<!-- .element: class="fragment fade-in" -->
+# Dynamic allocation problems
 
 ___
 
-## Accessing out-of-bounds memory
-
-Undefined behavior
+## What kind of problem is here? #1
 
 ```cpp
 #include <iostream>
@@ -36,12 +22,14 @@ int main() {
     delete[] dynamicArray;
 }
 ```
+<!-- .element: class="fragment fade-in" -->
+
+### Accessing out-of-bounds memory
+<!-- .element: class="fragment fade-in" -->
 
 ___
 
-## Dangling pointer
-
-A pointer which indicates to something that is not valid
+## What kind of problem is here? #2
 
 ```cpp
 #include <iostream>
@@ -56,19 +44,21 @@ void processMsg(Msg* msg) {
 
 int main() {
     Msg* m = new Msg();
-    // ...
     delete m;
     processMsg(m);
-
     return 0;
 }
 ```
 
+### Dangling pointer
+<!-- .element: class="fragment fade-in" -->
+
+A pointer which indicates to something that is not valid
+<!-- .element: class="fragment fade-in" -->
+
 ___
 
-## Double delete
-
-Happens when a dangling pointer is deleted
+## What kind of problem is here? #3
 
 ```cpp
 class Msg {};
@@ -85,11 +75,15 @@ int main() {
 }
 ```
 
+### Double delete
+<!-- .element: class="fragment fade-in" -->
+
+Happens when a dangling pointer is deleted
+<!-- .element: class="fragment fade-in" -->
+
 ___
 
-## Null pointer dereference
-
-Happens when a `nullptr` is used
+## What kind of problem is here? #4
 
 ```cpp
 #include <iostream>
@@ -105,9 +99,15 @@ int main() {
 }
 ```
 
+### Null pointer dereference
+<!-- .element: class="fragment fade-in" -->
+
+Happens when a `nullptr` is used
+<!-- .element: class="fragment fade-in" -->
+
 ___
 
-## Freeing stack allocated blocks
+## What kind of problem is here? #5
 
 ```cpp
 class Msg {};
@@ -125,11 +125,12 @@ int main() {
 }
 ```
 
+### Freeing stack allocated blocks
+<!-- .element: class="fragment fade-in" -->
+
 ___
 
-## Freeing a portion of a dynamic block
-
-Using `delete` instead of `delete[]`
+## What kind of problem is here? #6
 
 ```cpp
 int main() {
@@ -141,11 +142,15 @@ int main() {
 }
 ```
 
+### Freeing a portion of a dynamic block
+<!-- .element: class="fragment fade-in" -->
+
+Using `delete` instead of `delete[]`
+<!-- .element: class="fragment fade-in" -->
+
 ___
 
-## Memory leak
-
-Allocated memory which cannot be freed because there is no pointer that points to it
+## What kind of problem is here? #7
 
 ```cpp
 #include <iostream>
@@ -159,3 +164,28 @@ int main() {
     return 0;
 }
 ```
+
+### Memory leak
+<!-- .element: class="fragment fade-in" -->
+
+Allocated memory which cannot be freed because there is no pointer that points to it
+<!-- .element: class="fragment fade-in" -->
+
+___
+
+## Dynamic allocation problems
+
+* <!-- .element: class="fragment fade-in" --> accessing out-of-bounds memory
+* <!-- .element: class="fragment fade-in" --> dangling pointer
+* <!-- .element: class="fragment fade-in" --> double deleting
+* <!-- .element: class="fragment fade-in" --> <code>null</code> pointer dereference
+* <!-- .element: class="fragment fade-in" --> freeing memory blocks that were not dynamically allocated
+* <!-- .element: class="fragment fade-in" --> freeing a portion of a dynamic block
+* <!-- .element: class="fragment fade-in" --> memory leak
+
+All allocation problems cause Undefined Behavior.
+<!-- .element: class="fragment fade-in" -->
+
+These problems can be addressed by ASAN (Address Sanitizer) or Valgrind.
+Unfortunately they do not work on Windows 😕
+<!-- .element: class="fragment fade-in" -->
