@@ -1,10 +1,11 @@
 #include <iostream>
 #include <stdexcept>
+#include <memory>
 
 using namespace std;
 
 class Resource
-{ 
+{
 public:
     void use(const char* N)
     {
@@ -24,17 +25,18 @@ int main(int argc, char* argv[])
         exit(-1);
     }
     const char* N = argv[1];
-    Resource* rsc = nullptr;
     try
     {
-        rsc = new Resource();
+        // std::unique_ptr<Resource> rsc{new Resource()};
+        auto rsc = std::make_unique<Resource>();
         rsc->use(N);
-        delete rsc;
     }
-    catch (logic_error & e)
+    catch (const logic_error & e)
     {
         cout << e.what() << endl;
     }
+    catch (const bad_alloc & ba) {
+        // ignore
+    }
     return 0;
 }
-

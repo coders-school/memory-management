@@ -1,43 +1,44 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <memory>
 
 using namespace std;
 
 struct Resource
 {
     Resource(char* byte) : byte_(byte) {}
-    char* byte() const { return byte_; }
+    char byte() const { return *byte_; }
     virtual string name() const = 0;
-    ~Resource() { delete byte_; }
+    virtual ~Resource() = default;
 
 protected:
-    char* byte_ = nullptr;
+    unique_ptr<char> byte_ = nullptr;
 };
 
 struct ResourceA : Resource
 {
     ResourceA(char* byte) : Resource(byte) {}
-    string name() const override { return string("ResourceA ").append(byte_); }
+    string name() const override { return string("ResourceA ").append(byte_.get(), 1); }
 };
 
 struct ResourceB : Resource
 {
     ResourceB(char* byte) : Resource(byte) {}
-    string name() const override { return string("ResourceB ").append(byte_); }
+    string name() const override { return string("ResourceB ").append(byte_.get(), 1); }
 };
 
 struct ResourceFactory
-{ 
-    Resource* makeResourceA(char* byte) { return new ResourceA{byte}; }
-    Resource* makeResourceB(char* byte) { return new ResourceB{byte}; }
+{
+    shared_ptr<Resource> makeResourceA(char* byte) { return make_shared<ResourceA>(byte); }
+    shared_ptr<Resource> makeResourceB(char* byte) { return make_shared<ResourceB>(byte); }
 };
 
 struct ResourceCollection
 {
-    void add(Resource* r) { resources.push_back(r); }
+    void add(shared_ptr<Resource> r) { resources.push_back(r); }
     void clear() { resources.clear(); }
-    Resource* operator[](int index) { return resources[index]; }
+    shared_ptr<Resource> operator[](int index) { return resources[index]; }
     void printAll()
     {
         for (const auto & res : resources)
@@ -47,21 +48,20 @@ struct ResourceCollection
     }
 
 private:
-    vector<Resource*> resources;
+    vector<shared_ptr<Resource>> resources;
 };
 
 int main()
 {
     ResourceCollection collection;
     ResourceFactory rf;
-    collection.add(rf.makeResourceA(new char{0x01}));
-    collection.add(rf.makeResourceB(new char{0x02}));
+    collection.add(rf.makeResourceA(new char{0x40}));
+    collection.add(rf.makeResourceB(new char{0x41}));
     collection.printAll();
 
     auto firstByte = collection[0]->byte();
+    cout << firstByte << endl;
     collection.clear();
-    cout << *firstByte << endl;
 
     return 0;
 }
-
