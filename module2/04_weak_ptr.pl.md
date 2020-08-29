@@ -1,23 +1,23 @@
 ﻿<!-- .slide: data-background="#111111" -->
 
-## Cyclic dependencies
+## Zależności cykliczne
 
 <img data-src="img/cyclicinverted.png" alt="cyclic dependencies" class="plain fragment fade-in">
 
-* <!-- .element: class="fragment fade-in" --> Cyclic dependency is where you have class A with self-referencing member.
-* <!-- .element: class="fragment fade-in" --> Cyclic dependency is where you have two classes A and B where A has a reference to B which has a reference to A.
-* <!-- .element: class="fragment fade-in" --> How to fix it?
+* <!-- .element: class="fragment fade-in" --> Zależność cykliczna występuje wtedy, gdy masz klasę A z elementem odwołującym się do siebie.
+* <!-- .element: class="fragment fade-in" --> Zależność cykliczna występuje wtedy, gdy masz dwie klasy A i B, gdzie A ma odniesienie do B, które ma odniesienie do A.
+* <!-- .element: class="fragment fade-in" --> Jak to naprawić?
 
 ___
 
-### `std::weak_ptr<>` to the rescue
+### `std::weak_ptr<>` na ratunek
 
-#### Traits
+#### Cechy
 
-* <!-- .element: class="fragment fade-in" --> does not own an object
-* <!-- .element: class="fragment fade-in" --> observes only
-* <!-- .element: class="fragment fade-in" --> must be converted to <code>std::shared_ptr<></code> to access the object
-* <!-- .element: class="fragment fade-in" --> can be created only from a <code>std::shared_ptr<></code>
+* <!-- .element: class="fragment fade-in" --> nie jest właścicielem obiektu
+* <!-- .element: class="fragment fade-in" --> tylko obserwuje
+* <!-- .element: class="fragment fade-in" --> należy przekonwertować na <code>std::shared_ptr<></code>, aby uzyskać dostęp do obiektu
+* <!-- .element: class="fragment fade-in" --> można utworzyć tylko na podstawie <code>std::shared_ptr<></code>
 
 <div>
     <img data-src="img/weakptrinverted.png" alt="weak pointers" class="plain fragment fade-in">
@@ -25,7 +25,7 @@ ___
 
 ___
 
-### `std::weak_ptr<>` usage
+### użycie `std::weak_ptr<>`
 
 <div class="multicolumn" style="position: relative">
 <div class="col" style="width: 65%; flex: none">
@@ -68,9 +68,9 @@ Expired
 
 ___
 
-### `std::shared_ptr<>` cyclic dependencies
+### `std::shared_ptr<>` zależności cykliczne
 
-* How to solve this problem?
+* Jak rozwiązać ten problem?
 
 ```cpp
 #include <memory>
@@ -90,9 +90,9 @@ int main () {
 
 ___
 
-### Breaking cycle - solution
+### Złamanie cyklu - rozwiązanie
 
-* Use `std::weak_ptr<Node>` in one direction
+* Użyj `std::week_ptr<Node>` w jednym kierunku
 
 ```cpp
 #include <memory>

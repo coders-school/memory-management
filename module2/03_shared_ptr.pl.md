@@ -6,23 +6,23 @@ ___
 
 ### `std::shared_ptr<>`
 
-### Traits
+### Cechy
 
-* <!-- .element: class="fragment fade-in" --> one object == multiple owners
-* <!-- .element: class="fragment fade-in" --> last referrer destroys the object
-* <!-- .element: class="fragment fade-in" --> copying allowed
-* <!-- .element: class="fragment fade-in" --> moving allowed
-* <!-- .element: class="fragment fade-in" --> can use custom deleter
-* <!-- .element: class="fragment fade-in" --> can use custom allocator
+* <!-- .element: class="fragment fade-in" --> jeden obiekt == wielu właścicieli
+* <!-- .element: class="fragment fade-in" --> ostatnia strona odsyłająca niszczy obiekt
+* <!-- .element: class="fragment fade-in" --> kopiowanie dozwolone
+* <!-- .element: class="fragment fade-in" --> przemieszczanie dozwolone
+* <!-- .element: class="fragment fade-in" --> możliwe użycie niestandardowego usuwania
+* <!-- .element: class="fragment fade-in" --> możliwe użycie niestandardowego alokatora
 
 <img data-src="img/sharedptr1inverted.png" alt="shared pointers" class="plain fragment fade-in">
 
 ___
 <!-- .slide: style="font-size: 0.85em" -->
 
-### `std::shared_ptr<>` usage
+### użycie `std::shared_ptr<>`
 
-* Copying and moving is allowed
+* Kopiowanie i przenoszenie jest dozwolone
 
 <div class="multicolumn">
 <div class="col">
@@ -73,7 +73,7 @@ void collections() {
 ___
 <!-- .slide: style="font-size: 0.85em" -->
 
-### `std::shared_ptr<>` usage cont.
+### użycie `std::shared_ptr<>` cd
 
 ```cpp
 #include <memory>
@@ -85,25 +85,25 @@ std::map<std::string, std::shared_ptr<Gadget>> gadgets;
 // above wouldn't compile with C++03. Why?
 
 void foo() {
-    std::shared_ptr<Gadget> p1{new Gadget()};   // reference counter = 1
+    std::shared_ptr<Gadget> p1{new Gadget()};   // licznik odniesienia = 1
     {
-        auto p2 = p1;                           // copy (reference counter == 2)
-        gadgets.insert(make_pair("mp3", p2));   // copy (reference counter == 3)
+        auto p2 = p1;                           // kopiowanie (licznik odniesienia == 2)
+        gadgets.insert(make_pair("mp3", p2));   // kopiowanie (licznik odniesienia == 3)
         p2->use();
-    }                                           // destruction of p2, reference counter = 2
-}                                               // destruction of p1, reference counter = 1
+    }                                           // destrukcja p2, licznik odniesienia = 2
+}                                               // destrukcja p1, licznik odniesienia = 1
 
 int main() {
     foo();
-    gadgets.clear();                            // reference counter = 0 - gadget is removed
+    gadgets.clear();                            // licznik odniesienia = 0 - gadżet jest usunięty
 }
 ```
 
 ___
 
-### `std::shared_ptr<>` cyclic dependencies
+### `std::shared_ptr<>` cykliczne zależności
 
-* What happens here?
+* co się tutaj stało?
 
 <div class="multicolumn" style="position: relative">
 <div class="col" style="width: 65%; flex: none">
@@ -130,7 +130,7 @@ int main () {
 </div>
 
 <div class="col fragment fade-in">
-    Memory leak!
+    Wyciek pamięci!
     <img data-src="img/kot.jpg" alt="kot" class="plain" style="height: 50%">
 
 </div>
