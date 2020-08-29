@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-        <title>Intro</title>
+        <title>Wstęp</title>
 
         <link rel="stylesheet" href="../../css/reset.css">
         <link rel="stylesheet" href="../../css/reveal.css">
@@ -28,7 +28,7 @@
             <div class="slides">
 
                 <section data-background="#111111">
-                    <h1>Memory and resource management</h1>
+                    <h1>Zarządzanie pamięcią i zasobami</h1>
                     <br/>
                     <h2>CODERS SCHOOL</h2>
                     <a href="https://coders.school">https://coders.school</a>
@@ -53,38 +53,38 @@
 
                     ## Agenda
 
-                    ##### Duration: 7h30' (5h50' without breaks)
+                    ##### Czas trwania: 7h30' (5h50' bez przerw)
 
-                    * <!-- .element: class="fragment fade-in" --> intro (30')
-                    * <!-- .element: class="fragment fade-in" --> exceptions (1h)
-                    * <!-- .element: class="fragment fade-in" --> ☕️ break (10')
-                    * <!-- .element: class="fragment fade-in" --> memory management problems (20')
-                    * <!-- .element: class="fragment fade-in" --> pointers, references, copies (20')
+                    * <!-- .element: class="fragment fade-in" --> wstęp (30')
+                    * <!-- .element: class="fragment fade-in" --> oczekiwania (1h)
+                    * <!-- .element: class="fragment fade-in" --> ☕️ przerwa (10')
+                    * <!-- .element: class="fragment fade-in" --> problemy zarządzania pamięcią (20')
+                    * <!-- .element: class="fragment fade-in" --> wskaźniki, referencje, kopie (20')
                     * <!-- .element: class="fragment fade-in" --> <code>unique_ptr</code> (30')
-                    * <!-- .element: class="fragment fade-in" --> ☕️ break (10')
+                    * <!-- .element: class="fragment fade-in" --> ☕️ przerwa (10')
                     * <!-- .element: class="fragment fade-in" --> <code>shared_ptr</code> (30')
                     * <!-- .element: class="fragment fade-in" --> <code>weak_ptr</code> (15')
-                    * <!-- .element: class="fragment fade-in" --> 🍝 lunch break (50')
-                    * <!-- .element: class="fragment fade-in" --> smart pointers in use (1h)
-                    * <!-- .element: class="fragment fade-in" --> smart pointer implementation details (25')
-                    * <!-- .element: class="fragment fade-in" --> ☕️ break (10')
-                    * <!-- .element: class="fragment fade-in" --> RAII idiom and STL RAII classes (20')
-                    * <!-- .element: class="fragment fade-in" --> rule of 0, rule of 5, rule of 3 (15')
-                    * <!-- .element: class="fragment fade-in" --> performance of smart pointers (20')
-                    * <!-- .element: class="fragment fade-in" --> recap (20')
+                    * <!-- .element: class="fragment fade-in" --> 🍝 przerwa obiadowa (50')
+                    * <!-- .element: class="fragment fade-in" --> inteligentne wskaźniki w użyciu (1h)
+                    * <!-- .element: class="fragment fade-in" --> szczegóły implementacji inteligentnych wskaźników (25')
+                    * <!-- .element: class="fragment fade-in" --> ☕️ przerwa (10')
+                    * <!-- .element: class="fragment fade-in" --> Idiom RAII i klasy STL RAII (20')
+                    * <!-- .element: class="fragment fade-in" --> reguła 0, reguła 5, reguła 3 (15')
+                    * <!-- .element: class="fragment fade-in" --> wydajność inteligentnych wskaźników (20')
+                    * <!-- .element: class="fragment fade-in" --> podsumowanie (20')
 
                     </textarea>
                 </section>
 
-                <section data-markdown="01_about_you.en.md" data-separator-vertical="^___"
+                <section data-markdown="01_about_you.pl.md" data-separator-vertical="^___"
                     data-separator-notes="^Note:">
                 </section>
 
-                <section data-markdown="02_about_lukasz.en.md" data-separator-vertical="^___"
+                <section data-markdown="02_about_lukasz.pl.md" data-separator-vertical="^___"
                     data-separator-notes="^Note:">
                 </section>
 
-                <section data-markdown="03_contract.en.md" data-separator-vertical="^___"
+                <section data-markdown="03_contract.pl.md" data-separator-vertical="^___"
                     data-separator-notes="^Note:">
                 </section>
 
@@ -92,16 +92,16 @@
                     <section data-markdown>
                         <textarea data-template>
 
-                        ## Pre-test
+                        ## Test wstępny
 
-                        #### Take a pen and write down your answers
+                        #### Weź długopis i zapisz swoje odpowiedzi
 
                         </textarea>
                     </section>
                     <section data-markdown>
                         <textarea data-template>
 
-                        ## 1. What is the problem with below code?
+                        ## 1. Jaki jest problem z poniższym kodem?
 
                         ```cpp
                         class Msg{};
@@ -119,10 +119,10 @@
                         }
                         ```
 
-                        1. Freeing a heap allocated memory
-                        1. Freeing a stack allocated memory
-                        1. Freeing only a part of allocated memory
-                        1. Dangling pointer
+                        1. Zwalnianie pamięci przydzielonej stercie
+                        1. Zwalnianie pamięci przydzielonej na stosie
+                        1. Zwalnianie tylko części przydzielonej pamięci
+                        1. Nieaktualny wskaźnik
 
                         Note: 2
 
@@ -131,14 +131,14 @@
                     <section data-markdown>
                         <textarea data-template>
 
-                        ## 2. Mark true sentences
+                        ## 2. Zaznacz prawdziwe zdania
 
-                        1. A reference works like a const pointer
-                        1. A reference works like a pointer to const
-                        1. A reference cannot be reassigned
-                        1. `unique_ptr` can be copied
-                        1. `shared_ptr` can be moved
-                        1. `weak_ptr` can be created from `unique_ptr`
+                        1. Odwołanie działa jak stały wskaźnik
+                        1. Odwołanie działa jak wskaźnik do stałej
+                        1. Nie można ponownie przypisać odwołania
+                        1. Można skopiować `unique_ptr`
+                        1. Można przenieść `shared_ptr`
+                        1. Z `unique_ptr` można utworzyć `weak_ptr`
 
                         Note: 1, 3, 5
 
@@ -158,14 +158,14 @@
                     <section data-markdown>
                         <textarea data-template>
 
-                        ## Pre-test answers
+                        ## Odpowiedzi z testu wstępnego
 
                         </textarea>
                     </section>
                     <section data-markdown>
                         <textarea data-template>
 
-                        ## 1. What is the problem with below code?
+                        ## 1. Jaki jest problem z poniższym kodem?
 
                         ```cpp
                         class Msg{};
@@ -183,10 +183,10 @@
                         }
                         ```
 
-                        1. <!-- .element: class="fragment highlight-red" --> Freeing a heap allocated memory
-                        1. <!-- .element: class="fragment highlight-green" --> Freeing a stack allocated memory
-                        1. <!-- .element: class="fragment highlight-red" --> Freeing only a part of allocated memory
-                        1. <!-- .element: class="fragment highlight-red" --> Dangling pointer
+                        1. <!-- .element: class="fragment highlight-red" --> Zwalnianie pamięci przydzielonej stercie
+                        1. <!-- .element: class="fragment highlight-green" --> Zwalnianie pamięci przydzielonej na stosie
+                        1. <!-- .element: class="fragment highlight-red" --> Zwalnianie tylko części przydzielonej pamięci
+                        1. <!-- .element: class="fragment highlight-red" --> Nieaktualny wskaźnik
 
                         Note: 2
 
@@ -195,14 +195,14 @@
                     <section data-markdown>
                         <textarea data-template>
 
-                        ## 2. Mark true sentences
+                        ## 2. Zaznacz prawdziwe zdania
 
-                        1. <!-- .element: class="fragment highlight-green" --> A reference works like a const pointer
-                        1. <!-- .element: class="fragment highlight-red" --> A reference works like a pointer to const
-                        1. <!-- .element: class="fragment highlight-green" --> A reference cannot be reassigned
-                        1. <!-- .element: class="fragment highlight-red" --> <code>unique_ptr</code> can be copied
-                        1. <!-- .element: class="fragment highlight-green" --> <code>shared_ptr</code> can be moved
-                        1. <!-- .element: class="fragment highlight-red" --> <code>weak_ptr</code> can be created from <code>unique_ptr</code>
+                        1. <!-- .element: class="fragment highlight-green" --> Odwołanie działa jak stały wskaźnik
+                        1. <!-- .element: class="fragment highlight-red" --> Odwołanie działa jak wskaźnik do stałej
+                        1. <!-- .element: class="fragment highlight-green" --> Nie można ponownie przypisać odwołania
+                        1. <!-- .element: class="fragment highlight-red" --> Można skopiować <code>unique_ptr</code>
+                        1. <!-- .element: class="fragment highlight-green" --> Można przenieść <code>shared_ptr</code>
+                        1. <!-- .element: class="fragment highlight-red" --> Z <code>unique_ptr</code> można utworzyć <code>weak_ptr</code>
 
                         Note: 1, 3, 5
 
@@ -213,22 +213,22 @@
                 <section data-markdown>
                     <textarea data-template>
 
-                    ## Post-test
+                    ## Test końcowy
 
-                    #### [Link to the post-test](https://forms.gle/3C8QuJ87XwQRiqMb8)
+                    #### [Link do testu końcowego](https://forms.gle/3C8QuJ87XwQRiqMb8)
 
-                    Please complete it in a next week.
+                    Proszę o ukończenie go w następnym tygodniu.
 
-                    ## Post-work
+                    ## Zadania końcowe
 
-                    * Implement your own shared_ptr and make_shared function. Send me a repo to review your code.
-                    * Transform the list from List.cpp into double-linked list. Beware of cycles :)
+                    * Zaimplementuj własną funkcję shared_ptr i make_shared. Wyślij mi repozytorium, aby przejrzeć kod.
+                    * Przekształć listę z List.cpp w listę podwójnie połączoną. Uważaj na cykle :)
 
-                    ## Training evaluation
+                    ## Ocena szkolenia
 
-                    #### [Link to the evaluation form](https://forms.gle/y1F1we1yvvhuc9LR7)
+                    #### [Link do formularza oceny](https://forms.gle/y1F1we1yvvhuc9LR7)
 
-                    Please give me a feedback about this training session. I would like to know how can I improve it.
+                    Proszę o opinię na temat tego szkolenia. Chciałbym wiedzieć, jak mogę je poprawić.
 
                     </textarea>
                 </section>
