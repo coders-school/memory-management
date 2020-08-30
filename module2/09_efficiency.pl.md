@@ -1,10 +1,10 @@
 ﻿<!-- .slide: data-background="#111111" -->
 
-# Efficiency
+# Wydajność
 
 ___
 
-## Raw pointer
+## Wskaźnik surowy
 
 ```cpp
 #include <memory>
@@ -29,7 +29,7 @@ int main(void) {
 
 ___
 
-## Unique pointer
+## Wskaźnik unikalny
 
 ```cpp
 #include <memory>
@@ -52,7 +52,7 @@ int main(void) {
 
 ___
 
-## Shared pointer
+## Wskaźnik współdzielony
 
 ```cpp
 #include <memory>
@@ -75,7 +75,7 @@ int main(void) {
 
 ___
 
-## Shared pointer – `make_shared`
+## Wskaźnik współdzielony – `make_shared`
 
 ```cpp
 #include <memory>
@@ -98,7 +98,7 @@ int main(void) {
 
 ___
 
-## Weak pointer
+## Wskaźnik słaby
 
 ```cpp
 #include <memory>
@@ -125,20 +125,22 @@ int main(void) {
 
 ___
 
-## Measurements
+## Pomiary
 
 * <!-- .element: class="fragment fade-in" --> gcc-4.8.2
-* <!-- .element: class="fragment fade-in" --> compilation with <code>–std=c++11 –O3 –DNDEBUG</code>
-* <!-- .element: class="fragment fade-in" --> measuring with:
+* <!-- .element: class="fragment fade-in" --> kompilacja z użyciem <code>–std=c++11 –O3 –DNDEBUG</code>
+* <!-- .element: class="fragment fade-in" --> mierzenie za pomocą:
   * <!-- .element: class="fragment fade-in" --> time (real)
   * <!-- .element: class="fragment fade-in" --> htop (mem)
-  * <!-- .element: class="fragment fade-in" --> valgrind (allocations count)
+  * <!-- .element: class="fragment fade-in" --> valgrind (allocations count) 
+  
+  <!-- czy zamienić słowa w nawiasach na polskie odpowiedniki tj: time (rzeczywisty), htop (pamięć), valgrind (liczba alokacji); patrząc na ten fragment mam dylemat bo z jednej strony da się, z drugiej jednak dziwnie będzie to jakoś mi wyglądać, dlatego pozostawiam to pod osąd. -->
 
 ___
 
-## Results
+## Wynik
 
-| test name      | time [s] | allocations | memory [MB] |
+| Nazwa testu      | czas [s] | alokacje | pamięć [MB] |
 |:--------------:|:--------:|:-----------:|:-----------:|
 | raw pointer  <!-- .element: class="fragment fade-in" -->  | 0.54    <!-- .element: class="fragment fade-in" --> | 10 000 001 <!-- .element: class="fragment fade-in" --> | 686 <!-- .element: class="fragment fade-in" -->       |
 | unique pointer <!-- .element: class="fragment fade-in" --> | 0.56 <!-- .element: class="fragment fade-in" -->    | 10 000 001 <!-- .element: class="fragment fade-in" --> | 686 <!-- .element: class="fragment fade-in" -->        |
@@ -148,16 +150,16 @@ ___
 
 ___
 
-## Conclusions
+## Konkluzje
 
 * <!-- .element: class="fragment fade-in" --> RAII
-  * <!-- .element: class="fragment fade-in" --> acquire resource in constructor
-  * <!-- .element: class="fragment fade-in" --> release resource in destructor
-* <!-- .element: class="fragment fade-in" --> Rule of 5, Rule of 0
-* <!-- .element: class="fragment fade-in" --> Smart pointers:
-  * <!-- .element: class="fragment fade-in" --> <code>std::unique_ptr</code> – primary choice, no overhead, can convert to <code>std::shared_ptr</code>
-  * <!-- .element: class="fragment fade-in" --> <code>std::shared_ptr</code> – introduces memory and runtime overhead
-  * <!-- .element: class="fragment fade-in" --> <code>std::weak_ptr</code> – breaking cycles, can convert to/from <code>std::shared_ptr</code>
-* <!-- .element: class="fragment fade-in" --> Create smart pointers with <code>std::make_shared()</code> and <code>std::make_unique()</code>
-* <!-- .element: class="fragment fade-in" --> Raw pointer should mean „access only” (no ownership)
-* <!-- .element: class="fragment fade-in" --> Use reference instead of pointers if possible
+  * <!-- .element: class="fragment fade-in" --> pozyskanie zasobów w konstruktorze
+  * <!-- .element: class="fragment fade-in" --> zwolnienie zasobów w destruktorze
+* <!-- .element: class="fragment fade-in" --> Reguła 5, Reguła 0
+* <!-- .element: class="fragment fade-in" --> Inteligentne wskaźniki:
+  * <!-- .element: class="fragment fade-in" --> <code>std::unique_ptr</code> – podstawowy wybór, bez narzutów, można przekonwertować na <code>std::shared_ptr</code>
+  * <!-- .element: class="fragment fade-in" --> <code>std::shared_ptr</code> – wprowadza narzut pamięci i czasu wykonywania
+  * <!-- .element: class="fragment fade-in" --> <code>std::weak_ptr</code> – łamanie cykli, można konwertować do/z <code>std::shared_ptr</code>
+* <!-- .element: class="fragment fade-in" --> Tworzy inteligentne wskaźniki za pomocą <code>std::make_shared()</code> i <code>std::make_unique()</code>
+* <!-- .element: class="fragment fade-in" --> Surowy wskaźnik powinien oznaczać „tylko dostęp” (brak własności)
+* <!-- .element: class="fragment fade-in" --> Jeśli to możliwe, używaj odwołań zamiast wskaźników
