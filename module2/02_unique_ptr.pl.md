@@ -9,7 +9,7 @@ ___
 ### Cechy
 
 * <!-- .element: class="fragment fade-in" --> jeden obiekt == jeden właściciel
-* <!-- .element: class="fragment fade-in" --> destructor niszczy obiekt
+* <!-- .element: class="fragment fade-in" --> destruktor niszczy obiekt
 * <!-- .element: class="fragment fade-in" --> kopiowanie niedozwolone
 * <!-- .element: class="fragment fade-in" --> przemieszczanie dozwolone
 * <!-- .element: class="fragment fade-in" --> można użyć niestandardowego usuwania
