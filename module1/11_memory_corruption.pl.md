@@ -4,7 +4,7 @@
   * <!-- .element: class="fragment fade-in" --> dodaj flagi kompilacji:
     * <!-- .element: class="fragment fade-in" --> <code>–fsanitize=address -g</code>
     * <!-- .element: class="fragment fade-in" --> <code>–fsanitize=leak -g</code>
-  * <!-- .element: class="fragment fade-in" --> uruchom binakrę
+  * <!-- .element: class="fragment fade-in" --> uruchom binarkę
 * <!-- .element: class="fragment fade-in" --> Valgrind
   * <!-- .element: class="fragment fade-in" --> skompiluj binarkę
   * <!-- .element: class="fragment fade-in" --> uruchomić binarkę pod valgrind:
