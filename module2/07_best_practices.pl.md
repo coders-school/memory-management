@@ -84,7 +84,7 @@ ___
 * <!-- .element: class="fragment fade-in" --> uruchom konstruktor <code>MyData</code>
 * <!-- .element: class="fragment fade-in" --> przypisz adres przydzielonej pamięci do <code>p</code>
 
-Kolejność oceny operandów prawie wszystkich operatorów C ++ (w tym kolejność
+Kolejność oceny operandów prawie wszystkich operatorów C++ (w tym kolejność
 oceny argumentów funkcji w wyrażeniu wywołania funkcji i kolejność oceny
 podwyrażenia w dowolnym wyrażeniu) jest **nieokreślona**.
 
