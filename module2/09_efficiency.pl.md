@@ -130,9 +130,9 @@ ___
 * <!-- .element: class="fragment fade-in" --> gcc-4.8.2
 * <!-- .element: class="fragment fade-in" --> kompilacja z użyciem <code>–std=c++11 –O3 –DNDEBUG</code>
 * <!-- .element: class="fragment fade-in" --> mierzenie za pomocą:
-  * <!-- .element: class="fragment fade-in" --> time (real)
-  * <!-- .element: class="fragment fade-in" --> htop (mem)
-  * <!-- .element: class="fragment fade-in" --> valgrind (allocations count) 
+  * <!-- .element: class="fragment fade-in" --> time (czas)
+  * <!-- .element: class="fragment fade-in" --> htop (użyta pamięć)
+  * <!-- .element: class="fragment fade-in" --> valgrind (liczba alokacji) 
   
   <!-- czy zamienić słowa w nawiasach na polskie odpowiedniki tj: time (rzeczywisty), htop (pamięć), valgrind (liczba alokacji); patrząc na ten fragment mam dylemat bo z jednej strony da się, z drugiej jednak dziwnie będzie to jakoś mi wyglądać, dlatego pozostawiam to pod osąd. -->
 
