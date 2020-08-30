@@ -24,8 +24,8 @@ ___
 
 * <!-- .element: class="fragment fade-in" --> Zawiera wskaźnik obiektu
 * <!-- .element: class="fragment fade-in" --> Mieści 2 liczniki referencyjne:
-  * <!-- .element: class="fragment fade-in" --> liczący wspólne wskaźniki
-  * <!-- .element: class="fragment fade-in" --> liczący słabe wskazówki
+  * <!-- .element: class="fragment fade-in" --> liczący wspólne wskaźniki (<code>shared-refs</code>)
+  * <!-- .element: class="fragment fade-in" --> liczący słabe wskazówki (<code>weak-refs</code>)
 * <!-- .element: class="fragment fade-in" --> Destruktor:
   * <!-- .element: class="fragment fade-in" --> dekrementuje <code>shared-refs</code>
   * <!-- .element: class="fragment fade-in" --> usuwa dane użytkownika, gdy <code>shared-refs == 0</code>
