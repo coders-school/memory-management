@@ -1,11 +1,11 @@
 ﻿<!-- .slide: data-background="#111111" -->
 
-# How does it work?
+# Jak to działa?
 
 ___
 <!-- .slide: style="font-size: 0.9em" -->
 
-## Matching exceptions
+## Pasujące wyjątki
 
 <div class="multicolumn" style="position: relative">
 <div class="col" style="width: 75%; flex: none">
@@ -34,7 +34,7 @@ int main() {
 </div>
 <div class="col fragment fade-in">
 
-### Result
+### Rezultat
 
 `Constructor` <!-- .element: class="fragment fade-in" -->
 
@@ -51,20 +51,20 @@ int main() {
 
 ___
 
-## Stack unwinding mechanism
+## Mechanizm odwijania stosu
 
-* <!-- .element: class="fragment fade-in" --> Thrown exceptions starts a stack unwinding mechanism
-* <!-- .element: class="fragment fade-in" --> The exception type is being matched with consecutive <code>catch</code> clauses
-* <!-- .element: class="fragment fade-in" --> If the exception type is matched:
-  * <!-- .element: class="fragment fade-in" --> Everything allocated on stack is destroyed in a reversed order until reaching <code>try</code> block
-  * <!-- .element: class="fragment fade-in" --> The code from matching <code>catch</code> clause is executed
-  * <!-- .element: class="fragment fade-in" --> The exception object is destroyed
-* <!-- .element: class="fragment fade-in" --> If the exception type is not matched with any <code>catch</code> clause, the stack unwinding continues to the next <code>try</code> block
+* <!-- .element: class="fragment fade-in" --> Zgłoszone wyjątki uruchamiają mechanizm rozwijania stosu
+* <!-- .element: class="fragment fade-in" --> Typ wyjątku jest dopasowywany do kolejnych klauzul <code>catch</code>
+* <!-- .element: class="fragment fade-in" --> Jeśli typ wyjątku jest dopasowany:
+  * <!-- .element: class="fragment fade-in" --> Wszystko przydzielone na stosie jest niszczone w odwrotnej kolejności, aż do osiągnięcia bloku <code>try</code>
+  * <!-- .element: class="fragment fade-in" --> Wykonywany jest kod z pasującej klauzuli <code>catch</code>
+  * <!-- .element: class="fragment fade-in" --> Obiekt wyjątku zostaje zniszczony
+* <!-- .element: class="fragment fade-in" --> Jeśli typ wyjątku nie jest dopasowany do żadnej klauzuli <code>catch</code>, rozwijanie stosu jest kontynuowane do następnego bloku <code>try</code>
 
 ___
 <!-- .slide: style="font-size: 0.9em" -->
 
-## Unhandled exception
+## Nieobsługiwany wyjątek
 
 <div class="multicolumn" style="position: relative">
 <div class="col" style="width: 75%; flex: none">
@@ -92,7 +92,7 @@ int main() {
 </div>
 <div class="col fragment fade-in">
 
-### Result
+### Rezultat
 
 `Constructor` <!-- .element: class="fragment fade-in" -->
 
@@ -105,15 +105,15 @@ int main() {
 
 ___
 
-## Why destructors have not been called?
+## Dlaczego nie wywołano destruktorów?
 
-* <!-- .element: class="fragment fade-in" --> The stack unwinding mechanism first check for a matching <code>catch</code> clause in a current <code>try</code> block before destroying objects
-* <!-- .element: class="fragment fade-in" --> An exception which was not caught and falls out of the main function scope calls <code>std::terminate()</code>. It kills the program.
+* <!-- .element: class="fragment fade-in" --> Mechanizm rozwijania stosu najpierw sprawdza pasującą klauzulę <code>catch</code> w bieżącym bloku <code>try</code> przed zniszczeniem obiektów
+* <!-- .element: class="fragment fade-in" --> Wyjątek, który nie został przechwycony i wypada z głównego zakresu funkcji wywołuje <code>std::terminate()</code>. To zabija program.
 
 ___
 <!-- .slide: style="font-size: 0.9em" -->
 
-## Exception rethrowing
+## Ponowne zgłoszenie wyjątku
 
 <div class="multicolumn" style="position: relative">
 <div class="col" style="width: 75%; flex: none">
@@ -144,9 +144,9 @@ int main() {
 </div>
 <div class="col fragment fade-in">
 
-Bare `throw` in a `catch` clause rethrows a current exception.
+Samo `throw` w klauzuli `catch` ponownie zgłasza bieżący wyjątek.
 
-### Result <!-- .element: class="fragment fade-in" -->
+### Rezultat <!-- .element: class="fragment fade-in" -->
 
 `Constructor` <!-- .element: class="fragment fade-in" -->
 
@@ -165,17 +165,17 @@ Bare `throw` in a `catch` clause rethrows a current exception.
 
 ___
 
-## Exception rethrowing
+## Ponowne zgłoszenie wyjątku
 
-* <!-- .element: class="fragment fade-in" --> Rethrown exception starts a stack unwinding once again
-* <!-- .element: class="fragment fade-in" --> Stack unwinding continues until another <code>try</code> block is reached
-* <!-- .element: class="fragment fade-in" --> <code>catch</code> clause for a base type can catch an exception of a derived type
-* <!-- .element: class="fragment fade-in" --> It does not change the original exception type, when it is rethrown
+* <!-- .element: class="fragment fade-in" --> Ponownie zgłoszony wyjątek uruchamia ponownie rozwijanie stosu
+* <!-- .element: class="fragment fade-in" --> Odwijanie stosu trwa aż do osiągnięcia kolejnego bloku <code>try</code>
+* <!-- .element: class="fragment fade-in" --> Klauzula <code>catch</code> dla typu podstawowego może przechwycić wyjątek typu pochodnego
+* <!-- .element: class="fragment fade-in" --> Nie zmienia oryginalnego typu wyjątku, gdy jest ponownie generowany
 
 ___
 <!-- .slide: style="font-size: 0.9em" -->
 
-## Throwing an exception during stack unwinding
+## Zgłaszanie wyjątku podczas rozwijania stosu
 
 <div class="multicolumn" style="position: relative">
 <div class="col" style="width: 75%; flex: none">
@@ -206,7 +206,7 @@ int main() {
 </div>
 <div class="col fragment fade-in">
 
-### Result
+### Rezultat
 
 `Constructor` <!-- .element: class="fragment fade-in" -->
 
@@ -219,8 +219,8 @@ int main() {
 
 ___
 
-## Conclusions
+## Konkluzja
 
-* <!-- .element: class="fragment fade-in" --> Only one exception can be handled at a time
-* <!-- .element: class="fragment fade-in" --> The exception thrown during stack unwinding causes termination of the program - <code>std::terminate()</code> is called
-* <!-- .element: class="fragment fade-in" --> You should never throw an exception in a destructor
+* <!-- .element: class="fragment fade-in" --> Jednocześnie można obsłużyć tylko jeden wyjątek
+* <!-- .element: class="fragment fade-in" --> Wyjątek zgłoszony podczas rozwijania stosu powoduje zakończenie działania programu - wywoływana jest funkcja <code>std::terminate()</code>
+* <!-- .element: class="fragment fade-in" --> Nigdy nie należy zgłaszać wyjątku w destruktorze

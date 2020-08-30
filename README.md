@@ -1,3 +1,63 @@
+# Zarządzanie pamięcią i zasobami
+
+<a href="https://coders.school">
+    <img width="500" data-src="coders_school_logo.png" src="coders_school_logo.png" alt="Coders School" class="plain">
+</a>
+
+## [Moduł 1](module1/index.pl.html)
+
+### [Mapa pamięci](module1/01_memory_map.pl.md)
+
+### [Stos vs sterta](module1/02_stack_vs_heap.pl.md)
+
+### [Alokacja stosu](module1/03_stack_allocation.pl.md)
+
+### [Przepełnienie stosu](module1/04_stack_overflow.pl.md)
+
+### [Alokacja sterty](module1/05_heap_allocation.pl.md)
+
+### [Nowe wyrażenie i operator `new`](module1/06_new_expression.pl.md)
+
+### [Dynamiczna alokacja tablicy](module1/07_array_allocation.pl.md)
+
+### [Problemy z alokacją dynamiczną](module1/08_allocation_problems.pl.md)
+
+### [Proste pytanie…](module1/09_simple_question.pl.md)
+
+### [RAII](module1/10_raii.pl.md)
+
+### [Wykrywanie uszkodzeń pamięci](module1/11_memory_corruption.pl.md)
+
+## [Moduł 2](module2/index.pl.md)
+
+### [Inteligentne wskaźniki](module2/01_smart_ptrs.pl.md)
+
+### [`std::unique_ptr<>`](module2/02_unique_ptr.pl.md)
+
+### [`std::shared_ptr<>`](module2/03_shared_ptr.pl.md)
+
+### [`std::weak_ptr<>`](module2/04_weak_ptr.pl.md)
+
+### [`std::auto_ptr<>`](module2/05_auto_ptr.pl.md)
+
+### [Inteligentne wskaźniki - podsumowanie](module2/06_summary.pl.md)
+
+### [Najlepsze praktyki](module2/07_best_practices.pl.md)
+
+### [Szczegóły implementacji](module2/08_implementation_details.pl.md)
+
+### [Wydajność](module2/09_efficiency.pl.md)
+
+## [Moduł 3](module3/index.pl.md)
+
+### [Metody obsługi błędów](module3/01_error_handling.pl.md)
+
+### [Wyjątki](module3/02_exceptions.pl.md)
+
+### [Wydajność i koszt](module3/03_cost.pl.md)
+
+___
+
 # Memory and resource management
 
 <a href="https://coders.school">
@@ -50,8 +110,8 @@
 
 ## [Module 3](module3/index.en.md)
 
-### [Smart pointers](module2/01_error_handling.en.md)
+### [Error handling methods](module3/01_error_handling.en.md)
 
-### [`std::unique_ptr<>`](module2/02_exceptions.en.md)
+### [Exceptions](module3/02_exceptions.en.md)
 
-### [`std::shared_ptr<>`](module2/03_cost.en.md)
+### [Efficiency and cost](module3/03_cost.en.md)

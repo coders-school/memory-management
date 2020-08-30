@@ -1,6 +1,6 @@
 ﻿<!-- .slide: data-background="#111111" -->
 
-## Are exceptions expensive?
+## Czy wyjątki są drogie?
 
 * [My YT video with explanation (in Polish)](https://www.youtube.com/watch?v=quF1Jex0YL8)
 
@@ -9,40 +9,40 @@
 
 ___
 
-## Exceptions
+## Wyjątki
 
-### Advantages
+### Zalety
 <!-- .element: class="fragment fade-in" -->
 
-* <!-- .element: class="fragment fade-in" --> Error signalling and handling can be done separately
-* <!-- .element: class="fragment fade-in" --> Code readability - functions have only required logic without handling special cases
-* <!-- .element: class="fragment fade-in" --> Errors can be handled in constructors and operators
-* <!-- .element: class="fragment fade-in" --> No extra checks on casual flow = no extra if = no cost
+* <!-- .element: class="fragment fade-in" --> Sygnalizacja i obsługa błędów może odbywać się oddzielnie
+* <!-- .element: class="fragment fade-in" --> Czytelność kodu - funkcje mają tylko wymaganą logikę bez obsługi specjalnych przypadków
+* <!-- .element: class="fragment fade-in" --> Błędy można obsługiwać w konstruktorach i operatorach
+* <!-- .element: class="fragment fade-in" --> Brak dodatkowych sprawdzeń przy normalnym działaniu = brak dodatkowych if'ów = brak kosztów
 
-### Disadvantages
+### Wady
 <!-- .element: class="fragment fade-in" -->
 
-* <!-- .element: class="fragment fade-in" --> Binary size is increased (extra error handling code is added in the end of all <code>noexcept</code> functions)
-* <!-- .element: class="fragment fade-in" --> Time of exception handling is not defined
-* <!-- .element: class="fragment fade-in" --> Usually requires real-time information to track the program flow (core dump, debugger)
+* <!-- .element: class="fragment fade-in" --> Zwiększony rozmiar binarki (dodatkowy kod obsługi błędów jest dodawany na końcu wszystkich funkcji <code>noexcept</code>)
+* <!-- .element: class="fragment fade-in" --> Czas obsługi wyjątków nie jest zdefiniowany
+* <!-- .element: class="fragment fade-in" --> Zwykle wymaga informacji w czasie rzeczywistym, aby śledzić przepływ programu (zrzut rdzenia, debugger)
 
 ___
 
-## Conclusions
+## Konkluzja
 
-* <!-- .element: class="fragment fade-in" --> Time of exception handling is not defined
-  * It depends on the number and types of objects allocated on stack between the place where the exception was thrown and when it was actually caught
-* <!-- .element: class="fragment fade-in" --> Do not use exceptions in real-time devices with strictly defined time of execution (eg. in healthcare systems, automotive)
-* <!-- .element: class="fragment fade-in" --> If you want to use exceptions check the usage of the program. If exceptional program flow is really rare - measure and benchmark which version is faster
+* <!-- .element: class="fragment fade-in" --> Czas obsługi wyjątków nie jest zdefiniowany
+  * Zależy to od liczby i typów obiektów przydzielonych na stosie między miejscem, w którym wyjątek został zgłoszony, a momentem, w którym został faktycznie przechwycony
+* <!-- .element: class="fragment fade-in" --> Nie używaj wyjątków w urządzeniach czasu rzeczywistego o ściśle określonym czasie wykonania (np. w systemach opieki zdrowotnej, motoryzacji)
+* <!-- .element: class="fragment fade-in" --> Jeśli chcesz korzystać z wyjątków, sprawdź użycie programu. Jeśli wyjątkowy przepływ programu jest naprawdę rzadki - zmierz i porównaj, która wersja jest szybsza
 
 ___
 
-## Recommendations
+## Zalecenia
 
-* <!-- .element: class="fragment fade-in" --> Use STL exceptions <a href="https://en.cppreference.com/w/cpp/error/exception">check cppreference.com</a>
-* <!-- .element: class="fragment fade-in" --> Inherit own exceptions from STL exceptions
-  * <code>catch(const std::exception & e)</code> will catch all of them
-* <!-- .element: class="fragment fade-in" --> Avoid <code>catch(...)</code> - it catches absolutely everything and usually is not a good practice
-* <!-- .element: class="fragment fade-in" --> Catch exceptions by <code>const &</code> - it prevents redundant exception copies
-* <!-- .element: class="fragment fade-in" --> Use exceptions only in unusual situations and do not build a casual program flow on exceptions
-* <!-- .element: class="fragment fade-in" --> Use <code>noexcept</code> keyword to indicate functions from which the exception will not be thrown. It helps a compiler to optimize the code and reduce a binary size.
+* <!-- .element: class="fragment fade-in" --> Używaj wyjątków STL <a href="https://en.cppreference.com/w/cpp/error/exception">sprawdź cppreference.com</a>
+* <!-- .element: class="fragment fade-in" --> Dziedzicz własne wyjątki z wyjątków STL
+  * <code>catch(const std::exception & e)</code> złapie je wszystkie
+* <!-- .element: class="fragment fade-in" --> Unikaj <code>catch(...)</code> - łapie absolutnie wszystko i zwykle nie jest dobrą praktyką
+* <!-- .element: class="fragment fade-in" --> Łap wyjątki za pomocą <code>const &</code> - zapobiega zbędnym kopiom wyjątków
+* <!-- .element: class="fragment fade-in" --> Używaj wyjątków tylko w nietypowych sytuacjach i nie twórz swobodnego przepływu programu na wyjątkach
+* <!-- .element: class="fragment fade-in" --> Użyj słowa kluczowego <code>noexcept</code>, aby wskazać funkcje, z których wyjątek nie będzie generowany. Pomaga kompilatorowi w optymalizacji kodu i zmniejszeniu rozmiaru binarnego.

@@ -1,6 +1,6 @@
 ﻿<!-- .slide: data-background="#111111" -->
 
-# Error handling methods
+# Metody obsługi błędów
 
 ___
 
@@ -25,7 +25,7 @@ error:
 
 ___
 
-## Error codes
+## Kody błędów
 
 ```cpp
 #include <iostream>
@@ -53,15 +53,15 @@ int main() {
 ___
 <!-- .slide: style="font-size: 0.9em" -->
 
-### Error handling in constructors and operators
+### Obsługa błędów w konstruktorach i operatorach
 
-Constructors and operators have strictly defined return types (or no return type). It is impossible to return a custom error code from them.
+Konstruktory i operatory mają ściśle zdefiniowane typy zwracane (lub brak typu zwracanego). Niemożliwe jest zwrócenie od nich niestandardowego kodu błędu.
 
 ```cpp
 struct FileWrapper {
     FileWrapper(std::string const& filePath)
             : m_file(fopen(filePath.c_str(), "rw")) {
-        /* What if the file did not open? */
+        /* A jeśli plik się nie otworzył? */
     }
 
     ~FileWrapper() {
@@ -69,7 +69,7 @@ struct FileWrapper {
     }
 
     FileWrapper & operator<<(std::string const& text) {
-        /* What if the file did not open? */
+        /* A jeśli plik się nie otworzył? */
         fputs(text.c_str(), m_file);
         return *this;
     }
@@ -84,7 +84,7 @@ ___
 
 ## `throw`
 
-Instead of returning a special value from a function or setting an error code we just `throw` an exception. It indicates that something went wrong and we can handle this case in another place.
+Zamiast zwracać specjalną wartość z funkcji lub ustawiać kod błędu, po prostu `throw`(rzucamy) wyjątek. Wskazuje, że coś poszło nie tak i możemy zająć się tą sprawą w innym miejscu.
 
 ```cpp
 struct FileWrapper {
@@ -100,7 +100,7 @@ struct FileWrapper {
     }
 
     FileWrapper & operator<<(std::string const& text) {
-        /* Not validation needed, invalid object cannot be created */
+        /* Nie jest wymagana weryfikacja, nie można utworzyć nieprawidłowego obiektu */
         fputs(text.c_str(), m_file);
         return *this;
     }
@@ -115,7 +115,7 @@ ___
 
 ## `try/catch`
 
-`try` block is a place where we can expect an exception. `catch` blocks tries to match the exception type.
+Blok `try` to miejsce, w którym możemy spodziewać się wyjątku. Bloki `catch` próbują dopasować typ wyjątku.
 
 <div class="multicolumn" style="position: relative">
 <div class="col" style="width: 75%; flex: none">
@@ -142,7 +142,7 @@ int main() {
 </div>
 <div class="col fragment fade-in">
 
-### Result
+### Rezultat
 
 `std::runtime_error`
 
@@ -151,9 +151,9 @@ int main() {
 
 ___
 
-## What is an exception?
+## Czym jest wyjątek?
 
-Every object can work as an exception.
+Każdy obiekt może działać jako wyjątek.
 <!-- .element: class="fragment fade-in" -->
 
 ```cpp
@@ -161,7 +161,7 @@ throw 42;
 ```
 <!-- .element: class="fragment fade-in" -->
 
-However, it's not recommended to use build-in types or any user created classes as an exception.
+Jednak nie zaleca się używania typów wbudowanych ani klas utworzonych przez użytkownika jako wyjątków.
 <!-- .element: class="fragment fade-in" -->
 
 ```cpp
@@ -169,5 +169,5 @@ throw std::runtime_error{"Huston, we have a problem"};
 ```
 <!-- .element: class="fragment fade-in" -->
 
-It is recommended to use exceptions from the standard library (like `std::runtime_error`) of create own exception classes that inherits from `std::exception`.
+Zaleca się używanie wyjątków ze standardowej biblioteki (np. `std::runtime_error`) lub tworzenie własnych klas wyjątków, dziedziczących po `std::exception`.
 <!-- .element: class="fragment fade-in" -->
