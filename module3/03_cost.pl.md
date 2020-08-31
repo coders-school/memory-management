@@ -2,7 +2,7 @@
 
 ## Czy wyjątki są drogie?
 
-* [Moje film na YT z wyjaśnieniem](https://www.youtube.com/watch?v=quF1Jex0YL8)
+* [Mój film na YT z wyjaśnieniem](https://www.youtube.com/watch?v=quF1Jex0YL8)
 
 * [Swobodny przebieg programu](https://quick-bench.com/q/6nZ33ylUe5VE2JE5QrqGP2y21VM)
 * [Przebieg wyjątkowy](https://quick-bench.com/q/sKFj6SN0Jxx2l-beKR7JNNGh-uQ)
