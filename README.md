@@ -10,7 +10,7 @@
 
 ### [Stos vs sterta](module1/02_stack_vs_heap.pl.md)
 
-### [Alokacja stosu](module1/03_stack_allocation.pl.md)
+### [Alokacja na stosie](module1/03_stack_allocation.pl.md)
 
 ### [Przepełnienie stosu](module1/04_stack_overflow.pl.md)
 
