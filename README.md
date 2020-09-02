@@ -16,7 +16,7 @@
 
 ### [Alokacja na stercie](module1/05_heap_allocation.pl.md)
 
-### [Nowe wyrażenie i operator `new`](module1/06_new_expression.pl.md)
+### [Wyrażenie `new` i `operator new`](module1/06_new_expression.pl.md)
 
 ### [Dynamiczna alokacja tablicy](module1/07_array_allocation.pl.md)
 
