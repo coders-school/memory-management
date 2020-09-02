@@ -9,7 +9,7 @@
   * <!-- .element: class="fragment fade-in" --> skompiluj binarkę
   * <!-- .element: class="fragment fade-in" --> uruchomić binarkę pod valgrind:
     * <!-- .element: class="fragment fade-in" --> <code>valgrind /path/to/binary</code>
-  * <!-- .element: class="fragment fade-in" --> użyj dodatkowych kontroli:
+  * <!-- .element: class="fragment fade-in" --> dodatkowe sprawdzenia:
     * <!-- .element: class="fragment fade-in" --> <code>valgrind --leak-check=full /path/to/binary</code>
 
 Oba sposoby nie działają w systemie Windows 😕
