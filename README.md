@@ -14,7 +14,7 @@
 
 ### [Przepełnienie stosu](module1/04_stack_overflow.pl.md)
 
-### [Alokacja sterty](module1/05_heap_allocation.pl.md)
+### [Alokacja na stercie](module1/05_heap_allocation.pl.md)
 
 ### [Nowe wyrażenie i operator `new`](module1/06_new_expression.pl.md)
 
