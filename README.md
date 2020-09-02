@@ -26,7 +26,7 @@
 
 ### [RAII](module1/10_raii.pl.md)
 
-### [Wykrywanie uszkodzeń pamięci](module1/11_memory_corruption.pl.md)
+### [Wykrywanie problemów z pamięcią](module1/11_memory_corruption.pl.md)
 
 ## [Moduł 2](module2/index.pl.md)
 
