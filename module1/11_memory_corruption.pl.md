@@ -12,5 +12,5 @@
   * <!-- .element: class="fragment fade-in" --> dodatkowe sprawdzenia:
     * <!-- .element: class="fragment fade-in" --> <code>valgrind --leak-check=full /path/to/binary</code>
 
-Oba sposoby nie działają w systemie Windows 😕
+Oba narzędzia nie działają w systemie Windows 😕
 <!-- .element: class="fragment fade-in" -->
