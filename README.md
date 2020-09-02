@@ -76,7 +76,7 @@ ___
 
 ### [Heap allocation](module1/05_heap_allocation.en.md)
 
-### [New expression and operator `new`](module1/06_new_expression.en.md)
+### [`new` expression and `operator new`](module1/06_new_expression.en.md)
 
 ### [Dynamic array allocation](module1/07_array_allocation.en.md)
 
