@@ -1,9 +1,9 @@
-## Nowe wyrażenie i operator `new`
+## Wyrażenie `new` i `operator new`
 
 [Wyrażenie new](https://en.cppreference.com/w/cpp/language/new) robi 3 rzeczy:
 
 * <!-- .element: class="fragment fade-in" --> alokacja <code>sizeof(T)</code> bajtów na stercie (poprzez odpowiedni <a href="https://en.cppreference.com/w/cpp/memory/new/operator_new">operator <code>new</code></a>)
-* <!-- .element: class="fragment fade-in" --> wywołanie konstruktora <code>T</code> na przydzieloną pamięć
+* <!-- .element: class="fragment fade-in" --> wywołanie konstruktora <code>T</code> na przydzielonej pamięci
 * <!-- .element: class="fragment fade-in" --> przypisanie adresu pamięci do wskaźnika
 
 ```cpp

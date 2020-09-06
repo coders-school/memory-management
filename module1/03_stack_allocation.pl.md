@@ -1,4 +1,4 @@
-## Alokacja stosu
+## Alokacja na stosie
 
 <div class="multicolumn">
 <div class="col">
@@ -9,7 +9,7 @@
   * <!-- .element: class="fragment fade-in" --> argumenty przekazane do funkcji (jeśli istnieją)
   * <!-- .element: class="fragment fade-in" --> adres zwrotny do wywołania
   * <!-- .element: class="fragment fade-in" --> miejsce na zmienne lokalne (jeśli istnieją)
-* <!-- .element: class="fragment fade-in" --> Automatyczne cofanie przydziału, gdy poza zakresem
+* <!-- .element: class="fragment fade-in" --> Automatyczne zwalnianie pamięci po wyjściu z zakresu
 
 <img height="200" data-src="img/stack.png" src="img/stack.png" alt="stack" class="plain">
 <!-- .element: class="fragment fade-in" -->

@@ -1,16 +1,16 @@
-## Alokacja sterty
+## Alokacja na stercie
 
 <div class="multicolumn">
 <div class="col" style="margin-top: 70px; font-size: 85%;">
 
-Alokacja sterty składa się z kilku kroków:
+Alokacja na stercie składa się z kilku kroków:
 <!-- .element: class="fragment fade-in" -->
 
 * <!-- .element: class="fragment fade-in" --> alokacja wskaźnika na stosie
 * <!-- .element: class="fragment fade-in" --> alokacja <code>sizeof(T)</code> bajtów na stercie
-* <!-- .element: class="fragment fade-in" --> wywołanie konstruktora <code>T</code> na przydzieloną pamięć
+* <!-- .element: class="fragment fade-in" --> wywołanie konstruktora <code>T</code> na przydzielonej pamięci
 * <!-- .element: class="fragment fade-in" --> przypisanie adresu pamięci do wskaźnika
-* <!-- .element: class="fragment fade-in" --> ręczne cofnięcie przydziału przy użyciu operatora <code>delete</code>
+* <!-- .element: class="fragment fade-in" --> ręczne zwolnienie pamięci przy użyciu operatora <code>delete</code>
 
 </div>
 <div class="col" style="margin: 15px;">

@@ -1,6 +1,6 @@
 ## Proste pytanie…
 
-Ile jest tutaj możliwych ścieżek egzekucji?
+Ile jest tutaj możliwych ścieżek wykonania programu?
 
 ```cpp
 String EvaluateSalaryAndReturnName(Employee e)
@@ -16,5 +16,5 @@ String EvaluateSalaryAndReturnName(Employee e)
 ```
 
 * <!-- .element: class="fragment fade-in" --> 23 (dwadzieścia trzy)
-* <!-- .element: class="fragment fade-in" --> Wyjątki są powodem
+* <!-- .element: class="fragment fade-in" --> Powodem są wyjątki
 * <!-- .element: class="fragment fade-in" --> Przykład: Herb Sutter, <a href="http://www.gotw.ca/gotw/020.htm">GotW#20</a>

@@ -55,7 +55,7 @@ int main() {
 ### Wiszący wskaźnik
 <!-- .element: class="fragment fade-in" -->
 
-Wskaźnik wskazujący na coś, co jest nieprawidłowe
+Wskaźnik wskazujący na wcześniej zwolnioną pamięć
 <!-- .element: class="fragment fade-in" -->
 
 ___
@@ -80,7 +80,7 @@ int main() {
 ### Podwójne usunięcie
 <!-- .element: class="fragment fade-in" -->
 
-Dzieje się tak, gdy wiszący wskaźnik zostanie usunięty
+Dzieje się tak, gdy wołamy delete na wiszącym wskaźniku.
 <!-- .element: class="fragment fade-in" -->
 
 ___
@@ -101,7 +101,7 @@ int main() {
 }
 ```
 
-### Wyłuskiwanie wskaźnika zerowego
+### Wyłuskiwanie `nullptr`
 <!-- .element: class="fragment fade-in" -->
 
 Dzieje się tak, gdy użyto `nullptr`
@@ -127,7 +127,7 @@ int main() {
 }
 ```
 
-### Zwalnianie bloków przydzielonych na stosie
+### Zwalnianie bloków pamięci zaalokowanych na stosie
 <!-- .element: class="fragment fade-in" -->
 
 ___
@@ -144,7 +144,7 @@ int main() {
 }
 ```
 
-### Zwalnianie części bloku dynamicznego
+### Zwalnianie części bloku zaalokowanego dynamicznie
 <!-- .element: class="fragment fade-in" -->
 
 Użycie `delete` zamiast `delete[]`
@@ -185,9 +185,9 @@ ___
 * <!-- .element: class="fragment fade-in" --> zwolnienie części bloku dynamicznego
 * <!-- .element: class="fragment fade-in" --> wyciek pamięci
 
-Wszystkie problemy z alokacją powodują Niezdefiniowane Zachowanie.
+Wszystkie problemy z alokacją powodują UB - Undefined Behavior (Niezdefiniowane Zachowanie).
 <!-- .element: class="fragment fade-in" -->
 
-Problemy te można rozwiązać za pomocą ASAN (Address Sanitizer) lub Valgrind.
+Problemy te można wykryć za pomocą ASAN (Address Sanitizer) lub Valgrind.
 Niestety nie działają one w systemie Windows 😕
 <!-- .element: class="fragment fade-in" -->
