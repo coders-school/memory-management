@@ -11,8 +11,8 @@ ___
 * <!-- .element: class="fragment fade-in" --> jeden obiekt == jeden właściciel
 * <!-- .element: class="fragment fade-in" --> destruktor niszczy obiekt
 * <!-- .element: class="fragment fade-in" --> kopiowanie niedozwolone
-* <!-- .element: class="fragment fade-in" --> przemieszczanie dozwolone
-* <!-- .element: class="fragment fade-in" --> można użyć niestandardowego usuwania
+* <!-- .element: class="fragment fade-in" --> przenoszenie dozwolone
+* <!-- .element: class="fragment fade-in" --> można użyć niestandardowego deletera
 
 <img data-src="img/uniqueptrinverted.png" alt="unique pointers" class="plain fragment fade-in">
 
@@ -26,7 +26,7 @@ ___
 <div class="col">
 
 ```cpp
-#include <iostream> // podejście w starym stylu
+#include <iostream> // old-style approach
 
 
 struct Msg {
@@ -51,7 +51,7 @@ int main() {
 <div class="col">
 
 ```cpp
-#include <memory> // podejście nowoczesne
+#include <memory> // modern approach
 #include <iostream>
 
 struct Msg {
@@ -79,7 +79,7 @@ ___
 ### użycie `std::unique_ptr<>`
 
 * <!-- .element: class="fragment fade-in" --> Kopiowanie nie jest dozwolone
-* <!-- .element: class="fragment fade-in" --> Przemieszczanie jest dozwolone
+* <!-- .element: class="fragment fade-in" --> Przenoszenie jest dozwolone
 
 <div class="multicolumn">
 <div class="col">
@@ -92,12 +92,12 @@ void simpleUsage() {
     source();
     sink(source());
     auto ptr = source();
-    // sink(ptr);       // błąd kompilacji
+    // sink(ptr);       // compilation error
     sink(std::move(ptr));
     auto p1 = source();
-    // auto p2 = p1;    // błąd kompilacji
+    // auto p2 = p1;    // compilation error
     auto p2 = std::move(p1);
-    // p1 = p2;         // błąd kompilacji
+    // p1 = p2;         // compilation error
     p1 = std::move(p2);
 }
 ```
@@ -116,10 +116,10 @@ void collections() {
     v.push_back(source());
 
     auto tmp = source();
-    // v.push_back(tmp); // błąd kompilacji
+    // v.push_back(tmp); // compilation error
     v.push_back(std::move(tmp));
 
-    // sink(v[0]);       // błąd kompilacji
+    // sink(v[0]);       // compilation error
     sink(std::move(v[0]));
 
 }
@@ -145,7 +145,7 @@ int main() {
     deleteResource(ptr.release());
     ptr.reset(new int{10});
     referenceInterface(*ptr);
-    ptr.reset(); // ptr jest nullptr
+    ptr.reset(); // ptr is a nullptr
     return 0;
 }
 ```
@@ -169,12 +169,12 @@ struct Msg {
 
 int main() {
     auto ptr1 = std::unique_ptr<Msg>(new Msg{5});
-    auto ptr2 = std::make_unique<Msg>(5);   // równoznaczne z powyższym
+    auto ptr2 = std::make_unique<Msg>(5);   // equivalent to above
     return 0;
 }
 ```
 
-`std::make_unique()` jest funkcją fabryczną, która generuje `unique_ptrs`
+`std::make_unique()` jest funkcją szablonową, która generuje `unique_ptrs`
 <!-- .element: class="fragment fade-in" -->
 
 * <!-- .element: class="fragment fade-in" --> dodane w C++14 do symetrycznych operacji na unikalnych i wspólnych wskaźnikach
@@ -200,7 +200,7 @@ void use(void)
 }
 ```
 
-* <!-- .element: class="fragment fade-in" --> Podczas niszczenia
+* <!-- .element: class="fragment fade-in" --> Podczas usuwania
   * <!-- .element: class="fragment fade-in" --> <code>std::unique_ptr&ltT&gt</code> wywołuje <code>delete</code>
   * <!-- .element: class="fragment fade-in" --> <code>std::unique_ptr&ltT[]&gt</code> wywołuje <code>delete[]</code>
 * <!-- .element: class="fragment fade-in" --> <code>std::unique_ptr&ltT[]&gt</code> ma dodatkowy <code>operator[]</code> umożliwiający dostęp do elementu tablicy

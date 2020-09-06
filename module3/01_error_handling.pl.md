@@ -61,7 +61,7 @@ Konstruktory i operatory mają ściśle zdefiniowane typy zwracane (lub brak typ
 struct FileWrapper {
     FileWrapper(std::string const& filePath)
             : m_file(fopen(filePath.c_str(), "rw")) {
-        /* A jeśli plik się nie otworzył? */
+        /* What if the file did not open? */
     }
 
     ~FileWrapper() {
@@ -69,7 +69,7 @@ struct FileWrapper {
     }
 
     FileWrapper & operator<<(std::string const& text) {
-        /* A jeśli plik się nie otworzył? */
+        /* What if the file did not open? */
         fputs(text.c_str(), m_file);
         return *this;
     }
@@ -100,7 +100,7 @@ struct FileWrapper {
     }
 
     FileWrapper & operator<<(std::string const& text) {
-        /* Nie jest wymagana weryfikacja, nie można utworzyć nieprawidłowego obiektu */
+        /* Not validation needed, invalid object cannot be created */
         fputs(text.c_str(), m_file);
         return *this;
     }

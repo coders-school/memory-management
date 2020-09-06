@@ -1,6 +1,6 @@
 ﻿<!-- .slide: data-background="#111111" -->
 
-## Czy wyjątki są drogie?
+## Czy wyjątki są kosztowne?
 
 * [Mój film na YT z wyjaśnieniem](https://www.youtube.com/watch?v=quF1Jex0YL8)
 

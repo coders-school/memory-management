@@ -80,7 +80,7 @@ int main() {
 ### Podwójne usunięcie
 <!-- .element: class="fragment fade-in" -->
 
-Dzieje się tak, gdy wołamy delete na wiszącym wskaźniku.
+Dzieje się tak, gdy wołamy `delete` na wiszącym wskaźniku.
 <!-- .element: class="fragment fade-in" -->
 
 ___
@@ -180,9 +180,9 @@ ___
 * <!-- .element: class="fragment fade-in" --> dostęp do pamięci spoza zakresu
 * <!-- .element: class="fragment fade-in" --> wiszący wskaźnik
 * <!-- .element: class="fragment fade-in" --> podwójne usuwanie
-* <!-- .element: class="fragment fade-in" --> wyłuskiwanie wskaźnika <code>null</code>
-* <!-- .element: class="fragment fade-in" --> zwalnianie bloków pamięci, które nie zostały przydzielone dynamicznie
-* <!-- .element: class="fragment fade-in" --> zwolnienie części bloku dynamicznego
+* <!-- .element: class="fragment fade-in" --> wyłuskiwanie <code>nullptr</code>
+* <!-- .element: class="fragment fade-in" --> zwalnianie bloków pamięci, które nie zostały zaalokowane dynamicznie
+* <!-- .element: class="fragment fade-in" --> zwolnienie części bloków zaalokowanych dynamicznie
 * <!-- .element: class="fragment fade-in" --> wyciek pamięci
 
 Wszystkie problemy z alokacją powodują UB - Undefined Behavior (Niezdefiniowane Zachowanie).

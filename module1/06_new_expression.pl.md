@@ -7,16 +7,16 @@
 * <!-- .element: class="fragment fade-in" --> przypisanie adresu pamięci do wskaźnika
 
 ```cpp
-// wymienne funkcje alokacji
+// replaceable allocation functions
 void* operator new ( std::size_t count );
 void* operator new[]( std::size_t count );
-// wymienne, nierzucające funkcje alokacji
+// replaceable non-throwing allocation functions
 void* operator new ( std::size_t count, const std::nothrow_t& tag);
 void* operator new[]( std::size_t count, const std::nothrow_t& tag);
-// definiowane przez użytkownika funkcje alokacji miejsc docelowych
+// user-defined placement allocation functions
 void* operator new ( std::size_t count, user-defined-args... );
 void* operator new[]( std::size_t count, user-defined-args... );
-// dodatkowy parametr std::align_val_t od C++17, [[nodiscard]] od C++20
-// kilka innych wersji na https://en.cppreference.com/w/cpp/memory/new/operator_new
+// additional param std::align_val_t since C++17, [[nodiscard]] since C++20
+// some more versions on https://en.cppreference.com/w/cpp/memory/new/operator_new
 ```
 <!-- .element: class="fragment fade-in" -->

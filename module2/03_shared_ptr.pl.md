@@ -9,10 +9,10 @@ ___
 ### Cechy
 
 * <!-- .element: class="fragment fade-in" --> jeden obiekt == wielu właścicieli
-* <!-- .element: class="fragment fade-in" --> ostatnia strona odsyłająca niszczy obiekt
+* <!-- .element: class="fragment fade-in" --> ostatnia strona odsyłająca usuwa obiekt
 * <!-- .element: class="fragment fade-in" --> kopiowanie dozwolone
-* <!-- .element: class="fragment fade-in" --> przemieszczanie dozwolone
-* <!-- .element: class="fragment fade-in" --> możliwe użycie niestandardowego usuwania
+* <!-- .element: class="fragment fade-in" --> przenoszenie dozwolone
+* <!-- .element: class="fragment fade-in" --> możliwe użycie niestandardowego deletera
 * <!-- .element: class="fragment fade-in" --> możliwe użycie niestandardowego alokatora
 
 <img data-src="img/sharedptr1inverted.png" alt="shared pointers" class="plain fragment fade-in">
@@ -85,23 +85,23 @@ std::map<std::string, std::shared_ptr<Gadget>> gadgets;
 // above wouldn't compile with C++03. Why?
 
 void foo() {
-    std::shared_ptr<Gadget> p1{new Gadget()};   // licznik odniesienia = 1
+    std::shared_ptr<Gadget> p1{new Gadget()};   // reference counter = 1
     {
-        auto p2 = p1;                           // kopiowanie (licznik odniesienia == 2)
-        gadgets.insert(make_pair("mp3", p2));   // kopiowanie (licznik odniesienia == 3)
+        auto p2 = p1;                           // copy (reference counter == 2)
+        gadgets.insert(make_pair("mp3", p2));   // copy (reference counter == 3)
         p2->use();
-    }                                           // destrukcja p2, licznik odniesienia = 2
-}                                               // destrukcja p1, licznik odniesienia = 1
+    }                                           // destruction of p2, reference counter = 2
+}                                               // destruction of p1, reference counter = 1
 
 int main() {
     foo();
-    gadgets.clear();                            // licznik odniesienia = 0 - gadżet jest usunięty
+    gadgets.clear();                            // reference counter = 0 - gadget is removed
 }
 ```
 
 ___
 
-### `std::shared_ptr<>` cykliczne zależności
+### Zależności cykliczne `std::shared_ptr<>`
 
 * co się tutaj stało?
 

@@ -84,9 +84,7 @@ ___
 * <!-- .element: class="fragment fade-in" --> uruchom konstruktor <code>MyData</code>
 * <!-- .element: class="fragment fade-in" --> przypisz adres przydzielonej pamięci do <code>p</code>
 
-Kolejność oceny operandów prawie wszystkich operatorów C++ (w tym kolejność
-oceny argumentów funkcji w wyrażeniu wywołania funkcji i kolejność oceny
-podwyrażenia w dowolnym wyrażeniu) jest **nieokreślona**.
+Kolejność oceny operandów prawie wszystkich operatorów C++ (w tym kolejność oceny argumentów funkcji w wyrażeniu  wywołania funkcji i kolejność oceny podwyrażenia w dowolnym wyrażeniu) jest **nieokreślona**.
 
 <!-- .element: class="fragment fade-in box" -->
 
@@ -103,7 +101,7 @@ ___
 | (2) uruchom konstruktor `MyData`               | (2) uruchom konstruktor `MyData`                |
 | (3) przypisz adres przydzielonej pamięci do `p`| (3) przypisz adres przydzielonej pamięci do `p` |
 
-* <!-- .element: class="fragment fade-in" --> Nieokreślona kolejność wyceny oznacza, że ​​kolejność może być na przykład:
+* <!-- .element: class="fragment fade-in" --> Nieokreślona kolejność wyceny oznacza, że przykładowa kolejność może być następująca:
   * A1, A2, B1, B2, C3, C3
 * <!-- .element: class="fragment fade-in" --> Co jeśli B2 zgłosi wyjątek?
 
@@ -111,7 +109,7 @@ ___
 
 ### Używaj `std::make_shared()` / `std::make_unique()`
 
-* <!-- .element: class="fragment fade-in" --> <code>std::make_shared()</code> / <code>std::make_unique()</code> rozwiązuje problem
+* <!-- .element: class="fragment fade-in" --> <code>std::make_shared()</code> / <code>std::make_unique()</code> rozwiązuje ten problem
 
 ```cpp
 struct MyData{ int value; };
@@ -141,8 +139,8 @@ void bar(std::shared_ptr<MyData> p) {
 }
 ```
 
-* <!-- .element: class="fragment fade-in" --> wymaga zwiększania / zmniejszania liczników
-* <!-- .element: class="fragment fade-in" --> atomy / blokady nie są darmowe
+* <!-- .element: class="fragment fade-in" --> wymaga inkrementacji / dekrementacji liczników
+* <!-- .element: class="fragment fade-in" --> zmienne atomowe / blokady nie są darmowe
 * <!-- .element: class="fragment fade-in" --> wywoła destruktory
 
 ##### Może być lepiej?
@@ -181,7 +179,7 @@ ___
 
 ## Ćwiczenie: List
 
-Spójrz na plik `List.cpp`, w którym zaimplementowano prostą (i błędną) listę pojedyńczo łączoną.
+Spójrz na plik `List.cpp`, w którym zaimplementowano prostą (i błędną) listę jednokierunkową.
 
 * Metoda `void add(Node* node)` dodaje nowy węzeł na końcu listy.
 * Metoda `Node* get(const int value)` iteruje po liście i zwraca pierwszy węzeł z pasującym argumentem `value` lub `nullptr`

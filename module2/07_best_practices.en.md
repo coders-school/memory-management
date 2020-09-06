@@ -84,9 +84,7 @@ ___
 * <!-- .element: class="fragment fade-in" --> run <code>MyData</code> constructor
 * <!-- .element: class="fragment fade-in" --> assign address of allocated memory to <code>p</code>
 
-The order of evaluation of operands of almost all C++ operators (including the order of
-evaluation of function arguments in a function-call expression and the order of evaluation of
-the subexpressions within any expression) is **unspecified**.
+The order of evaluation of operands of almost all C++ operators (including the order of evaluation of function arguments in a function-call expression and the order of evaluation of the subexpressions within any expression) is  **unspecified**.
 <!-- .element: class="fragment fade-in box" -->
 
 ___

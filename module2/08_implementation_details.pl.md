@@ -9,7 +9,7 @@ ___
 * <!-- .element: class="fragment fade-in" --> Tylko ramka do przechowywania
 * <!-- .element: class="fragment fade-in" --> Zawiera wskaźnik obiektu
 * <!-- .element: class="fragment fade-in" --> Konstruktor kopiuje wskaźnik
-* <!-- .element: class="fragment fade-in" --> Wywołaj prawidłowe usuwanie w destruktorze
+* <!-- .element: class="fragment fade-in" --> Wywołanie właściwego usuwania w destruktorze
 * <!-- .element: class="fragment fade-in" --> Bez kopiowania
 * <!-- .element: class="fragment fade-in" --> Przeniesienie oznacza:
   * <!-- .element: class="fragment fade-in" --> Kopiowanie oryginalnego wskaźnika do nowego obiektu
@@ -30,8 +30,8 @@ ___
   * <!-- .element: class="fragment fade-in" --> dekrementuje <code>shared-refs</code>
   * <!-- .element: class="fragment fade-in" --> usuwa dane użytkownika, gdy <code>shared-refs == 0</code>
   * <!-- .element: class="fragment fade-in" --> usuwa liczniki odwołań, gdy <code>shared-refs == 0</code> i <code>weak-refs == 0</code>
-* <!-- .element: class="fragment fade-in" --> Extra space for a deleter
-* <!-- .element: class="fragment fade-in" --> All methods are inline
+* <!-- .element: class="fragment fade-in" --> Dodatkowe miejsce na deleter
+* <!-- .element: class="fragment fade-in" --> Wszystkie metody są liniowe
 
 ___
 
@@ -39,7 +39,7 @@ ___
 
 * <!-- .element: class="fragment fade-in" --> Kopiowanie oznacza:
   * <!-- .element: class="fragment fade-in" --> Kopiowanie wskaźników do celu
-  * <!-- .element: class="fragment fade-in" --> Zwiększenie <code>shared-refs</code>
+  * <!-- .element: class="fragment fade-in" --> Inkrementację <code>shared-refs</code>
 
 <img data-src="img/sharedptr3inverted.png" alt="sharedptr3" class="plain fragment fade-in">
 
@@ -69,7 +69,7 @@ ___
 
 * <!-- .element: class="fragment fade-in" --> Kopiowanie oznacza:
   * <!-- .element: class="fragment fade-in" --> kopiowanie wskaźników do celu
-  * <!-- .element: class="fragment fade-in" --> zwiększenie <code>weak-refs</code>
+  * <!-- .element: class="fragment fade-in" --> inkrementację <code>weak-refs</code>
 
 <img data-src="img/sharedptr6inverted.png" alt="sharedptr6" class="plain fragment fade-in">
 
@@ -100,7 +100,7 @@ ___
 <img data-src="img/sharedptr10inverted.png" alt="sharedptr10" class="plain fragment fade-in">
 
 * <!-- .element: class="fragment fade-in" --> <code>auto p = std::make_shared&ltData&gt();</code>
-  * <!-- .element: class="fragment fade-in" --> Mniej pamięci (najprawdopodobniej)
+  * <!-- .element: class="fragment fade-in" --> Mniej pamięci (zazwyczaj)
   * <!-- .element: class="fragment fade-in" --> Tylko jeden przydział
   * <!-- .element: class="fragment fade-in" --> Przyjazny dla pamięci podręcznej
 

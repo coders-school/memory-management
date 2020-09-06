@@ -51,7 +51,7 @@ int main() {
 
 ___
 
-## Mechanizm odwijania stosu
+## Mechanizm rozwijania stosu
 
 * <!-- .element: class="fragment fade-in" --> Zgłoszone wyjątki uruchamiają mechanizm rozwijania stosu
 * <!-- .element: class="fragment fade-in" --> Typ wyjątku jest dopasowywany do kolejnych klauzul <code>catch</code>
@@ -105,7 +105,7 @@ int main() {
 
 ___
 
-## Dlaczego nie wywołano destruktorów?
+## Dlaczego destruktory nie zostały wywołane?
 
 * <!-- .element: class="fragment fade-in" --> Mechanizm rozwijania stosu najpierw sprawdza pasującą klauzulę <code>catch</code> w bieżącym bloku <code>try</code> przed zniszczeniem obiektów
 * <!-- .element: class="fragment fade-in" --> Wyjątek, który nie został przechwycony i wypada z głównego zakresu funkcji wywołuje <code>std::terminate()</code>. To zabija program.
@@ -170,7 +170,7 @@ ___
 * <!-- .element: class="fragment fade-in" --> Ponownie zgłoszony wyjątek uruchamia ponownie rozwijanie stosu
 * <!-- .element: class="fragment fade-in" --> Odwijanie stosu trwa aż do osiągnięcia kolejnego bloku <code>try</code>
 * <!-- .element: class="fragment fade-in" --> Klauzula <code>catch</code> dla typu podstawowego może przechwycić wyjątek typu pochodnego
-* <!-- .element: class="fragment fade-in" --> Nie zmienia oryginalnego typu wyjątku, gdy jest ponownie generowany
+* <!-- .element: class="fragment fade-in" --> Nie zmienia oryginalnego typu wyjątku, gdy jest ponownie ten jest ponownie zgłaszany.
 
 ___
 <!-- .slide: style="font-size: 0.9em" -->

@@ -68,7 +68,7 @@ Expired
 
 ___
 
-### `std::shared_ptr<>` zależności cykliczne
+### Zależności cykliczne `std::shared_ptr<>`
 
 * Jak rozwiązać ten problem?
 

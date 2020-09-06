@@ -75,7 +75,7 @@ int main(void) {
 
 ___
 
-## Shared pointer – `make_shared`
+## Shared pointer – `std::make_shared`
 
 ```cpp
 #include <memory>
