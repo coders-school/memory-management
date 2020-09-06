@@ -7,7 +7,7 @@
 
 * Trener i DevOps w Coders School
 * Developer C++ i Python w Nokii i Credit Suisse
-* Team leader i Trener w Nokia
+* Team leader i Trener w Nokii
 * Scrum Master w Nokia i Credit Suisse
 * Code Reviewer w Nokia
 * Web developer (HTML, PHP, CSS) w StarCraft Area
