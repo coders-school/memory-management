@@ -60,10 +60,6 @@ ___
 
 # Memory and resource management
 
-<a href="https://coders.school">
-    <img width="500" data-src="coders_school_logo.png" src="coders_school_logo.png" alt="Coders School" class="plain">
-</a>
-
 ## [Module 1](module1/index.en.html)
 
 ### [Memory map](module1/01_memory_map.en.md)
