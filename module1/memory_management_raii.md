@@ -28,3 +28,17 @@
 
 </div>
 <!-- .element: class="fragment fade-in" -->
+
+___
+
+## Exercise
+
+Take a look into exercises/FileOperations.cpp file. It is casual file handling in C language.
+Write a FileHandler class that implements RAII and mimicks the behavior implemented in FileOperations.cpp.
+
+Remember about:
+
+* proper constructor that acquire a file
+* proper destructor that release the file
+* `operator<<` for displaying file content on the screen
+* error handling
