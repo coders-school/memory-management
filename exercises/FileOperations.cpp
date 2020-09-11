@@ -1,23 +1,53 @@
 #include <cstdio>
 #include <cstdlib>
+#include <iostream>
+
+//wyjątek
+class FileOpeningError : public std::runtime_error{
+public:
+    FileOpeningError(std::string fileName) : std::runtime_error("File opening failed: " + fileName) {}
+};
+
+class FileHandler{
+private:
+    std::string fileName_;
+    FILE* fp_;
+public:
+    FileHandler(std::string fileName) : fileName_(fileName){
+        fp_ = std::fopen(fileName_.c_str(), "r");
+        if(!fp_){
+            throw FileOpeningError{fileName};
+        }
+    }
+
+    ~FileHandler(){
+        std::fclose(fp_);
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const FileHandler& fH){
+        char c;
+        while((c = std::fgetc(fH.fp_)) != EOF){
+            os << c;
+        }
+        if(std::ferror(fH.fp_))
+            throw std::runtime_error("I/O error when reading");
+        else if(std::feof(fH.fp_))
+            os << "End of file reached successfully";
+
+        return os;
+    }
+};
+
 
 int main()
 {
-    FILE* fp = std::fopen("exampale.cpp", "r");
-    if(!fp) {
-        std::perror("File opening failed");
-        return EXIT_FAILURE;
+    try {
+        FileHandler fh(std::string{"../ResourceD.cpp"});
+        std::cout << fh;
+    } catch(FileOpeningError& foe){
+        std::cerr << foe.what() << '\n';
+    } catch (std::runtime_error& re) {
+        std::cerr << re.what() << '\n';
     }
-
-    int c; // note: int, not char, required to handle EOF
-    while ((c = std::fgetc(fp)) != EOF) { // standard C I/O file reading loop
-       std::putchar(c);
-    }
-
-    if (std::ferror(fp))
-        std::puts("I/O error when reading");
-    else if (std::feof(fp))
-        std::puts("End of file reached successfully");
-
-    std::fclose(fp);
+    return 0;
 }
