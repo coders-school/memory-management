@@ -8,6 +8,8 @@ public:
     unique_ptr(const unique_ptr&& otherPtr);
     ~unique_ptr();
 
+    T operator*() const;
+
 private:
     T* ptr_;
 };
@@ -27,4 +29,12 @@ unique_ptr<T>::~unique_ptr() {
     if (ptr_) {
         delete ptr_;
     }
+}
+
+template <typename T>
+T unique_ptr<T>::operator*() const {
+    if (!ptr_) {
+        return nullptr;
+    }
+    return *ptr_;
 }
