@@ -11,6 +11,7 @@ public:
     T operator*() const;
     T operator->() const;
     T get() const;
+    T* release();
 
 private:
     T* ptr_;
@@ -55,4 +56,11 @@ T unique_ptr<T>::get() const {
         return nullptr;
     }
     return ptr_;
+}
+
+template <typename T>
+T* unique_ptr<T>::release() {
+    T* tempPtr = ptr_;
+    ptr_ = nullptr;
+    return tempPtr;
 }
