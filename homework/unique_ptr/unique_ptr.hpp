@@ -5,6 +5,7 @@ class unique_ptr {
 public:
     unique_ptr(T* ptr);
     unique_ptr(const unique_ptr&) = delete;
+    unique_ptr(const unique_ptr&& otherPtr);
     ~unique_ptr();
 
 private:
@@ -14,6 +15,12 @@ private:
 template <typename T>
 unique_ptr<T>::unique_ptr(T* ptr)
     : ptr_(ptr) {}
+
+template <typename T>
+unique_ptr<T>::unique_ptr(const unique_ptr&& otherPtr)
+    : ptr_(otherPtr) {
+        otherPtr = nullptr;
+    }
 
 template <typename T>
 unique_ptr<T>::~unique_ptr() {
