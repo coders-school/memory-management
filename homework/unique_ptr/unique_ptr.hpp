@@ -9,6 +9,7 @@ public:
     ~unique_ptr();
 
     T operator*() const;
+    T operator->() const;
 
 private:
     T* ptr_;
@@ -37,4 +38,12 @@ T unique_ptr<T>::operator*() const {
         return nullptr;
     }
     return *ptr_;
+}
+
+template <typename T>
+T unique_ptr<T>::operator->() const {
+    if (!ptr_) {
+        return nullptr;
+    }
+    return ptr_;
 }
