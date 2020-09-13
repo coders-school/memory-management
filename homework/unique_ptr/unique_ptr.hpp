@@ -18,7 +18,7 @@ public:
     T& operator*();
 
 private:
-    T* ptr_;
+    T* ptr_{};
 };
 
 template <typename T>
