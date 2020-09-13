@@ -10,6 +10,7 @@ public:
 
     T operator*() const;
     T operator->() const;
+    T get() const;
 
 private:
     T* ptr_;
@@ -42,6 +43,14 @@ T unique_ptr<T>::operator*() const {
 
 template <typename T>
 T unique_ptr<T>::operator->() const {
+    if (!ptr_) {
+        return nullptr;
+    }
+    return ptr_;
+}
+
+template <typename T>
+T unique_ptr<T>::get() const {
     if (!ptr_) {
         return nullptr;
     }
