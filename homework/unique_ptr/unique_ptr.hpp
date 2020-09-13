@@ -14,7 +14,7 @@ public:
     const T* get() const;
     void reset(T* newPtr);
 
-    T* operator->();
+    const T* operator->();
     T& operator*();
 
 private:
@@ -39,7 +39,7 @@ unique_ptr<T>::~unique_ptr() {
 }
 
 template <typename T>
-T* unique_ptr<T>::operator->() {
+const T* unique_ptr<T>::operator->() {
     return ptr_;
 }
 
