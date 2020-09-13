@@ -1,7 +1,25 @@
-#include "unique_ptr.h"
-#include <iostream>
+#pragma once
 
 namespace cs {
+
+template <typename T>
+class unique_ptr {
+public:
+    unique_ptr(T* ptr);
+    unique_ptr(unique_ptr&& previousOwner);
+    unique_ptr(const unique_ptr&) = delete;
+    ~unique_ptr();
+
+    T* release();
+    const T* get() const;
+    void reset(T* newPtr);
+
+    T* operator->();
+    T& operator*();
+
+private:
+    T* ptr_;
+};
 
 template <typename T>
 unique_ptr<T>::unique_ptr(T* ptr)
@@ -57,7 +75,5 @@ void unique_ptr<T>::reset(T* newPtr) {
         delete oldPtr;
     }
 }
-
-template class unique_ptr<int>;
 
 }  // namespace cs
