@@ -63,11 +63,6 @@ T* unique_ptr<T>::release() {
 
 template <typename T>
 void unique_ptr<T>::reset(T* newPtr) {
-    if (nullptr == newPtr) {
-        delete ptr_;
-        return;
-    }
-
     T* oldPtr = ptr_;
     ptr_ = newPtr;
     if (oldPtr) {
