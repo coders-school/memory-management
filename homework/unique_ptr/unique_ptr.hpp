@@ -29,7 +29,6 @@ unique_ptr<T>::unique_ptr(T* ptr)
 template <typename T>
 unique_ptr<T>::unique_ptr(unique_ptr&& previousOwner) {
     ptr_ = previousOwner.release();
-    std::cout << "move contructor\n";
 }
 
 template <typename T>
