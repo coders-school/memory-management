@@ -6,6 +6,7 @@ template <typename T>
 class unique_ptr {
 public:
     unique_ptr(T* ptr);
+    unique_ptr() = delete;
     unique_ptr(unique_ptr&& previousOwner);
     unique_ptr(const unique_ptr&) = delete;
     ~unique_ptr();
