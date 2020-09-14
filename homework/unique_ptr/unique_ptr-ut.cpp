@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-
+#include <string>
 #include "unique_ptr.hpp"
 
 constexpr int testValueOne = 10;
@@ -16,4 +16,12 @@ TEST_F(uniquePtrTest, checkConstructors) {
     unique_ptr<int> uPtr2(new int{testValueTwo});
     unique_ptr<int> uPtr3(std::move(uPtr2));
     ASSERT_EQ(*uPtr3, 20);
+}
+
+TEST_F(uniquePtrTest, checkOperators) {
+    unique_ptr<std::string> uPtr2(new std::string{"AbCd"});
+    ASSERT_EQ(uPtr2->at(0), 'A');
+    ASSERT_EQ(uPtr2->at(1), 'b');
+    ASSERT_EQ(uPtr2->at(2), 'C');
+    ASSERT_EQ(uPtr2->at(3), 'd');
 }

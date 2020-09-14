@@ -9,7 +9,7 @@ public:
     ~unique_ptr();
 
     T& operator*() const;
-    T operator->() const;
+    T* operator->() const;
     T get() const;
     T* release();
     void reset(T* newPtr);
@@ -40,7 +40,7 @@ T& unique_ptr<T>::operator*() const {
 }
 
 template <typename T>
-T unique_ptr<T>::operator->() const {
+T* unique_ptr<T>::operator->() const {
     if (!ptr_) {
         return nullptr;
     }
