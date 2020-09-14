@@ -5,6 +5,6 @@ int main() {
     unique_ptr<int> uPtr(new int{10});
     std::cout << *uPtr;
     unique_ptr<int> uPtr2(std::move(uPtr));
-    
+    std::cout << uPtr.get();
     return 1;
 }

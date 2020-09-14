@@ -25,3 +25,8 @@ TEST_F(uniquePtrTest, checkOperators) {
     ASSERT_EQ(uPtr2->at(2), 'C');
     ASSERT_EQ(uPtr2->at(3), 'd');
 }
+
+TEST_F(uniquePtrTest, checkGet) {
+    auto ptr = uPtr.get();
+    ASSERT_EQ(*ptr, *uPtr);
+}
