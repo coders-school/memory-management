@@ -30,3 +30,9 @@ TEST_F(uniquePtrTest, checkGet) {
     auto ptr = uPtr.get();
     ASSERT_EQ(*ptr, *uPtr);
 }
+
+TEST_F(uniquePtrTest, checkRelease) {
+    auto ptr = uPtr.release();
+    ASSERT_EQ(*ptr, testValueOne);
+    ASSERT_EQ(uPtr.get(), nullptr);
+}
