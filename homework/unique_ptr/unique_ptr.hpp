@@ -5,10 +5,10 @@ class unique_ptr {
 public:
     unique_ptr(T* ptr);
     unique_ptr(const unique_ptr&) = delete;
-    unique_ptr(const unique_ptr&& otherPtr);
+    unique_ptr(unique_ptr&& otherPtr);
     ~unique_ptr();
 
-    T operator*() const;
+    T& operator*() const;
     T operator->() const;
     T get() const;
     T* release();
@@ -23,9 +23,8 @@ unique_ptr<T>::unique_ptr(T* ptr)
     : ptr_(ptr) {}
 
 template <typename T>
-unique_ptr<T>::unique_ptr(const unique_ptr&& otherPtr)
-    : ptr_(otherPtr) {
-        otherPtr = nullptr;
+unique_ptr<T>::unique_ptr(unique_ptr&& otherPtr) {
+        ptr_ = otherPtr.release();
     }
 
 template <typename T>
@@ -36,10 +35,7 @@ unique_ptr<T>::~unique_ptr() {
 }
 
 template <typename T>
-T unique_ptr<T>::operator*() const {
-    if (!ptr_) {
-        return nullptr;
-    }
+T& unique_ptr<T>::operator*() const {
     return *ptr_;
 }
 
