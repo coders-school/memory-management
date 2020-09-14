@@ -36,3 +36,8 @@ TEST_F(uniquePtrTest, checkRelease) {
     ASSERT_EQ(*ptr, testValueOne);
     ASSERT_EQ(uPtr.get(), nullptr);
 }
+
+TEST_F(uniquePtrTest, checkReset) {
+    uPtr.reset(new int{testValueTwo});
+    ASSERT_EQ(*uPtr, testValueTwo);
+}
