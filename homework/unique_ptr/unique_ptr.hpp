@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdexcept>
+
 template <typename T>
 class unique_ptr {
 public:
@@ -29,21 +31,19 @@ unique_ptr<T>::unique_ptr(unique_ptr&& otherPtr) {
 
 template <typename T>
 unique_ptr<T>::~unique_ptr() {
-    if (ptr_) {
-        delete ptr_;
-    }
+    delete ptr_;
 }
 
 template <typename T>
 T& unique_ptr<T>::operator*() const {
+    if (!ptr_) {
+        throw std::runtime_error("Pointer is nullptr");
+    }
     return *ptr_;
 }
 
 template <typename T>
 T* unique_ptr<T>::operator->() const {
-    if (!ptr_) {
-        return nullptr;
-    }
     return ptr_;
 }
 
@@ -64,5 +64,8 @@ T* unique_ptr<T>::release() {
 
 template <typename T>
 void unique_ptr<T>::reset(T* newPtr) {
+    if (ptr_) {
+        delete ptr_;
+    }
     ptr_ = newPtr;
 }
