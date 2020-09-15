@@ -4,44 +4,58 @@ template <typename T>
 class UniquePtr {
 public:
     UniquePtr(T* ptr)
-        : p{ptr} {}
+        : ptr_{ptr} {}
 
-    UniquePtr(const UniquePtr&) = delete;
+    UniquePtr(const UniquePtr<T>&) = delete;
 
-    ~UniquePtr() {
-        delete p;
+    UniquePtr(UniquePtr<T>&& ptr)
+        : ptr_{ptr.release()} {}
+
+    UniquePtr<T>& operator=(const UniquePtr<T>&) = delete;
+    UniquePtr<T>& operator=(UniquePtr<T>&& ptr) {
+        if (!ptr_) {
+            return *this;
+        }
+        delete ptr_;
+        ptr_ = ptr.ptr_;
+        ptr.ptr_ = nullptr;
+        return *this;
     }
 
     T operator*() const {
-        return *p;
+        //nullptr
+        return *ptr_;
     }
 
     T* operator->() const {
-        return p;
+        return ptr_;
     }
 
     T* get() {
-        if (p) {
-            return p;
+        if (ptr_) {
+            return ptr_;
         }
         return nullptr;
     }
 
     T* release() {
-        T* q = p;
-        p = nullptr;
-        return q;
+        T* ptr = ptr_;
+        delete ptr_;
+        ptr_ = nullptr;
+        return ptr;
     }
 
     void reset(T* ptr) {
-        delete p;
-        p = ptr;
+        if (ptr_) {
+            delete ptr_;
+        }
+        ptr_ = ptr;
     }
 
-    // bool operator==(const UniquePtr<T>& ptr) {
-    //     return this.get() == ptr.get();
-    // }
+    ~UniquePtr() {
+        delete ptr_;
+    }
 
 private:
-    T* p;
+    T* ptr_;
 };

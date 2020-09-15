@@ -1,10 +1,15 @@
 #include <iostream>
 #include "UniquePtr.hpp"
 
+auto moveTest() {
+    UniquePtr<int> ptr{new int{9}};
+    return ptr;
+}
+
 int main() {
     UniquePtr<int> ptr{new int{5}};
     std::cout << *ptr << '\n';
-    
+
     ptr.reset(new int{99});
     std::cout << *ptr << '\n';
 
@@ -12,6 +17,15 @@ int main() {
     if (ptr.get() == nullptr) {
         std::cout << "It should be nullptr after ptr.release()!\n";
     }
+
+    UniquePtr<int> ptr2{moveTest()};
+    std::cout << *ptr2 << '\n';
+
+
+    UniquePtr<int> ptr3{new int{21}};
+    std::cout << *ptr3 << '\n';
+    ptr3 = moveTest();
+    std::cout << *ptr3 << '\n';
 
     return 0;
 }
