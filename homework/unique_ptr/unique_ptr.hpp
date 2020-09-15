@@ -19,7 +19,7 @@ public:
 
     const T* operator->();
     T& operator*();
-    unique_ptr& operator=(unique_ptr) = delete;
+    unique_ptr<T>& operator=(unique_ptr<T>&) = delete;
 
 private:
     T* ptr_{nullptr};
