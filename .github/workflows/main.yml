@@ -1,0 +1,22 @@
+name: Compile & Test
+
+on: [push, pull_request]
+
+jobs:
+  ctest:
+    runs-on: ubuntu-20.04
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Build folder
+      working-directory: homework/unique_ptr
+      run: mkdir build
+    - name: Compile
+      working-directory: homework/unique_ptr/build
+      run: |
+        cmake ..
+        make
+    - name: Tests
+      working-directory: homework/unique_ptr/build
+      run: ctest -V
