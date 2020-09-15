@@ -1,0 +1,20 @@
+name: C++ with CMake CI
+
+on: [push, pull_request]
+
+jobs:
+  shm:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Check out code
+      uses: actions/checkout@master
+    - name: mkdir memory-management/homework/unique_ptr/build 
+      run: mkdir memory-management/homework/unique_ptr/build
+    - name: Compile
+      working-directory: memory-management/homework/unique_ptr/build
+      run: |
+        cmake ..
+        make
+    - name: Run test 
+      working-directory: memory-management/homework/unique_ptr/build
+      run: ctest -V
