@@ -1,5 +1,11 @@
 #pragma once
 
+class NullptrDereferenceError : public std::runtime_error {
+public:
+    NullptrDereferenceError()
+        : std::runtime_error{"Cannot dereference nullptr"} {}
+};
+
 template <typename T>
 class UniquePtr {
 public:
@@ -23,7 +29,9 @@ public:
     }
 
     T operator*() const {
-        //nullptr
+        if (!ptr_) {
+            throw NullptrDereferenceError();
+        }
         return *ptr_;
     }
 

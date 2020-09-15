@@ -21,11 +21,18 @@ int main() {
     UniquePtr<int> ptr2{moveTest()};
     std::cout << *ptr2 << '\n';
 
-
     UniquePtr<int> ptr3{new int{21}};
     std::cout << *ptr3 << '\n';
     ptr3 = moveTest();
     std::cout << *ptr3 << '\n';
+
+    try {
+        UniquePtr<int> ptr4{nullptr};
+        std::cout << *ptr4 << '\n';
+
+    } catch (const NullptrDereferenceError& err) {
+        std::cerr << "Exception: " << err.what() << '\n';
+    }
 
     return 0;
 }
