@@ -37,12 +37,10 @@ endif()
 
 # Now simply link against gtest or gtest_main as needed. Eg
 
-
 project(UniquePtr)
 
 include_directories(include)
 include_directories(tests)
-
 
 set(HEADERS 
     include/UniquePtr.hpp
@@ -52,16 +50,13 @@ set(TESTS
     tests/UniquePtr.ut.cpp
     )
 
-
 add_executable(${PROJECT_NAME} main.cpp)
 set(FLAGS -Wall -Wextra -Werror -Wconversion -Wpedantic)
 target_compile_options(${PROJECT_NAME} PRIVATE ${FLAGS})
-
 
 enable_testing()
 add_executable(${PROJECT_NAME}-ut ${TESTS})
 target_link_libraries(${PROJECT_NAME}-ut gtest_main)
 target_compile_options(${PROJECT_NAME}-ut PRIVATE ${FLAGS})
-
 
 add_test(NAME ${PROJECT_NAME}-test COMMAND ${PROJECT_NAME}-ut)
