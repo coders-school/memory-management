@@ -42,3 +42,8 @@ TEST(PointerTest, ShouldProperlyUseArrowOperator) {
 
     ASSERT_EQ(testPointer->at(1), testString.at(1));
 }
+
+TEST(PointerTest, DereferencingANullptrShouldThrowAnExeption) {
+    cs::unique_ptr<int> testPointer(nullptr);
+    EXPECT_ANY_THROW(*testPointer);
+}

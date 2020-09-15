@@ -1,5 +1,7 @@
 #pragma once
 
+#include "NullPtrException.hpp"
+
 namespace cs {
 
 template <typename T>
@@ -46,6 +48,9 @@ const T* unique_ptr<T>::operator->() {
 
 template <typename T>
 T& unique_ptr<T>::operator*() {
+    if (!ptr_) {
+        throw NullPtrException("Dereferencing a nullptr");
+    }
     return *ptr_;
 }
 
