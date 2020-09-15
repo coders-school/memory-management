@@ -41,7 +41,6 @@ endif()
 project(UniquePtr)
 
 include_directories(include)
-include_directories(src)
 include_directories(tests)
 
 
@@ -49,24 +48,19 @@ set(HEADERS
     include/UniquePtr.hpp
     )
 
-set(SRC
-    src/UniquePtr.cpp
-    )
-
 set(TESTS
     tests/UniquePtr.ut.cpp
     )
 
-add_library(${PROJECT_NAME}-lib STATIC ${SRC})
+
 add_executable(${PROJECT_NAME} main.cpp)
-target_link_libraries(${PROJECT_NAME} ${PROJECT_NAME}-lib)
 set(FLAGS -Wall -Wextra -Werror -Wconversion -Wpedantic)
 target_compile_options(${PROJECT_NAME} PRIVATE ${FLAGS})
 
 
 enable_testing()
 add_executable(${PROJECT_NAME}-ut ${TESTS})
-target_link_libraries(${PROJECT_NAME}-ut ${PROJECT_NAME}-lib gtest_main)
+target_link_libraries(${PROJECT_NAME}-ut gtest_main)
 target_compile_options(${PROJECT_NAME}-ut PRIVATE ${FLAGS})
 
 
