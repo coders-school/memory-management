@@ -36,6 +36,13 @@ TEST_F(TestingPtr, ShouldProperlyMovePointer) {
     ASSERT_EQ(testString, *testPointer);
 }
 
+TEST_F(TestingPtr, ShouldUseMoveAssignmentOperator) {
+    cs::unique_ptr<std::string> testPointer(nullptr);
+    testPointer = std::move(ptr);
+
+    ASSERT_EQ(testString, *testPointer);
+}
+
 TEST_F(TestingPtr, MovedPointerShouldBeNullptr) {
     cs::unique_ptr<std::string> testPointer(std::move(ptr));
 

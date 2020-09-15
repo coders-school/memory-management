@@ -19,6 +19,7 @@ public:
 
     const T* operator->();
     T& operator*();
+    unique_ptr<T>& operator=(unique_ptr<T>&& previousOwner);
     unique_ptr<T>& operator=(unique_ptr<T>&) = delete;
 
 private:
@@ -33,6 +34,16 @@ unique_ptr<T>::unique_ptr(T* ptr)
 template <typename T>
 unique_ptr<T>::unique_ptr(unique_ptr&& previousOwner) {
     ptr_ = previousOwner.release();
+}
+template <typename T>
+unique_ptr<T>& unique_ptr<T>::operator=(unique_ptr<T>&& previousOwner) {
+    if (this != &previousOwner) {
+        delete ptr_;
+        ptr_ = previousOwner.ptr_;
+        previousOwner.ptr_ = nullptr;
+    }
+
+    return *this;
 }
 
 template <typename T>
