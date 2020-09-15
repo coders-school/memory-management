@@ -10,8 +10,7 @@ public:
     unique_ptr()
         : ptr_(nullptr) {}
     unique_ptr(const unique_ptr&) = delete;
-    unique_ptr(unique_ptr&& otherPtr)
-        : ptr_(otherPtr.ptr_) { otherPtr.ptr_ = nullptr; }
+    unique_ptr(unique_ptr&& otherPtr);
 
     ~unique_ptr();
 
@@ -25,6 +24,11 @@ public:
 private:
     T* ptr_;
 };
+
+template <typename T>
+unique_ptr<T>::unique_ptr(unique_ptr&& otherPtr) {
+    ptr_ = otherPtr.release();
+}
 
 template <typename T>
 unique_ptr<T>::~unique_ptr() {
@@ -43,10 +47,9 @@ void unique_ptr<T>::reset(T* newPtr) {
 
 template <typename T>
 T* unique_ptr<T>::release() {
-    auto value = *ptr_;
-    delete ptr_;
+    T* temp = ptr_;
     ptr_ = nullptr;
-    return new T{value};
+    return temp;
 }
 
 template <typename T>

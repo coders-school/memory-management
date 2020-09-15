@@ -43,6 +43,7 @@ TEST_F(unique_ptrTest, shouldUseReleaseMethod) {
     auto p = ptr.release();
     ASSERT_EQ(*p, initValue);
     ASSERT_EQ(ptr.get(), nullptr);
+    delete p;
 }
 
 TEST(unique_ptrTestArrow, shouldUseArrowOperator) {
