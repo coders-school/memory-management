@@ -15,4 +15,7 @@ public:
     T* release();
     void reset(T* ptr);
     ~UniquePtr();
+
+private:
+    T* resource_;
 };
