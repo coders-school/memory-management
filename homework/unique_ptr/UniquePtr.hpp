@@ -75,6 +75,10 @@ T* UniquePtr<T>::release() {
 
 template <typename T>
 void UniquePtr<T>::reset(T* ptr) {
+    if(resource_){
+        delete resource_;
+    }
+    resource_ = ptr;
 }
 
 template <typename T>
