@@ -35,6 +35,10 @@ UniquePtr<T>& UniquePtr<T>::operator=(UniquePtr<T>&& ptr) {
 
 template <typename T>
 T UniquePtr<T>::operator*() const {
+    if(!resource_){
+        throw NullPtrDereferenceException();
+    }
+    return resource_;
 }
 
 template <typename T>
