@@ -20,47 +20,48 @@ private:
     T* resource_;
 };
 
-template<typename T>
+template <typename T>
 UniquePtr<T>::UniquePtr(T* ptr)
     : resource_(ptr) {
 }
 
-template<typename T>
-UniquePtr<T>::UniquePtr(UniquePtr<T>&& ptr){
+template <typename T>
+UniquePtr<T>::UniquePtr(UniquePtr<T>&& ptr) {
+}
+
+template <typename T>
+UniquePtr<T>& UniquePtr<T>::operator=(UniquePtr<T>&& ptr) {
+}
+
+template <typename T>
+T UniquePtr<T>::operator*() const {
+}
+
+template <typename T>
+T* UniquePtr<T>::operator->() const {
+}
+
+template <typename T>
+T* UniquePtr<T>::get() {
 
 }
 
-template<typename T>
-UniquePtr<T>& UniquePtr<T>::operator=(UniquePtr<T>&& ptr){
-
+template <typename T>
+T* UniquePtr<T>::release() {
+    if (ptr) {
+        T* ptr = resource_;
+        delete resource_;
+        resource_ == nullptr;
+        return ptr;
+    }
+    return nullptr;
 }
 
-template<typename T>
-T UniquePtr<T>::operator*() const{
-
+template <typename T>
+void UniquePtr<T>::reset(T* ptr) {
 }
 
-template<typename T>
-T* UniquePtr<T>::operator->() const{
-
-}
-
-template<typename T>
-T* UniquePtr<T>::get(){
-
-}
-
-template<typename T>
-T* UniquePtr<T>::release(){
-
-}
-
-template<typename T>
-void UniquePtr<T>::reset(T* ptr){
-
-}
-
-template<typename T>
-UniquePtr<T>::~UniquePtr(){
+template <typename T>
+UniquePtr<T>::~UniquePtr() {
     delete resource_;
 }
