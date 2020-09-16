@@ -39,6 +39,7 @@ T UniquePtr<T>::operator*() const {
 
 template <typename T>
 T* UniquePtr<T>::operator->() const {
+    return resource_;
 }
 
 template <typename T>
