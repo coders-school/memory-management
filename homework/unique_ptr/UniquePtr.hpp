@@ -1,3 +1,12 @@
+#pragma once
+
+#include <iostream>
+
+struct NullPtrDereferenceException : public std::runtime_error {
+    NullPtrDereferenceException()
+        : std::runtime_error{"Fatal error, cannot dereference nullptr"} {}
+};
+
 template <typename T>
 class UniquePtr {
 public:
@@ -35,7 +44,7 @@ UniquePtr<T>& UniquePtr<T>::operator=(UniquePtr<T>&& ptr) {
 
 template <typename T>
 T UniquePtr<T>::operator*() const {
-    if(!resource_){
+    if (!resource_) {
         throw NullPtrDereferenceException();
     }
     return resource_;
@@ -48,7 +57,7 @@ T* UniquePtr<T>::operator->() const {
 
 template <typename T>
 T* UniquePtr<T>::get() {
-    if(resource_){
+    if (resource_) {
         return resource_;
     }
 }
