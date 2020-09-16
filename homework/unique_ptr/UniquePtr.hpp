@@ -35,7 +35,10 @@ UniquePtr<T>::UniquePtr(T* ptr)
 }
 
 template <typename T>
-UniquePtr<T>::UniquePtr(UniquePtr<T>&& ptr) {
+UniquePtr<T>::UniquePtr(UniquePtr<T>&& ptr) : resource_(nullptr) {
+    resource_ = ptr.resource_;
+    ptr.resource_ = nullptr;
+    return *this;
 }
 
 template <typename T>
