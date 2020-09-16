@@ -43,7 +43,9 @@ T* UniquePtr<T>::operator->() const {
 
 template <typename T>
 T* UniquePtr<T>::get() {
-
+    if(resource_){
+        return resource_;
+    }
 }
 
 template <typename T>
