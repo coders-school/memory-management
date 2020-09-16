@@ -19,3 +19,48 @@ public:
 private:
     T* resource_;
 };
+
+template<typename T>
+UniquePtr<T>::UniquePtr(T* ptr)
+    : resource_(ptr) {
+}
+
+template<typename T>
+UniquePtr<T>::UniquePtr(UniquePtr<T>&& ptr){
+
+}
+
+template<typename T>
+UniquePtr<T>& UniquePtr<T>::operator=(UniquePtr<T>&& ptr){
+
+}
+
+template<typename T>
+T UniquePtr<T>::operator*() const{
+
+}
+
+template<typename T>
+T* UniquePtr<T>::operator->() const{
+
+}
+
+template<typename T>
+T* UniquePtr<T>::get(){
+
+}
+
+template<typename T>
+T* UniquePtr<T>::release(){
+
+}
+
+template<typename T>
+void UniquePtr<T>::reset(T* ptr){
+
+}
+
+template<typename T>
+UniquePtr<T>::~UniquePtr(){
+    delete resource_;
+}
