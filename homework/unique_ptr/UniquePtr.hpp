@@ -4,6 +4,7 @@
 #include <stdexcept>
 
 class DereferenceNullPtrError : public std::logic_error {
+public:
     DereferenceNullPtrError()
         : std::logic_error("Error - nullptr dereference") {}
 };
@@ -11,26 +12,22 @@ class DereferenceNullPtrError : public std::logic_error {
 template <typename T>
 class UniquePtr {
 public:
-    UniquePtr();
-    UniquePtr(T* ptr);
+    UniquePtr<T>() = default;
+    UniquePtr<T>(T* ptr);
     ~UniquePtr();
-    UniquePtr(const UniquePtr<T>& otherPtr) = delete;
-    UniquePtr(UniquePtr<T>&& otherPtr);
-    UniquePtr& operator=(const UniquePtr<T>& otherPtr) = delete;
-    UniquePtr& operator=(UniquePtr<T>&& otherPtr);
-    UniquePtr<T>& operator*() const;
-    UniquePtr<T>* operator->() const;
-    UniquePtr* get() const;
-    UniquePtr* relese();
-    void reset(UniquePtr* newPtr);
+    UniquePtr(const UniquePtr& otherPtr) = delete;
+    UniquePtr(UniquePtr&& otherPtr);
+    UniquePtr& operator=(const UniquePtr& otherPtr) = delete;
+    UniquePtr& operator=(UniquePtr&& otherPtr);
+    T& operator*() const;
+    T* operator->() const;
+    T* get() const;
+    T* release();
+    void reset(T* newPtr);
 
 private:
     T* ptr_ = nullptr;
 };
-
-template <class T>
-UniquePtr<T>::UniquePtr()
-    : ptr_(nullptr) {}
 
 template <typename T>
 UniquePtr<T>::UniquePtr(T* ptr)
@@ -43,22 +40,22 @@ UniquePtr<T>::~UniquePtr() {
 
 template <typename T>
 UniquePtr<T>::UniquePtr(UniquePtr<T>&& otherPtr)
-    : ptr_(otherPtr.ptr_.release()) {
-}
+    : ptr_(otherPtr.release()) {}
 
 template <typename T>
 UniquePtr<T>& UniquePtr<T>::operator=(UniquePtr<T>&& otherPtr) {
-    if (this != otherPtr) {
+    if (this != &otherPtr) {
         if (ptr_ != nullptr) {
             delete ptr_;
         }
-        ptr_ = otherPtr.ptr_.release();
+        ptr_ = otherPtr.ptr_;
+        otherPtr.ptr_ = nullptr;
     }
     return *this;
 }
 
 template <typename T>
-UniquePtr<T>& UniquePtr<T>::operator*() const {
+T& UniquePtr<T>::operator*() const {
     try {
         if (ptr_ == nullptr) {
             throw DereferenceNullPtrError();
@@ -70,24 +67,23 @@ UniquePtr<T>& UniquePtr<T>::operator*() const {
 }
 
 template <typename T>
-UniquePtr<T>* UniquePtr<T>::operator->() const {
+T* UniquePtr<T>::operator->() const {
     return ptr_;
 }
 
 template <typename T>
-UniquePtr<T>* UniquePtr<T>::get() const {
+T* UniquePtr<T>::get() const {
     return ptr_;
 }
 template <typename T>
-UniquePtr<T>* UniquePtr<T>::relese() {
-    UniquePtr<T>* tempPtr = ptr_;
-    delete ptr_;
+T* UniquePtr<T>::release() {
+    T* tempPtr = ptr_;
     ptr_ = nullptr;
     return tempPtr;
 }
 
 template <typename T>
-void UniquePtr<T>::reset(UniquePtr<T>* newPtr) {
+void UniquePtr<T>::reset(T* newPtr) {
     if (ptr_ != nullptr) {
         delete ptr_;
     }
