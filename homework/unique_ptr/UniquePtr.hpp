@@ -40,6 +40,12 @@ UniquePtr<T>::UniquePtr(UniquePtr<T>&& ptr) {
 
 template <typename T>
 UniquePtr<T>& UniquePtr<T>::operator=(UniquePtr<T>&& ptr) {
+    if( this != &ptr){
+        delete resource_;
+        resource_ = ptr.resource_;
+        ptr.resource_ == nullptr;
+    }
+    return *this;
 }
 
 template <typename T>
