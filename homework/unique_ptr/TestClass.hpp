@@ -2,7 +2,7 @@ class TestClass{
 
 public:
 
-TestClass(int data): data_(data){};
+TestClass(long double data): data_(data){};
 
-int data_;
+long double data_;
 };
