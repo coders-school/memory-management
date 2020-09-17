@@ -3,7 +3,7 @@ name: C++ with CMake CI
 on: [push, pull_request]
 
 jobs:
-  unique_ptr:
+  UniquePtr:
     runs-on: ubuntu-20.04
     steps:
     - name: Check out code
