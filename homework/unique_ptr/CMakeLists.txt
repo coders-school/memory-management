@@ -31,7 +31,7 @@ if (CMAKE_VERSION VERSION_LESS 2.8.11)
 endif()
 
 # Now simply link against gtest or gtest_main as needed. Eg
-project(unique_ptr)
+project(UniquePtr)
 
 set(HEADERS
     UniquePtr.hpp
@@ -42,7 +42,7 @@ set(TESTS
 )
 
 add_executable(${PROJECT_NAME} main.cpp)
-set(FLAGS -Wall -Wextra -Werror -Wconversion _Wpedantic)
+set(FLAGS -Wall -Wextra -Werror -Wconversion -Wpedantic)
 target_compile_options(${PROJECT_NAME} PRIVATE ${FLAGS})
 
 enable_testing()
