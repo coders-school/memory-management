@@ -3,7 +3,7 @@
 
 int main()
 {
-    FILE* fp = std::fopen("exampale.cpp", "r");
+    FILE* fp = std::fopen("example.cpp", "r");
     if(!fp) {
         std::perror("File opening failed");
         return EXIT_FAILURE;
