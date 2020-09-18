@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <iostream>
 
-template <class T> class unique_ptr {
+template <typename T> class unique_ptr {
 
 public:
   unique_ptr(T *rawPtr);                      // creation constructor
@@ -14,18 +14,17 @@ public:
 
   T *get() const;
   T release();
-  void reset();
+  void reset(T *rawPtr) noexcept;
   T &operator*();
 
 private:
   T *rawPtr_;
 };
 
-template <class T> unique_ptr<T>::unique_ptr(T *rawPtr) : rawPtr_(rawPtr) {
-  puts("Yes, we created uniqueptr! :)");
+template <typename T> unique_ptr<T>::unique_ptr(T *rawPtr) : rawPtr_(rawPtr) {
 }; // creation constructor
 
-template <class T>
+template <typename T>
 unique_ptr<T>::unique_ptr(unique_ptr<T> &&other) noexcept // move constructor
     : rawPtr_(other.rawPtr_)
 
@@ -33,25 +32,27 @@ unique_ptr<T>::unique_ptr(unique_ptr<T> &&other) noexcept // move constructor
   other.rawPtr_ = nullptr;
 }
 
-template <class T>
+template <typename T>
 unique_ptr<T>::~unique_ptr() // destructor
 {
-  std::cout << "Destructor called where raw_ptr adress is: " << this->rawPtr_ << '\n';
   delete rawPtr_;
 }
 
-template <class T>
+template <typename T>
 T *unique_ptr<T>::get() const { /* if(rawPtr_ == nullptr)
                                  throw std::range_error("Trying to access empty
                                  unique_ptr using .get()"); else  */
   return rawPtr_;
 }
 
-template <class T> T unique_ptr<T>::release() {
+template <typename T> T unique_ptr<T>::release() {
   auto result = rawPtr_;
   rawPtr_ = nullptr;
   return result;
 }
 
-template <class T> void unique_ptr<T>::reset() { rawPtr_ = nullptr; }
-template <class T> T &unique_ptr<T>::operator*() { return *rawPtr_; }
+template <typename T> void unique_ptr<T>::reset(T *NewRawPtr) noexcept { 
+  delete rawPtr_;
+  rawPtr_ = NewRawPtr;
+ }
+template <typename T> T& unique_ptr<T>::operator*() { return *rawPtr_; }

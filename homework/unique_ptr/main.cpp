@@ -18,6 +18,8 @@ int dataFromShop = PtrShop.at(0).get()->data_;
 std::cout << "Now data from our unique ptr is in vector: " << dataFromShop << "!\n";
 }
 std::cout << "raw_ptr adress stored in vector's unique_ptr after std::move(): " << firstUnique.get() << '\n';
+firstUnique.reset(new TestClass(3.0));
+std::cout << "Data stored in firstUnique: " << (*firstUnique).data_ << '\n';
 }
 
 
