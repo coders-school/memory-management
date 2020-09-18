@@ -47,7 +47,7 @@ T *unique_ptr<T>::get() const { /* if(rawPtr_ == nullptr)
 }
 
 template <typename T> T unique_ptr<T>::release() {
-  auto result = rawPtr_;
+  T* result = rawPtr_;
   rawPtr_ = nullptr;
   return result;
 }
