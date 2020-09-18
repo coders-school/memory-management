@@ -59,5 +59,6 @@ TEST_F(UniquePtrTest, ShouldCallMethodByArrowOperator) {
     double a = 3.5;
     double b = 2.0;
     UniquePtr<Square> squarePtr = new Square(a, b);
+
     ASSERT_EQ(squarePtr->ComputeArea(), a * b);
 }
