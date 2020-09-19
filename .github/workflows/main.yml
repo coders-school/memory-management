@@ -8,13 +8,13 @@ jobs:
     steps:
     - name: Check out code
       uses: actions/checkout@master
-    - name: mkdir build
-      run: mkdir build
+    - name: mkdir homework/unique_ptr/build
+      run: mkdir homework/unique_ptr/build
     - name: Compile
-      working-directory: build
+      working-directory: homework/unique_ptr/build
       run: |
         cmake ..
         make
     - name: Run tests
-      working-directory: build
+      working-directory: homework/unique_ptr/build
       run: ctest -V
