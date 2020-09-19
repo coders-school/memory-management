@@ -40,12 +40,12 @@ endif()
 
 project(UniquePointer)
 
-add_executable(${PROJECT_NAME} main.cpp)
+# add_executable(${PROJECT_NAME} main.cpp)
 add_executable(${PROJECT_NAME}-ut unique_ptr-ut.cpp)
 
 target_link_libraries(${PROJECT_NAME}-ut gtest_main)
 
-target_compile_options(${PROJECT_NAME} PUBLIC -Wall -Wextra -Werror -Wconversion -pedantic -O3)
+# target_compile_options(${PROJECT_NAME} PUBLIC -Wall -Wextra -Werror -Wconversion -pedantic -O3)
 target_compile_options(${PROJECT_NAME}-ut PRIVATE -Wall -Wextra -Werror -Wconversion -pedantic -O3)
 enable_testing()
 add_test(NAME UniquePointerTests COMMAND ${PROJECT_NAME}-ut)

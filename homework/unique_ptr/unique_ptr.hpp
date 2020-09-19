@@ -5,10 +5,10 @@ namespace coders {
 template <typename T>
 class unique_ptr{
 public:
-    unique_ptr() = delete; //default constructor
-    unique_ptr(T* ptr); //constructor
-    unique_ptr(const T&) = delete; //copy constructor not allowed
-    unique_ptr(unique_ptr<T>&& ptr) noexcept; //move constructor
+    unique_ptr() = delete;
+    unique_ptr(T* ptr);
+    unique_ptr(const unique_ptr<T>&) = delete;
+    unique_ptr(unique_ptr<T>&& ptr) noexcept;
     ~unique_ptr();
 
     T* get() const noexcept;
@@ -84,4 +84,4 @@ T* unique_ptr<T>::operator->() const noexcept {
     return get();
 }
 
-}
+} //coders namespace
