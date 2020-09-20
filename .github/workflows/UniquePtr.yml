@@ -19,4 +19,9 @@ jobs:
         make
     - name: Run tests
       working-directory: homework/unique_ptr/build
-      run: ctest -V   
+      run: ctest -V 
+    - name: Run Valgrind
+      working-directory: homework/unique_ptr/build
+      run: |
+          sudo apt-get update -y    
+          sudo apt get install -y valgrind
