@@ -18,5 +18,9 @@ int main() {
         std::cout << exc.what() << '\n';
     }
 
+    unique_ptr<int> ptr3(new int{10});
+    unique_ptr<int> ptr4(new int{5});
+    ptr3 = std::move(ptr4);
+
     return 0;
 }

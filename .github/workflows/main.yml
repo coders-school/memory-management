@@ -1,9 +1,9 @@
-name: CMake CI
+name: CMake and sanitizers
 
 on: [push, pull_request]
 
 jobs:
-  ctest:
+  ctestsanitizers:
     runs-on: ubuntu-20.04
 
     steps:
@@ -20,3 +20,7 @@ jobs:
     - name: Run tests
       working-directory: homework/unique_ptr/build
       run: ctest -V
+
+    - name: Run sanitizers
+      working-directory: homework/unique_ptr/build
+      run: ./unique_ptr

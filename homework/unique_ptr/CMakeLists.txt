@@ -5,7 +5,7 @@ project(unique_ptr)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(FLAGS -Wall -Wextra -Werror -Wconversion -pedantic)
+set(FLAGS -Wall -Wextra -Werror -Wconversion -pedantic -g)
 
 #####################################################################
 # Download and unpack googletest at configure time
@@ -36,10 +36,12 @@ add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
 
 add_executable(${PROJECT_NAME} main.cpp)
 target_compile_options(${PROJECT_NAME} PRIVATE ${FLAGS})
+target_link_options(${PROJECT_NAME} PRIVATE -fsanitize=address)
 
 add_executable(${PROJECT_NAME}-ut unique_ptr-ut.cpp)
 target_compile_options(${PROJECT_NAME}-ut PRIVATE ${FLAGS})
 target_link_libraries(${PROJECT_NAME}-ut PUBLIC gtest_main)
+target_link_options(${PROJECT_NAME}-ut PRIVATE -fsanitize=address)
 
 add_test(NAME unique_ptr COMMAND ${PROJECT_NAME}-ut)
 

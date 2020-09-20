@@ -27,6 +27,11 @@ TEST_F(unique_ptrTest, shouldMovePtr) {
     unique_ptr<int> ptr2 = std::move(ptr);
     ASSERT_EQ(*ptr2, initValue);
     ASSERT_EQ(ptr.get(), nullptr);
+
+    unique_ptr<int> ptr3(new int{initValue + 1});
+    ptr2 = std::move(ptr3);
+    ASSERT_EQ(*ptr2, initValue + 1);
+    ASSERT_EQ(ptr3.get(), nullptr);
 }
 
 TEST_F(unique_ptrTest, shouldUseResetMethod) {

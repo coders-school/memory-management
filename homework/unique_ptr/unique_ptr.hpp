@@ -12,11 +12,14 @@ public:
     unique_ptr(const unique_ptr&) = delete;
     unique_ptr(unique_ptr&& otherPtr);
 
-    ~unique_ptr();
+    ~unique_ptr() { delete ptr_; }
+
+    unique_ptr<T>& operator=(const unique_ptr<T>&) = delete;
+    unique_ptr<T>& operator=(unique_ptr<T>&& otherPtr);
 
     T* get() const { return ptr_; }
     T* release();
-    void reset(T* newPtr);
+    void reset(T* newPtr = nullptr);
 
     T& operator*() const;
     T* operator->() const { return ptr_; }
@@ -31,17 +34,15 @@ unique_ptr<T>::unique_ptr(unique_ptr&& otherPtr) {
 }
 
 template <typename T>
-unique_ptr<T>::~unique_ptr() {
-    if (ptr_) {
-        delete ptr_;
-    }
+unique_ptr<T>& unique_ptr<T>::operator=(unique_ptr<T>&& otherPtr){
+    delete ptr_;
+    ptr_ = otherPtr.release();
+    return *this;
 }
 
 template <typename T>
 void unique_ptr<T>::reset(T* newPtr) {
-    if (ptr_) {
-        delete ptr_;
-    }
+    delete ptr_;
     ptr_ = newPtr;
 }
 
