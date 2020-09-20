@@ -50,6 +50,8 @@ TEST(UniquePointerTest, ShouldReleaseUniquePointerToString)
     // Then
     ASSERT_EQ(rawPtrBeforeRelease, releasedRawPtr);
     ASSERT_EQ(uniquePtr.get(), nullptr);
+
+    delete releasedRawPtr;
 }
 
 TEST(UniquePointerTest, ShouldResetUniquePointerToVectorOfInts)
