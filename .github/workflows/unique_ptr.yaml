@@ -35,4 +35,4 @@ jobs:
         make
     - name: Run tests with valgrind
       working-directory: homework/unique_ptr/build
-      run: valgrind --leak-check=full --show-leak-kinds=all -v ./unique_ptr-ut
+      run: valgrind --leak-check=full --show-leak-kinds=all ./unique_ptr-ut
