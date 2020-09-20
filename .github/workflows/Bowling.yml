@@ -18,5 +18,5 @@ jobs:
         cmake ..
         make
     - name: Run tests
-      working-directory: /homework/unique_ptr/build
+      working-directory: homework/unique_ptr/build
       run: ctest -V   
