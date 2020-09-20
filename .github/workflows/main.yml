@@ -5,7 +5,6 @@ on: [push, pull_request]
 jobs:
   ctest:
     runs-on: ubuntu-20.04
-
     steps:
     - name: Test code
       uses: actions/checkout@master
@@ -20,12 +19,12 @@ jobs:
     - name: Run tests
       working-directory: homework/unique_ptr/build
       run: ctest -V
+  
   valgrind:
     runs-on: ubuntu-20.04
-
     steps:
     - name: install valgrind
-    run: sudo apt-get install valgrind
+    run: sudo apt-get update && sudo apt-get install valgrind
     - name: check code
     uses: actions/checkout@master
     - name: mkdir build/
@@ -37,5 +36,5 @@ jobs:
         cmake ..
         make
     - name: Run valgrind
-      working-directory: homework/unique_ptr/build
-      run: valgrind --leak-check=full --show-leak-kinds=all ./unique_ptr-ut
+    working-directory: homework/unique_ptr/build
+    run: valgrind --leak-check=full --show-leak-kinds=all ./unique_ptr-ut
