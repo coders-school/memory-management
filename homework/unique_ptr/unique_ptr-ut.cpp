@@ -35,6 +35,16 @@ SCENARIO("TestUnique_ptr", "Unique_ptr"){
                 CHECK(ptr.get() == nullptr);
             }
         }
+        WHEN("MovePtrToPointerWhoHaveObject"){
+            unique_ptr<int> ptr2 = new int{StartValue};
+
+            ptr2 = std::move(ptr);
+
+            THEN("ShouldMovePtr"){
+                CHECK(*ptr2 == StartValue);
+                CHECK(ptr.get() == nullptr);
+            }
+        }
         WHEN("UseResetMethod"){
 
             ptr.reset(new int{StartValue});
