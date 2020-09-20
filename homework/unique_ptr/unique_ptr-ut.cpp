@@ -5,6 +5,16 @@
 
 #include "unique_ptr.hpp"
 
+TEST(UniquePointerTest, ShouldCreateUniquePointerToIntegerUsingDefaultConstructor)
+{
+    // Given
+    // When
+    coders::unique_ptr<int> uniquePtr{};
+
+    // Then
+    ASSERT_EQ(uniquePtr.get(), nullptr);
+}
+
 TEST(UniquePointerTest, ShouldCreateUniquePointerToIntegerUsingBasicConstructor)
 {
     // Given
@@ -55,6 +65,18 @@ TEST(UniquePointerTest, ShouldResetUniquePointerToVectorOfInts)
     ASSERT_EQ(uniquePtr->at(1), 11);
 }
 
+TEST(UniquePointerTest, ShouldResetUniquePointerWithoutArgument)
+{
+    // Given
+    coders::unique_ptr<std::vector<int>> uniquePtr(new std::vector<int>{1, 2, 3});
+
+    // When
+    uniquePtr.reset();
+
+    // Then
+    ASSERT_EQ(uniquePtr.get(), nullptr);
+}
+
 TEST(UniquePointerTest, ShouldCreateUniquePointerToIntegerUsingMoveConstructor)
 {
     // Given
@@ -65,6 +87,7 @@ TEST(UniquePointerTest, ShouldCreateUniquePointerToIntegerUsingMoveConstructor)
     coders::unique_ptr<int> ptr2(std::move(ptr1));
 
     // Then
+    ASSERT_EQ(ptr1.get(), nullptr);
     ASSERT_EQ(*ptr2, testValue);
 }
 
@@ -79,32 +102,6 @@ TEST(UniquePointerTest, ShouldUseMoveAssignmentOnUniquePointerToDouble)
     ptr2 = std::move(ptr1);
 
     // Then
+    ASSERT_EQ(ptr1.get(), nullptr);
     ASSERT_EQ(*ptr2, testValue);
-}
-
-TEST(UniquePointerTest, SourcePointerShouldBeNullptrAfterMoveConstructorWasUsed)
-{
-    // Given
-    int testValue = 10;
-    coders::unique_ptr<int> ptr1(new int(testValue));
-
-    // When
-    coders::unique_ptr<int> ptr2(std::move(ptr1));
-
-    // Then
-    ASSERT_EQ(ptr1.get(), nullptr);
-}
-
-TEST(UniquePointerTest, SourcePointerShouldBeNullptrAfterMoveAssignment)
-{
-    // Given
-    int testValue = 10;
-    coders::unique_ptr<int> ptr1(new int(testValue));
-    coders::unique_ptr<int> ptr2(new int(666));
-
-    // When
-    ptr2 = std::move(ptr1);
-
-    // Then
-    ASSERT_EQ(ptr1.get(), nullptr);
 }
