@@ -12,7 +12,7 @@ public:
   unique_ptr &operator=(const unique_ptr &) = delete; // copy assigment operator
   ~unique_ptr();
 
-  T *get() const;
+  T* get() const;
   T release();
   void reset(T *rawPtr) noexcept;
   T &operator*();
@@ -23,7 +23,7 @@ private:
 
 template <typename T>
 unique_ptr<T>::unique_ptr(T *rawPtr)
-    : rawPtr_(rawPtr){}; // creation constructor
+    : rawPtr_(rawPtr){} // creation constructor
 
 template <typename T>
 unique_ptr<T>::unique_ptr(unique_ptr<T> &&other) noexcept // move constructor
@@ -40,7 +40,7 @@ unique_ptr<T>::~unique_ptr() // destructor
 }
 
 template <typename T>
-T *unique_ptr<T>::get() const { /* if(rawPtr_ == nullptr)
+T* unique_ptr<T>::get() const { /* if(rawPtr_ == nullptr)
                                  throw std::range_error("Trying to access empty
                                  unique_ptr using .get()"); else  */
   return rawPtr_;

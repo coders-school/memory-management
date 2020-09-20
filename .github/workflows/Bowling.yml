@@ -1,0 +1,22 @@
+name: C/C++ CI
+
+on: [push, pull_request]
+
+jobs:
+  BowlingGame:
+
+    runs-on: [ubuntu-20.04]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: mkdir unique_ptr/build
+      run: mkdir unique_ptr/build
+    - name: Compile
+      working-directory: unique_ptr/gbuild
+      run: |
+        cmake ..
+        make
+    - name: Run tests
+      working-directory: bowling/build
+      run: ctest -V   
