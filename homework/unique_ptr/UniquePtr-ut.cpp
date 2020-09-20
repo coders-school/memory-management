@@ -43,14 +43,12 @@ TEST_F(UniquePtrTest, ShouldResetUniquePtr) {
     int* tempPtr = new int{newValue};
     testPtr.reset(tempPtr);
     ASSERT_EQ(*testPtr, newValue);
-    delete tempPtr;
 }
 
 TEST_F(UniquePtrTest, ShouldResetUniquePtrWithNoArgument) {
     int* tempPtr = new int{newValue};
     testPtr.reset();
     ASSERT_EQ(testPtr.get(), nullptr);
-    delete tempPtr;
 }
 
 TEST_F(UniquePtrTest, ShouldMoveUniquePtr) {
