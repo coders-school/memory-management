@@ -10,6 +10,9 @@ public:
     unique_ptr(unique_ptr&& otherPtr);
     ~unique_ptr();
 
+    unique_ptr<T>& operator=(unique_ptr<T>&) = delete;
+    unique_ptr<T>& operator=(unique_ptr<T>&& otherPtr);
+
     T& operator*() const;
     T* operator->() const;
     T* get() const;
@@ -35,10 +38,14 @@ unique_ptr<T>::~unique_ptr() {
 }
 
 template <typename T>
+unique_ptr<T>& unique_ptr<T>::operator=(unique_ptr<T>&& otherPtr) {
+    delete ptr_;
+    ptr_ = otherPtr.release();
+    return *this;
+}
+
+template <typename T>
 T& unique_ptr<T>::operator*() const {
-    if (!ptr_) {
-        throw std::runtime_error("Pointer is nullptr");
-    }
     return *ptr_;
 }
 
@@ -64,8 +71,6 @@ T* unique_ptr<T>::release() {
 
 template <typename T>
 void unique_ptr<T>::reset(T* newPtr) {
-    if (ptr_) {
-        delete ptr_;
-    }
+    delete ptr_;
     ptr_ = newPtr;
 }
