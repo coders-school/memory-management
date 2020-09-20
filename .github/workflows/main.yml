@@ -22,10 +22,10 @@ jobs:
   ut_valgrind:
     runs-on: ubuntu-latest
     steps:
-    - name: Install valgrind
-      uses: sudo apt install valgrind
     - name: Check out code
       uses: actions/checkout@master
+    - name: Install valgrind
+      uses: sudo apt install valgrind
     - name: mkdir homework/unique_ptr/build
       run: mkdir homework/unique_ptr/build
     - name: Compile
