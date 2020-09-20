@@ -29,6 +29,7 @@ TEST_F(uniquePtrTest, checkOperators) {
 TEST_F(uniquePtrTest, checkGet) {
     auto ptr = uPtr.get();
     ASSERT_EQ(*ptr, *uPtr);
+    uPtr.release();
     delete ptr;
 }
 
