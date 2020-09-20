@@ -23,7 +23,7 @@ public:
     T* operator->() const;
     T* get() const;
     T* release();
-    void reset(T* newPtr);
+    void reset(T* newPtr = nullptr);
 
 private:
     T* ptr_ = nullptr;
@@ -44,24 +44,18 @@ UniquePtr<T>::UniquePtr(UniquePtr<T>&& otherPtr)
 
 template <typename T>
 UniquePtr<T>& UniquePtr<T>::operator=(UniquePtr<T>&& otherPtr) {
-    if (this != &otherPtr) {
-        if (ptr_ != nullptr) {
-            delete ptr_;
-        }
-        ptr_ = otherPtr.ptr_;
-        otherPtr.ptr_ = nullptr;
+    if (ptr_ != nullptr) {
+        delete ptr_;
     }
+    ptr_ = otherPtr.ptr_;
+    otherPtr.ptr_ = nullptr;
     return *this;
 }
 
 template <typename T>
 T& UniquePtr<T>::operator*() const {
-    try {
-        if (ptr_ == nullptr) {
-            throw DereferenceNullPtrError();
-        }
-    } catch (DereferenceNullPtrError& error) {
-        std::cerr << error.what() << "\n";
+    if (ptr_ == nullptr) {
+        throw DereferenceNullPtrError();
     }
     return *ptr_;
 }
@@ -84,8 +78,6 @@ T* UniquePtr<T>::release() {
 
 template <typename T>
 void UniquePtr<T>::reset(T* newPtr) {
-    if (ptr_ != nullptr) {
-        delete ptr_;
-    }
+    delete ptr_;
     ptr_ = newPtr;
 }
