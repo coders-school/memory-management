@@ -24,4 +24,4 @@ jobs:
       working-directory: homework/unique_ptr/build
       run: |
           sudo apt-get update -y    
-          sudo apt get install -y valgrind
+          sudo apt-get install -y valgrind
