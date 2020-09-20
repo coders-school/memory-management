@@ -1,9 +1,9 @@
-name: C++ with CMake CI
+name: UniquePointer
 
 on: [push, pull_request]
 
 jobs:
- UniquePointer-ut:
+  ut:
     runs-on: ubuntu-latest
     steps:
     - name: Check out code
@@ -18,3 +18,21 @@ jobs:
     - name: Run tests
       working-directory: homework/unique_ptr/build
       run: ctest -V
+
+  ut_valgrind:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install valgrind
+      uses: sudo apt install valgrind
+    - name: Check out code
+      uses: actions/checkout@master
+    - name: mkdir homework/unique_ptr/build
+      run: mkdir homework/unique_ptr/build
+    - name: Compile
+      working-directory: homework/unique_ptr/build
+      run: |
+        cmake ..
+        make
+    - name: Run valgrind
+      working-directory: homework/unique_ptr/build
+      run: valgrind ./UniquePointer-ut
