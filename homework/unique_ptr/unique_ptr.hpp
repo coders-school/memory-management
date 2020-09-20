@@ -5,28 +5,27 @@ namespace coders {
 template <typename T>
 class unique_ptr{
 public:
-    unique_ptr() = delete;
-    unique_ptr(T* ptr);
+    unique_ptr() noexcept = default;
+    unique_ptr(T* ptr) noexcept;
     unique_ptr(const unique_ptr<T>&) = delete;
     unique_ptr(unique_ptr<T>&& ptr) noexcept;
     ~unique_ptr();
 
     T* get() const noexcept;
     T* release() noexcept;
-    void reset(T* ptr) noexcept;
+    void reset(T* ptr = nullptr) noexcept;
 
     unique_ptr<T>& operator=(unique_ptr<T>& ptr) = delete;
     unique_ptr<T>& operator=(unique_ptr<T>&& ptr) noexcept;
     T& operator*() const;
     T* operator->() const noexcept;
 
-
 private:
     T* rawPtr_{nullptr};
 };
 
 template <typename T>
-unique_ptr<T>::unique_ptr(T* ptr) {
+unique_ptr<T>::unique_ptr(T* ptr) noexcept {
     rawPtr_ = ptr;
 }
 
@@ -38,9 +37,7 @@ unique_ptr<T>::unique_ptr(unique_ptr<T>&& ptr) noexcept {
 
 template <typename T>
 unique_ptr<T>::~unique_ptr() {
-    if (rawPtr_) {
-        delete rawPtr_; 
-    }
+    delete rawPtr_;
 }
 
 template <typename T>
@@ -59,9 +56,7 @@ template <typename T>
 void unique_ptr<T>::reset(T* ptr) noexcept {
     T* oldPtr = rawPtr_;
     rawPtr_ = ptr;
-    if (oldPtr) {
-        delete oldPtr;  
-    }
+    delete oldPtr;
 }
 
 template <typename T>
