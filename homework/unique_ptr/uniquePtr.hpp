@@ -15,8 +15,6 @@ public:
     unique_ptr(T* ptr);
     unique_ptr(unique_ptr&& otherPtr);
     unique_ptr(const unique_ptr&) = delete;
-    unique_ptr& operator=(const unique_ptr& otherPtr) = delete;
-    unique_ptr& operator=(unique_ptr&& otherPtr);
     ~unique_ptr();
 
     T* get() const;
@@ -25,6 +23,8 @@ public:
 
     T& operator*() const;
     T* operator->() const;
+    unique_ptr& operator=(unique_ptr& otherPtr) = delete;
+    unique_ptr& operator=(unique_ptr&& otherPtr);
 
 private:
     T* ptr_;
@@ -38,16 +38,6 @@ unique_ptr<T>::unique_ptr(T* ptr) : ptr_(ptr) {}
 
 template <typename T>
 unique_ptr<T>::unique_ptr(unique_ptr&& otherPtr) : ptr_(otherPtr.release()) {}
-
-template <typename T>
-unique_ptr<T>& unique_ptr<T>::operator=(unique_ptr<T>&& otherPtr) {
-    if (this != &otherPtr) {
-        delete ptr_;
-        ptr_ = otherPtr.ptr_;
-        otherPtr.ptr_ = nullptr;
-    }
-    return *this;
-}
 
 template <typename T>
 unique_ptr<T>::~unique_ptr() {
@@ -83,4 +73,14 @@ T& unique_ptr<T>::operator*() const {
 template <typename T>
 T* unique_ptr<T>::operator->() const {
     return ptr_;
+}
+
+template <typename T>
+unique_ptr<T>& unique_ptr<T>::operator=(unique_ptr<T>&& otherPtr) {
+    if (this != &otherPtr) {
+        delete ptr_;
+        ptr_ = otherPtr.ptr_;
+        otherPtr.ptr_ = nullptr;
+    }
+    return *this;
 }
