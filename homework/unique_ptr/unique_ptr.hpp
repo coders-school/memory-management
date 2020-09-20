@@ -7,7 +7,7 @@ class unique_ptr {
 public:
     unique_ptr(T* ptr);
     unique_ptr(const unique_ptr&) = delete;
-    unique_ptr(unique_ptr&& otherPtr);
+    unique_ptr(unique_ptr&& otherPtr) noexcept;
     ~unique_ptr();
 
     unique_ptr<T>& operator=(unique_ptr<T>&) = delete;
@@ -28,7 +28,7 @@ unique_ptr<T>::unique_ptr(T* ptr)
     : ptr_(ptr) {}
 
 template <typename T>
-unique_ptr<T>::unique_ptr(unique_ptr&& otherPtr) {
+unique_ptr<T>::unique_ptr(unique_ptr&& otherPtr) noexcept {
         ptr_ = otherPtr.release();
     }
 
