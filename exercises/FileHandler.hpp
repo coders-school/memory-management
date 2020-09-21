@@ -38,13 +38,3 @@ std::ostream& operator<<(std::ostream& os, const FileHandler& fh) {
     }
     return os;
 }
-
-int main() {
-    try {
-        FileHandler fh{"../ResourdeD.cpp"};
-
-    } catch (FileOpeningError& foe) {
-        std::cerr << foe.what() << '/n';
-    }
-    return 0;
-}
