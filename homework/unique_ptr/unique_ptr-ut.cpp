@@ -14,6 +14,7 @@ struct uniquePtrTest : ::testing::Test {
 TEST_F(uniquePtrTest, checkConstructors) {
     ASSERT_EQ(*uPtr, testValueOne);
     unique_ptr<int> uPtr2(new int{testValueTwo});
+    ASSERT_EQ(*uPtr2, testValueTwo);
     unique_ptr<int> uPtr3(std::move(uPtr2));
     ASSERT_EQ(*uPtr3, testValueTwo);
 }
@@ -29,7 +30,7 @@ TEST_F(uniquePtrTest, checkOperators) {
 TEST_F(uniquePtrTest, checkGet) {
     auto ptr = uPtr.get();
     ASSERT_EQ(*ptr, *uPtr);
-    uPtr.release();
+    ptr = uPtr.release();
     delete ptr;
 }
 
