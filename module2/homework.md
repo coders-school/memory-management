@@ -21,8 +21,8 @@ ___
 
 ### Bonuses
 
-+3 XP for delivery of each task before 11.10.2020 23:59
-+3 XP for cooperation for each person in the group
+* +3 XP for delivery of each task before 11.10.2020 23:59
+* +3 XP for cooperation for each person in the group
 
 ___
 <!-- .slide: style="font-size: 0.78em" -->
