@@ -13,10 +13,15 @@ int main() {
     ptr.reset(new int{99});
     std::cout << *ptr << '\n';
 
-    ptr.release();
+    int* released = ptr.release();
     if (ptr.get() == nullptr) {
         std::cout << "It should be nullptr after ptr.release()!\n";
     }
+
+    if (*released == 99) {
+        std::cout << "Released pointer should have value of 99!\n";
+    }
+    delete released;
 
     UniquePtr<int> ptr2{moveTest()};
     std::cout << *ptr2 << '\n';

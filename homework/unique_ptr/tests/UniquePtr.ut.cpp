@@ -1,35 +1,58 @@
 #include <gtest/gtest.h>
 #include "UniquePtr.hpp"
 
-class MoveTest : public testing::Test {
+constexpr int FirstPointerValue = 9;
+constexpr int SecondVectorValue = 99;
+constexpr int ArrowValueTest = 5;
+constexpr int MoveInitialValue = 12;
+
+class ArrowTest {
 public:
-    auto moveTest() {
-        UniquePtr<int> ptr{new int{9}};
-        return ptr;
+    ArrowTest(int value)
+        : value_{value} {}
+    auto arrowGetTest() {
+        return value_;
     }
+
+private:
+    int value_;
+};
+
+class MoveUniqueTestClass : public testing::Test {
+public:
+    MoveUniqueTestClass()
+        : uniquePtrTest_(new int{MoveInitialValue}) {}
+    UniquePtr<int> uniquePtrTest_;
 };
 
 TEST(UniquePtrTest, UniquePointerDereferenceOperatorShouldReturnValue) {
-    UniquePtr<int> ptr{new int{5}};
-    ASSERT_EQ(5, *ptr);
+    UniquePtr<int> ptr{new int{FirstPointerValue}};
+    ASSERT_EQ(FirstPointerValue, *ptr);
+}
+
+TEST(UniquePtrTest, UniquePtrArrowOperatorShouldReturnFunctionValue) {
+    UniquePtr<ArrowTest> ptr = new ArrowTest(ArrowValueTest);
+    ASSERT_EQ(ptr->arrowGetTest(), ArrowValueTest);
 }
 
 TEST(UniquePtrTest, UniquePtrAfterResetShouldContainNewValue) {
-    UniquePtr<int> ptr{new int{5}};
-    ptr.reset(new int{99});
-    ASSERT_EQ(99, *ptr);
+    UniquePtr<int> ptr{new int{FirstPointerValue}};
+    ptr.reset(new int{SecondVectorValue});
+    ASSERT_EQ(SecondVectorValue, *ptr);
 }
 
 TEST(UniquePtrTest, UniquePtrGetShouldGiveUsValueOfPointer) {
-    UniquePtr<int> ptr{new int{5}};
+    UniquePtr<int> ptr{new int{FirstPointerValue}};
     auto newPtr = ptr.get();
-    ASSERT_EQ(5, *newPtr);
+    ASSERT_EQ(FirstPointerValue, *newPtr);
 }
 
 TEST(UniquePtrTest, UniquePtrAfterReleaseShouldBeNullptr) {
-    UniquePtr<int> ptr{new int{5}};
-    ptr.release();
+    UniquePtr<int> ptr{new int{FirstPointerValue}};
+    int* released = ptr.release();
     ASSERT_EQ(ptr.get(), nullptr);
+    ASSERT_EQ(*released, FirstPointerValue);
+    delete released;
 }
 
 TEST(UniquePtrTest, DereferenceOfNullptrShouldReturnException) {
@@ -37,13 +60,15 @@ TEST(UniquePtrTest, DereferenceOfNullptrShouldReturnException) {
     ASSERT_THROW(*ptr, NullptrDereferenceError);
 }
 
-TEST_F(MoveTest, MoveConstructorTest) {
-    UniquePtr<int> ptr{moveTest()};
-    ASSERT_EQ(9, *ptr);
+TEST_F(MoveUniqueTestClass, MoveConstructorTest) {
+    UniquePtr<int> ptr{std::move(uniquePtrTest_)};
+    ASSERT_EQ(uniquePtrTest_.get(), nullptr);
+    ASSERT_EQ(MoveInitialValue, *ptr);
 }
 
-TEST_F(MoveTest, MoveAssignmentTest) {
-    UniquePtr<int> ptr{new int{12}};
-    ptr = moveTest();
-    ASSERT_EQ(9, *ptr);
+TEST_F(MoveUniqueTestClass, MoveAssignmentTest) {
+    UniquePtr<int> ptr{new int{SecondVectorValue}};
+    ptr = std::move(uniquePtrTest_);
+    ASSERT_EQ(uniquePtrTest_.get(), nullptr);
+    ASSERT_EQ(MoveInitialValue, *ptr);
 }

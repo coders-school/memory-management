@@ -21,7 +21,7 @@ public:
     T* operator->() const;
     T* get();
     T* release();
-    void reset(T* ptr);
+    void reset(T* ptr = nullptr);
 
     ~UniquePtr() {
         delete ptr_;
@@ -41,7 +41,7 @@ UniquePtr<T>::UniquePtr(UniquePtr<T>&& ptr)
 
 template <typename T>
 UniquePtr<T>& UniquePtr<T>::operator=(UniquePtr<T>&& ptr) {
-    if (!ptr_) {
+    if (this == &ptr) {
         return *this;
     }
     delete ptr_;
@@ -65,24 +65,18 @@ T* UniquePtr<T>::operator->() const {
 
 template <typename T>
 T* UniquePtr<T>::get() {
-    if (ptr_) {
-        return ptr_;
-    }
-    return nullptr;
+    return ptr_;
 }
 
 template <typename T>
 T* UniquePtr<T>::release() {
-    T* ptr = ptr_;
-    delete ptr_;
-    ptr_ = nullptr;
+    T* ptr = nullptr;
+    std::swap(ptr, ptr_);
     return ptr;
 }
 
 template <typename T>
 void UniquePtr<T>::reset(T* ptr) {
-    if (ptr_) {
-        delete ptr_;
-    }
+    delete ptr_;
     ptr_ = ptr;
 }
