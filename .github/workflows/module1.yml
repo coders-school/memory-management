@@ -18,3 +18,21 @@ jobs:
     - name: Run test 
       working-directory: homework/unique_ptr/build
       run: ctest -V
+  Valgrind:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Check out code
+      uses: actions/checkout@master
+    - name: mkdir homework/unique_ptr/build 
+      run: mkdir homework/unique_ptr/build
+    - name: ValgrindTest
+      working-directory: homework/unique_ptr/build
+      run: |
+        sudo apt install valgrind
+        cmake ..
+        make
+    - name: Run valgrind 
+      working-directory: homework/unique_ptr/build
+      run: |
+        valgrind ./UniquePtr-ut
+        valgrind ./UniquePtr
