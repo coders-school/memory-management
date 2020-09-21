@@ -6,13 +6,10 @@ public:
     explicit UniquePtr(T* ptr) noexcept;
     UniquePtr(UniquePtr&& uniquePtr) noexcept;
     UniquePtr(const UniquePtr&) = delete;
-    ~UniquePtr() {
-        if (ptr_)
-            delete ptr_;
-    }
+    ~UniquePtr() { delete ptr_; }
     T* get() const noexcept { return ptr_; }
     T* operator->();
-    T operator*() const;
+    T& operator*() const;
     UniquePtr<T>& operator=(UniquePtr&& ptr) noexcept;
     T* release() noexcept;
     void reset(T* ptr) noexcept;
@@ -30,7 +27,13 @@ UniquePtr<T>::UniquePtr(UniquePtr&& ptr) noexcept {
 }
 
 template <typename T>
-T UniquePtr<T>::operator*() const {
+UniquePtr<T>& UniquePtr<T>::operator=(UniquePtr&& ptr) noexcept {
+  this->ptr_ = ptr.release();
+  return *this;
+}
+
+template <typename T>
+T& UniquePtr<T>::operator*() const {
     return *UniquePtr<T>::get();
 }
 
@@ -48,8 +51,6 @@ T* UniquePtr<T>::release() noexcept {
 
 template <typename T>
 void UniquePtr<T>::reset(T* ptr) noexcept {
-    if (ptr_) {
-        delete ptr_;
-    }
+    delete ptr_;
     ptr_ = ptr;
 }

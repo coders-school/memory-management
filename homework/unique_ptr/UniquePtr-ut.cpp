@@ -10,10 +10,11 @@ TEST(UniquePtrSuite, UniquePtrDereferencing) {
 }
 
 TEST(UniquePtrSuite, UniquePointerReset) {
+    int expectedValue = 200;
     auto ptr = UniquePtr<int>(new int(100));
     ptr.reset(new int(200));
 
-    ASSERT_EQ(200, *ptr);
+    ASSERT_EQ(expectedValue, *ptr);
 }
 
 TEST(UniquePtrSuite, UniquePointerRelease) {
@@ -32,4 +33,18 @@ TEST(UniquePtrSuite, UniquePointerMoveSemantics) {
     UniquePtr<int> hello_3 = std::move(ptr);
 
     ASSERT_EQ(*hello_3, 10);
+    ASSERT_FALSE(ptr.get());
+}
+
+TEST(UniquePtrSuite, UniquePointerArrowOperator) {
+    std::pair<size_t, size_t> expectedValue(10, 20);
+    auto ptr =
+        UniquePtr<std::pair<size_t, size_t>>(new std::pair<size_t, size_t>(10, 20));
+    auto secondPtr =
+        UniquePtr<std::pair<size_t, size_t>>(new std::pair<size_t, size_t>(30, 40));
+    secondPtr = std::move(ptr);
+
+    ASSERT_EQ(secondPtr->first, expectedValue.first);
+    ASSERT_EQ(secondPtr->second, expectedValue.second);
+    ASSERT_FALSE(ptr.get());
 }

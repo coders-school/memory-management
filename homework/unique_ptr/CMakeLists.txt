@@ -48,7 +48,7 @@ add_executable(${PROJECT_NAME}-ut UniquePtr-ut.cpp)
 
 add_compile_options(${PROJECT_NAME} PUBLIC -Wall -Werror -Wpedantic -Wextra)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE lib -fsanitize=undefined)
-target_link_libraries(${PROJECT_NAME}-ut PRIVATE gtest_main lib -fsanitize=undefined)
+target_link_libraries(${PROJECT_NAME} PRIVATE lib -fsanitize=address)
+target_link_libraries(${PROJECT_NAME}-ut PRIVATE gtest_main lib -fsanitize=address)
 
 add_test(NAME ${PROJECT_NAME}_test COMMAND ${PROJECT_NAME}-ut)
