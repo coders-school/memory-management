@@ -103,7 +103,7 @@ ___
 | (3) assign address of allocated memory to `p` | (3) assign address of allocated memory to `p` |
 
 * <!-- .element: class="fragment fade-in" --> Unspecified order of evaluation means that order can be for example:
-  * A1, A2, B1, B2, C3, C3
+  * A1, A2, B1, B2, A3, B3
 * <!-- .element: class="fragment fade-in" --> What if B2 throws an exception?
 
 ___
