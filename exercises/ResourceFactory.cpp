@@ -1,6 +1,7 @@
 #include <iostream>
-#include <vector>
+#include <memory>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -9,7 +10,7 @@ struct Resource
     Resource(char* byte) : byte_(byte) {}
     char* byte() const { return byte_; }
     virtual string name() const = 0;
-    ~Resource() { delete byte_; }
+    virtual ~Resource() { delete byte_; }
 
 protected:
     char* byte_ = nullptr;
@@ -18,26 +19,26 @@ protected:
 struct ResourceA : Resource
 {
     ResourceA(char* byte) : Resource(byte) {}
-    string name() const override { return string("ResourceA ").append(byte_); }
+    string name() const override { return string("ResourceA ").append(byte_, 1); }
 };
 
 struct ResourceB : Resource
 {
     ResourceB(char* byte) : Resource(byte) {}
-    string name() const override { return string("ResourceB ").append(byte_); }
+    string name() const override { return string("ResourceB ").append(byte_, 1); }
 };
 
 struct ResourceFactory
 { 
-    Resource* makeResourceA(char* byte) { return new ResourceA{byte}; }
-    Resource* makeResourceB(char* byte) { return new ResourceB{byte}; }
+    std::shared_ptr<Resource> makeResourceA(char* byte) { return std::make_shared<ResourceA>(byte); }
+    std::shared_ptr<Resource> makeResourceB(char* byte) { return std::make_shared<ResourceB>(byte); }
 };
 
 struct ResourceCollection
 {
-    void add(Resource* r) { resources.push_back(r); }
+    void add(std::shared_ptr<Resource> r) { resources.push_back(r); }
     void clear() { resources.clear(); }
-    Resource* operator[](int index) { return resources[index]; }
+    std::shared_ptr<Resource> operator[](int index) { return resources[index]; }
     void printAll()
     {
         for (const auto & res : resources)
@@ -47,7 +48,7 @@ struct ResourceCollection
     }
 
 private:
-    vector<Resource*> resources;
+    vector<std::shared_ptr<Resource>> resources;
 };
 
 int main()
@@ -59,8 +60,8 @@ int main()
     collection.printAll();
 
     auto firstByte = collection[0]->byte();
-    collection.clear();
     cout << *firstByte << endl;
+    collection.clear();
 
     return 0;
 }
