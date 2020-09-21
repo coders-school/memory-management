@@ -41,7 +41,10 @@ endif()
 project(unique_ptr)
 
 add_executable(${PROJECT_NAME} main.cpp)
+target_compile_options(${PROJECT_NAME} PUBLIC -Wall -Werror -Wpedantic -Wextra)
+enable_testing()
 add_executable(${PROJECT_NAME}-ut unique_ptr-ut.cpp)
 target_link_libraries(${PROJECT_NAME}-ut gtest_main)
+target_compile_options(${PROJECT_NAME}-ut PUBLIC -Wall -Werror -Wpedantic -Wextra)
 add_test(NAME ${PROJECT_NAME}-test COMMAND ${PROJECT_NAME}-ut)
-target_compile_options(${PROJECT_NAME} PUBLIC -Wall -Werror -Wpedantic -Wextra)
+
