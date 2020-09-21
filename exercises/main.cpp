@@ -1,13 +1,13 @@
-// #include "FileHandler.hpp"
+#include "FileHandler.hpp"
 
-// #include <iostream>
+#include <iostream>
 
-// int main() {
-//     try {
-//         FileHandler fh{"../ResourdeD.cpp"};
+int main() {
+    try {
+        FileHandler fh{"../ResourdeD.cpp"};
 
-//     } catch (FileOpeningError& foe) {
-//         std::cerr << foe.what() << '/n';
-//     }
-//     return 0;
-// }
+    } catch (FileOpeningError& foe) {
+        std::cerr << foe.what() << '\n';
+    }
+    return 0;
+}
