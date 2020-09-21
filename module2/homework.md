@@ -15,8 +15,8 @@ ___
 
 ## Post-work
 
-* `shared_ptr` (40 XP)
-* `weak_ptr` (20 XP) for volunteers
+* `shared_ptr` (50 XP)
+* `weak_ptr` (25 XP) for volunteers
 * `make_shared` (40 XP) for volunteers
 
 ### Bonuses
@@ -29,7 +29,7 @@ ___
 
 ### `shared_ptr`
 
-(40 XP) Implement your own `shared_ptr` (simplified).
+(50 XP) Implement your own `shared_ptr` (simplified).
 
 `shared_ptr` is a RAII class:
 
@@ -56,7 +56,7 @@ ___
 
 ### `weak_ptr` - for volunteers
 
-(20 XP) Implement your own `weak_ptr`
+(25 XP) Implement your own `weak_ptr`
 
 * Proper cooperation with above `shared_ptr`
 * Member functions: `use_count()`, `expired()`, `lock()`, `reset()`
