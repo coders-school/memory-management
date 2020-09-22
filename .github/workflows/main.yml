@@ -25,4 +25,4 @@ jobs:
       working-directory: homework/unique_ptr/build
       run: |
         sudo apt-get update && sudo apt-get install valgrind
-        valgrind --leak-check=full ./uniquePtr-ut
+        valgrind --leak-check=full ./unique_ptr-ut
