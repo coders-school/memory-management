@@ -3,10 +3,11 @@
 template<typename T>
 class unique_ptr {
 public:
-    unique_ptr() = default;
-    unique_ptr(T* pointer) : pointer_(pointer) {}
-    unique_ptr(unique_ptr& ptr);
+    unique_ptr(T* pointer = nullptr) : pointer_(pointer) {}
+    unique_ptr(unique_ptr& ptr) = delete;
     unique_ptr(unique_ptr&& ptr);
+    unique_ptr& operator=(const unique_ptr& ptr) = delete;
+    unique_ptr& operator=(unique_ptr&& ptr);
     ~unique_ptr();
     T& operator*() const { return *pointer_; }
     T* operator->() const { return pointer_; }
@@ -14,7 +15,7 @@ public:
     T* release();
     void reset(T* new_ptr = nullptr);
 private:
-    T* pointer_ = nullptr;
+    T* pointer_;
 };
 
 template<typename T>
@@ -31,26 +32,21 @@ T* unique_ptr<T>::release() {
 
 template<typename T>
 void unique_ptr<T>::reset(T* new_ptr) {
-    if(pointer_ != nullptr) {
-        delete pointer_;
-    }
+    delete pointer_;
     pointer_ = new_ptr;
 }
 
 template<typename T>
-unique_ptr<T>::unique_ptr(unique_ptr& ptr) {
-    if(pointer_ != nullptr) {
+unique_ptr<T>& unique_ptr<T>::operator=(unique_ptr<T>&& ptr) {
+    if(this != &ptr) {
         delete pointer_;
+        pointer_ = ptr.pointer_;
+        ptr.pointer_ = nullptr;
     }
-    pointer_ = ptr.pointer_;
-    ptr.pointer_ = nullptr;
+    return *this;
 }
 
 template<typename T>
-unique_ptr<T>::unique_ptr(unique_ptr&& ptr) {
-    if(pointer_ != nullptr) {
-        delete pointer_;
-    }
-    pointer_ = ptr.pointer_;
+unique_ptr<T>::unique_ptr(unique_ptr&& ptr) : pointer_(ptr.pointer_) {
     ptr.pointer_ = nullptr;
 }
