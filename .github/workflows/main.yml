@@ -1,0 +1,22 @@
+name: CMake and sanitizers
+
+on: [push, pull_request]
+
+jobs:
+  ctestsanitizers:
+    runs-on: ubuntu-20.04
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Create build folder
+      working-directory: homework/shared_ptr
+      run: mkdir build
+    - name: Compile
+      working-directory: homework/shared_ptr/build
+      run: |
+        cmake ..
+        make
+    - name: Run tests and sanitizer
+      working-directory: homework/shared_ptr/build
+      run: ctest -V
