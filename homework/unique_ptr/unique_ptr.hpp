@@ -12,7 +12,7 @@ public:
     T* operator->() const { return pointer_; }
     T* get() const { return pointer_; }
     T* release();
-    void reset(T* new_ptr);
+    void reset(T* new_ptr = nullptr);
 private:
     T* pointer_ = nullptr;
 };
