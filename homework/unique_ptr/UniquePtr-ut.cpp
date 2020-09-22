@@ -12,7 +12,7 @@ TEST(UniquePtrSuite, UniquePtrDereferencing) {
 TEST(UniquePtrSuite, UniquePointerReset) {
     int expectedValue = 200;
     auto ptr = UniquePtr<int>(new int(100));
-    ptr.reset(new int(200));
+    ptr.reset(new int(expectedValue));
 
     ASSERT_EQ(expectedValue, *ptr);
 }
@@ -39,7 +39,7 @@ TEST(UniquePtrSuite, UniquePointerMoveSemantics) {
 TEST(UniquePtrSuite, UniquePointerArrowOperator) {
     std::pair<size_t, size_t> expectedValue(10, 20);
     auto ptr =
-        UniquePtr<std::pair<size_t, size_t>>(new std::pair<size_t, size_t>(10, 20));
+      UniquePtr<std::pair<size_t, size_t>>(new std::pair<size_t, size_t>{expectedValue});
     auto secondPtr =
         UniquePtr<std::pair<size_t, size_t>>(new std::pair<size_t, size_t>(30, 40));
     secondPtr = std::move(ptr);

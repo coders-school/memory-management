@@ -11,6 +11,7 @@ public:
     T* operator->();
     T& operator*() const;
     UniquePtr<T>& operator=(UniquePtr&& ptr) noexcept;
+    UniquePtr<T>& operator=(const UniquePtr&) = delete;
     T* release() noexcept;
     void reset(T* ptr) noexcept;
 
@@ -28,8 +29,10 @@ UniquePtr<T>::UniquePtr(UniquePtr&& ptr) noexcept {
 
 template <typename T>
 UniquePtr<T>& UniquePtr<T>::operator=(UniquePtr&& ptr) noexcept {
-  this->ptr_ = ptr.release();
-  return *this;
+    if (this != &ptr) {
+        this->ptr_ = ptr.release();
+    }
+    return *this;
 }
 
 template <typename T>
