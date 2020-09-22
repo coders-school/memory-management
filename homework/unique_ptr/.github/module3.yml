@@ -17,4 +17,6 @@ jobs:
         make
     - name: Run tests
       working-directory: build
-      run: ctest -V
+      run: |
+        ctest -V
+        valgrind ./unique_ptr-ut 

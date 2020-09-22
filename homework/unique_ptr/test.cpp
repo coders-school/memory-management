@@ -59,4 +59,5 @@ TEST(UniquePtrTest, ReleaseFunctionShouldSetNullptrAndReturnPointer) {
     int* ptr = temp.release();
 
     ASSERT_TRUE(*ptr == 42);
+    delete ptr;
 }

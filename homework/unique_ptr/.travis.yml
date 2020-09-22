@@ -12,3 +12,4 @@ script:
   - cmake ..
   - make
   - ctest -V
+  - valgrind ./unique_ptr-ut 
