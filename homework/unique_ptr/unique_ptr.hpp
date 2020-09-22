@@ -19,10 +19,7 @@ private:
 
 template<typename T>
 unique_ptr<T>::~unique_ptr() {
-    if(pointer_ != nullptr) {
-        delete pointer_;
-        pointer_ = nullptr;
-    }
+    delete pointer_;
 }
 
 template<typename T>
