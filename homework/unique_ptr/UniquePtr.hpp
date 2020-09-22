@@ -1,7 +1,5 @@
 #pragma once
 
-#include <algorithm>
-
 template <typename T>
 class UniquePtr {
 public:
@@ -32,7 +30,7 @@ UniquePtr<T>::UniquePtr(UniquePtr&& ptr) noexcept {
 template <typename T>
 UniquePtr<T>& UniquePtr<T>::operator=(UniquePtr&& ptr) noexcept {
     if (this != &ptr) {
-        this->ptr_ = ptr.release();
+        this->reset(ptr.release());
     }
     return *this;
 }
@@ -49,8 +47,8 @@ T* UniquePtr<T>::operator->() {
 
 template <typename T>
 T* UniquePtr<T>::release() noexcept {
-    T* old_ptr = nullptr;
-    std::swap(old_ptr, ptr_);
+    T* old_ptr = ptr_;
+    ptr_ = nullptr;
     return old_ptr;
 }
 
