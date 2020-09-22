@@ -29,8 +29,8 @@ SCENARIO("Working on home implemented unique_ptr") {
       firstUnique.reset();
       THEN("unique_ptr is nullptr") { REQUIRE(firstUnique.get() == nullptr); }
     }
-    WHEN("Releasing owned pointer without assigning return") {
-      firstUnique.release();
+    WHEN("Releasing owned pointer with assigning return to another unique_ptr") {
+      unique_ptr<TestClass> containerForReleased = firstUnique.release();
       THEN("unique_ptr is nullptr") { REQUIRE(firstUnique.get() == nullptr); }
     }
     WHEN("Releasing owned pointer with assigning return") {
