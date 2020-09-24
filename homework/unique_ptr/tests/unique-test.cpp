@@ -51,3 +51,9 @@ TEST(unique, resetMethodShouldSetAsNullptrByDefault) {
     ptr.reset();
     EXPECT_EQ(ptr.get(), nullptr);
 }
+
+TEST(unique, resetMethodShouldSetPtrAsEqualToArgument) {
+    cs::unique_ptr<int> ptr{new int{5}};
+    ptr.reset(new int{10});
+    EXPECT_EQ(*ptr, 10);
+}
