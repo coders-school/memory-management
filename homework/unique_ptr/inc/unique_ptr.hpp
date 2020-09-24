@@ -15,7 +15,9 @@ class unique_ptr {
     }
     unique_ptr& operator=(const unique_ptr&) = delete;
     unique_ptr& operator=(unique_ptr&& rhs) {
-        
+        delete data_;
+        data_ = rhs.data_;
+        rhs.data_ = nullptr;
     }
     T& operator*() const {}
     T* operator->() const {}
