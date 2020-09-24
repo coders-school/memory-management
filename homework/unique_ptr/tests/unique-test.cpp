@@ -78,3 +78,13 @@ TEST_F(unique, resetShouldSetOwnershipAgain) {
     ptr.reset(new int{new_value});
     EXPECT_EQ(*ptr, new_value);
 }
+
+TEST_F(unique, moveWhenUniqueAlreadyOwnsPtr) {
+    cs::unique_ptr<int> ptr{new int{default_value}};
+    int new_value{10};
+    ptr = cs::unique_ptr<int>(new int{new_value});
+    EXPECT_EQ(*ptr, new_value);
+    cs::unique_ptr<int> toBeMoved{new int{default_value}};
+    ptr = std::move(toBeMoved);
+    EXPECT_EQ(*ptr, default_value);
+}

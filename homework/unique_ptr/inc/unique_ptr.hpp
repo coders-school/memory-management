@@ -36,8 +36,8 @@ unique_ptr<T>::unique_ptr(unique_ptr&& rhs) {
 
 template <typename T>
 unique_ptr<T>& unique_ptr<T>::operator=(unique_ptr&& rhs) {
-    if (this == rhs) {
-        return this;
+    if (this == &rhs) {
+        return *this;
     }
     if (isOwned) {
         delete data_;
