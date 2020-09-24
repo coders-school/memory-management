@@ -13,4 +13,7 @@ struct sharedPtrTest : ::testing::Test {
 
 TEST_F(sharedPtrTest, TestConstructor) {
     ASSERT_EQ(*sPtr, testValueOne);
+    cs::shared_ptr<int> sPtr2(std::move(sPtr));
+    //cs::shared_ptr<int> sPtr2(sPtr);
+    //ASSERT_EQ(*sPtr, *sPtr2);
 }

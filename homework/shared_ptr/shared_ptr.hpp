@@ -6,6 +6,10 @@ template <typename T>
 class shared_ptr {
 public:
     shared_ptr(T* ptr);
+    shared_ptr (const shared_ptr& ptr) noexcept; //copy c-tor
+    shared_ptr (shared_ptr&& previousOwner) noexcept; //move c-tor
+
+    T* release();
 
     T& operator*();
 
@@ -19,8 +23,20 @@ shared_ptr<T>::shared_ptr(T* ptr)
     : ptr_(ptr) {}
 
 template <typename T>
+shared_ptr<T>::shared_ptr(shared_ptr&& previousOwner) noexcept {
+    ptr_ = previousOwner.release();
+}
+
+template <typename T>
 T& shared_ptr<T>::operator*() {
     return *ptr_;
+}
+
+template <typename T>
+T* shared_ptr<T>::release() {
+    T* tempPtr = ptr_;
+    ptr_ = nullptr;
+    return tempPtr;
 }
 
 }  // namespace cs
