@@ -8,46 +8,79 @@ class unique_ptr {
 
    public:
     unique_ptr() = default;
-    explicit unique_ptr(T* data) : data_(data){};
+    explicit unique_ptr(T* data);
     unique_ptr(const unique_ptr&) = delete;
-    unique_ptr(unique_ptr&& rhs) {
-        delete data_;
-        data_ = rhs.data_;
-        rhs.data_ = nullptr;
-    }
+    unique_ptr(unique_ptr&& rhs);
     unique_ptr& operator=(const unique_ptr&) = delete;
-    unique_ptr& operator=(unique_ptr&& rhs) {
-        if (isOwned) {
-            delete data_;
-        }
-        data_ = rhs.data_;
-        rhs.data_ = nullptr;
-        isOwned = true;
-        return *this;
-    }
-    T& operator*() const { return *data_; }
-    T* operator->() const { return data_; }
-    T* get() const {
-        if (!isOwned) {
-            return nullptr;
-        }
-        return data_;
-    }
-    T* release() {
-        isOwned = false;
-        return data_;
-    }
-    void reset(T* new_ptr = nullptr) {
-        if (isOwned) {
-            delete data_;
-        }
-        data_ = new_ptr;
-        isOwned = true;
-    }
-    ~unique_ptr() {
-        if (isOwned) {
-            delete data_;
-        }
-    }
+    unique_ptr& operator=(unique_ptr&& rhs);
+    T& operator*() const;
+    T* operator->() const;
+    T* get() const;
+    T* release();
+    void reset(T* new_ptr = nullptr);
+    ~unique_ptr();
 };
+
+template <typename T>
+unique_ptr<T>::unique_ptr(T* data) : data_(data) {
+}
+
+template <typename T>
+unique_ptr<T>::unique_ptr(unique_ptr&& rhs) {
+    delete data_;
+    data_ = rhs.data_;
+    rhs.data_ = nullptr;
+}
+
+template <typename T>
+unique_ptr<T>& unique_ptr<T>::operator=(unique_ptr&& rhs) {
+    if (isOwned) {
+        delete data_;
+    }
+    data_ = rhs.data_;
+    rhs.data_ = nullptr;
+    isOwned = true;
+    return *this;
+}
+
+template <typename T>
+T& unique_ptr<T>::operator*() const {
+    return *data_;
+}
+
+template <typename T>
+T* unique_ptr<T>::operator->() const {
+    return data_;
+}
+
+template <typename T>
+T* unique_ptr<T>::get() const {
+    if (!isOwned) {
+        return nullptr;
+    }
+    return data_;
+}
+
+template <typename T>
+T* unique_ptr<T>::release() {
+    isOwned = false;
+    return data_;
+}
+
+template <typename T>
+void unique_ptr<T>::reset(T* new_ptr) {
+    if (isOwned) {
+        delete data_;
+    }
+    data_ = new_ptr;
+    isOwned = true;
+}
+
+template <typename T>
+unique_ptr<T>::~unique_ptr() {
+    if (isOwned) {
+        delete data_;
+    }
+}
+
 };  // namespace cs
