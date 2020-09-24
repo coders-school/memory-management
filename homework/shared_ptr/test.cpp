@@ -3,7 +3,14 @@
 #include "shared_ptr.hpp"
 
 const std::string testString{"Ala ma kota"};
+constexpr int testValueOne = 10;
 
-TEST(TestTest, FailTest) {
-    ASSERT_TRUE(false);
+struct sharedPtrTest : ::testing::Test {
+    sharedPtrTest()
+    : sPtr(new int{testValueOne}) {}
+    cs::shared_ptr<int> sPtr;
+};
+
+TEST_F(sharedPtrTest, TestConstructor) {
+    ASSERT_EQ(*sPtr, testValueOne);
 }
