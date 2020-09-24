@@ -45,3 +45,9 @@ TEST(unique, releaseMethodShouldReturnPointerAndReleaseOwnership) {
     EXPECT_EQ(*ptr, *new_owner_ptr);
     delete new_owner_ptr;
 }
+
+TEST(unique, resetMethodShouldSetAsNullptrByDefault) {
+    cs::unique_ptr<int> ptr{new int{5}};
+    ptr.reset();
+    EXPECT_EQ(ptr.get(), nullptr);
+}
