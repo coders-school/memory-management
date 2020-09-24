@@ -24,4 +24,5 @@ jobs:
     - name: Run valgrind
       working-directory: homework/unique_ptr/build
       run: | 
+        sudo apt install valgrind
         valgrind ./unique_ptr-ut
