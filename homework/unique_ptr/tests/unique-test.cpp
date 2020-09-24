@@ -25,6 +25,10 @@ TEST(unique, canBeDereferenced) {
 }
 
 TEST(unique, arrowOperatorCanBeUsed) {
-    cs::unique_ptr<int> ptr{new int{3}};
-    ptr->reset();
+    struct foo {
+        void use(){};
+    };
+    cs::unique_ptr<foo> ptr{new foo()};
+    ptr->use();
+    
 }
