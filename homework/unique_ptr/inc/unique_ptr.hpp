@@ -8,7 +8,11 @@ class unique_ptr {
     unique_ptr() = default;
     unique_ptr(T* data): data_(data) {};
     unique_ptr(const unique_ptr&) = delete;
-    unique_ptr(unique_ptr&& rhs) {}
+    unique_ptr(unique_ptr&& rhs) {
+        delete data_;
+        data_ = rhs.data_;
+        rhs.data_ = nullptr;
+    }
     unique_ptr& operator=(const unique_ptr&) = delete;
     unique_ptr& operator=(unique_ptr&& rhs) {
         
