@@ -29,7 +29,9 @@ template <typename T>
 unique_ptr<T>::unique_ptr(unique_ptr&& rhs) {
     delete data_;
     data_ = rhs.data_;
+    isOwned = rhs.isOwned;
     rhs.data_ = nullptr;
+    rhs.isOwned = false;
 }
 
 template <typename T>
@@ -38,8 +40,9 @@ unique_ptr<T>& unique_ptr<T>::operator=(unique_ptr&& rhs) {
         delete data_;
     }
     data_ = rhs.data_;
+    isOwned = rhs.isOwned;
     rhs.data_ = nullptr;
-    isOwned = true;
+    rhs.isOwned = false;
     return *this;
 }
 
