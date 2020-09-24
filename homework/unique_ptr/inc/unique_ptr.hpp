@@ -3,12 +3,12 @@
 namespace cs {
 template <typename T>
 class unique_ptr {
-    bool isReleased{false};
+    bool isOwned{true};
     T* data_{nullptr};
 
    public:
     unique_ptr() = default;
-    unique_ptr(T* data) : data_(data){};
+    explicit unique_ptr(T* data) : data_(data){};
     unique_ptr(const unique_ptr&) = delete;
     unique_ptr(unique_ptr&& rhs) {
         delete data_;
@@ -17,24 +17,35 @@ class unique_ptr {
     }
     unique_ptr& operator=(const unique_ptr&) = delete;
     unique_ptr& operator=(unique_ptr&& rhs) {
-        delete data_;
+        if (isOwned) {
+            delete data_;
+        }
         data_ = rhs.data_;
         rhs.data_ = nullptr;
+        isOwned = true;
+        return *this;
     }
     T& operator*() const { return *data_; }
     T* operator->() const { return data_; }
-    T* get() const { return data_; }
+    T* get() const {
+        if (!isOwned) {
+            return nullptr;
+        }
+        return data_;
+    }
     T* release() {
-        isReleased = true;
+        isOwned = false;
         return data_;
     }
     void reset(T* new_ptr = nullptr) {
-        delete data_;
+        if (isOwned) {
+            delete data_;
+        }
         data_ = new_ptr;
-        isReleased = false;
+        isOwned = true;
     }
     ~unique_ptr() {
-        if (!isReleased) {
+        if (isOwned) {
             delete data_;
         }
     }
