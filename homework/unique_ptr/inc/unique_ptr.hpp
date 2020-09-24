@@ -6,7 +6,7 @@ class unique_ptr {
     T* data_{nullptr};
     public:
     unique_ptr() = default;
-    unique_ptr(T* data) {};
+    unique_ptr(T* data): data_(data) {};
     unique_ptr(const unique_ptr&) = delete;
     unique_ptr(unique_ptr&& rhs) {}
     unique_ptr& operator=(const unique_ptr&) = delete;
