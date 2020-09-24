@@ -24,6 +24,7 @@ TEST(unique, canBeDereferenced) {
     EXPECT_EQ(*ptr, 3);
 }
 
-
-
-
+TEST(unique, arrowOperatorCanBeUsed) {
+    cs::unique_ptr<int> ptr{new int{3}};
+    ptr->reset();
+}
