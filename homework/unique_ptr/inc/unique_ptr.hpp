@@ -19,8 +19,8 @@ class unique_ptr {
         data_ = rhs.data_;
         rhs.data_ = nullptr;
     }
-    T& operator*() const {}
-    T* operator->() const {}
+    T& operator*() const { return *data_; }
+    T* operator->() const { return data_; }
     T* get() const {}
     T* release() {}
     void reset() {}
