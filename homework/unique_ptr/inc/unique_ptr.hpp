@@ -21,7 +21,7 @@ class unique_ptr {
     }
     T& operator*() const { return *data_; }
     T* operator->() const { return data_; }
-    T* get() const {}
+    T* get() const { return data_; }
     T* release() {}
     void reset() {}
     ~unique_ptr() { delete data_; }
