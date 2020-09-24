@@ -28,8 +28,9 @@ class unique_ptr {
         isReleased = true;
         return data_;
     }
-    void reset() {
-        data_ = nullptr;
+    void reset(T* new_ptr = nullptr) {
+        delete data_;
+        data_ = new_ptr;
         isReleased = false;
     }
     ~unique_ptr() {
