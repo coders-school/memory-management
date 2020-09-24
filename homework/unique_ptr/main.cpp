@@ -3,11 +3,10 @@
 
 int main() {
     std::cout << "Unique pointers: \n";
-    UniquePointer<int> intPtr();
     UniquePointer<int> ptr2(new int(44));
     std::cout << *ptr2 << "\n";
     std::cout << *ptr2.get() << "\n";
-    ptr2.release();
+    auto pptr2 = ptr2.release();
 
     try {
         UniquePointer<int> uPtr(nullptr);
@@ -16,6 +15,8 @@ int main() {
     } catch (NullPtrException& e) {
         std::cout << e.what() << '\n';
     }
+
+    delete pptr2;
 
     UniquePointer<int> mptr{new int{14}};
     UniquePointer<int> mptr2 = std::move(mptr);

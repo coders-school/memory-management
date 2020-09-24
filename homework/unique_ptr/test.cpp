@@ -12,33 +12,24 @@ struct TestUniquePtr : ::testing::Test {
 
 TEST_F(TestUniquePtr, TestOfConstructor) {
     ASSERT_EQ(testValue1, *uPtr);
-
-    UniquePointer<int> ptr{new int{33}};
-    ASSERT_EQ(33, *ptr);
 }
 
 TEST_F(TestUniquePtr, TestOfGetMethod) {
     auto ptr = uPtr.get();
-    ASSERT_EQ(*ptr, *uPtr);
-
-    UniquePointer<int> ptr2{new int{9}};
-    auto newPtr = ptr2.get();
-    ASSERT_EQ(9, *newPtr);
+    ASSERT_EQ(*ptr, testValue1);
 }
 
 TEST_F(TestUniquePtr, TestOfResetMethod) {
     uPtr.reset(new int{testValue2});
     ASSERT_EQ(testValue2, *uPtr);
-
-    UniquePointer<int> ptr(new int(15));
-    ptr.reset(new int(45));
-    ASSERT_EQ(45, *ptr);
 }
 
 TEST_F(TestUniquePtr, TestOfReleaseMethod) {
-    UniquePointer<int> ptr(new int(35));
-    ptr.release();
+    UniquePointer<int> ptr(new int(testValue2));
+    auto newPtr = ptr.release();
+    ASSERT_EQ(*newPtr, testValue2);
     ASSERT_EQ(ptr.get(), nullptr);
+    delete newPtr;
 }
 
 TEST_F(TestUniquePtr, TestOfNullPtrException) {
@@ -48,13 +39,14 @@ TEST_F(TestUniquePtr, TestOfNullPtrException) {
 
 TEST_F(TestUniquePtr, TestOfMoveConstructor) {
     UniquePointer<int> ptr(std::move(uPtr));
-    ASSERT_EQ(20, *ptr);
+    ASSERT_EQ(testValue1, *ptr);
 }
 
 TEST_F(TestUniquePtr, TestOfMoveAssignmentOperator) {
-    UniquePointer<int> ptr{new int{14}};
+    UniquePointer<int> ptr{new int{testValue2}};
     UniquePointer<int> ptr2 = std::move(ptr);
-    ASSERT_EQ(14, *ptr2);
+    ASSERT_EQ(ptr.get(), nullptr);
+    ASSERT_EQ(testValue2, *ptr2);
 }
 
 TEST_F(TestUniquePtr, TestOfArrowOperator) {
