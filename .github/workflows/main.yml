@@ -11,17 +11,18 @@ jobs:
       with:
         ref: unique_ptr
     - name: mkdir build
+      working-directory: homework/unique_ptr/
       run: mkdir build
     - name: Compile
-      working-directory: build
+      working-directory: homework/unique_ptr/build
       run: |
         cmake ..
         make
     - name: Run tests
-      working-directory: build
+      working-directory: homework/unique_ptr/build
       run: ctest -V
     - name: Run valgrind
-      working-directory: build
+      working-directory: homework/unique_ptr/build
       run: | 
         sudo apt install valgrind
         valgrind ./unique-ptr-ut
