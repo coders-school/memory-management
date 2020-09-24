@@ -1,12 +1,14 @@
 #pragma once
 
 namespace cs {
-template<typename T>
+template <typename T>
 class unique_ptr {
+    bool isReleased{false};
     T* data_{nullptr};
-    public:
+
+   public:
     unique_ptr() = default;
-    unique_ptr(T* data): data_(data) {};
+    unique_ptr(T* data) : data_(data){};
     unique_ptr(const unique_ptr&) = delete;
     unique_ptr(unique_ptr&& rhs) {
         delete data_;
@@ -22,8 +24,15 @@ class unique_ptr {
     T& operator*() const { return *data_; }
     T* operator->() const { return data_; }
     T* get() const { return data_; }
-    T* release() {}
+    T* release() {
+        isReleased = true;
+        return data_;
+    }
     void reset() {}
-    ~unique_ptr() { delete data_; }
+    ~unique_ptr() {
+        if (!isReleased) {
+            delete data_;
+        }
+    }
 };
 };  // namespace cs
