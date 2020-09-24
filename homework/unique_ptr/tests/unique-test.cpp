@@ -38,3 +38,10 @@ TEST(unique, getMethodShouldReturnPointerWithoutReleasingOwnership) {
     int* raw_ptr = ptr.get();
     EXPECT_EQ(*ptr, *raw_ptr);
 }
+
+TEST(unique, releaseMethodShouldReturnPointerAndReleaseOwnership) {
+    cs::unique_ptr<int> ptr{new int{5}};
+    int* new_owner_ptr = ptr.release();
+    delete new_owner_ptr;
+    EXPECT_EQ(*ptr, *raw_ptr);
+}
