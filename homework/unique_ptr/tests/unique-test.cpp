@@ -32,3 +32,9 @@ TEST(unique, arrowOperatorCanBeUsed) {
     ptr->use();
     
 }
+
+TEST(unique, getMethodShouldReturnPointerWithoutReleasingOwnership) {
+    cs::unique_ptr<int> ptr{new int{5}};
+    int* raw_ptr = ptr.get();
+    EXPECT_EQ(*ptr, *raw_ptr);
+}
