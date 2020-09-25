@@ -16,6 +16,8 @@ public:
     ~UniquePtr();
 
     T& operator=(const T&) = delete;
+    UniquePtr<T>& operator=(UniquePtr<T>&& movedPtr);
+
     T* operator->() const { return ptr_; }
     T& operator*() const;
 
@@ -34,7 +36,7 @@ UniquePtr<T>::UniquePtr(UniquePtr&& movedPtr) {
 
 template <typename T>
 UniquePtr<T>::~UniquePtr() {
-        delete ptr_;
+    delete ptr_;
 }
 
 template <typename T>
@@ -43,6 +45,16 @@ T& UniquePtr<T>::operator*() const {
         throw NullptrException("pointer is null");
     }
     return *ptr_;
+}
+
+template <typename T>
+UniquePtr<T>& UniquePtr<T>::operator=(UniquePtr<T>&& movedPtr) {
+    if (this != &movedPtr) {
+        delete ptr_;
+        ptr_ = movedPtr.ptr_;
+        movedPtr.ptr_ = nullptr;
+    }
+    return *this;
 }
 
 template <typename T>

@@ -45,6 +45,8 @@ TEST_F(UniquePtrTest, ShouldUseMoveAndGet) {
 TEST_F(UniquePtrTest, ShouldUseReset) {
     doublePtr.reset(new double{ConstValues::newdoubleVal});
     ASSERT_EQ(*doublePtr, ConstValues::newdoubleVal);
+    doublePtr.reset();
+    ASSERT_THROW(*doublePtr, NullptrException);
 }
 
 TEST_F(UniquePtrTest, ShouldUseReleaseAndThrowExceptionIfDerefenceNull) {
@@ -59,6 +61,8 @@ TEST_F(UniquePtrTest, ShouldCallMethodByArrowOperator) {
     double a = 3.5;
     double b = 2.0;
     UniquePtr<Square> squarePtr = new Square(a, b);
-
     ASSERT_EQ(squarePtr->ComputeArea(), a * b);
+
+    squarePtr = new Square (2*a, 2*b);
+    ASSERT_EQ(squarePtr->ComputeArea(), 2*a * 2*b);
 }
