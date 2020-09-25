@@ -37,4 +37,4 @@ jobs:
         make
     - name: Run valgrind
       working-directory: homework/unique_ptr/build
-      run: valgrind ./UniquePointer-ut
+      run: valgrind ./UniquePtr-ut
