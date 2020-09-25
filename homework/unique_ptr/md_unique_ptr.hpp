@@ -12,6 +12,9 @@ public:
 
     ~my_unique_ptr() { delete ptr_; }
 
+    T operator*() { return *ptr_;} ; //what if nullptr
+
+
 private:
     T* ptr_ = nullptr;
 };
