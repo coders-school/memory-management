@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@master
 
     - name: Create build folder
       working-directory: homework/unique_ptr
@@ -20,3 +20,21 @@ jobs:
     - name: Run tests
       working-directory: homework/unique_ptr/build
       run: ctest -V
+
+  valgrind:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Check out code
+      uses: actions/checkout@master
+    - name: Install valgrind
+      run: sudo apt-get install valgrind
+    - name: Create build dir
+      run: mkdir homework/unique_ptr/build
+    - name: Compile
+      working-directory: homework/unique_ptr/build
+      run: |
+        cmake ..
+        make
+    - name: Run valgrind
+      working-directory: homework/unique_ptr/build
+      run: valgrind ./UniquePointer-ut
