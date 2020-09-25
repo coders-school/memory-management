@@ -16,7 +16,7 @@ public:
     ~UniquePtr();
 
     T& operator=(const T&) = delete;
-    UniquePtr<T>& operator=(UniquePtr<T>&& movedPtr);
+    UniquePtr& operator=(UniquePtr&& movedPtr);
 
     T* operator->() const { return ptr_; }
     T& operator*() const;
