@@ -34,9 +34,7 @@ UniquePtr<T>::UniquePtr(UniquePtr&& movedPtr) {
 
 template <typename T>
 UniquePtr<T>::~UniquePtr() {
-    if (ptr_) {
         delete ptr_;
-    }
 }
 
 template <typename T>
