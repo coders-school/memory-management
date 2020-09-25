@@ -6,18 +6,12 @@ class my_unique_ptr
 {
 
 public:
-    T* get();
-    ~my_unique_ptr(T* ptr){
-    
-    
-    }
+    T* get() { return ptr_; }
+
+    my_unique_ptr(T* ptr) :  ptr_(ptr) {};
+
+    ~my_unique_ptr() { delete ptr_; }
 
 private:
-    T* t_ptr = nullptr;
-} 
-
-
-inline T* get()
-{
-    return T*;
-}
+    T* ptr_ = nullptr;
+};
