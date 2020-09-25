@@ -65,4 +65,7 @@ TEST_F(UniquePtrTest, ShouldCallMethodByArrowOperator) {
 
     squarePtr = new Square (2*a, 2*b);
     ASSERT_EQ(squarePtr->ComputeArea(), 2*a * 2*b);
+
+    UniquePtr<Square> squarePtr2 = std::move(squarePtr);
+    ASSERT_EQ(squarePtr2->ComputeArea(), 2*a * 2*b);
 }
