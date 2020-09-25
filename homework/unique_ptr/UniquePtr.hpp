@@ -21,7 +21,7 @@ public:
 
     T* get() const { return ptr_; }
     T* release();
-    void reset(T* newPtr);
+    void reset(T* newPtr = nullptr);
 
 private:
     T* ptr_;
