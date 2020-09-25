@@ -77,7 +77,6 @@ template <typename T>
 T* unique_ptr<T>::release() {
     T* tempPtr = ptr_;
     ptr_ = nullptr;
-
     return tempPtr;
 }
 
