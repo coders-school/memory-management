@@ -6,7 +6,7 @@ class shared_ptr {
 public:
     shared_ptr(T* ptr);
     shared_ptr(const shared_ptr& ptr) noexcept;  //copy c-tor
-    shared_ptr(shared_ptr&& previousOwner);      //move c-tor
+    shared_ptr(shared_ptr&& previousOwner) noexcept;      //move c-tor
     ~shared_ptr();
 
     //TODO Implement reset, swap
@@ -23,29 +23,34 @@ private:
 };
 
 template <typename T>
-shared_ptr<T>::shared_ptr(const shared_ptr& ptr) noexcept {
-    counter_ = ptr.counter_;
-    ptr_ = ptr.ptr_;
-    *counter_++;
+shared_ptr<T>::shared_ptr(T* ptr)
+    : ptr_(ptr), counter_(new size_t(0)) {
+    (*counter_)++;
 }
 
 template <typename T>
-shared_ptr<T>::shared_ptr(T* ptr)
-    : ptr_(ptr), counter_(new size_t(0)) {
-    *counter_++;
+shared_ptr<T>::shared_ptr(const shared_ptr& ptr) noexcept {
+    counter_ = ptr.counter_;
+    ptr_ = ptr.ptr_;
+    (*counter_)++;
+}
+
+template <typename T>
+shared_ptr<T>::shared_ptr(shared_ptr&& previousOwner) noexcept
+    :   ptr_(previousOwner.ptr_), counter_(previousOwner.counter_) {
+    previousOwner.ptr_ = nullptr;
+    previousOwner.counter_ = nullptr;
 }
 
 template <typename T>
 shared_ptr<T>::~shared_ptr() {
-    // *counter_--;
-    // if (*counter_ == 0) {
-    //     delete counter_;
-    //     delete ptr_;
-    // }
-    if (*counter_ == 1) {
-        *counter_--;
-        delete ptr_;
-    }
+    if (counter_ != nullptr) {
+        (*counter_)--;
+        if ((*counter_) == 0) {
+            delete ptr_;
+            delete counter_;
+        }
+    } 
 }
 
 template <typename T>
@@ -66,11 +71,8 @@ T& shared_ptr<T>::operator*() {
 template <typename T>
 shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr<T>&& previousOwner) {
     if (this != &previousOwner) {
-        *counter_--;
-        if (*counter_ == 0) {
-            delete ptr_;
-            delete counter_;
-        }
+        delete ptr_;
+        delete counter_;
         ptr_ = previousOwner.ptr_;
         counter_ = previousOwner.counter_;
         previousOwner.ptr_ = nullptr;

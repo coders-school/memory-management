@@ -19,10 +19,15 @@ TEST_F(sharedPtrTest, TestCopyConstructor) {
     ASSERT_EQ(*sPtr, *sPtr3);
 }
 
+TEST_F(sharedPtrTest, TestMoveConstructor) {
+    auto sPtr2(std::move(sPtr));
+    //auto sPtr3 = 
+    ASSERT_EQ(*sPtr2, testValueOne);
+}
+
 TEST_F(sharedPtrTest, testGet) {
     auto ptr = sPtr.get();
     ASSERT_EQ(*ptr, *sPtr);
-    delete ptr;
 }
 
 TEST_F(sharedPtrTest, testOperator) {
