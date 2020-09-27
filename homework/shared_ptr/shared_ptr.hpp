@@ -44,6 +44,11 @@ shared_ptr<T>::shared_ptr(shared_ptr&& previousOwner) noexcept
 }
 
 template <typename T>
+shared_ptr<T>::shared_ptr(shared_ptr&& previousOwner) {
+    ptr_ = previousOwner.release();
+}
+
+template <typename T>
 shared_ptr<T>::~shared_ptr() {
     if (counter_ != nullptr) {
         (*counter_)--;
