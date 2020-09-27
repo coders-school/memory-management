@@ -30,7 +30,17 @@ jobs:
     
     steps:
     - name: Run valgrind
+      uses: actions/checkout@master
+    - name: Valgrind Instalation
+      run: sudo apt install valgrind
+    - name: Create folder - build
+      working-directory: homework/unique_ptr/
+      run: mkdir build
+    - name: Compile
       working-directory: homework/unique_ptr/build
       run: |
-        sudo apt install valgrind
-        valgrind --leak-check=full ./uniquePtr-ut
+        cmake ..
+        make
+    - name: Run Valgrind
+      working-directory: homework/unique_ptr/build
+      run: valgrind --leak-check=full ./uniquePtr-ut
