@@ -6,9 +6,11 @@ template <typename T>
 class shared_ptr {
 public:
     shared_ptr(T* ptr);
-    //shared_ptr(const shared_ptr& ptr) noexcept; //copy c-tor
-    shared_ptr(shared_ptr&& previousOwner); //move c-tor
+    shared_ptr(const shared_ptr& otherPtr) noexcept; //copy c-tor
+    // shared_ptr(shared_ptr&& previousOwner); //move c-tor
     ~shared_ptr();
+
+    shared_ptr& operator=(const shared_ptr& otherPtr) noexcept;
 
     T* release();
     const T* get() const;
@@ -26,14 +28,22 @@ shared_ptr<T>::shared_ptr(T* ptr)
     : ptr_(ptr) {}
 
 template <typename T>
-shared_ptr<T>::shared_ptr(shared_ptr&& previousOwner) {
-    ptr_ = previousOwner.release();
+shared_ptr<T>::shared_ptr(const shared_ptr<T>& otherPtr) noexcept {
+    ptr_ = otherPtr.ptr_;
 }
+
+// template <typename T>
+// shared_ptr<T>::shared_ptr(shared_ptr&& previousOwner) {
+//     ptr_ = previousOwner.release();
+// }
 
 template <typename T>
 shared_ptr<T>::~shared_ptr() {
-    delete ptr_;
+    //delete ptr_;
 }
+
+template <typename T>
+shared_ptr<T>& shared_ptr<T>::operator=(const shared_ptr<T>& otherPtr) noexcept {}
 
 template <typename T>
 T* shared_ptr<T>::release() {
