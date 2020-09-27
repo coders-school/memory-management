@@ -54,6 +54,7 @@ TEST_F(UniquePtrTest, MethodReleaseShouldReleaseOwnership) {
     auto testPtr = testUniquePtr_.release();
     EXPECT_EQ(*testPtr, testingValue);
     EXPECT_EQ(testUniquePtr_.get(), nullptr);
+    delete testPtr;
 }
 
 TEST_F(UniquePtrTest, MethodResetShouldDeleteOldPtrAndSetPtrWithProvidedValue) {
