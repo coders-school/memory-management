@@ -21,8 +21,9 @@ TEST_F(sharedPtrTest, TestCopyConstructor) {
 
 TEST_F(sharedPtrTest, TestMoveConstructor) {
     auto sPtr2(std::move(sPtr));
-    //auto sPtr3 = 
     ASSERT_EQ(*sPtr2, testValueOne);
+    auto sPtr3 = std::move(sPtr2);
+    ASSERT_EQ(*sPtr3, testValueOne);
 }
 
 TEST_F(sharedPtrTest, testGet) {
