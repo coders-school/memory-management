@@ -11,6 +11,7 @@ public:
 
     //TODO Implement reset, swap
     const T* get() const;
+    void reset(T* newPtr = nullptr);
 
     const T* operator->();
     T& operator*();
@@ -56,6 +57,12 @@ shared_ptr<T>::~shared_ptr() {
 template <typename T>
 const T* shared_ptr<T>::get() const {
     return ptr_;
+}
+
+template <typename T>
+void shared_ptr<T>::reset(T* newPtr) {
+    delete ptr_;
+    ptr_ = newPtr;
 }
 
 template <typename T>
