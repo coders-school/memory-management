@@ -36,12 +36,12 @@ shared_ptr<T>::shared_ptr(T* ptr)
 }
 
 template <typename T>
+shared_ptr<T>::shared_ptr(shared_ptr&& previousOwner) {
+    ptr_ = previousOwner.release();
+}
+
+template <typename T>
 shared_ptr<T>::~shared_ptr() {
-    // *counter_--;
-    // if (*counter_ == 0) {
-    //     delete counter_;
-    //     delete ptr_;
-    // }
     if (*counter_ == 1) {
         *counter_--;
         delete ptr_;
