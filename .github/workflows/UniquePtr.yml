@@ -32,5 +32,5 @@ jobs:
     - name: Run valgrind
       working-directory: homework/unique_ptr/build
       run: |
-        sudo apt-get update && sudo apt-get install valgrind
+        sudo apt install valgrind
         valgrind --leak-check=full ./uniquePtr-ut
