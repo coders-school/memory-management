@@ -46,7 +46,6 @@ TEST_F(UniquePtrTest, ShouldResetUniquePtr) {
 }
 
 TEST_F(UniquePtrTest, ShouldResetUniquePtrWithNoArgument) {
-    int* tempPtr = new int{newValue};
     testPtr.reset();
     ASSERT_EQ(testPtr.get(), nullptr);
 }

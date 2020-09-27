@@ -1,0 +1,40 @@
+name: uniquePtr CI
+
+on: [push, pull_request]
+
+jobs:
+  uptrTests:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out code
+      uses: actions/checkout@master
+    - name: mkdir build
+      working-directory: homework/unique_ptr
+      run: mkdir build
+    - name: Compile
+      working-directory: homework/unique_ptr/build
+      run: |
+        cmake ..
+        make
+    - name: Run tests
+      working-directory: homework/unique_ptr/build
+      run:  ctest -V
+
+  ut_valgrind:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out code
+      uses: actions/checkout@master
+    - name: Install valgrind
+      run: sudo apt-get install valgrind
+    - name: mkdir build
+      working-directory: homework/unique_ptr
+      run: mkdir build
+    - name: Compile
+      working-directory: homework/unique_ptr/build
+      run: |
+        cmake ..
+        make
+    - name: Run valgrind
+      working-directory: homework/unique_ptr/build
+      run: valgrind ./UniquePtr-ut
