@@ -24,13 +24,5 @@ jobs:
       working-directory: build
       run: ./uniquePtr-ut
       
-  valgrind:
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Run valgrind
-    working-directory: build
-    run: |
-      sudo apt-get update && sudo apt-get install valgrind
-      valgrind --leak-check=full ./uniquePtr-ut
+
    
