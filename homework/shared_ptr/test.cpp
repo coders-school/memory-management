@@ -22,7 +22,6 @@ TEST_F(sharedPtrTest, TestCopyConstructor) {
 TEST_F(sharedPtrTest, testGet) {
     auto ptr = sPtr.get();
     ASSERT_EQ(*ptr, *sPtr);
-    ptr = sPtr.release();
     delete ptr;
 }
 
