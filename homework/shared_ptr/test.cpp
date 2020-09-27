@@ -37,6 +37,13 @@ TEST_F(sharedPtrTest, testRest) {
     ASSERT_EQ(*sPtr, testValueTwo);
 }
 
+// TEST_F(sharedPtrTest, testSwap) {
+//     auto sPtr2 (new int{testValueTwo});
+//     sPtr.swap(sPtr2);
+//     ASSERT_EQ(*sPtr, testValueTwo);
+//     ASSERT_EQ(*sPtr2, testValueOne);
+// }
+
 TEST_F(sharedPtrTest, testOperator) {
     cs::shared_ptr<std::string> uPtr2(new std::string{testString});
     ASSERT_EQ(uPtr2->at(0), 'A');
