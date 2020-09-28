@@ -33,12 +33,19 @@ TEST_F(sharedPtrTest, testMoveConstructor) {
 
 TEST_F(sharedPtrTest, testGet) {
     auto ptr = sPtr.get();
-    ASSERT_EQ(*ptr, *sPtr);
+    auto ptr2 = sPtr.get();
+    ASSERT_EQ(*ptr, *ptr2);
 }
 
-TEST_F(sharedPtrTest, testRest) {
+TEST_F(sharedPtrTest, testReset) {
     sPtr.reset(new int{testValueTwo});
     ASSERT_EQ(*sPtr, testValueTwo);
+}
+
+TEST(PointerTest, shouldCreateWithoutArguments) {
+    cs::shared_ptr<int> ptr;
+
+    ASSERT_ANY_THROW(*ptr);
 }
 
 // TEST_F(sharedPtrTest, testSwap) {
@@ -52,4 +59,4 @@ TEST_F(sharedPtrTest, testOperator) {
     cs::shared_ptr<std::string> uPtr2(new std::string{testString});
     ASSERT_EQ(uPtr2->at(0), 'A');
     ASSERT_EQ(uPtr2->at(1), 'l');
-}
+} 

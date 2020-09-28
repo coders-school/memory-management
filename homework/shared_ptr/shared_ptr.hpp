@@ -3,12 +3,13 @@
 #include "control_block.hpp"
 
 #include <algorithm> //for swap method
+#include <stdexcept>
 
 namespace cs {
 template <typename T>
 class shared_ptr {
 public:
-    shared_ptr(T* ptr);
+    shared_ptr(T* ptr = nullptr);
     shared_ptr(const shared_ptr& ptr) noexcept;  //copy c-tor
     shared_ptr(shared_ptr&& previousOwner) noexcept;      //move c-tor
     ~shared_ptr();
@@ -69,7 +70,13 @@ const T* shared_ptr<T>::get() const {
 
 template <typename T>
 void shared_ptr<T>::reset(T* newPtr) {
-    delete ptr_;
+    if (counter_->getRefs() == 1) {
+        delete ptr_;
+    }
+    else {
+        counter_ = new control_block();
+        counter_->incrementRefs();
+    }
     ptr_ = newPtr;
 }
 
@@ -80,6 +87,9 @@ const T* shared_ptr<T>::operator->() {
 
 template <typename T>
 T& shared_ptr<T>::operator*() {
+    if(!ptr_) {
+        throw std::runtime_error("Dereferencing a nullptr");
+    }
     return *ptr_;
 }
 

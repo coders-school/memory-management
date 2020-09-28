@@ -11,7 +11,9 @@ public:
     ~control_block() {}
 
     void incrementRefs() { sharedRefs_++; }
+    control_block& operator++() { sharedRefs_++; };
     void decrementRefs() { sharedRefs_--; }
+    control_block& operator--() { sharedRefs_--; };
     size_t getRefs() { return sharedRefs_; }
     //void sharedDeleter() { sharedRefs_ = 0; }
 
