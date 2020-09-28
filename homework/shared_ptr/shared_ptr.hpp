@@ -24,22 +24,25 @@ public:
     shared_ptr<T>& operator=(const shared_ptr<T>& ptr) noexcept;             //copy assignment
     shared_ptr<T>& operator=(shared_ptr<T>&& previousOwner);  //move assignment
 
+    size_t getRefs() { return counter_->getRefs(); } // for test purpose
+
 private:
-    size_t* counter_;
+    control_block* counter_{nullptr};
     T* ptr_{nullptr};
 };
 
 template <typename T>
 shared_ptr<T>::shared_ptr(T* ptr)
-    : ptr_(ptr), counter_(new size_t(0)) {
-    (*counter_)++;
+    : ptr_(ptr), counter_(new control_block()) {
+    if (ptr_) {
+        counter_->incrementRefs();
+    }
 }
 
 template <typename T>
-shared_ptr<T>::shared_ptr(const shared_ptr& ptr) noexcept {
-    counter_ = ptr.counter_;
-    ptr_ = ptr.ptr_;
-    (*counter_)++;
+shared_ptr<T>::shared_ptr(const shared_ptr& ptr) noexcept
+    : counter_(ptr.counter_), ptr_(ptr.ptr_) {
+    counter_->incrementRefs();
 }
 
 template <typename T>
@@ -51,13 +54,13 @@ shared_ptr<T>::shared_ptr(shared_ptr&& previousOwner) noexcept
 
 template <typename T>
 shared_ptr<T>::~shared_ptr() {
-    if (counter_ != nullptr) {
-        (*counter_)--;
-        if ((*counter_) == 0) {
-            delete ptr_;
-            delete counter_;
-        }
-    } 
+    // if (counter_ != nullptr) {
+    //     (*counter_)--;
+    //     if ((*counter_) == 0) {
+    //         delete ptr_;
+    //         delete counter_;
+    //     }
+    // } 
 }
 
 template <typename T>
@@ -97,11 +100,11 @@ template <typename T>
 shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr<T>&& previousOwner) {
     if (this != &previousOwner) {
         delete ptr_;
-        delete counter_;
+        // delete counter_;
         ptr_ = previousOwner.ptr_;
-        counter_ = previousOwner.counter_;
+        // counter_ = previousOwner.counter_;
         previousOwner.ptr_ = nullptr;
-        previousOwner.counter_ = nullptr;
+        // previousOwner.counter_ = nullptr;
     }
 
     return *this;
@@ -110,9 +113,9 @@ shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr<T>&& previousOwner) {
 template <typename T>
 shared_ptr<T>& shared_ptr<T>::operator=(const shared_ptr<T>& ptr) noexcept {
     //TODO check for memory leak
-    counter_ = ptr.counter_;
+    // counter_ = ptr.counter_;
     ptr_ = ptr.ptr_;
-    *counter_++;
+    // *counter_++;
 }
 
 }  // namespace cs
