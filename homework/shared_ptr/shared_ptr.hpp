@@ -1,20 +1,25 @@
 #pragma once
 
+#include <algorithm>
+
 namespace cs {
 template <typename T>
 class shared_ptr {
 public:
     shared_ptr(T* ptr);
     shared_ptr(const shared_ptr& ptr) noexcept;  //copy c-tor
-    shared_ptr(shared_ptr&& previousOwner);      //move c-tor
+    shared_ptr(shared_ptr&& previousOwner) noexcept;      //move c-tor
     ~shared_ptr();
 
-    //TODO Implement reset, swap
+    //TODO Implement swap
     const T* get() const;
+    void reset(T* newPtr = nullptr);
+    //void swap(T& otherPtr) noexcept;
 
     const T* operator->();
     T& operator*();
-    shared_ptr<T>& operator=(shared_ptr<T>& ptr);             //copy assignment
+    explicit operator bool() const noexcept;
+    shared_ptr<T>& operator=(const shared_ptr<T>& ptr) noexcept;             //copy assignment
     shared_ptr<T>& operator=(shared_ptr<T>&& previousOwner);  //move assignment
 
 private:
@@ -23,36 +28,53 @@ private:
 };
 
 template <typename T>
+shared_ptr<T>::shared_ptr(T* ptr)
+    : ptr_(ptr), counter_(new size_t(0)) {
+    (*counter_)++;
+}
+
+template <typename T>
 shared_ptr<T>::shared_ptr(const shared_ptr& ptr) noexcept {
     counter_ = ptr.counter_;
     ptr_ = ptr.ptr_;
-    *counter_++;
+    (*counter_)++;
 }
 
 template <typename T>
-shared_ptr<T>::shared_ptr(T* ptr)
-    : ptr_(ptr), counter_(new size_t(0)) {
-    *counter_++;
-}
-
-template <typename T>
-shared_ptr<T>::shared_ptr(shared_ptr&& previousOwner) {
-    ptr_ = previousOwner.release();
+shared_ptr<T>::shared_ptr(shared_ptr&& previousOwner) noexcept
+    :   ptr_(previousOwner.ptr_), counter_(previousOwner.counter_) {
+    previousOwner.ptr_ = nullptr;
+    previousOwner.counter_ = nullptr;
 }
 
 template <typename T>
 shared_ptr<T>::~shared_ptr() {
-    *counter_--;
-    if (*counter_ == 0) {
-        delete counter_;
-        delete ptr_;
-    }
+    if (counter_ != nullptr) {
+        (*counter_)--;
+        if ((*counter_) == 0) {
+            delete ptr_;
+            delete counter_;
+        }
+    } 
 }
 
 template <typename T>
 const T* shared_ptr<T>::get() const {
     return ptr_;
 }
+
+template <typename T>
+void shared_ptr<T>::reset(T* newPtr) {
+    delete ptr_;
+    ptr_ = newPtr;
+}
+
+// TODO SWAP
+// template <typename T>
+// void shared_ptr<T>::swap(T& otherValue) noexcept {
+//     std::swap(ptr_, otherValue.ptr_);
+//     //counter_.swap()
+// }
 
 template <typename T>
 const T* shared_ptr<T>::operator->() {
@@ -65,13 +87,15 @@ T& shared_ptr<T>::operator*() {
 }
 
 template <typename T>
+shared_ptr<T>::operator bool() const noexcept {
+    return ptr_;
+}
+
+template <typename T>
 shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr<T>&& previousOwner) {
     if (this != &previousOwner) {
-        *counter_--;
-        if (*counter_ == 0) {
-            delete ptr_;
-            delete counter_;
-        }
+        delete ptr_;
+        delete counter_;
         ptr_ = previousOwner.ptr_;
         counter_ = previousOwner.counter_;
         previousOwner.ptr_ = nullptr;
@@ -82,7 +106,8 @@ shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr<T>&& previousOwner) {
 }
 
 template <typename T>
-shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr<T>& ptr) {  //TODO check for memory leak
+shared_ptr<T>& shared_ptr<T>::operator=(const shared_ptr<T>& ptr) noexcept {
+    //TODO check for memory leak
     counter_ = ptr.counter_;
     ptr_ = ptr.ptr_;
     *counter_++;
