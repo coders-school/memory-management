@@ -13,6 +13,15 @@ struct sharedPtrTest : ::testing::Test {
     cs::shared_ptr<int> sPtr;
 };
 
+TEST_F(sharedPtrTest, testCounter) {
+    ASSERT_EQ(sPtr.use_count(), 1);
+    {
+        cs::shared_ptr<int> testPtr(sPtr);
+        ASSERT_EQ(sPtr.use_count(), 2);
+    };
+    ASSERT_EQ(sPtr.use_count(), 1);
+}
+
 TEST_F(sharedPtrTest, testCopyConstructor) {
     ASSERT_EQ(*sPtr, testValueOne);
     ASSERT_EQ(sPtr.use_count(), 1);
