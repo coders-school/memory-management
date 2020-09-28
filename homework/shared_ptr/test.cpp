@@ -1,5 +1,6 @@
 #include <string>
 #include "gtest/gtest.h"
+#include "control_block.hpp"
 #include "shared_ptr.hpp"
 
 const std::string testString{"Ala ma kota"};
@@ -14,10 +15,12 @@ struct sharedPtrTest : ::testing::Test {
 
 TEST_F(sharedPtrTest, testCopyConstructor) {
     ASSERT_EQ(*sPtr, testValueOne);
+    ASSERT_EQ(sPtr.getRefs(), 1);
     auto sPtr2(sPtr);
     auto sPtr3 = sPtr;
     ASSERT_EQ(*sPtr, *sPtr2);
     ASSERT_EQ(*sPtr, *sPtr3);
+    ASSERT_EQ(sPtr3.getRefs(), 3);
 }
 
 TEST_F(sharedPtrTest, testMoveConstructor) {
@@ -25,6 +28,7 @@ TEST_F(sharedPtrTest, testMoveConstructor) {
     ASSERT_EQ(*sPtr2, testValueOne);
     auto sPtr3 = std::move(sPtr2);
     ASSERT_EQ(*sPtr3, testValueOne);
+    ASSERT_EQ(sPtr3.getRefs(), 1);
 }
 
 TEST_F(sharedPtrTest, testGet) {
