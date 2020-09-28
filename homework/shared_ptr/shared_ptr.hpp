@@ -24,7 +24,7 @@ public:
     shared_ptr<T>& operator=(const shared_ptr<T>& ptr) noexcept;             //copy assignment
     shared_ptr<T>& operator=(shared_ptr<T>&& previousOwner);  //move assignment
 
-    size_t use_count() { return counter_->getRefs(); }  // for test purpose
+    size_t use_count() { return counter_->getRefs(); }
 
 private:
     control_block* counter_{nullptr};
@@ -117,7 +117,10 @@ shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr<T>&& previousOwner) {
 
 template <typename T>
 shared_ptr<T>& shared_ptr<T>::operator=(const shared_ptr<T>& ptr) noexcept {
-    //TODO check for memory leak
+    if (counter_->getRefs() == 1) {
+        delete counter_;
+        delete ptr_;
+    }
     counter_ = ptr.counter_;
     ptr_ = ptr.ptr_;
     ++(*counter_);
