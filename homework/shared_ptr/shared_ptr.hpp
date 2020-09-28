@@ -100,11 +100,11 @@ template <typename T>
 shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr<T>&& previousOwner) {
     if (this != &previousOwner) {
         delete ptr_;
-        // delete counter_;
+        delete counter_;
         ptr_ = previousOwner.ptr_;
-        // counter_ = previousOwner.counter_;
+        counter_ = previousOwner.counter_;
         previousOwner.ptr_ = nullptr;
-        // previousOwner.counter_ = nullptr;
+        previousOwner.counter_ = nullptr;
     }
 
     return *this;
@@ -113,9 +113,9 @@ shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr<T>&& previousOwner) {
 template <typename T>
 shared_ptr<T>& shared_ptr<T>::operator=(const shared_ptr<T>& ptr) noexcept {
     //TODO check for memory leak
-    // counter_ = ptr.counter_;
+    counter_ = ptr.counter_;
     ptr_ = ptr.ptr_;
-    // *counter_++;
+    counter_->incrementRefs();
 }
 
 }  // namespace cs
