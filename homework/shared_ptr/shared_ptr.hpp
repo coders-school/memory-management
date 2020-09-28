@@ -54,13 +54,13 @@ shared_ptr<T>::shared_ptr(shared_ptr&& previousOwner) noexcept
 
 template <typename T>
 shared_ptr<T>::~shared_ptr() {
-    // if (counter_ != nullptr) {
-    //     (*counter_)--;
-    //     if ((*counter_) == 0) {
-    //         delete ptr_;
-    //         delete counter_;
-    //     }
-    // } 
+    if (counter_ != nullptr) {
+        counter_->decrementRefs();
+        if ((counter_->getRefs()) == 0) {
+            delete ptr_;
+            delete counter_;
+        }
+    } 
 }
 
 template <typename T>
