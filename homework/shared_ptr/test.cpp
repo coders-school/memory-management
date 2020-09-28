@@ -1,5 +1,6 @@
 #include <string>
 #include "gtest/gtest.h"
+#include "control_block.hpp"
 #include "shared_ptr.hpp"
 
 const std::string testString{"Ala ma kota"};
