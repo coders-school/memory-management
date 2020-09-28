@@ -2,7 +2,7 @@
 
 #include "control_block.hpp"
 
-//#include <algorithm> //for swap method
+#include <algorithm> //for swap method
 
 namespace cs {
 template <typename T>
@@ -16,7 +16,6 @@ public:
     //TODO Implement swap
     const T* get() const;
     void reset(T* newPtr = nullptr);
-    //void swap(T& otherPtr) noexcept;
 
     const T* operator->();
     T& operator*();
@@ -73,13 +72,6 @@ void shared_ptr<T>::reset(T* newPtr) {
     delete ptr_;
     ptr_ = newPtr;
 }
-
-// TODO SWAP
-// template <typename T>
-// void shared_ptr<T>::swap(T& otherValue) noexcept {
-//     std::swap(ptr_, otherValue.ptr_);
-//     //counter_.swap()
-// }
 
 template <typename T>
 const T* shared_ptr<T>::operator->() {
