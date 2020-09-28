@@ -15,6 +15,7 @@ public:
     ~shared_ptr();
 
     //TODO Implement swap
+    void swap(shared_ptr<T>& secondPointer) noexcept;
     const T* get() const;
     void reset(T* newPtr = nullptr);
 
@@ -33,8 +34,9 @@ private:
 
 template <typename T>
 shared_ptr<T>::shared_ptr(T* ptr)
-    : ptr_(ptr), counter_(new control_block()) {
+    : ptr_(ptr) {
     if (ptr_) {
+        counter_ = new control_block();
         ++(*counter_);
     }
 }
@@ -61,6 +63,16 @@ shared_ptr<T>::~shared_ptr() {
             delete counter_;
         }
     } 
+}
+
+template <typename T>
+void shared_ptr<T>::swap(shared_ptr<T>& secondPointer) noexcept {
+    auto ptrTmp = secondPointer.ptr_;
+    auto counterTmp = secondPointer.counter_;
+    secondPointer.ptr_ = ptr_;
+    secondPointer.counter_ = counter_;
+    ptr_ = ptrTmp;
+    counter_ = counterTmp;
 }
 
 template <typename T>
