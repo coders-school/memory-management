@@ -88,3 +88,10 @@ TEST_F(unique, moveWhenUniqueAlreadyOwnsPtr) {
     ptr = std::move(toBeMoved);
     EXPECT_EQ(*ptr, default_value);
 }
+
+TEST_F(unique, shouldChangeValue) {
+    cs::unique_ptr<int> ptr{new int{default_value}};
+    int new_value{10};
+    *ptr = new_value;
+    EXPECT_EQ(*ptr, new_value);
+}
