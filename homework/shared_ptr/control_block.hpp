@@ -10,10 +10,15 @@ public:
     control_block& operator=(const control_block&) = delete;
     ~control_block() {}
 
-    void incrementRefs() { sharedRefs_++; }
-    control_block& operator++() { sharedRefs_++; };
-    void decrementRefs() { sharedRefs_--; }
-    control_block& operator--() { sharedRefs_--; };
+    control_block& operator--() {
+        --sharedRefs_;
+        return *this;
+    };
+
+    control_block& operator++() {
+        ++sharedRefs_;
+        return *this;
+    };
     size_t getRefs() { return sharedRefs_; }
     //void sharedDeleter() { sharedRefs_ = 0; }
 

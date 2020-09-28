@@ -24,7 +24,7 @@ public:
     shared_ptr<T>& operator=(const shared_ptr<T>& ptr) noexcept;             //copy assignment
     shared_ptr<T>& operator=(shared_ptr<T>&& previousOwner);  //move assignment
 
-    size_t getRefs() { return counter_->getRefs(); } // for test purpose
+    size_t use_count() { return counter_->getRefs(); }  // for test purpose
 
 private:
     control_block* counter_{nullptr};
@@ -35,14 +35,14 @@ template <typename T>
 shared_ptr<T>::shared_ptr(T* ptr)
     : ptr_(ptr), counter_(new control_block()) {
     if (ptr_) {
-        counter_->incrementRefs();
+        ++(*counter_);
     }
 }
 
 template <typename T>
 shared_ptr<T>::shared_ptr(const shared_ptr& ptr) noexcept
     : counter_(ptr.counter_), ptr_(ptr.ptr_) {
-    counter_->incrementRefs();
+    ++(*counter_);
 }
 
 template <typename T>
@@ -55,7 +55,7 @@ shared_ptr<T>::shared_ptr(shared_ptr&& previousOwner) noexcept
 template <typename T>
 shared_ptr<T>::~shared_ptr() {
     if (counter_ != nullptr) {
-        counter_->decrementRefs();
+        --(*counter_);
         if ((counter_->getRefs()) == 0) {
             delete ptr_;
             delete counter_;
@@ -75,7 +75,7 @@ void shared_ptr<T>::reset(T* newPtr) {
     }
     else {
         counter_ = new control_block();
-        counter_->incrementRefs();
+        ++(*counter_);
     }
     ptr_ = newPtr;
 }
@@ -101,8 +101,11 @@ shared_ptr<T>::operator bool() const noexcept {
 template <typename T>
 shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr<T>&& previousOwner) {
     if (this != &previousOwner) {
-        delete ptr_;
-        delete counter_;
+        if (counter_->getRefs() == 1) {
+            delete ptr_;
+            delete counter_;
+        }
+
         ptr_ = previousOwner.ptr_;
         counter_ = previousOwner.counter_;
         previousOwner.ptr_ = nullptr;
@@ -117,7 +120,7 @@ shared_ptr<T>& shared_ptr<T>::operator=(const shared_ptr<T>& ptr) noexcept {
     //TODO check for memory leak
     counter_ = ptr.counter_;
     ptr_ = ptr.ptr_;
-    counter_->incrementRefs();
+    ++(*counter_);
 }
 
 }  // namespace cs
