@@ -2,6 +2,7 @@
 #include "gtest/gtest.h"
 #include "control_block.hpp"
 #include "shared_ptr.hpp"
+#include "weak_ptr.hpp"
 
 const std::string testString{"Ala ma kota"};
 constexpr int testValueOne = 10;

@@ -2,7 +2,6 @@
 
 #include "control_block.hpp"
 
-#include <algorithm> //for swap method
 #include <stdexcept>
 
 namespace cs {
