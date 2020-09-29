@@ -30,7 +30,19 @@ public:
 private:
     control_block* counter_{nullptr};
     T* ptr_{nullptr};
+
+    void checkAndDeletePointers();
 };
+
+template <typename T>
+void shared_ptr<T>::checkAndDeletePointers() {
+    if (!counter_->getRefs()) {
+        delete ptr_;
+        if (!counter_->getWeakRefs()) {
+            delete counter_;
+        }
+    }
+}
 
 template <typename T>
 shared_ptr<T>::shared_ptr(T* ptr)
@@ -57,14 +69,8 @@ shared_ptr<T>::shared_ptr(shared_ptr&& previousOwner) noexcept
 template <typename T>
 shared_ptr<T>::~shared_ptr() {
     if (counter_ != nullptr) {
-        --(*counter_);
-        if (!counter_->getRefs()) {
-            delete ptr_;
-
-            if (!counter_->getWeakRefs()) {
-                delete counter_;
-            }
-        }
+        --*counter_;
+        checkAndDeletePointers();
     }
 }
 
@@ -116,13 +122,8 @@ shared_ptr<T>::operator bool() const noexcept {
 template <typename T>
 shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr<T>&& previousOwner) {
     if (this != &previousOwner) {
-        if (counter_->getRefs() == 1) {
-            delete ptr_;
-            --*counter_;
-            if (!counter_->getWeakRefs()) {
-                delete counter_;
-            }
-        }
+        --*counter_;
+        checkAndDeletePointers();
 
         ptr_ = previousOwner.ptr_;
         counter_ = previousOwner.counter_;
@@ -135,13 +136,8 @@ shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr<T>&& previousOwner) {
 
 template <typename T>
 shared_ptr<T>& shared_ptr<T>::operator=(const shared_ptr<T>& ptr) noexcept {
-    if (counter_->getRefs() == 1) {
-        --*counter_;
-        if (!counter_->getWeakRefs()) {
-            delete counter_;
-    }
-        delete ptr_;
-    }
+    --*counter_;
+    checkAndDeletePointers();
     counter_ = ptr.counter_;
     ptr_ = ptr.ptr_;
     ++(*counter_);
