@@ -12,7 +12,7 @@ public:
     weak_ptr(const weak_ptr& ptr) noexcept;
     weak_ptr(const shared_ptr<T>& ptr) noexcept;
     weak_ptr(weak_ptr<T>&& previousOwner) noexcept;
-    // ~weak_ptr();
+    ~weak_ptr();
 
     weak_ptr& operator=(const weak_ptr<T>& ptr) noexcept;
     // weak_ptr& operator=(const shared_ptr<T>& ptr) noexcept;
@@ -49,6 +49,14 @@ weak_ptr<T>::weak_ptr(weak_ptr<T>&& previousOwner) noexcept
     : ptr_(previousOwner.ptr_), counter_(previousOwner.counter_) {
     previousOwner.ptr_ = nullptr;
     previousOwner.counter_ = nullptr;
+}
+
+template <typename T>
+weak_ptr<T>::~weak_ptr() {
+    if (counter_ != nullptr) {
+        --*counter_;
+        //checkAndDeletePointers();
+    }
 }
 
 template <typename T>
