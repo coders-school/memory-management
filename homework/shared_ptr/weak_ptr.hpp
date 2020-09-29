@@ -14,9 +14,9 @@ public:
     weak_ptr(weak_ptr<T>&& previousOwner) noexcept;
     // ~weak_ptr();
 
-    // weak_ptr& operator=(const weak_ptr<T>& ptr) noexcept;
+    weak_ptr& operator=(const weak_ptr<T>& ptr) noexcept;
     // weak_ptr& operator=(const shared_ptr<T>& ptr) noexcept;
-    // weak_ptr& operator=(weak_ptr<T>&& ptr) noexcept;
+    weak_ptr& operator=(weak_ptr<T>&& previousOwner) noexcept;
 
     // void reset() noexcept;
     // long use_count() const noexcept;
@@ -49,6 +49,28 @@ weak_ptr<T>::weak_ptr(weak_ptr<T>&& previousOwner) noexcept
     : ptr_(previousOwner.ptr_), counter_(previousOwner.counter_) {
     previousOwner.ptr_ = nullptr;
     previousOwner.counter_ = nullptr;
+}
+
+template <typename T>
+weak_ptr<T>& weak_ptr<T>::operator=(const weak_ptr<T>& ptr) noexcept {
+    --*counter_;
+    //checkAndDeletePointers();
+    counter_ = ptr.counter_;
+    ptr_ = ptr.ptr_;
+    ++(*counter_);
+}
+
+template <typename T>
+weak_ptr<T>& weak_ptr<T>::operator=(weak_ptr<T>&& previousOwner) noexcept {
+    if (this != &previousOwner) {
+        --*counter_;
+        //checkAndDeletePointers();
+        ptr_ = previousOwner.ptr_;
+        counter_ = previousOwner.counter_;
+        previousOwner.ptr_ = nullptr;
+        previousOwner.counter_ = nullptr;
+    }
+    return *this;
 }
 
 } //namespace cs
