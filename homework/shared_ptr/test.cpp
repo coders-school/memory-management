@@ -94,3 +94,9 @@ TEST_F(weakPtrTest, testCopyConstructor) {
     ASSERT_EQ(*wPtr, *wPtr3);
     ASSERT_EQ(wPtr3.use_count(), 3);
 }
+
+TEST_F(weakPtrTest, testCopyConstructorFromShared) {
+    cs::shared_ptr<int> sPtr(new int{testValueOne});
+    auto wPtr2(sPtr);
+    ASSERT_EQ(*wPtr, *wPtr2);
+}
