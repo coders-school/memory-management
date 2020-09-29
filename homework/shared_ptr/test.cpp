@@ -75,3 +75,22 @@ TEST_F(sharedPtrTest, testAccessOperator) {
     ASSERT_EQ(uPtr2->at(0), 'A');
     ASSERT_EQ(uPtr2->at(1), 'l');
 }
+
+struct weakPtrTest : ::testing::Test {
+    weakPtrTest()
+    : wPtr(new int{testValueOne}) {}
+    cs::shared_ptr<int> wPtr;
+};
+
+TEST_F(weakPtrTest, testConstructor) {
+    ASSERT_EQ(*wPtr, testValueOne);
+    ASSERT_EQ(wPtr.use_count(), 1);
+}
+
+TEST_F(weakPtrTest, testCopyConstructor) {
+    auto wPtr2(wPtr);
+    auto wPtr3 = wPtr;
+    ASSERT_EQ(*wPtr, *wPtr2);
+    ASSERT_EQ(*wPtr, *wPtr3);
+    ASSERT_EQ(wPtr3.use_count(), 3);
+}
