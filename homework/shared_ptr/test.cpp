@@ -100,3 +100,11 @@ TEST_F(weakPtrTest, testCopyConstructorFromShared) {
     auto wPtr2(sPtr);
     ASSERT_EQ(*wPtr, *wPtr2);
 }
+
+TEST_F(weakPtrTest, testMoveConstructor) {
+    auto wPtr2(std::move(wPtr));
+    ASSERT_EQ(*wPtr2, testValueOne);
+    auto wPtr3 = std::move(wPtr2);
+    ASSERT_EQ(*wPtr3, testValueOne);
+    ASSERT_EQ(wPtr3.use_count(), 1);
+}
