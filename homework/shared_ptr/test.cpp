@@ -76,11 +76,14 @@ TEST_F(sharedPtrTest, testAccessOperator) {
     ASSERT_EQ(uPtr2->at(1), 'l');
 }
 
+struct weakPtrTest : ::testing::Test {
+    weakPtrTest()
+        : sPtr(new int{testValueOne}) {}
+    cs::shared_ptr<int> sPtr;
+};
 
+TEST_F(weakPtrTest, testLock) {
+    cs::weak_ptr weak(sPtr);
 
-TEST(weakPtrTest, testLock) {
-    cs::shared_ptr<int> ptr(new int(5));
-    cs::weak_ptr weak(ptr);
-
-    ASSERT_EQ(*(weak.lock()), 5);
+    ASSERT_EQ(*(weak.lock()), testValueOne);
 }
