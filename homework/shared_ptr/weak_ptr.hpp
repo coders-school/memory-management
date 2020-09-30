@@ -18,8 +18,7 @@ public:
     weak_ptr& operator=(const shared_ptr<T>& ptr) noexcept;
     weak_ptr& operator=(weak_ptr<T>&& previousOwner) noexcept;
 
-    // void reset() noexcept;
-    // long use_count() const noexcept;
+    void reset() noexcept;
     bool expired() const noexcept;
     shared_ptr<T> lock() const noexcept;
     size_t use_count() { return counter_->getWeakRefs(); } 
@@ -83,6 +82,15 @@ weak_ptr<T>& weak_ptr<T>::operator=(weak_ptr<T>&& previousOwner) noexcept {
         previousOwner.counter_ = nullptr;
     }
     return *this;
+}
+
+template <typename T>
+void weak_ptr<T>::reset() noexcept {
+    if (!counter_->getWeakRefs()) {
+        delete ptr_;
+    } else {
+        ptr_ = nullptr;
+    }
 }
 
 template <typename T>
