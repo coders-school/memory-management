@@ -1,6 +1,6 @@
 
 #include "../TestClass.hpp"
-#include "../uniqueptr.hpp"
+#include "../SharedPtr.hpp"
 #include "catch.hpp"
 
 SCENARIO("Working on home implemented unique_ptr") {

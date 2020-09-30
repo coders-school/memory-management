@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include <stdio.h>
 
-template <typename T> class unique_ptr {
+/* template <typename T> class unique_ptr {
 
 public:
   unique_ptr(T *rawPtr = nullptr);                              // creation constructor
@@ -48,9 +48,7 @@ unique_ptr<T> & unique_ptr<T>::operator = (unique_ptr<T> && otherUniquePtr) noex
 }
 
 template <typename T>
-T* unique_ptr<T>::get() const { /* if(rawPtr_ == nullptr)
-                                 throw std::range_error("Trying to access empty
-                                 unique_ptr using .get()"); else  */
+T* unique_ptr<T>::get() const {                   
   return rawPtr_;
 }
 
@@ -71,3 +69,4 @@ template <typename T> T &unique_ptr<T>::operator*() {
   } else
     throw std::runtime_error("dereferecing nullptr");
 }
+ */
