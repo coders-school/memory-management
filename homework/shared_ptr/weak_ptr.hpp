@@ -15,13 +15,14 @@ public:
     ~weak_ptr();
 
     weak_ptr& operator=(const weak_ptr<T>& ptr) noexcept;
-    // weak_ptr& operator=(const shared_ptr<T>& ptr) noexcept;
+    weak_ptr& operator=(const shared_ptr<T>& ptr) noexcept;
     weak_ptr& operator=(weak_ptr<T>&& previousOwner) noexcept;
 
     // void reset() noexcept;
     // long use_count() const noexcept;
-    // bool expired() const noexcept;
+    bool expired() const noexcept;
     shared_ptr<T> lock() const noexcept;
+    size_t use_count() { return counter_->getWeakRefs(); } 
 
 private:
     control_block* counter_{nullptr};
@@ -34,11 +35,6 @@ weak_ptr<T>::weak_ptr(const weak_ptr& ptr) noexcept
     if (ptr_) {
         counter_->increaseWeakRefs();
     }
-}
-
-template <typename T>
-shared_ptr<T> weak_ptr<T>::lock() const noexcept {
-    return cs::shared_ptr<T>(ptr_, counter_);
 }
 
 template <typename T>
@@ -87,6 +83,16 @@ weak_ptr<T>& weak_ptr<T>::operator=(weak_ptr<T>&& previousOwner) noexcept {
         previousOwner.counter_ = nullptr;
     }
     return *this;
+}
+
+template <typename T>
+bool weak_ptr<T>::expired() const noexcept {
+    return counter_ ? counter_->expired() : false;
+}
+
+template <typename T>
+shared_ptr<T> weak_ptr<T>::lock() const noexcept {
+    return expired() ? cs::shared_ptr<T>{} : cs::shared_ptr<T>(ptr_, counter_);
 }
 
 } //namespace cs

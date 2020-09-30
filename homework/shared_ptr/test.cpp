@@ -83,7 +83,24 @@ struct weakPtrTest : ::testing::Test {
 };
 
 TEST_F(weakPtrTest, testLock) {
-    cs::weak_ptr weak(sPtr);
+    cs::weak_ptr<int> wPtr(sPtr);
+    ASSERT_EQ(*(wPtr.lock()), testValueOne);
+}
 
-    ASSERT_EQ(*(weak.lock()), testValueOne);
+TEST_F(weakPtrTest, testCopyConstructor) {
+    cs::weak_ptr<int> wPtr(sPtr);
+    auto wPtr2(wPtr);
+    // auto wPtr3 = wPtr;
+    ASSERT_EQ(*(wPtr2.lock()), testValueOne);
+    ASSERT_EQ(wPtr2.use_count(), 2);
+    // ASSERT_EQ(*(wPtr3.lock()), testValueOne);
+}
+
+TEST_F(weakPtrTest, testMoveConstructor) {
+    cs::weak_ptr<int> wPtr(sPtr);
+    auto wPtr2(std::move(wPtr));
+    ASSERT_EQ(*(wPtr2.lock()), testValueOne);
+    ASSERT_EQ(wPtr2.use_count(), 1);
+    // auto wPtr3 = std::move(wPtr2);
+    // ASSERT_EQ(*(wPtr3.lock()), testValueOne);
 }

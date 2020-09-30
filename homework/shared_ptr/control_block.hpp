@@ -29,6 +29,7 @@ public:
     };
     size_t getRefs() { return sharedRefs_; }
     size_t getWeakRefs() { return weakRefs_; }
+    bool expired() const noexcept { return sharedRefs_ == 0; }
     //void sharedDeleter() { sharedRefs_ = 0; }
 
 private:
