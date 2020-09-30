@@ -1,14 +1,37 @@
 
-#include "../TestClass.hpp"
+#include "../Scooter.hpp"
 #include "../SharedPtr.hpp"
 #include "catch.hpp"
 
-SCENARIO("Working on home implemented unique_ptr") {
+SCENARIO("Testing all SharedPtr functions") {
+  GIVEN("SharedPtr with Scooter(power) where power = 200") {
+    int power{200};
+    SharedPtr<Scooter> scooter(new Scooter(power));
+    WHEN("getting insertValue from SharedPtr::get() function result") {
+      auto result = scooter.get()->power_;
+      THEN("power value inside SharedPtr is same value as passed one") {
+        REQUIRE(result == power);
+      }
+    }
+  }
 
-  GIVEN("Created FirstUniquePtr and PtrCollection") {
-    WHEN("Reseting unique_ptr with new object and value") {
-        THEN("new value in unique_ptr, and earlier called get() is empty") {
-        REQUIRE(1 == 1);
+  GIVEN("SharedPtr with Scooter(insertValue) where power = 100") {
+    SharedPtr<Scooter> scooter(nullptr);
+    WHEN("dereferencing SharedPtr and get member from Scooter object") {
+      auto result = scooter.get();
+      THEN("value inside SharedPtr is same value as passed insertValue") {
+        REQUIRE(result == nullptr);
+      }
+    }
+  }
+
+  GIVEN("SharedPtr with Scooter(insertValue) where power = 100") {
+    int power{100};
+    SharedPtr<Scooter> scooter(new Scooter(power));
+    WHEN("dereferencing SharedPtr and get member from Scooter object") {
+      auto result = (*scooter).power_;
+      THEN("value inside SharedPtr is same value as passed insertValue") {
+        REQUIRE(result == power);
       }
     }
   }

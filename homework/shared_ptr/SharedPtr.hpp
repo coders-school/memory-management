@@ -3,19 +3,56 @@
 #include <stdexcept>
 #include <stdio.h>
 
-/* template <typename T> class unique_ptr {
+template <typename T> class SharedPtr {
 
 public:
-  unique_ptr(T *rawPtr = nullptr);                              // creation constructor
-  unique_ptr(unique_ptr<T> &&other) noexcept;         // move constructor
-  unique_ptr(const unique_ptr<T> &) = delete;            // copy constructor
-  unique_ptr<T> &operator = (const unique_ptr<T> &) = delete; // copy assigment operator
-  unique_ptr<T> &operator = (unique_ptr<T> && otherUniquePtr) noexcept;
-  ~unique_ptr();
+  SharedPtr(T *rawPtr = nullptr);
+  T *get() const;
+  T &operator*() const noexcept;
+  T *operator->() const noexcept;
+  void reset(T *NewRawPtr = nullptr);
 
-  T* get() const;
-  T* release();
-  void reset(T* NewRawPtr = nullptr);
+private:
+  T *rawPtr_{};
+};
+
+template <typename T> SharedPtr<T>::SharedPtr(T *rawPtr) : rawPtr_(rawPtr) {}
+
+template <typename T> T *SharedPtr<T>::get() const { return rawPtr_; }
+
+template <typename T> T &SharedPtr<T>::operator*() const noexcept {
+  return *rawPtr_;
+}
+
+template <typename T> T *SharedPtr<T>::operator->() const noexcept{
+  return rawPtr_;
+}
+
+template <typename T> void SharedPtr<T>::reset(T *NewRawPtr) {
+  delete rawPtr_;
+  rawPtr_ = NewRawPtr;
+}
+
+
+
+
+
+
+/* 
+
+template <typename T> class unique_ptr {
+
+public:
+  unique_ptr(T *rawPtr = nullptr);            // creation constructor
+  unique_ptr(unique_ptr<T> &&other) noexcept; // move constructor
+  unique_ptr(const unique_ptr<T> &) = delete; // copy constructor
+  unique_ptr<T> &
+  operator=(const unique_ptr<T> &) = delete; // copy assigment operator
+  unique_ptr<T> &operator=(unique_ptr<T> &&otherUniquePtr) noexcept;
+  ~unique_ptr();
+  T *get() const;
+  T *release();
+  void reset(T *NewRawPtr = nullptr);
   T &operator*();
 
 private:
@@ -24,11 +61,11 @@ private:
 
 template <typename T>
 unique_ptr<T>::unique_ptr(T *rawPtr)
-    : rawPtr_(rawPtr){} // creation constructor
+    : rawPtr_(rawPtr) {} // creation constructor
 
 template <typename T>
 unique_ptr<T>::unique_ptr(unique_ptr<T> &&other) noexcept // move constructor
-    : rawPtr_(other.rawPtr_){
+    : rawPtr_(other.rawPtr_) {
   other.rawPtr_ = nullptr;
 }
 
@@ -39,27 +76,25 @@ unique_ptr<T>::~unique_ptr() // destructor
 }
 
 template <typename T>
-unique_ptr<T> & unique_ptr<T>::operator = (unique_ptr<T> && otherUniquePtr) noexcept{ 
-  if(this != & otherUniquePtr){
+unique_ptr<T> &unique_ptr<T>::
+operator=(unique_ptr<T> &&otherUniquePtr) noexcept {
+  if (this != &otherUniquePtr) {
     delete rawPtr_;
     rawPtr_ = otherUniquePtr.rawPtr_;
     otherUniquePtr = nullptr;
-  } return *this;
+  }
+  return *this;
 }
 
-template <typename T>
-T* unique_ptr<T>::get() const {                   
-  return rawPtr_;
-}
+template <typename T> T *unique_ptr<T>::get() const { return rawPtr_; }
 
-template <typename T> T* unique_ptr<T>::release() {
-  T* result = rawPtr_;
+template <typename T> T *unique_ptr<T>::release() {
+  T *result = rawPtr_;
   rawPtr_ = nullptr;
   return result;
 }
 
-template <typename T> 
-void unique_ptr<T>::reset(T* NewRawPtr){  
+template <typename T> void unique_ptr<T>::reset(T *NewRawPtr) {
   delete rawPtr_;
   rawPtr_ = NewRawPtr;
 }
@@ -68,5 +103,5 @@ template <typename T> T &unique_ptr<T>::operator*() {
     return *rawPtr_;
   } else
     throw std::runtime_error("dereferecing nullptr");
-}
- */
+} */
+  
