@@ -15,6 +15,14 @@ public:
         return *this;
     };
 
+    void increaseWeakRefs() {
+        ++weakRefs_;
+    };
+
+    void decreaseWeakRefs() {
+        --weakRefs_;
+    };
+
     control_block& operator++() {
         ++sharedRefs_;
         return *this;

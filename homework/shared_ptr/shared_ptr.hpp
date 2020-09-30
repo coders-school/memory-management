@@ -5,9 +5,14 @@
 #include <stdexcept>
 
 namespace cs {
+    
+template <typename T>
+class weak_ptr;
+
 template <typename T>
 class shared_ptr {
 public:
+    template <typename B> friend class weak_ptr;
     shared_ptr(T* ptr = nullptr);
     shared_ptr(const shared_ptr& ptr) noexcept;  //copy c-tor
     shared_ptr(shared_ptr&& previousOwner) noexcept;      //move c-tor
@@ -27,6 +32,7 @@ public:
     size_t use_count() { return counter_->getRefs(); }
 
 private:
+    shared_ptr(T* ptr, control_block* counter);
     control_block* counter_{nullptr};
     T* ptr_{nullptr};
 
@@ -41,6 +47,11 @@ void shared_ptr<T>::checkAndDeletePointers() {
             delete counter_;
         }
     }
+}
+
+template <typename T>
+shared_ptr<T>::shared_ptr(T* ptr, control_block* counter) : ptr_(ptr), counter_(counter) {
+
 }
 
 template <typename T>
