@@ -1,37 +1,41 @@
 #include <gtest/gtest.h>
 #include "UniquePtr.hpp"
 
+constexpr int testedValue = 5;
+constexpr int expectedValue = 5;
+
 class MoveTest : public testing::Test {
 public:
     auto moveTest() {
-        UniquePtr<int> ptr{new int{9}};
+        UniquePtr<int> ptr{new int{testedValue}};
         return ptr;
     }
 };
 
-TEST(UniquePtrTest, DereferenceOperatorShouldReturnFive) {
-    UniquePtr<int> unique{new int(5)};
-    ASSERT_EQ(5, *unique);
+TEST(UniquePtrTest, DereferenceOperatorShouldReturnTestedValue) {
+    UniquePtr<int> unique{new int(testedValue)};
+    ASSERT_EQ(expectedValue, *unique);
 }
 
 TEST(UniquePtrTest, GetFunctionShouldReturnValueOfPointer) {
-    UniquePtr<int> ptr{new int{3}};
+    UniquePtr<int> ptr{new int{testedValue}};
     auto ptrNew = ptr.get();
-    ASSERT_EQ(3, *ptrNew);
+    ASSERT_EQ(expectedValue, *ptrNew);
 }
 
 TEST(UniquePtrTest, AfterReleaseUniquePtrShouldHaveNullPtrInside) {
-    UniquePtr<int> ptr{new int{4}};
-    ptr.release();
+    UniquePtr<int> ptr{new int{testedValue}};
+    auto newPtr = ptr.release();
+    delete newPtr;
     ASSERT_EQ(nullptr, ptr.get());
 }
 
 TEST_F(MoveTest, MoveConstructorTest) {
-    UniquePtr<int> ptr{new int{30}};
+    UniquePtr<int> ptr{new int{testedValue}};
     UniquePtr<int> secondPtr(std::move(ptr));
 
     ASSERT_EQ(ptr.get(), nullptr);
-    ASSERT_EQ(30, *secondPtr.get());
+    ASSERT_EQ(expectedValue, *secondPtr.get());
 }
 
 TEST(UniquePtrTest, IfUniquePtrDereferenceNullPtrExceptionShouldBeThrown) {
@@ -40,13 +44,15 @@ TEST(UniquePtrTest, IfUniquePtrDereferenceNullPtrExceptionShouldBeThrown) {
 }
 
 TEST(UniquePtrTest, IfResetIsUsedUniquePtrShouldContainNewValue) {
-    UniquePtr<int> ptr{new int{10}};
-    ptr.reset(new int{100});
-    ASSERT_EQ(100, *ptr);
+    constexpr int newValue =  5;
+    UniquePtr<int> ptr{new int{testedValue}};
+    ptr.reset(new int{newValue});
+    ASSERT_EQ(expectedValue, *ptr);
 }
 
 TEST_F(MoveTest, MoveAssignmentTest) {
-    UniquePtr<int> ptr{new int{12}};
+    constexpr int firstValue = 12;
+    UniquePtr<int> ptr{new int{firstValue}};
     ptr = moveTest();
-    ASSERT_EQ(9, *ptr);
+    ASSERT_EQ(expectedValue, *ptr);
 }

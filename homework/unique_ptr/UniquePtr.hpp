@@ -18,7 +18,7 @@ public:
     UniquePtr(UniquePtr<T>&& ptr);
     UniquePtr<T>& operator=(UniquePtr<T>&& ptr);
 
-    T operator*() const;
+    T& operator*() const;
     T* operator->() const;
     T* get();
     T* release();
@@ -43,17 +43,16 @@ UniquePtr<T>::UniquePtr(UniquePtr<T>&& ptr)
 
 template <typename T>
 UniquePtr<T>& UniquePtr<T>::operator=(UniquePtr<T>&& ptr) {
-    if (!resource_) {
-        return *this;
+    if (this != &ptr) {
+        delete resource_;
+        resource_ = ptr.resource_;
+        ptr.resource_ = nullptr;
     }
-    delete resource_;
-    resource_ = ptr.resource_;
-    ptr.resource_ = nullptr;
     return *this;
 }
 
 template <typename T>
-T UniquePtr<T>::operator*() const {
+T& UniquePtr<T>::operator*() const {
     if (!resource_) {
         throw NullPtrDereferenceException();
     }
@@ -73,16 +72,13 @@ T* UniquePtr<T>::get() {
 template <typename T>
 T* UniquePtr<T>::release() {
     T* ptr = resource_;
-    delete resource_;
     resource_ = nullptr;
     return ptr;
 }
 
 template <typename T>
-void UniquePtr<T>::reset(T* ptr) {
-    if (resource_) {
-        delete resource_;
-    }
+void UniquePtr<T>::reset(T* ptr = nullptr) {
+    delete resource_;
     resource_ = ptr;
 }
 
