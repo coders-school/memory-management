@@ -1,22 +1,43 @@
 #pragma once
+#include <atomic>
 #include <iostream>
-#include <stdexcept>
-#include <stdio.h>
+#include <vector>
 
 template <typename T> class SharedPtr {
 
 public:
   SharedPtr(T *rawPtr = nullptr);
+  SharedPtr(SharedPtr<T> &&other) noexcept;      // move constructor
+  SharedPtr(const SharedPtr<T> &other) noexcept; // copy constructor
   T *get() const;
   T &operator*() const noexcept;
   T *operator->() const noexcept;
+  operator = (const SharedPtr<T> & other);
   void reset(T *NewRawPtr = nullptr);
 
 private:
   T *rawPtr_{};
+public: 
+  std::vector<std::atomic<size_t> *> ControlBlock{
+      new std::atomic<size_t>{},  // sharedRefsCounter,
+      new std::atomic<size_t>{}}; // weakRefsCounter
 };
 
-template <typename T> SharedPtr<T>::SharedPtr(T *rawPtr) : rawPtr_(rawPtr) {}
+template <typename T> SharedPtr<T>::SharedPtr(T *rawPtr) : rawPtr_(rawPtr) {
+  ControlBlock.at(0)++;
+}
+
+template <typename T>
+SharedPtr<T>::SharedPtr(SharedPtr<T> &&other) noexcept // move constructor
+    : rawPtr_(other.rawPtr_) {
+  other.rawPtr_ = nullptr;
+}
+
+template <typename T>
+SharedPtr<T>::SharedPtr(const SharedPtr<T> &other) noexcept // copy constructor
+    : rawPtr_(other.rawPtr_) {
+  ControlBlock.at(0)++;
+}
 
 template <typename T> T *SharedPtr<T>::get() const { return rawPtr_; }
 
@@ -24,7 +45,7 @@ template <typename T> T &SharedPtr<T>::operator*() const noexcept {
   return *rawPtr_;
 }
 
-template <typename T> T *SharedPtr<T>::operator->() const noexcept{
+template <typename T> T *SharedPtr<T>::operator->() const noexcept {
   return rawPtr_;
 }
 
@@ -33,12 +54,7 @@ template <typename T> void SharedPtr<T>::reset(T *NewRawPtr) {
   rawPtr_ = NewRawPtr;
 }
 
-
-
-
-
-
-/* 
+/*
 
 template <typename T> class unique_ptr {
 
@@ -104,4 +120,3 @@ template <typename T> T &unique_ptr<T>::operator*() {
   } else
     throw std::runtime_error("dereferecing nullptr");
 } */
-  

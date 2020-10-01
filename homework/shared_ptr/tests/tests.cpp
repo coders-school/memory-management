@@ -35,4 +35,14 @@ SCENARIO("Testing all SharedPtr functions") {
       }
     }
   }
+  GIVEN("SharedPtr with Scooter(insertValue) where power = 100") {
+    int power{100};
+    SharedPtr<Scooter> scooter(new Scooter(power));
+    WHEN("copying SharedPtr") {
+      auto NewSharedPtr = scooter;
+      THEN("ControlBlock Shared Counter is incremented to 1") {
+        REQUIRE(*(scooter.ControlBlock.at(1)) == 1);
+      }
+    }
+  }
 }
