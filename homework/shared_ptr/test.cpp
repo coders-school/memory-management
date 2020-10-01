@@ -82,6 +82,20 @@ struct weakPtrTest : ::testing::Test {
     cs::shared_ptr<int> sPtr;
 };
 
+TEST_F(weakPtrTest, shouldConstruct) {
+    cs::weak_ptr<int> weak(sPtr);
+
+    ASSERT_EQ(*(weak.lock()), *sPtr);
+}
+
+TEST_F(weakPtrTest, shouldCopyAssign) {
+    cs::weak_ptr<int> weakOne(sPtr);
+    cs::weak_ptr<int> weakTwo;
+    weakTwo = weakOne;
+
+    ASSERT_EQ(*(weakOne.lock()), *(weakTwo.lock()));
+}
+
 TEST_F(weakPtrTest, testLock) {
     cs::weak_ptr weak(sPtr);
 

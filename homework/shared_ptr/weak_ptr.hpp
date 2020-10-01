@@ -69,11 +69,15 @@ weak_ptr<T>::~weak_ptr() {
 
 template <typename T>
 weak_ptr<T>& weak_ptr<T>::operator=(const weak_ptr<T>& ptr) noexcept {
-    counter_->decreaseWeakRefs();
+    if (counter_) {
+        counter_->decreaseWeakRefs();
+    }
     //checkAndDeletePointers();
     counter_ = ptr.counter_;
     ptr_ = ptr.ptr_;
     counter_->increaseWeakRefs();
+
+    return *this;
 }
 
 template <typename T>
