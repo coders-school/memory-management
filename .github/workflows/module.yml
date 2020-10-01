@@ -18,3 +18,9 @@ jobs:
     - name: Run test 
       working-directory: homework/unique_ptr/build
       run: ctest -V
+    - name: Run Valgrind
+      working-directory: homework/unique_ptr/build
+      run: |
+          sudo apt-get update -y
+          sudo apt-get install -y valgrind
+          valgrind --leak-check=yes ./UniquePtr-ut 
