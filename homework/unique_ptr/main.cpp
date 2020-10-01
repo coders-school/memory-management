@@ -10,7 +10,6 @@ int main() {
     
     unique_ptr<int> ptr3(std::move(ptr2));
     
-    // int result;
     int result = *(ptr3->get());
     int value = *ptr3;
     (void)result;
