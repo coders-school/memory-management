@@ -22,7 +22,7 @@ public:
     T* operator->() const;
     T* get();
     T* release();
-    void reset(T* ptr);
+    void reset(T* ptr = nullptr);
     ~UniquePtr();
 
 private:
@@ -77,7 +77,7 @@ T* UniquePtr<T>::release() {
 }
 
 template <typename T>
-void UniquePtr<T>::reset(T* ptr = nullptr) {
+void UniquePtr<T>::reset(T* ptr) {
     delete resource_;
     resource_ = ptr;
 }
