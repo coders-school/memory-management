@@ -23,8 +23,7 @@ private:
 template <typename T>
 class shared_ptr {
 public:
-    shared_ptr(T* ptr = nullptr, std::function<void()> del = new ControlBlock([&]() { delete ptr_; }))
-        : ptr_(ptr), cb_(del) {}
+    shared_ptr(T* ptr = nullptr) : ptr_(ptr), cb_(new ControlBlock([&]() { delete ptr_; })) {}
     shared_ptr(const shared_ptr& ptr);
     shared_ptr(shared_ptr&& ptr);
     shared_ptr& operator=(const shared_ptr& ptr);
@@ -36,6 +35,7 @@ public:
     long use_count() const { return static_cast<long>(cb_->getShared()); }
     explicit operator bool() const { return get() != nullptr; }
     void reset(T* ptr);
+
 private:
     void deletePointers();
     T* ptr_;
