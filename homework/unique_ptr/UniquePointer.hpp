@@ -1,78 +1,59 @@
 #pragma once
 
-#include <utility>
-
 template <class T>
-class unique_ptr {
+class UniquePtr {
 private:
-    T* ptr_;
+    T* ptr_{};
 
 public:
-    unique_ptr(T* newPtr = nullptr);
-    unique_ptr(unique_ptr<T>&& otherPtr);
-    ~unique_ptr();
+    UniquePtr(T* newPtr = nullptr);
+    UniquePtr(UniquePtr<T>&& newPtr);
+    ~UniquePtr();
 
-    T* get() const;
+    UniquePtr<T>& operator=(UniquePtr<T>&& newPtr);
+
+    UniquePtr(const UniquePtr<T>& newPtr) = delete;
+    UniquePtr<T>& operator=(const UniquePtr<T>& newPtr) = delete;
+
+    T* get() const { return ptr_; }
     T* release();
-    void reset(T* newPtr = nullptr);
+    void reset(T* newPtr);
 
-    T& operator*() const;
-    T& operator->() const;
-    unique_ptr<T>& operator=(unique_ptr<T>&& otherPtr);
-
-    unique_ptr(const unique_ptr<T>& otherPtr) = delete;
-    unique_ptr<T>& operator=(const unique_ptr<T>& otherPtr) = delete;
+    T& operator*() const { return *ptr_; }
 };
 
 template <class T>
-unique_ptr<T>::unique_ptr(T* newPtr)
+UniquePtr<T>::UniquePtr(T* newPtr)
     : ptr_(newPtr) {}
 
 template <class T>
-unique_ptr<T>::~unique_ptr() {
+UniquePtr<T>::UniquePtr(UniquePtr<T>&& newPtr)
+    : ptr_(newPtr.release()) {}
+
+template <class T>
+UniquePtr<T>::~UniquePtr() {
     delete ptr_;
 }
 
 template <class T>
-unique_ptr<T>::unique_ptr(unique_ptr<T>&& otherPtr) {
-    ptr_ = otherPtr.ptr_;
-    otherPtr.ptr_ = nullptr;
-}
-
-template <class T>
-T* unique_ptr<T>::get() const {
-    return ptr_;
-}
-
-template <class T>
-T* unique_ptr<T>::release() {
+T* UniquePtr<T>::release() {
     T* tmpPtr = ptr_;
     ptr_ = nullptr;
     return tmpPtr;
 }
 
 template <class T>
-void unique_ptr<T>::reset(T* newPtr) {
+void UniquePtr<T>::reset(T* newPtr) {
     delete ptr_;
     ptr_ = newPtr;
 }
 
 template <class T>
-T& unique_ptr<T>::operator*() const {
-    return *ptr_;
-}
-
-template <class T>
-T& unique_ptr<T>::operator->() const {
-    return *ptr_;
-}
-
-template <class T>
-unique_ptr<T>& unique_ptr<T>::operator=(unique_ptr<T>&& otherPtr) {
-    if (this != &otherPtr) {
+UniquePtr<T>& UniquePtr<T>::operator=(UniquePtr<T>&& newPtr) {
+    if (this != &newPtr) {
         delete ptr_;
-        ptr_ = otherPtr.ptr_;
-        otherPtr.ptr_ = nullptr;
+        ptr_ = newPtr.ptr_;
+        newPtr.ptr_ = nullptr;
     }
     return *this;
 }
