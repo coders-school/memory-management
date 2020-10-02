@@ -64,18 +64,17 @@ weak_ptr<T>::~weak_ptr() {
 
 template <typename T>
 weak_ptr<T>& weak_ptr<T>::operator=(const weak_ptr<T>& ptr) noexcept {
-    counter_->decreaseWeakRefs();
-    //checkAndDeletePointers();
     counter_ = ptr.counter_;
     ptr_ = ptr.ptr_;
-    counter_->increaseWeakRefs();
+    if (counter_) {
+        counter_->increaseWeakRefs();
+    }
 }
 
 template <typename T>
 weak_ptr<T>& weak_ptr<T>::operator=(weak_ptr<T>&& previousOwner) noexcept {
     if (this != &previousOwner) {
-        counter_->decreaseWeakRefs();
-        //checkAndDeletePointers();
+        // counter_->decreaseWeakRefs();
         ptr_ = previousOwner.ptr_;
         counter_ = previousOwner.counter_;
         previousOwner.ptr_ = nullptr;

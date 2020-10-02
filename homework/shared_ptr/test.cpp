@@ -86,13 +86,15 @@ TEST_F(weakPtrTest, testLock) {
     cs::weak_ptr<int> wPtr(sPtr);
     ASSERT_EQ(*(wPtr.lock()), testValueOne);
 }
-
+#include <iostream>
 TEST_F(weakPtrTest, testCopyConstructor) {
     cs::weak_ptr<int> wPtr(sPtr);
+    
     auto wPtr2(wPtr);
-    // auto wPtr3 = wPtr;
     ASSERT_EQ(*(wPtr2.lock()), testValueOne);
     ASSERT_EQ(wPtr2.use_count(), 2);
+    auto wPtr3 = wPtr;
+    ASSERT_EQ(wPtr3.use_count(), 3);
     // ASSERT_EQ(*(wPtr3.lock()), testValueOne);
 }
 
@@ -101,6 +103,12 @@ TEST_F(weakPtrTest, testMoveConstructor) {
     auto wPtr2(std::move(wPtr));
     ASSERT_EQ(*(wPtr2.lock()), testValueOne);
     ASSERT_EQ(wPtr2.use_count(), 1);
+    ASSERT_EQ((wPtr.lock()).get(), nullptr);
     // auto wPtr3 = std::move(wPtr2);
     // ASSERT_EQ(*(wPtr3.lock()), testValueOne);
+}
+
+TEST_F(weakPtrTest, testExpired) {
+    cs::weak_ptr<int> wPtr(sPtr);
+    ASSERT_FALSE(wPtr.expired());
 }
