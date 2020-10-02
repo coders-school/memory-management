@@ -12,7 +12,7 @@ public:
     void decreaseWeakRef() { weak_refs -= 1; }
     std::atomic<size_t>& getShared() { return shared_refs; }
     std::atomic<size_t>& getWeak() { return weak_refs; }
-    void callDeleter() { deleter(); }
+    void callDeleter() const { deleter(); }
 
 private:
     std::atomic<size_t> shared_refs = 1;
@@ -33,7 +33,9 @@ public:
     T* get() const { return ptr_; }
     T& operator*() const { return *ptr_; }
     T* operator->() const { return ptr_; }
-
+    long use_count() const { return static_cast<long>(cb_->getShared()); }
+    explicit operator bool() const { return get() != nullptr; }
+    void reset(T* ptr);
 private:
     void deletePointers();
     T* ptr_;
@@ -92,4 +94,10 @@ shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr&& ptr) {
         ptr.cb_ = nullptr;
     }
     return *this;
+}
+
+template <typename T>
+void shared_ptr<T>::reset(T* ptr) {
+    *ptr_ = *ptr;
+    delete ptr;
 }
