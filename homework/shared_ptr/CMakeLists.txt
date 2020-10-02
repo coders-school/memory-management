@@ -35,10 +35,10 @@ if (CMAKE_VERSION VERSION_LESS 2.8.11)
 endif()
 
 # Now simply link against gtest or gtest_main as needed. Eg
-project(sharedPtr)
+project(SharedPtr)
 enable_testing()
 
 add_executable(${PROJECT_NAME} main.cpp)
-add_executable(${PROJECT_NAME}-ut sharedPtr-ut.cpp)
+add_executable(${PROJECT_NAME}-ut SharedPtr-ut.cpp)
 target_link_libraries(${PROJECT_NAME}-ut gtest_main)
 add_test(NAME ${PROJECT_NAME}_test COMMAND ${PROJECT_NAME}-ut)
