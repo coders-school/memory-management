@@ -30,9 +30,8 @@ public:
     size_t getRefs() { return sharedRefs_; }
     size_t getWeakRefs() { return weakRefs_; }
     bool expired() const noexcept { return sharedRefs_ == 0; }
-    //void sharedDeleter() { sharedRefs_ = 0; }
 
 private:
-    std::atomic<size_t> sharedRefs_;
-    std::atomic<size_t> weakRefs_;
+    std::atomic<size_t> sharedRefs_ {};
+    std::atomic<size_t> weakRefs_{};
 };

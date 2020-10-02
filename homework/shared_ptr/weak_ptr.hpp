@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include "control_block.hpp"
 #include "shared_ptr.hpp"
 
@@ -7,21 +8,21 @@ namespace cs {
 template <typename T>
 class weak_ptr {
 public:
-    constexpr weak_ptr() noexcept
-        : ptr_{}, counter_{} {}
+    constexpr weak_ptr() noexcept = default;
     weak_ptr(const weak_ptr& ptr) noexcept;
     weak_ptr(const shared_ptr<T>& ptr) noexcept;
-    weak_ptr(weak_ptr<T>&& previousOwner) noexcept;
+    weak_ptr(weak_ptr&& previousOwner) noexcept;
     ~weak_ptr();
 
     weak_ptr& operator=(const weak_ptr<T>& ptr) noexcept;
     weak_ptr& operator=(const shared_ptr<T>& ptr) noexcept;
-    weak_ptr& operator=(weak_ptr<T>&& previousOwner) noexcept;
+    weak_ptr& operator=(weak_ptr&& previousOwner) noexcept;
 
     void reset() noexcept;
     bool expired() const noexcept;
     shared_ptr<T> lock() const noexcept;
     size_t use_count() { return counter_->getWeakRefs(); } 
+    void swap(weak_ptr& ptr) noexcept;
 
 private:
     control_block* counter_{nullptr};
@@ -31,21 +32,21 @@ private:
 template <typename T>
 weak_ptr<T>::weak_ptr(const weak_ptr& ptr) noexcept
     : ptr_(ptr.ptr_), counter_(ptr.counter_) {
-    if (ptr_) {
-        counter_->increaseWeakRefs();
-    }
-}
-
-template <typename T>
-weak_ptr<T>::weak_ptr(const shared_ptr<T>& sPtr) noexcept
-    : ptr_{sPtr.ptr_}, counter_{sPtr.counter_} {  //TODO implement
     if (counter_) {
         counter_->increaseWeakRefs();
     }
 }
 
 template <typename T>
-weak_ptr<T>::weak_ptr(weak_ptr<T>&& previousOwner) noexcept
+weak_ptr<T>::weak_ptr(const shared_ptr<T>& sPtr) noexcept
+    : ptr_{sPtr.ptr_}, counter_{sPtr.counter_} {
+    if (counter_) {
+        counter_->increaseWeakRefs();
+    }
+}
+
+template <typename T>
+weak_ptr<T>::weak_ptr(weak_ptr&& previousOwner) noexcept
     : ptr_(previousOwner.ptr_), counter_(previousOwner.counter_) {
     previousOwner.ptr_ = nullptr;
     previousOwner.counter_ = nullptr;
@@ -64,17 +65,27 @@ weak_ptr<T>::~weak_ptr() {
 
 template <typename T>
 weak_ptr<T>& weak_ptr<T>::operator=(const weak_ptr<T>& ptr) noexcept {
-    counter_ = ptr.counter_;
     ptr_ = ptr.ptr_;
     if (counter_) {
         counter_->increaseWeakRefs();
     }
+    return *this;
 }
+
+template <typename T>
+weak_ptr<T>& weak_ptr<T>::operator=(const shared_ptr<T>& ptr) noexcept {
+    ptr_ = ptr.ptr_;
+    counter_ = ptr.counter_;
+    if (counter_) {
+        counter_->increaseWeakRefs();
+    }
+    return *this;
+}
+
 
 template <typename T>
 weak_ptr<T>& weak_ptr<T>::operator=(weak_ptr<T>&& previousOwner) noexcept {
     if (this != &previousOwner) {
-        // counter_->decreaseWeakRefs();
         ptr_ = previousOwner.ptr_;
         counter_ = previousOwner.counter_;
         previousOwner.ptr_ = nullptr;
@@ -85,20 +96,23 @@ weak_ptr<T>& weak_ptr<T>::operator=(weak_ptr<T>&& previousOwner) noexcept {
 
 template <typename T>
 void weak_ptr<T>::reset() noexcept {
-    if (counter_->getWeakRefs()) {
-        counter_->decreaseWeakRefs();
-    }
-    ptr_ = nullptr;
+    weak_ptr{}.swap(*this);
 }
 
 template <typename T>
 bool weak_ptr<T>::expired() const noexcept {
-    return counter_ ? counter_->expired() : false;
+    return (counter_ == nullptr || counter_->getRefs() == 0);
 }
 
 template <typename T>
 shared_ptr<T> weak_ptr<T>::lock() const noexcept {
     return expired() ? cs::shared_ptr<T>{} : cs::shared_ptr<T>(ptr_, counter_);
+}
+
+template <typename T>
+void weak_ptr<T>::swap(weak_ptr& ptr) noexcept {
+    std::swap(ptr_, ptr.ptr_);
+    std::swap(counter_, ptr.counter_);
 }
 
 } //namespace cs
