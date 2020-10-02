@@ -1,0 +1,1 @@
+/usr/bin/c++  -g  -rdynamic CMakeFiles/homework-ut.dir/unique_ptr-ut.cpp.o  -o homework-ut  lib/libgtest_maind.a lib/libgtestd.a -lpthread 

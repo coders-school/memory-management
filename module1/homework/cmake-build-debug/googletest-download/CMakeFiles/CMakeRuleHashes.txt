@@ -1,0 +1,11 @@
+# Hashes of file build rules.
+5fab5753d9896e5c01e64f279ad63fbf CMakeFiles/googletest
+704fb1078bb63a3aa991ea16a3f122bf CMakeFiles/googletest-complete
+a1e026f0af3b615a8905f8c0d09025d6 googletest-prefix/src/googletest-stamp/googletest-build
+3e08c534dff1f8841748796efa8123a8 googletest-prefix/src/googletest-stamp/googletest-configure
+69f42ed37a749da61f41c0532d90dfe5 googletest-prefix/src/googletest-stamp/googletest-download
+24561a295092e02ca03624d70fa2893b googletest-prefix/src/googletest-stamp/googletest-install
+b03a345e7261f1cf6edcaa33ae325a37 googletest-prefix/src/googletest-stamp/googletest-mkdir
+5c9293f63b769e0b67a65b1e4e743d39 googletest-prefix/src/googletest-stamp/googletest-patch
+d4dfe2de8f14dc2b43ca3a05bdbc6561 googletest-prefix/src/googletest-stamp/googletest-test
+68f8064d7e39bd99148ce096f05bbcab googletest-prefix/src/googletest-stamp/googletest-update
