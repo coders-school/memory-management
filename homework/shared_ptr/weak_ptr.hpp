@@ -86,11 +86,10 @@ weak_ptr<T>& weak_ptr<T>::operator=(weak_ptr<T>&& previousOwner) noexcept {
 
 template <typename T>
 void weak_ptr<T>::reset() noexcept {
-    if (!counter_->getWeakRefs()) {
-        delete ptr_;
-    } else {
-        ptr_ = nullptr;
+    if (counter_->getWeakRefs()) {
+        counter_->decreaseWeakRefs();
     }
+    ptr_ = nullptr;
 }
 
 template <typename T>
