@@ -23,7 +23,8 @@ private:
 template <typename T>
 class shared_ptr {
 public:
-    shared_ptr(T* ptr = nullptr) : ptr_(ptr), cb_(new ControlBlock([&](){ delete ptr_; })) {}
+    shared_ptr(T* ptr = nullptr, std::function<void()> del = new ControlBlock([&]() { delete ptr_; }))
+        : ptr_(ptr), cb_(del) {}
     shared_ptr(const shared_ptr& ptr);
     shared_ptr(shared_ptr&& ptr);
     shared_ptr& operator=(const shared_ptr& ptr);
@@ -34,19 +35,25 @@ public:
     T* operator->() const { return ptr_; }
 
 private:
+    void deletePointers();
     T* ptr_;
     ControlBlock* cb_;
 };
 
 template <typename T>
-shared_ptr<T>::~shared_ptr() {
+void shared_ptr<T>::deletePointers() {
     cb_->decreaseSharedRef();
-    if(cb_->getShared() == 0) {
+    if (cb_->getShared() == 0) {
         cb_->callDeleter();
-        if(cb_->getWeak() == 0) {
+        if (cb_->getWeak() == 0) {
             delete cb_;
         }
     }
+}
+
+template <typename T>
+shared_ptr<T>::~shared_ptr() {
+    deletePointers();
 }
 
 template <typename T>
@@ -66,14 +73,8 @@ shared_ptr<T>::shared_ptr(shared_ptr&& ptr) {
 
 template <typename T>
 shared_ptr<T>& shared_ptr<T>::operator=(const shared_ptr& ptr) {
-    if(&ptr != this) {
-        cb_->decreaseSharedRef();
-        if(cb_->getShared() == 0) {
-            cb_->callDeleter();
-            if(cb_->getWeak() == 0) {
-                delete cb_;
-            }
-        }
+    if (&ptr != this) {
+        deletePointers();
         ptr_ = ptr.ptr_;
         cb_ = ptr.cb_;
         cb_->increaseSharedRef();
@@ -83,14 +84,8 @@ shared_ptr<T>& shared_ptr<T>::operator=(const shared_ptr& ptr) {
 
 template <typename T>
 shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr&& ptr) {
-    if(&ptr != this) {
-        cb_->decreaseSharedRef();
-        if(cb_->getShared() == 0) {
-            cb_->callDeleter();
-            if(cb_->getWeak() == 0) {
-                delete cb_;
-            }
-        }
+    if (&ptr != this) {
+        deletePointers();
         ptr_ = ptr.ptr_;
         cb_ = ptr.cb_;
         ptr.ptr_ = nullptr;
