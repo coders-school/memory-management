@@ -1,39 +1,40 @@
 #include <iostream>
 
-template <class T>
+template <typename T>
 class unique_ptr{
 public:
-//    unique_ptr(T& ptr) : ptr_(&ptr) {};
-    unique_ptr(T* v) : ptr_(v) {};
-    unique_ptr(unique_ptr<T>&& other) noexcept
-    : ptr_(std::move(other.ptr_)) {
-        std::cout << "Moved!\n";
-        other.ptr_ = nullptr;
-    }
-    ~unique_ptr(){
-        std::cout << "Delete ptr_!\n";
-        delete ptr_;
+    unique_ptr(T* ptr = nullptr) : ptr_(ptr){}
+
+    unique_ptr(unique_ptr<T>&) = delete;
+    unique_ptr<T>& operator=(unique_ptr<T>&) = delete;
+
+    unique_ptr(unique_ptr<T>&& otherPtr) : ptr_(otherPtr.ptr_){
+        otherPtr.ptr_ = nullptr;
     }
 
-    unique_ptr<T>& operator=(unique_ptr<T>&& other) = delete;
-    unique_ptr(T&) = delete;
+    unique_ptr<T>& operator=(unique_ptr<T>&& otherPtr){
+        if(this != &otherPtr){
+            delete ptr_;
+            ptr_ = otherPtr.ptr_;
+            otherPtr.ptr_ = nullptr;
+            return *this;
+        }
+        return *this;
+    }
 
-    T* operator->() const   { return ptr_; }
-    T& operator*()  const   { return *ptr_; }
-
-    T* get()        const   { return ptr_; }
+    ~unique_ptr(){ delete ptr_; }
+    T& operator*() const { return *ptr_; }
+    T* get() const { return ptr_; }
 
     T* release(){
-        T* tmp = nullptr;
-        std::swap(tmp, ptr_);
-        return tmp;
+        T* tmpPtr = ptr_;
+        ptr_ = nullptr;
+        return tmpPtr;
     }
 
-    void reset(T* ptr){
-        if(ptr_){
-            delete ptr_;
-        }
-        ptr_ = ptr;
+    void reset(T* otherPtr){
+        delete ptr_;
+        ptr_ = otherPtr;
     }
 
 private:
@@ -41,6 +42,5 @@ private:
 };
 
 int main(){
-	return 0;
+    return 0;
 }
-
