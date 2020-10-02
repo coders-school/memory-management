@@ -8,8 +8,7 @@ namespace coders_school {
 template <typename T>
 class shared_ptr {
 public:
-    shared_ptr() = default;
-    shared_ptr(T* ptr);
+    shared_ptr(T* ptr = nullptr);
     shared_ptr(const shared_ptr& otherPtr);
     shared_ptr(shared_ptr&& otherPtr);
     ~shared_ptr();
@@ -24,17 +23,20 @@ public:
 
 private:
     T* ptr_{nullptr};
-    ReferenceCounterBlock* counter_{};
+    ReferenceCounterBlock* counter_;
 
     void deleter();
 };
 
 template <typename T>
 void shared_ptr<T>::deleter() {
-    counter_->operator--();
+    if (ptr_) {
+        counter_->operator--();
+    }
+
     if (use_count() == 0) {
-        delete ptr_;
         delete counter_;
+        delete ptr_;
     }
 }
 
@@ -59,7 +61,8 @@ template <typename T>
 shared_ptr<T>::shared_ptr(shared_ptr&& otherPtr) {
     ptr_ = otherPtr.ptr_;
     counter_ = otherPtr.counter_;
-    otherPtr.ptr_ = otherPtr.counter_ = nullptr;
+    otherPtr.ptr_ = nullptr;
+    otherPtr.counter_ = nullptr;
 }
 
 template <typename T>
@@ -85,7 +88,8 @@ shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr&& otherPtr) {
         deleter();
         ptr_ = otherPtr.ptr_;
         counter_ = otherPtr.counter_;
-        otherPtr.ptr_ = otherPtr.counter_ = nullptr;
+        otherPtr.ptr_ = nullptr;
+        otherPtr.counter_ = nullptr;
     }
 
     return *this;
