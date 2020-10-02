@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <iostream>
 
+
 //wyjątek
 class FileOpeningError : public std::runtime_error{
 public:
@@ -18,6 +19,7 @@ public:
         if(!fp_){
             throw FileOpeningError{fileName};
         }
+
     }
 
     ~FileHandler(){
@@ -39,6 +41,7 @@ public:
 };
 
 
+
 int main()
 {
     try {
@@ -51,3 +54,4 @@ int main()
     }
     return 0;
 }
+
