@@ -64,16 +64,30 @@ TEST_F(sharedPtrTest, testSwap) {
     ASSERT_EQ(sPtr.use_count(), lowerUseCount);
 }
 
-TEST(PointerTest, shouldCreateWithoutArguments) {
+TEST_F(sharedPtrTest, testAccessOperator) {
+    cs::shared_ptr<std::string> uPtr2(new std::string{testString});
+    ASSERT_EQ(uPtr2->at(0), 'A');
+    ASSERT_EQ(uPtr2->at(1), 'l');
+}
+
+TEST(sharedPointerTest, shouldCreateWithoutArguments) {
     cs::shared_ptr<int> ptr;
 
     ASSERT_EQ(ptr.get(), nullptr);
 }
 
-TEST_F(sharedPtrTest, testAccessOperator) {
-    cs::shared_ptr<std::string> uPtr2(new std::string{testString});
-    ASSERT_EQ(uPtr2->at(0), 'A');
-    ASSERT_EQ(uPtr2->at(1), 'l');
+TEST(sharedPointerTest, shouldUseMakeShared) {
+    auto ptr = cs::make_shared(testValueOne);
+
+    ASSERT_EQ(*ptr, testValueOne);
+}
+
+TEST(sharedPointerTest, shouldUseMakeSharedOnSTLDataStructs) {
+    std::vector<int> testVector{1,2};
+
+    auto ptr = cs::make_shared<std::vector<int>>({1,2});
+
+    ASSERT_EQ(*ptr, testVector);
 }
 
 struct weakPtrTest : ::testing::Test {

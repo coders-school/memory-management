@@ -24,7 +24,7 @@ public:
     shared_ptr<T> lock() const noexcept;
 
 private:
-    control_block* counter_{nullptr};
+    control_block<T>* counter_{nullptr};
     T* ptr_{nullptr};
 
     void checkAndDeletePointers();

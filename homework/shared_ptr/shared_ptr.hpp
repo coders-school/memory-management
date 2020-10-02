@@ -13,6 +13,7 @@ template <typename T>
 class shared_ptr {
 public:
     template <typename B> friend class weak_ptr;
+    template <typename C> friend shared_ptr<C>make_shared(const C& object);
     shared_ptr(T* ptr = nullptr);
     shared_ptr(const shared_ptr& ptr) noexcept;  //copy c-tor
     shared_ptr(shared_ptr&& previousOwner) noexcept;      //move c-tor
@@ -32,8 +33,9 @@ public:
     size_t use_count() { return counter_->getRefs(); }
 
 private:
-    shared_ptr(T* ptr, control_block* counter);
-    control_block* counter_{nullptr};
+    shared_ptr(const T& object);
+    shared_ptr(T* ptr, control_block<T>* counter);
+    control_block<T>* counter_{nullptr};
     T* ptr_{nullptr};
 
     void checkAndDeletePointers();
@@ -42,7 +44,9 @@ private:
 template <typename T>
 void shared_ptr<T>::checkAndDeletePointers() {
     if (!counter_->getRefs()) {
-        delete ptr_;
+        if(typeid(*counter_) == typeid(control_block<T>)) {
+            delete ptr_;
+        }
         if (!counter_->getWeakRefs()) {
             delete counter_;
         }
@@ -50,7 +54,7 @@ void shared_ptr<T>::checkAndDeletePointers() {
 }
 
 template <typename T>
-shared_ptr<T>::shared_ptr(T* ptr, control_block* counter) : ptr_(ptr), counter_(counter) {
+shared_ptr<T>::shared_ptr(T* ptr, control_block<T>* counter) : ptr_(ptr), counter_(counter) {
     ++*counter_;
 }
 
@@ -58,9 +62,16 @@ template <typename T>
 shared_ptr<T>::shared_ptr(T* ptr)
     : ptr_(ptr) {
     if (ptr_) {
-        counter_ = new control_block();
+        counter_ = new control_block<T>();
         ++(*counter_);
     }
+}
+
+template<typename T>
+shared_ptr<T>::shared_ptr(const T& object) {
+    counter_ = new continuous_block<T>(object);
+    ptr_ = counter_->getObjectPointer();
+    ++(*counter_);
 }
 
 template <typename T>
@@ -105,7 +116,7 @@ void shared_ptr<T>::reset(T* newPtr) {
         delete ptr_;
     }
     else {
-        counter_ = new control_block();
+        counter_ = new control_block<T>();
         ++(*counter_);
     }
     ptr_ = newPtr;
@@ -152,5 +163,11 @@ shared_ptr<T>& shared_ptr<T>::operator=(const shared_ptr<T>& ptr) noexcept {
     ptr_ = ptr.ptr_;
     ++(*counter_);
 }
+
+template<typename C>
+shared_ptr<C> make_shared(const C &object) {
+    return shared_ptr<C>(object);
+}
+
 
 }  // namespace cs
