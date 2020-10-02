@@ -1,7 +1,6 @@
 #pragma once
 
 #include <atomic>
-#include <iostream>
 
 template <typename T>
 class control_block {
@@ -47,7 +46,6 @@ template <typename T>
 class continuous_block : public control_block<T> {
 public:
     continuous_block(const T& object) : object_(object) {
-        std::cout << "Making continuous_block\n";
     }
 
     T* getObjectPointer() override{
