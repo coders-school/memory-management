@@ -31,9 +31,7 @@ endif()
 project(homework)
 enable_testing()
 
-set(CMAKE_CXX_STANDARD 17)
-
-add_executable(${PROJECT_NAME} unique_ptr.cpp)
+add_executable(${PROJECT_NAME} main.cpp)
 add_executable(${PROJECT_NAME}-ut unique_ptr-ut.cpp)
 target_link_libraries(${PROJECT_NAME}-ut gtest_main)
 add_test(NAME unique_ptr-Test COMMAND ${PROJECT_NAME}-ut)

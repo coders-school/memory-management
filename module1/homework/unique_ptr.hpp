@@ -23,8 +23,14 @@ public:
     }
 
     ~unique_ptr(){ delete ptr_; }
-    T& operator*() const { return *ptr_; }
     T* get() const { return ptr_; }
+
+    T& operator*() const {
+        if(!ptr_){
+            throw std::invalid_argument("Raw Pointer is nullptr!\n");
+        }
+        return *ptr_;
+    }
 
     T* release(){
         T* tmpPtr = ptr_;
@@ -40,7 +46,3 @@ public:
 private:
     T* ptr_;
 };
-
-int main(){
-    return 0;
-}
