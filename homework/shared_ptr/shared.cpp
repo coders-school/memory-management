@@ -35,6 +35,7 @@ class shared_ptr
     T* get() const noexcept { return data_; }
     T& operator*() noexcept { return *data_; }
     T* operator->() noexcept { return data_; }
+    operator bool() const noexcept { return data_ != nullptr; }
     int use_count() const noexcept { return controlBlock->getSharedRef(); }
     void reset(T* data = nullptr) noexcept { data_ = data; }
 

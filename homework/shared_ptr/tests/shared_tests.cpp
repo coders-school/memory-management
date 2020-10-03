@@ -104,3 +104,11 @@ TEST_F(SharedTest, sharedDefaultResetShouldSetToNullptr)
     test.reset();
     EXPECT_EQ(test.get(), nullptr);
 }
+
+TEST_F(SharedTest, sharedOperatorBoolShouldCheckIfManagedObjectIsNotNullptr)
+{
+    cs::shared_ptr<int> test(new int{defaultValue});
+    EXPECT_EQ(test, true);
+    test.reset();
+    EXPECT_EQ(test, false);
+}
