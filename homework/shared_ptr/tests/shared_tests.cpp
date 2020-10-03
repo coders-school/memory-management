@@ -32,3 +32,11 @@ TEST_F(SharedTest, sharedDestructorShouldDecreaseRefCount) {
     test2.~shared_ptr();
     EXPECT_EQ(test.use_count(), 1);
 }
+
+TEST_F(SharedTest, sharedMoveCtorShouldNotIncreaseRefCounter) {
+    cs::shared_ptr<int> test(new int{defaultValue});
+    EXPECT_EQ(test.use_count(), 1);
+    cs::shared_ptr<int> test2(std::move(test));
+    EXPECT_EQ(test2.use_count(), 1);
+
+}
