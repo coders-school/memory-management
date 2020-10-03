@@ -23,3 +23,12 @@ TEST_F(SharedTest, sharedWhenCopiedShouldIncreaseRefCount) {
     EXPECT_EQ(test.use_count(), 2);
     EXPECT_EQ(test2.use_count(), 2);
 }
+
+TEST_F(SharedTest, sharedDestructorShouldDecreaseRefCount) {
+    cs::shared_ptr<int> test(new int{defaultValue});
+    cs::shared_ptr<int> test2(test);
+    EXPECT_EQ(test.use_count(), 2);
+    EXPECT_EQ(test2.use_count(), 2);
+    test2.~shared_ptr();
+    EXPECT_EQ(test.use_count(), 1);
+}
