@@ -3,7 +3,7 @@ name: C++ with CMake with tests
 on: [push, pull_request]
 
 jobs:
-  UniquePtrTests:
+  SharedPtrTests:
     runs-on: ubuntu-latest
     steps:
     - name: Check out code
