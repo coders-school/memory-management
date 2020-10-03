@@ -29,8 +29,15 @@ class shared_ptr
     shared_ptr(shared_ptr&&);
     ~shared_ptr();
 
+    shared_ptr& operator=(shared_ptr&&) = default;
+    shared_ptr& operator=(const shared_ptr&) noexcept;
+
     T* get() const noexcept { return data_; }
+    T& operator*() noexcept { return *data_; }
+    T* operator->() noexcept { return data_; }
     int use_count() const noexcept { return controlBlock->getSharedRef(); }
+    void reset(T* data = nullptr) noexcept { data_ = data; }
+
 };
 
 template <typename T>
@@ -46,9 +53,24 @@ shared_ptr<T>::shared_ptr(const shared_ptr& rhs) : data_(rhs.data_), controlBloc
 }
 
 template <typename T>
-shared_ptr<T>::shared_ptr(shared_ptr&& temp) : data_(temp.data_), controlBlock(temp.controlBlock) {
+shared_ptr<T>::shared_ptr(shared_ptr&& temp) : data_(temp.data_), controlBlock(temp.controlBlock)
+{
     temp.data_ = nullptr;
     temp.controlBlock = nullptr;
+}
+
+template <typename T>
+shared_ptr<T>& shared_ptr<T>::operator=(const shared_ptr& rhs) noexcept
+{
+    if (this == &rhs) {
+        return *this;
+    }
+    data_ = rhs.data_;
+    controlBlock = rhs.controlBlock;
+    if (controlBlock) {
+        controlBlock->incrementSharedRef();
+    }
+    return *this;
 }
 
 template <typename T>
