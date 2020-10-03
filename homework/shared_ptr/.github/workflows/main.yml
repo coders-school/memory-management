@@ -1,0 +1,28 @@
+name: C++ with CMake with tests
+
+on: [push, pull_request]
+
+jobs:
+  SharedPtrTests:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v2
+      with:
+        ref: shared_ptr
+    - name: mkdir build
+      working-directory: homework/shared_ptr/
+      run: mkdir build
+    - name: Compile
+      working-directory: homework/shared_ptr/build
+      run: |
+        cmake ..
+        make
+    - name: Run tests
+      working-directory: homework/shared_ptr/build
+      run: ctest -V
+    - name: Run valgrind
+      working-directory: homework/shared_ptr/build
+      run: | 
+        sudo apt install valgrind
+        valgrind ./shared-ut
