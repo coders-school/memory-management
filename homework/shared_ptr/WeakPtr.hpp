@@ -7,10 +7,15 @@ template <typename T>
 class WeakPtr {
 public:
     constexpr WeakPtr() noexcept = default;
+    ~WeakPtr();
+
     WeakPtr(const WeakPtr& otherWeakPtr) noexcept;
     WeakPtr(const SharedPtr<T>& sharedPtr) noexcept;
     WeakPtr(WeakPtr&& otherWeakPtr) noexcept;
-    ~WeakPtr();
+
+    WeakPtr& operator=(const WeakPtr& otherWeakPtr) noexcept;
+    WeakPtr& operator=(const SharedPtr<T>& sharedPtr) noexcept;
+    WeakPtr& operator=(WeakPtr&& otherWeakPtr) noexcept;
 
     size_t use_count() const noexcept;
     bool expired() const noexcept;
@@ -35,6 +40,11 @@ void WeakPtr<T>::handleWeakPtrAndControlBlockDelete() {
 }
 
 template <typename T>
+WeakPtr<T>::~WeakPtr() {
+    handleWeakPtrAndControlBlockDelete();
+}
+
+template <typename T>
 WeakPtr<T>::WeakPtr(const WeakPtr& otherWeakPtr) noexcept
     : ptr_(otherWeakPtr.ptr_), controlBlock_(otherWeakPtr.controlBlock_) {
     if (controlBlock_ != nullptr) {
@@ -52,11 +62,43 @@ WeakPtr<T>::WeakPtr(const SharedPtr<T>& sharedPtr) noexcept
 
 template <typename T>
 WeakPtr<T>::WeakPtr(WeakPtr&& otherWeakPtr) noexcept
-    : ptr_(std::move(otherWeakPtr.ptr_)), controlBlock_(std::move(otherWeakPtr.controlBlock_)) {}
+    : ptr_(std::move(otherWeakPtr.ptr_)), controlBlock_(std::move(otherWeakPtr.controlBlock_)) {
+    otherWeakPtr.ptr_ = nullptr;
+    otherWeakPtr.controlBlock_ = nullptr;
+}
 
 template <typename T>
-WeakPtr<T>::~WeakPtr() {
-    handleWeakPtrAndControlBlockDelete();
+WeakPtr<T>& WeakPtr<T>::operator=(const WeakPtr& otherWeakPtr) noexcept {
+    if (&otherWeakPtr != this) {
+        if (controlBlock_ != nullptr) {
+            controlBlock_->incrementWeakRefsCount();
+        }
+        ptr_ = otherWeakPtr.ptr_;
+        controlBlock_ = otherWeakPtr.controlBlock_;
+    }
+    return *this;
+}
+
+template <typename T>
+WeakPtr<T>& WeakPtr<T>::operator=(const SharedPtr<T>& sharedPtr) noexcept {
+    if (controlBlock_ != nullptr) {
+        controlBlock_->incrementWeakRefsCount();
+    }
+    ptr_ = sharedPtr.ptr_;
+    controlBlock_ = sharedPtr.shControlBlock_;
+    return *this;
+}
+
+template <typename T>
+WeakPtr<T>& WeakPtr<T>::operator=(WeakPtr&& otherWeakPtr) noexcept {
+    if (&otherWeakPtr != this) {
+        handleWeakPtrAndControlBlockDelete();
+        ptr_ = otherWeakPtr.ptr_;
+        controlBlock_ = otherWeakPtr.controlBlock_;
+        otherWeakPtr.ptr_ = nullptr;
+        otherWeakPtr.controlBlock_ = nullptr;
+    }
+    return *this;
 }
 
 template <typename T>
@@ -75,9 +117,9 @@ bool WeakPtr<T>::expired() const noexcept {
 template <typename T>
 SharedPtr<T> WeakPtr<T>::lock() const noexcept {
     if (expired()) {
-        SharedPtr<T>();
+        return SharedPtr<T>();
     } else {
-        SharedPtr<T>(ptr_);
+        return SharedPtr<T>(ptr_);
     }
 }
 
