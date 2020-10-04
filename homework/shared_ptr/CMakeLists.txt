@@ -47,6 +47,7 @@ set(SRC_LIST
 
 set(TEST_SRC_LIST
   SharedPtr-ut.cpp
+  SharedControlBlock-ut.cpp
 )
 
 # Now simply link against gtest or gtest_main as needed. Eg
@@ -64,7 +65,7 @@ endif (UNIX)
 
 link_libraries(gtest)
 link_libraries(gmock)
-add_executable(${PROJECT_NAME}-ut SharedPtr-ut.cpp)
+add_executable(${PROJECT_NAME}-ut SharedPtr-ut.cpp SharedControlBlock-ut.cpp)
 target_compile_options(${PROJECT_NAME}-ut PUBLIC -Wall -Werror -Wpedantic -Wextra)
 target_link_libraries(${PROJECT_NAME}-ut gtest_main)
 
