@@ -13,6 +13,7 @@ public:
     std::atomic<size_t>& getShared() { return shared_refs; }
     std::atomic<size_t>& getWeak() { return weak_refs; }
     void callDeleter() const { deleter(); }
+    void setDeleter(std::function<void()> del) { deleter = del; }
 
 private:
     std::atomic<size_t> shared_refs = 1;
@@ -33,7 +34,7 @@ public:
     T& operator*() const { return *ptr_; }
     T* operator->() const { return ptr_; }
     long use_count() const { return static_cast<long>(cb_->getShared()); }
-    explicit operator bool() const { return get() != nullptr; }
+    explicit operator bool() const { return ptr_ != nullptr; }
     void reset(T* ptr);
 
 private:
@@ -44,11 +45,13 @@ private:
 
 template <typename T>
 void shared_ptr<T>::deletePointers() {
-    cb_->decreaseSharedRef();
-    if (cb_->getShared() == 0) {
-        cb_->callDeleter();
-        if (cb_->getWeak() == 0) {
-            delete cb_;
+    if(cb_) {
+        cb_->decreaseSharedRef();
+        if (cb_->getShared() == 0) {
+            cb_->callDeleter();
+            if (cb_->getWeak() == 0) {
+                delete cb_;
+            }
         }
     }
 }
@@ -69,6 +72,7 @@ template <typename T>
 shared_ptr<T>::shared_ptr(shared_ptr&& ptr) {
     ptr_ = ptr.ptr_;
     cb_ = ptr.cb_;
+    cb_->setDeleter([&](){ delete ptr_; });
     ptr.ptr_ = nullptr;
     ptr.cb_ = nullptr;
 }
@@ -90,6 +94,7 @@ shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr&& ptr) {
         deletePointers();
         ptr_ = ptr.ptr_;
         cb_ = ptr.cb_;
+        cb_->setDeleter([&](){ delete ptr_; });
         ptr.ptr_ = nullptr;
         ptr.cb_ = nullptr;
     }
