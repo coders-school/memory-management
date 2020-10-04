@@ -4,15 +4,15 @@
 template <typename T>
 class SharedPtr {
 public:
-    SharedPtr<T>() noexcept = default;
-    explicit SharedPtr<T>(T* ptr);
-    SharedPtr<T>(T* ptr, std::function<void(T*)> deleter);
-    ~SharedPtr<T>();
+    SharedPtr() noexcept = default;
+    explicit SharedPtr(T* ptr);
+    SharedPtr(T* ptr, std::function<void(T*)> deleter);
+    ~SharedPtr();
 
-    SharedPtr<T>(const SharedPtr& otherOtr);
-    SharedPtr<T>(SharedPtr&& otherPtr);
-    SharedPtr<T>& operator=(const SharedPtr& otherPtr);
-    SharedPtr<T>& operator=(SharedPtr&& otherPtr);
+    SharedPtr(const SharedPtr& otherOtr);
+    SharedPtr(SharedPtr&& otherPtr);
+    SharedPtr& operator=(const SharedPtr& otherPtr);
+    SharedPtr& operator=(SharedPtr&& otherPtr);
 
     T& operator*() const noexcept { return *ptr_; }
     T* operator->() const noexcept { return ptr_; }

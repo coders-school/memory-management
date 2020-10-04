@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.2)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-# set(CMAKE_CXX_STANDARD_REQUIRED 17)
 
 # Download and unpack googletest at configure time
 configure_file(CMakeLists.txt.in googletest-download/CMakeLists.txt)
@@ -40,9 +39,6 @@ project(SharedPtr)
 
 set(SRC_LIST
   main.cpp
-#   SharedPtr.cpp
-#   SharedControlBlock.cpp
-
 )
 
 set(TEST_SRC_LIST
