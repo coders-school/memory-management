@@ -4,8 +4,8 @@
 template <typename T>
 class SharedPtr {
 public:
-    SharedPtr<T>() = default;
-    SharedPtr<T>(T* ptr);
+    SharedPtr<T>() noexcept = default;
+    explicit SharedPtr<T>(T* ptr);
     SharedPtr<T>(T* ptr, std::function<void(T*)> deleter);
     ~SharedPtr<T>();
 
@@ -13,6 +13,15 @@ public:
     SharedPtr<T>(SharedPtr&& otherPtr);
     SharedPtr<T>& operator=(const SharedPtr& otherPtr);
     SharedPtr<T>& operator=(SharedPtr&& otherPtr);
+
+    T& operator*() const noexcept { return *ptr_; }
+    T* operator->() const noexcept { return ptr_; }
+    T* get() const noexcept { return ptr_; }
+    void reset(
+        T* newPtr = nullptr,
+        std::function<void(T*)> newDeleter = [](T* ptr) { delete ptr; }) noexcept;
+    size_t use_count() const noexcept { return shControlBlock_->getSharedRefsCount(); }
+    explicit operator bool() const noexcept { return this.get() != nullptr; }
 
     void handleSharedPtrAndControlBlockDelete();
 
@@ -84,21 +93,9 @@ SharedPtr<T>& SharedPtr<T>::operator=(SharedPtr&& otherPtr) {
     return *this;
 }
 
-// (50 XP) Implement your own `shared_ptr` (simplified)
-// `shared_ptr` is a RAII class:
-// // * Holds a pointer to managed object (template class)
-// // * Holds a pointer to shared control block with 2 counters and a deleter:
-// //   * shared_refs count (as `std::atomic<size_t>`)
-// //   * weak_refs count (as `std::atomic<size_t>`)
-// //   * deleter (function pointer)
-// // *Constructor copies a pointer and allocate the control block
-// // * Destructor decrease shared_refs and:
-// //   * if shared_refs == 0 -> release the managed object
-// //   * if shared_refs == 0 and weak_refs == 0 -> release the control block
-//  // * Copying is allowed - it increments shared_refs
-// // * Moving is allowed and it means:
-// //   * Copying original pointers to a new object
-// //   * Setting source pointer to nullptr
-// * Member functions: `operator*()`, `operator->()`, `get()`, `reset()`, `use_count()`, `operator bool()`
-
-// Do not forget about CI - UT + Valgrind / ASAN. Work in pairs.
+template <typename T>
+void SharedPtr<T>::reset(T* newPtr, std::function<void(T*)> newDeleter) noexcept {
+    handleSharedPtrAndControlBlockDelete();
+    ptr_ = newPtr;
+    shControlBlock_ = new SharedControlBlock<T>{newDeleter};
+}
