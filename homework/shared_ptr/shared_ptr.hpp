@@ -52,7 +52,7 @@ void shared_ptr<T>::checkAndDeletePointers() {
 
 template <typename T>
 shared_ptr<T>::shared_ptr(T* ptr, control_block* counter) : ptr_(ptr), counter_(counter) {
-
+    ++*counter_;
 }
 
 template <typename T>
