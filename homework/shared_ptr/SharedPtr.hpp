@@ -21,7 +21,7 @@ public:
         T* newPtr = nullptr,
         std::function<void(T*)> newDeleter = [](T* ptr) { delete ptr; }) noexcept;
     size_t use_count() const noexcept { return shControlBlock_->getSharedRefsCount(); }
-    explicit operator bool() const noexcept { return this.get() != nullptr; }
+    explicit operator bool() const noexcept { return this->get() != nullptr; }
 
     void handleSharedPtrAndControlBlockDelete();
 
@@ -34,9 +34,9 @@ template <typename T>
 void SharedPtr<T>::handleSharedPtrAndControlBlockDelete() {
     if (shControlBlock_ != nullptr) {
         shControlBlock_->decrementSharedRefsCount();
-        if (shControlBlock_->getSharedRefsCount == 0) {
+        if (shControlBlock_->getSharedRefsCount() == 0) {
             shControlBlock_->defaultDeleter(ptr_);
-        } else if (shControlBlock_->getSharedRefsCount == 0 && shControlBlock_->getWeakRefsCount == 0) {
+        } else if (shControlBlock_->getSharedRefsCount() == 0 && shControlBlock_->getWeakRefsCount() == 0) {
             delete shControlBlock_;
         }
     }
