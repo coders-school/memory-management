@@ -40,4 +40,4 @@ jobs:
     - name: Run valgrind
       working-directory: homework/shared_ptr/build
       run: |
-        valgrind --leak-check=full ./shared_ptr-ut
+        valgrind --leak-check=full ./sharedPtr-ut
