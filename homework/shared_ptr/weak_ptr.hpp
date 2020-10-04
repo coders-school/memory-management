@@ -14,7 +14,7 @@ public:
     weak_ptr(weak_ptr&& previousOwner) noexcept;
     ~weak_ptr();
 
-    weak_ptr& operator=(const weak_ptr<T>& ptr) noexcept;
+    weak_ptr& operator=(const weak_ptr& ptr) noexcept;
     weak_ptr& operator=(const shared_ptr<T>& ptr) noexcept;
     weak_ptr& operator=(weak_ptr&& previousOwner) noexcept;
 
@@ -31,7 +31,7 @@ private:
 
 template <typename T>
 weak_ptr<T>::weak_ptr(const weak_ptr& ptr) noexcept
-    : ptr_(ptr.ptr_), counter_(ptr.counter_) {
+    : ptr_{ptr.ptr_}, counter_{ptr.counter_} {
     if (counter_) {
         counter_->increaseWeakRefs();
     }
@@ -64,8 +64,9 @@ weak_ptr<T>::~weak_ptr() {
 }
 
 template <typename T>
-weak_ptr<T>& weak_ptr<T>::operator=(const weak_ptr<T>& ptr) noexcept {
+weak_ptr<T>& weak_ptr<T>::operator=(const weak_ptr& ptr) noexcept {
     ptr_ = ptr.ptr_;
+    counter_ = ptr.counter_;
     if (counter_) {
         counter_->increaseWeakRefs();
     }
@@ -84,10 +85,9 @@ weak_ptr<T>& weak_ptr<T>::operator=(const shared_ptr<T>& ptr) noexcept {
 
 
 template <typename T>
-weak_ptr<T>& weak_ptr<T>::operator=(weak_ptr<T>&& previousOwner) noexcept {
+weak_ptr<T>& weak_ptr<T>::operator=(weak_ptr&& previousOwner) noexcept {
     if (this != &previousOwner) {
-        ptr_ = previousOwner.ptr_;
-        counter_ = previousOwner.counter_;
+        weak_ptr(previousOwner).swap(*this);
         previousOwner.ptr_ = nullptr;
         previousOwner.counter_ = nullptr;
     }
@@ -106,7 +106,7 @@ bool weak_ptr<T>::expired() const noexcept {
 
 template <typename T>
 shared_ptr<T> weak_ptr<T>::lock() const noexcept {
-    return expired() ? cs::shared_ptr<T>{} : cs::shared_ptr<T>(ptr_, counter_);
+    return expired() ? cs::shared_ptr<T>() : cs::shared_ptr<T>(ptr_, counter_);
 }
 
 template <typename T>

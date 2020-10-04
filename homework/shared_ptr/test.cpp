@@ -87,24 +87,44 @@ TEST_F(weakPtrTest, testLock) {
     ASSERT_EQ(*(wPtr.lock()), testValueOne);
 }
 
-TEST_F(weakPtrTest, testCopyConstructor) {
+TEST_F(weakPtrTest, testCopyConstructorFromShared) {
     cs::weak_ptr<int> wPtr(sPtr);
-    auto wPtr2(wPtr);
-    ASSERT_EQ(*(wPtr2.lock()), testValueOne);
-    ASSERT_EQ(wPtr2.use_count(), 2);
-    auto wPtr3 = wPtr;
-    ASSERT_EQ(wPtr3.use_count(), 3);
-    //ASSERT_EQ(*(wPtr3.lock()), testValueOne);
+    ASSERT_EQ(*(wPtr.lock()), testValueOne);
+    ASSERT_EQ(wPtr.use_count(), 1);
 }
 
-TEST_F(weakPtrTest, testMoveConstructor) {
+TEST_F(weakPtrTest, testCopyConstructorFromWeak) {
     cs::weak_ptr<int> wPtr(sPtr);
+    auto wPtr2(wPtr);
+    ASSERT_FALSE(wPtr.expired());
+    ASSERT_EQ(*(wPtr.lock()), testValueOne);
+    ASSERT_EQ(wPtr.use_count(), 2);
+}
+
+TEST_F(weakPtrTest, testCopyAssignment) {
+    cs::weak_ptr<int> wPtr = sPtr;
+    ASSERT_EQ(*(wPtr.lock()), testValueOne);
+    ASSERT_EQ(wPtr.use_count(), 1);
+}
+
+TEST_F(weakPtrTest, testMoveConstructorFromShared) {
+    cs::weak_ptr<int> wPtr{sPtr};
+    ASSERT_EQ(*(wPtr.lock()), testValueOne);
+    ASSERT_EQ(wPtr.use_count(), 1);
+}
+
+TEST_F(weakPtrTest, testMoveConstructorFromWeak) {
+    cs::weak_ptr<int> wPtr{sPtr};
     auto wPtr2(std::move(wPtr));
     ASSERT_EQ(*(wPtr2.lock()), testValueOne);
     ASSERT_EQ(wPtr2.use_count(), 1);
-    ASSERT_EQ((wPtr.lock()).get(), nullptr);
-    auto wPtr3 = std::move(wPtr2);
-    //ASSERT_EQ(*(wPtr3.lock()), testValueOne);
+    ASSERT_TRUE(wPtr.expired());
+}
+
+TEST_F(weakPtrTest, testMoveAssignment) {
+    cs::weak_ptr<int> wPtr = std::move(sPtr);
+    ASSERT_EQ(*(wPtr.lock()), testValueOne);
+    ASSERT_EQ(wPtr.use_count(), 1);
 }
 
 TEST_F(weakPtrTest, testExpired) {
