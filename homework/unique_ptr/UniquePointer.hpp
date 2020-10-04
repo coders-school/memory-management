@@ -1,55 +1,56 @@
 #pragma once
 
 template <class T>
-class UniquePtr {
+class unique_ptr {
 private:
     T* ptr_{};
 
 public:
-    UniquePtr(T* newPtr = nullptr);
-    UniquePtr(UniquePtr<T>&& newPtr);
-    ~UniquePtr();
-
-    UniquePtr<T>& operator=(UniquePtr<T>&& newPtr);
-
-    UniquePtr(const UniquePtr<T>& newPtr) = delete;
-    UniquePtr<T>& operator=(const UniquePtr<T>& newPtr) = delete;
+    unique_ptr(T* newPtr = nullptr);
+    unique_ptr(unique_ptr<T>&& newPtr);
+    ~unique_ptr();
 
     T* get() const { return ptr_; }
     T* release();
     void reset(T* newPtr);
 
+    unique_ptr<T>& operator=(unique_ptr<T>&& newPtr);
     T& operator*() const { return *ptr_; }
+    T* operator->() const { return ptr_; }
+
+    unique_ptr(const unique_ptr<T>& newPtr) = delete;
+    unique_ptr<T>& operator=(const unique_ptr<T>& newPtr) = delete;
 };
 
 template <class T>
-UniquePtr<T>::UniquePtr(T* newPtr)
+unique_ptr<T>::unique_ptr(T* newPtr)
     : ptr_(newPtr) {}
 
 template <class T>
-UniquePtr<T>::UniquePtr(UniquePtr<T>&& newPtr)
+unique_ptr<T>::unique_ptr(unique_ptr<T>&& newPtr)
     : ptr_(newPtr.release()) {}
 
 template <class T>
-UniquePtr<T>::~UniquePtr() {
+unique_ptr<T>::~unique_ptr() {
     delete ptr_;
 }
 
 template <class T>
-T* UniquePtr<T>::release() {
-    T* tmpPtr = ptr_;
+T* unique_ptr<T>::release() {
+    T* tmp = ptr_;
     ptr_ = nullptr;
-    return tmpPtr;
+    return tmp;
 }
 
 template <class T>
-void UniquePtr<T>::reset(T* newPtr) {
+void unique_ptr<T>::reset(T* newPtr) {
     delete ptr_;
     ptr_ = newPtr;
+    newPtr = nullptr;
 }
 
 template <class T>
-UniquePtr<T>& UniquePtr<T>::operator=(UniquePtr<T>&& newPtr) {
+unique_ptr<T>& unique_ptr<T>::operator=(unique_ptr<T>&& newPtr) {
     if (this != &newPtr) {
         delete ptr_;
         ptr_ = newPtr.ptr_;
