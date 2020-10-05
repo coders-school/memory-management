@@ -3,6 +3,14 @@
 #include <iostream>
 #include <vector>
 
+template <typename T> class ControlBlock {
+
+public:
+  std::atomic<size_t> sharedRefsCounter_{1};
+  std::atomic<size_t> weakRefsCounter_{0};
+  void deleter(T *rawPtr) { delete rawPtr; };
+};
+
 template <typename T> class SharedPtr {
 
 public:
@@ -12,31 +20,44 @@ public:
   T *get() const;
   T &operator*() const noexcept;
   T *operator->() const noexcept;
-  operator = (const SharedPtr<T> & other);
+  T &operator=(const SharedPtr<T> &other) noexcept;
   void reset(T *NewRawPtr = nullptr);
+  int use_count() const;
 
 private:
-  T *rawPtr_{};
-public: 
-  std::vector<std::atomic<size_t> *> ControlBlock{
-      new std::atomic<size_t>{},  // sharedRefsCounter,
-      new std::atomic<size_t>{}}; // weakRefsCounter
+  T *rawPtr_;
+  ControlBlock<T> *ControlBlock_;
 };
 
-template <typename T> SharedPtr<T>::SharedPtr(T *rawPtr) : rawPtr_(rawPtr) {
-  ControlBlock.at(0)++;
-}
+template <typename T>
+SharedPtr<T>::SharedPtr(T *rawPtr)
+    : rawPtr_(rawPtr), ControlBlock_(new ControlBlock<T>) {}
 
 template <typename T>
 SharedPtr<T>::SharedPtr(SharedPtr<T> &&other) noexcept // move constructor
-    : rawPtr_(other.rawPtr_) {
+    : rawPtr_(other.rawPtr_), ControlBlock_(other.ControlBlock_) {
   other.rawPtr_ = nullptr;
+  other.ControlBlock_ = nullptr;
 }
 
 template <typename T>
 SharedPtr<T>::SharedPtr(const SharedPtr<T> &other) noexcept // copy constructor
-    : rawPtr_(other.rawPtr_) {
-  ControlBlock.at(0)++;
+    : rawPtr_(other.rawPtr_), ControlBlock_(other.ControlBlock_) {
+  ControlBlock_->sharedRefsCounter_.exchange(
+      ControlBlock_->sharedRefsCounter_.load(std::memory_order_relaxed) + 1,
+      std::memory_order_relaxed);
+}
+
+template <typename T>
+T &SharedPtr<T>::operator=(const SharedPtr<T> &other) noexcept {
+  if (other != this) {
+    rawPtr_ = other.rawPtr_;
+    ControlBlock_ = other.ControlBlock_;
+    ControlBlock_->sharedRefsCounter_.exchange(
+        ControlBlock_->sharedRefsCounter_.load(std::memory_order_relaxed) + 1,
+        std::memory_order_relaxed);
+  } else
+    return this;
 }
 
 template <typename T> T *SharedPtr<T>::get() const { return rawPtr_; }
@@ -50,8 +71,25 @@ template <typename T> T *SharedPtr<T>::operator->() const noexcept {
 }
 
 template <typename T> void SharedPtr<T>::reset(T *NewRawPtr) {
-  delete rawPtr_;
-  rawPtr_ = NewRawPtr;
+  if (ControlBlock_->sharedRefsCounter_ >= 2) {
+    ControlBlock_->sharedRefsCounter_.exchange(
+        ControlBlock_->sharedRefsCounter_.load(std::memory_order_relaxed) - 1,
+        std::memory_order_relaxed);
+      ControlBlock_ = new ControlBlock<T>{};
+      rawPtr_ = NewRawPtr;
+      return;
+  }
+  else if(ControlBlock_->sharedRefsCounter_ == 1){
+    ControlBlock_->deleter(rawPtr_);
+    delete ControlBlock_; //if weak_ptr will be created, this must be removed !!
+    rawPtr_ = NewRawPtr;
+    ControlBlock_ = new ControlBlock<T>{};
+    return;
+  }
+}
+
+template <typename T> int SharedPtr<T>::use_count() const {
+  return ControlBlock_->sharedRefsCounter_.load(std::memory_order_relaxed);
 }
 
 /*
