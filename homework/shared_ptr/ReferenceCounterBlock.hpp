@@ -14,22 +14,22 @@ public:
     ReferenceCounterBlock& operator=(ReferenceCounterBlock&&) = delete;
     ~ReferenceCounterBlock() {}
 
-    unsigned int getCounter() const;
-    void operator++();
-    void operator--();
+    unsigned int getCounter() const noexcept;
+    void operator++() noexcept;
+    void operator--() noexcept;
 
 private:
     std::atomic<unsigned int> counter_;
 };
 
-void ReferenceCounterBlock::operator++() {
+void ReferenceCounterBlock::operator++() noexcept {
     counter_++;
 }
 
-void ReferenceCounterBlock::operator--() {
+void ReferenceCounterBlock::operator--() noexcept {
     counter_--;
 }
 
-unsigned int ReferenceCounterBlock::getCounter() const {
+unsigned int ReferenceCounterBlock::getCounter() const noexcept {
     return counter_.load();
 }

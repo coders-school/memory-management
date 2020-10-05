@@ -8,21 +8,21 @@ namespace coders_school {
 template <typename T>
 class shared_ptr {
 public:
-    shared_ptr(T* ptr = nullptr);
-    shared_ptr(const shared_ptr& otherPtr);
-    shared_ptr(shared_ptr&& otherPtr);
+    explicit shared_ptr(T* ptr = nullptr);
+    shared_ptr(const shared_ptr& otherPtr) noexcept;
+    shared_ptr(shared_ptr&& otherPtr) noexcept;
     ~shared_ptr();
-    shared_ptr& operator=(const shared_ptr& otherPtr);
-    shared_ptr& operator=(shared_ptr&& otherPtr);
+    shared_ptr& operator=(const shared_ptr& otherPtr) noexcept;
+    shared_ptr& operator=(shared_ptr&& otherPtr) noexcept;
     T& operator*() const;
-    T* operator->() const;
-    operator bool() const;
-    T* get() const;
-    unsigned int use_count();
+    T* operator->() const noexcept;
+    operator bool() const noexcept;
+    T* get() const noexcept;
+    unsigned int use_count() noexcept;
     void reset(T* ptr);
 
 private:
-    T* ptr_{nullptr};
+    T* ptr_;
     ReferenceCounterBlock* counter_;
 
     void deleter();
@@ -49,7 +49,7 @@ shared_ptr<T>::shared_ptr(T* ptr)
 }
 
 template <typename T>
-shared_ptr<T>::shared_ptr(const shared_ptr& otherPtr) {
+shared_ptr<T>::shared_ptr(const shared_ptr& otherPtr) noexcept {
     ptr_ = otherPtr.ptr_;
     counter_ = otherPtr.counter_;
     if (ptr_) {
@@ -58,7 +58,7 @@ shared_ptr<T>::shared_ptr(const shared_ptr& otherPtr) {
 }
 
 template <typename T>
-shared_ptr<T>::shared_ptr(shared_ptr&& otherPtr) {
+shared_ptr<T>::shared_ptr(shared_ptr&& otherPtr) noexcept {
     ptr_ = otherPtr.ptr_;
     counter_ = otherPtr.counter_;
     otherPtr.ptr_ = nullptr;
@@ -71,7 +71,7 @@ shared_ptr<T>::~shared_ptr() {
 }
 
 template <typename T>
-shared_ptr<T>& shared_ptr<T>::operator=(const shared_ptr& otherPtr) {
+shared_ptr<T>& shared_ptr<T>::operator=(const shared_ptr& otherPtr) noexcept {
     if (this != &otherPtr && ptr_ != nullptr) {
         deleter();
         ptr_ = otherPtr.ptr_;
@@ -83,7 +83,7 @@ shared_ptr<T>& shared_ptr<T>::operator=(const shared_ptr& otherPtr) {
 }
 
 template <typename T>
-shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr&& otherPtr) {
+shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr&& otherPtr) noexcept {
     if (this != &otherPtr && ptr_ != nullptr) {
         deleter();
         ptr_ = otherPtr.ptr_;
@@ -105,12 +105,12 @@ T& shared_ptr<T>::operator*() const {
 }
 
 template <typename T>
-T* shared_ptr<T>::operator->() const {
+T* shared_ptr<T>::operator->() const noexcept {
     return ptr_;
 }
 
 template <typename T>
-shared_ptr<T>::operator bool() const {
+shared_ptr<T>::operator bool() const noexcept {
     if (!ptr_) {
         return false;
     }
@@ -119,12 +119,12 @@ shared_ptr<T>::operator bool() const {
 }
 
 template <typename T>
-T* shared_ptr<T>::get() const {
+T* shared_ptr<T>::get() const noexcept {
     return ptr_;
 }
 
 template <typename T>
-unsigned int shared_ptr<T>::use_count() {
+unsigned int shared_ptr<T>::use_count() noexcept {
     return counter_->getCounter();
 }
 
