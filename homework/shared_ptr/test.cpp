@@ -76,16 +76,24 @@ TEST(sharedPointerTest, shouldCreateWithoutArguments) {
     ASSERT_EQ(ptr.get(), nullptr);
 }
 
-TEST(sharedPointerTest, shouldUseMakeShared) {
-    auto ptr = cs::make_shared(testValueOne);
+// TEST(sharedPointerTest, shouldUseMakeShared) {
+//     auto ptr = cs::make_shared(testValueOne);
 
-    ASSERT_EQ(*ptr, testValueOne);
-}
+//     ASSERT_EQ(*ptr, testValueOne);
+// }
 
-TEST(sharedPointerTest, shouldUseMakeSharedOnSTLDataStructs) {
+// TEST(sharedPointerTest, shouldUseMakeSharedOnSTLDataStructs) {
+//     std::vector<int> testVector{1,2};
+
+//     auto ptr = cs::make_shared<std::vector<int>>({1,2});
+
+//     ASSERT_EQ(*ptr, testVector);
+// }
+
+TEST(sharedPointerTest, shouldUseVariadicMakeShared) {
     std::vector<int> testVector{1,2};
 
-    auto ptr = cs::make_shared<std::vector<int>>({1,2});
+    auto ptr = cs::make_shared<std::vector<int>>(1,2);
 
     ASSERT_EQ(*ptr, testVector);
 }
@@ -111,7 +119,7 @@ TEST_F(weakPtrTest, shouldCopyAssign) {
 }
 
 TEST_F(weakPtrTest, testLock) {
-    cs::weak_ptr weak(sPtr);
+    cs::weak_ptr<int> weak(sPtr);
 
     ASSERT_EQ(*(weak.lock()), testValueOne);
 }

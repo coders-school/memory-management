@@ -3,7 +3,7 @@
 #include "control_block.hpp"
 
 #include <stdexcept>
-
+#include <iostream>
 namespace cs {
     
 template <typename T>
@@ -13,7 +13,8 @@ template <typename T>
 class shared_ptr {
 public:
     template <typename B> friend class weak_ptr;
-    template <typename C> friend shared_ptr<C>make_shared(const C& object);
+    //template <typename C> friend shared_ptr<C>make_shared(const C& object);
+    template<typename D, typename... Args> friend shared_ptr<D> make_shared(Args ... args);
     shared_ptr(T* ptr = nullptr);
     shared_ptr(const shared_ptr& ptr) noexcept;  //copy c-tor
     shared_ptr(shared_ptr&& previousOwner) noexcept;      //move c-tor
@@ -164,10 +165,15 @@ shared_ptr<T>& shared_ptr<T>::operator=(const shared_ptr<T>& ptr) noexcept {
     ++(*counter_);
 }
 
-template<typename C>
-shared_ptr<C> make_shared(const C &object) {
-    return shared_ptr<C>(object);
-}
+// template<typename C>
+// shared_ptr<C> make_shared(const C &object) {
+//     return shared_ptr<C>(object);
+// }
 
+template<typename D, typename... Args>
+shared_ptr<D> make_shared(Args... args) {
+    auto tempCounter = new continuous_block<D>(args...);
+    return shared_ptr<D>(tempCounter->getObjectPointer(), tempCounter);
+}
 
 }  // namespace cs

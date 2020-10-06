@@ -44,8 +44,10 @@ private:
 
 template <typename T>
 class continuous_block : public control_block<T> {
-public:
-    continuous_block(const T& object) : object_(object) {
+public: 
+
+    template<typename ...Args>
+    continuous_block(Args ...args) : object_{args...} {
     }
 
     T* getObjectPointer() override{
@@ -53,4 +55,19 @@ public:
     }
 private:
     T object_;
+};
+
+template <typename T>
+class normal_block : public control_block<T> {
+public:
+    normal_block(T* ptr = nullptr) {
+        object_ = ptr;
+    }
+    T* getObjectPointer() override {
+        return object_;
+    }
+    
+
+private:
+    T* object_{nullptr};
 };
