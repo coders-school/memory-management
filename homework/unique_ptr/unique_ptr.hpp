@@ -12,7 +12,7 @@ public:
 
     T* get() const { return ptr_; }
     T* release();
-    void reset(T* newPtr);
+    void reset(T* newPtr = nullptr);
 
     unique_ptr<T>& operator=(unique_ptr<T>&& newPtr);
     T& operator*() const { return *ptr_; }
