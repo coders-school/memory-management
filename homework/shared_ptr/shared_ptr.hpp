@@ -33,11 +33,11 @@ public:
     size_t use_count() { return counter_->getRefs(); }
 
 private:
-    bool madeShared_{false};
     shared_ptr(T* ptr, control_block<T>* counter);
     T* ptr_{nullptr};
     control_block<T>* counter_{nullptr};
-    
+    bool madeShared_{false};
+
 
     void checkAndDeletePointers();
 };
