@@ -33,7 +33,6 @@ public:
     size_t use_count() { return counter_->getRefs(); }
 
 private:
-    shared_ptr(const T& object);
     shared_ptr(T* ptr, control_block<T>* counter);
     T* ptr_{nullptr};
     control_block<T>* counter_{nullptr};
@@ -68,12 +67,6 @@ shared_ptr<T>::shared_ptr(T* ptr)
     }
 }
 
-template<typename T>
-shared_ptr<T>::shared_ptr(const T& object) {
-    counter_ = new continuous_block<T>(object);
-    ptr_ = counter_->getObjectPointer();
-    ++(*counter_);
-}
 
 template <typename T>
 shared_ptr<T>::shared_ptr(const shared_ptr& ptr) noexcept
