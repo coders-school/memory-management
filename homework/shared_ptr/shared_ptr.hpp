@@ -165,11 +165,6 @@ shared_ptr<T>& shared_ptr<T>::operator=(const shared_ptr<T>& ptr) noexcept {
     ++(*counter_);
 }
 
-template<typename C>
-shared_ptr<C> make_shared(const C &object) {
-    return shared_ptr<C>(object);
-}
-
 template<typename D, typename... Args>
 shared_ptr<D> make_shared(Args&&... args) {
     auto tempCounter = new continuous_block<D>(std::forward<Args>(args)...);

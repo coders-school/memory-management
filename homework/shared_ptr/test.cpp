@@ -85,8 +85,7 @@ TEST(makeSharedTest, shouldUseMakeShared) {
 TEST(makeSharedTest, shouldUseMakeSharedOnSTLDataStructs) {
     std::vector<int> testVector{1,2};
 
-    auto ptr = cs::make_shared<std::vector<int>>({1,2});
-
+    auto ptr = cs::make_shared<std::vector<int>, std::initializer_list<int>>({1,2});
     ASSERT_EQ(*ptr, testVector);
 }
 
