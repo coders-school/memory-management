@@ -33,6 +33,7 @@ public:
     size_t use_count() { return counter_->getRefs(); }
 
 private:
+    bool madeShared_{false};
     shared_ptr(T* ptr, control_block<T>* counter);
     T* ptr_{nullptr};
     control_block<T>* counter_{nullptr};
@@ -44,7 +45,7 @@ private:
 template <typename T>
 void shared_ptr<T>::checkAndDeletePointers() {
     if (!counter_->getRefs()) {
-        if(typeid(*counter_) == typeid(control_block<T>)) {
+        if(!madeShared_) {
             delete ptr_;
         }
         if (!counter_->getWeakRefs()) {
@@ -54,7 +55,7 @@ void shared_ptr<T>::checkAndDeletePointers() {
 }
 
 template <typename T>
-shared_ptr<T>::shared_ptr(T* ptr, control_block<T>* counter) : ptr_(ptr), counter_(counter) {
+shared_ptr<T>::shared_ptr(T* ptr, control_block<T>* counter) : ptr_(ptr), counter_(counter), madeShared_(true) {
     ++*counter_;
 }
 
@@ -70,13 +71,13 @@ shared_ptr<T>::shared_ptr(T* ptr)
 
 template <typename T>
 shared_ptr<T>::shared_ptr(const shared_ptr& ptr) noexcept
-    : counter_(ptr.counter_), ptr_(ptr.ptr_) {
+    : counter_(ptr.counter_), ptr_(ptr.ptr_), madeShared_(ptr.madeShared_) {
     ++(*counter_);
 }
 
 template <typename T>
 shared_ptr<T>::shared_ptr(shared_ptr&& previousOwner) noexcept
-    :   ptr_(previousOwner.ptr_), counter_(previousOwner.counter_) {
+    :   ptr_(previousOwner.ptr_), counter_(previousOwner.counter_), madeShared_(previousOwner.madeShared_) {
     previousOwner.ptr_ = nullptr;
     previousOwner.counter_ = nullptr;
 }
@@ -93,10 +94,13 @@ template <typename T>
 void shared_ptr<T>::swap(shared_ptr<T>& secondPointer) noexcept {
     auto ptrTmp = secondPointer.ptr_;
     auto counterTmp = secondPointer.counter_;
+    auto madeShared = secondPointer.madeShared_;
     secondPointer.ptr_ = ptr_;
     secondPointer.counter_ = counter_;
+    secondPointer.madeShared_ = madeShared_;
     ptr_ = ptrTmp;
     counter_ = counterTmp;
+    madeShared_ = madeShared;
 }
 
 template <typename T>
@@ -142,6 +146,7 @@ shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr<T>&& previousOwner) {
 
         ptr_ = previousOwner.ptr_;
         counter_ = previousOwner.counter_;
+        madeShared_ = previousOwner.madeShared_;
         previousOwner.ptr_ = nullptr;
         previousOwner.counter_ = nullptr;
     }
@@ -155,6 +160,7 @@ shared_ptr<T>& shared_ptr<T>::operator=(const shared_ptr<T>& ptr) noexcept {
     checkAndDeletePointers();
     counter_ = ptr.counter_;
     ptr_ = ptr.ptr_;
+    madeShared_ = ptr.madeShared_;
     ++(*counter_);
 }
 
