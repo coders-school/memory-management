@@ -47,7 +47,7 @@ class continuous_block : public control_block<T> {
 public: 
 
     template<typename ...Args>
-    continuous_block(Args ...args) : object_{args...} {
+    continuous_block(Args&& ...args) : object_{args...} {
     }
 
     T* getObjectPointer() override{
