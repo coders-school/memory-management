@@ -13,7 +13,7 @@ template <typename T>
 class shared_ptr {
 public:
     template <typename B> friend class weak_ptr;
-    //template <typename C> friend shared_ptr<C>make_shared(const C& object);
+    template <typename C> friend shared_ptr<C>make_shared(const C& object);
     template<typename D, typename... Args> friend shared_ptr<D> make_shared(Args&& ... args);
     shared_ptr(T* ptr = nullptr);
     shared_ptr(const shared_ptr& ptr) noexcept;  //copy c-tor
@@ -165,10 +165,10 @@ shared_ptr<T>& shared_ptr<T>::operator=(const shared_ptr<T>& ptr) noexcept {
     ++(*counter_);
 }
 
-// template<typename C>
-// shared_ptr<C> make_shared(const C &object) {
-//     return shared_ptr<C>(object);
-// }
+template<typename C>
+shared_ptr<C> make_shared(const C &object) {
+    return shared_ptr<C>(object);
+}
 
 template<typename D, typename... Args>
 shared_ptr<D> make_shared(Args&&... args) {

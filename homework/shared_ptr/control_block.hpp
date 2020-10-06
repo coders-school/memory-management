@@ -45,7 +45,7 @@ private:
 template <typename T>
 class continuous_block : public control_block<T> {
 public: 
-
+    
     template<typename ...Args>
     continuous_block(Args&& ...args) : object_{args...} {
     }

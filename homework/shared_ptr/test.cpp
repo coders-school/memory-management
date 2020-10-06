@@ -76,19 +76,19 @@ TEST(sharedPointerTest, shouldCreateWithoutArguments) {
     ASSERT_EQ(ptr.get(), nullptr);
 }
 
-// TEST(sharedPointerTest, shouldUseMakeShared) {
-//     auto ptr = cs::make_shared(testValueOne);
+TEST(sharedPointerTest, shouldUseMakeShared) {
+    auto ptr = cs::make_shared<int>(testValueOne);
 
-//     ASSERT_EQ(*ptr, testValueOne);
-// }
+    ASSERT_EQ(*ptr, testValueOne);
+}
 
-// TEST(sharedPointerTest, shouldUseMakeSharedOnSTLDataStructs) {
-//     std::vector<int> testVector{1,2};
+TEST(sharedPointerTest, shouldUseMakeSharedOnSTLDataStructs) {
+    std::vector<int> testVector{1,2};
 
-//     auto ptr = cs::make_shared<std::vector<int>>({1,2});
+    auto ptr = cs::make_shared<std::vector<int>>({1,2});
 
-//     ASSERT_EQ(*ptr, testVector);
-// }
+    ASSERT_EQ(*ptr, testVector);
+}
 
 TEST(sharedPointerTest, shouldUseVariadicMakeShared) {
     std::vector<int> testVector{1,2};
