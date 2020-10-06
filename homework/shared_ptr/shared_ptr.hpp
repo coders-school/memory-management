@@ -36,8 +36,9 @@ public:
 private:
     shared_ptr(const T& object);
     shared_ptr(T* ptr, control_block<T>* counter);
-    control_block<T>* counter_{nullptr};
     T* ptr_{nullptr};
+    control_block<T>* counter_{nullptr};
+    
 
     void checkAndDeletePointers();
 };
