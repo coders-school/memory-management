@@ -27,6 +27,7 @@ TEST_F(unique_ptr_test, shouldRelease) {
     auto ptr2 = ptr.release();
     ASSERT_EQ(*ptr2, expected);
     ASSERT_EQ(ptr.get(), nullptr);
+    delete ptr2;
 }
 
 TEST_F(unique_ptr_test, shouldReset) {
