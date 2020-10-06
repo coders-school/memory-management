@@ -21,7 +21,7 @@ public:
   T *get() const;
   T &operator*() const noexcept;
   T *operator->() const noexcept;
-  SharedPtr<T>& operator=(const SharedPtr<T> &other) noexcept;
+  SharedPtr<T> &operator=(const SharedPtr<T> &other) noexcept;
   explicit operator bool() const noexcept;
   void reset(T *NewRawPtr = nullptr);
   int use_count() const;
@@ -33,14 +33,16 @@ private:
 
 template <typename T>
 SharedPtr<T>::SharedPtr(T *rawPtr)
-    : rawPtr_(rawPtr), ControlBlock_(new ControlBlock<T>) {}
+    : rawPtr_(rawPtr) {
+      ControlBlock_ = new ControlBlock<T>;
+    }
 
 template <typename T>
-SharedPtr<T>::SharedPtr(SharedPtr<T> &&other) noexcept // move constructor
+SharedPtr<T>::SharedPtr(SharedPtr<T> && other) noexcept // move constructor
     : rawPtr_(other.rawPtr_), ControlBlock_(other.ControlBlock_) {
   other.rawPtr_ = nullptr;
-  other.ControlBlock_ = nullptr;
-}
+  //other.ControlBlock_ = nullptr; // dont know why it dosent work
+    }
 
 template <typename T>
 SharedPtr<T>::SharedPtr(const SharedPtr<T> &other) noexcept // copy constructor
@@ -58,7 +60,7 @@ template <typename T> SharedPtr<T>::~SharedPtr() {
   } else if (ControlBlock_->sharedRefsCounter_ == 1 &&
              ControlBlock_->weakRefsCounter_ == 0) {
     ControlBlock_->deleter(rawPtr_);
-    delete ControlBlock_;
+    //delete ControlBlock_; //why it makes problem??
   } else if (ControlBlock_->sharedRefsCounter_ == 1 &&
              ControlBlock_->weakRefsCounter_ >= 1) {
     ControlBlock_->deleter(rawPtr_);
@@ -93,21 +95,20 @@ SharedPtr<T> &SharedPtr<T>::operator=(const SharedPtr<T> &other) noexcept {
       ControlBlock_->deleter(rawPtr_);
       rawPtr_ = other.rawPtr_;
       ControlBlock_ = other.ControlBlock_;
-            ControlBlock_->sharedRefsCounter_.exchange(
+      ControlBlock_->sharedRefsCounter_.exchange(
           ControlBlock_->sharedRefsCounter_.load(std::memory_order_relaxed) + 1,
           std::memory_order_relaxed);
       return *this;
-    }  else if (ControlBlock_->sharedRefsCounter_ == 1 &&
+    } else if (ControlBlock_->sharedRefsCounter_ == 1 &&
                ControlBlock_->weakRefsCounter_ == 0) {
-      std::cout << ControlBlock_->sharedRefsCounter_<< 
-    " blablabla";
-      ControlBlock_->deleter(rawPtr_);
-      //delete ControlBlock_;
-      //delete ControlBlock_;
-      //rawPtr_ = other.rawPtr_;
-      //ControlBlock_ = other.ControlBlock_;
+      rawPtr_ = other.rawPtr_;
+      ControlBlock_ = other.ControlBlock_;
+      ControlBlock_->sharedRefsCounter_.exchange(
+          ControlBlock_->sharedRefsCounter_.load(std::memory_order_relaxed) + 1,
+          std::memory_order_relaxed);
       return *this;
-    }  else return *this; 
+    } else
+      return *this;
   } else
     return *this;
 }
