@@ -1,5 +1,6 @@
 #include <iostream>
 #include "SharedPointer.hpp"
+#include "MakeShared.hpp"
 
 int main() {
     std::cout << "Shared pointers: \n";
@@ -18,5 +19,18 @@ int main() {
     std::cout << *ptr3.get() << "\n";
     std::cout << *ptr2.get() << "\n";
     std::cout << ptr3.use_count() << "\n";
+
+    auto msPtr = MakeShared<int>(new int {20});
+    std::cout << *msPtr << "\n";
+    std::cout << *msPtr.get() << "\n";
+    std::cout << msPtr.use_count() << "\n";
+    SharedPointer<int> ptr5 = msPtr;
+    std::cout << msPtr.use_count() << "\n";
+    {
+        SharedPointer<int> ptr = msPtr;
+        std::cout << msPtr.use_count() << "\n";
+    }
+    std::cout << msPtr.use_count() << "\n";
+
     return 0;
 }

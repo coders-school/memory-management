@@ -42,7 +42,7 @@ project(sharedPtr)
 enable_testing()
 
 add_executable(${PROJECT_NAME} main.cpp)
-add_executable(${PROJECT_NAME}-ut SharedPointer-ut.cpp WeakPointer-ut.cpp)
+add_executable(${PROJECT_NAME}-ut SharedPointer-ut.cpp WeakPointer-ut.cpp MakeShared-ut.cpp)
 target_link_libraries(${PROJECT_NAME}-ut gtest_main)
 add_test(NAME ${PROJECT_NAME}-test COMMAND ${PROJECT_NAME}-ut)
 target_compile_options(${PROJECT_NAME} PUBLIC -Wall -Werror -Wpedantic -Wextra)
