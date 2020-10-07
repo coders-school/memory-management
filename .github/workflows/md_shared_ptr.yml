@@ -10,15 +10,15 @@ jobs:
     - uses: actions/checkout@master
 
     - name: Create build folder
-      working-directory: homework/unique_ptr
+      working-directory: homework/shared_ptr
       run: mkdir build
     - name: Compile
-      working-directory: homework/unique_ptr/build
+      working-directory: homework/shared_ptr/build
       run: |
         cmake ..
         make
     - name: Run tests
-      working-directory: homework/unique_ptr/build
+      working-directory: homework/shared_ptr/build
       run: ctest -V
   valgrind:
     runs-on: ubuntu-20.04
@@ -27,15 +27,15 @@ jobs:
     - uses: actions/checkout@master
 
     - name: Create build folder
-      working-directory: homework/unique_ptr
+      working-directory: homework/shared_ptr
       run: mkdir build
     - name: Compile
-      working-directory: homework/unique_ptr/build
+      working-directory: homework/shared_ptr/build
       run: |
         cmake ..
         make
     - name: Install and run valgrind
-      working-directory: homework/unique_ptr/build
+      working-directory: homework/shared_ptr/build
       run: |
         sudo apt-get update && sudo apt-get install valgrind
         valgrind --leak-check=full ./tests
