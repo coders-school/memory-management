@@ -1,19 +1,19 @@
 #pragma once
 
 template <typename T>
-class my_unique_ptr
+class my_shared_ptr
 {
 
 public:
-    explicit my_unique_ptr(T* ptr) : ptr_(ptr){};
+    explicit my_shared_ptr(T* ptr) : ptr_(ptr){};
 
-    my_unique_ptr() { ptr_ = nullptr; };
+    my_shared_ptr() { ptr_ = nullptr; };
 
-    my_unique_ptr(const my_unique_ptr<T>&) = delete;
+    my_shared_ptr(const my_shared_ptr<T>&) = delete;
 
-    my_unique_ptr(my_unique_ptr<T>&& ptr_m) { ptr_ = ptr_m.release(); }
+    my_shared_ptr(my_shared_ptr<T>&& ptr_m) { ptr_ = ptr_m.release(); }
 
-    void operator=(const my_unique_ptr<T>&) = delete;
+    void operator=(const my_shared_ptr<T>&) = delete;
 
     T* get() { return ptr_; }
 
@@ -30,7 +30,7 @@ public:
         ptr_ = new_ptr;
     };
 
-    ~my_unique_ptr() { delete ptr_; }
+    ~my_shared_ptr() { delete ptr_; }
 
     T operator*() { return *ptr_; };
     T* operator->() { return this->ptr_; };
