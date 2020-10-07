@@ -96,6 +96,16 @@ TEST(makeSharedTest, shouldUseVariadicMakeShared) {
 
     ASSERT_EQ(*ptr, testVector);
 }
+TEST(makeSharedTest, shouldCreateCustomStruct) {
+    struct A {
+        int a;
+        std::string b;
+    };
+    auto ptr = cs::make_shared<A>(testValueOne, testString);
+
+    ASSERT_EQ(ptr->a, testValueOne);
+    ASSERT_EQ(ptr->b, testString);
+}
 
 struct weakPtrTest : ::testing::Test {
     weakPtrTest()

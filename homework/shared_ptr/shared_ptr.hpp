@@ -19,7 +19,6 @@ public:
     shared_ptr(shared_ptr&& previousOwner) noexcept;      //move c-tor
     ~shared_ptr();
 
-    //TODO Implement swap
     void swap(shared_ptr<T>& secondPointer) noexcept;
     const T* get() const;
     void reset(T* newPtr = nullptr);

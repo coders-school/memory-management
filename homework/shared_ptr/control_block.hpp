@@ -34,7 +34,6 @@ public:
     size_t getRefs() { return sharedRefs_; }
     size_t getWeakRefs() { return weakRefs_; }
     virtual T* getObjectPointer() {return nullptr;};
-    //void sharedDeleter() { sharedRefs_ = 0; }
 
 private:
     std::atomic<size_t> sharedRefs_;
