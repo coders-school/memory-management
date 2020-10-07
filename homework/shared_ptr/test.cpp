@@ -10,7 +10,7 @@ struct SomeUsefulClass
     std::string message_;
 };
 
-std::string functionUptrAsArg(my_shared_ptr<SomeUsefulClass> ptr)
+std::string functionSharedPtrAsArg(my_shared_ptr<SomeUsefulClass> ptr)
 {
     return ptr->message_;
 }
@@ -29,21 +29,14 @@ TEST(Test, empty)
 TEST(Test, passedAsTemporary)
 {
     std::string msg("some important message");
-    EXPECT_EQ(msg, functionUptrAsArg(provider(msg)));
-}
-
-TEST(Test, passedResetOwneship)
-{
-
-    std::string msg("some important message");
-    EXPECT_EQ(msg, functionUptrAsArg(provider(msg)));
+    EXPECT_EQ(msg, functionSharedPtrAsArg(provider(msg)));
 }
 
 TEST(Test, passedWithMove)
 {
     std::string someString("provided by provider");
     my_shared_ptr<SomeUsefulClass> ptr = provider(someString);
-    EXPECT_EQ(functionUptrAsArg(std::move(ptr)), someString);
+    EXPECT_EQ(functionSharedPtrAsArg(std::move(ptr)), someString);
 }
 
 TEST(Test, ShouldRelease)
