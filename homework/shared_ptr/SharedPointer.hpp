@@ -1,4 +1,7 @@
 #pragma once
+
+#include "ControlBlock.hpp"
+
 #include <stdexcept>
 #include <string>
 
@@ -10,46 +13,57 @@ public:
 template <typename T>
 class SharedPointer {
 public:
-    SharedPointer(T* ptr = nullptr) : ptr_(ptr) {
-        refCounter_ = new int(1);
-    }
-    ~SharedPointer();
+    SharedPointer(T* ptr = nullptr);
     SharedPointer(SharedPointer& anotherPtr);
     SharedPointer(SharedPointer&& anotherPtr) noexcept;
+    ~SharedPointer();
 
     T* get();
     void reset(T* ptr = nullptr);
-    int use_count();
+    size_t use_count();
 
     T& operator*() const;
     T* operator->() const;
-    SharedPointer<T>& operator=(SharedPointer<T>&& anotherPtr);
     SharedPointer<T>& operator=(SharedPointer<T>& anotherPtr);
+    SharedPointer<T>& operator=(SharedPointer<T>&& anotherPtr);
 
 private:
+    ControlBlock* refCounter_{nullptr};
     T* ptr_{nullptr};
-    int* refCounter_{nullptr};
+
+    void checkControlBlock();
 };
 
-template <class T>
-SharedPointer<T>::~SharedPointer() {
-    std::cout << "BEFORE: " << *refCounter_ << "\n";
-    *refCounter_ -= 1;
-    std::cout << "AFTER: " << *refCounter_ << "\n";
-    if (*refCounter_ == 0) {
-        delete ptr_;
+template <typename T>
+SharedPointer<T>::SharedPointer(T* ptr) : ptr_(ptr) {
+    if (ptr_) {
+        refCounter_ = new ControlBlock();
+        ++(*refCounter_);
     }
 }
 
 template <typename T>
-SharedPointer<T>::SharedPointer(SharedPointer& anotherPtr) {
-    ptr_ = anotherPtr.ptr_;
-    refCounter_ = anotherPtr.refCounter_;
-    *refCounter_ += 1;
+SharedPointer<T>::SharedPointer(SharedPointer& anotherPtr)
+    : refCounter_(anotherPtr.refCounter_), ptr_(anotherPtr.ptr_) {
+    ++(*refCounter_);
 }
 
 template <typename T>
-SharedPointer<T>::SharedPointer(SharedPointer&& anotherPtr) noexcept : ptr_(anotherPtr.release()) {}
+SharedPointer<T>::SharedPointer(SharedPointer&& anotherPtr) noexcept
+    : refCounter_(anotherPtr.refCounter_), ptr_(anotherPtr.ptr_) {
+    anotherPtr.ptr_ = nullptr;
+    anotherPtr.refCounter_ = nullptr;
+}
+
+template <typename T>
+SharedPointer<T>::~SharedPointer() {
+    if (refCounter_ != nullptr) {
+        // std::cout << "BEFORE: " << refCounter_->getShared() << "\n";
+        --(*refCounter_);
+        // std::cout << "AFTER: " << refCounter_->getShared() << "\n";
+        checkControlBlock();
+    }
+}
 
 template <typename T>
 T* SharedPointer<T>::get() {
@@ -58,13 +72,18 @@ T* SharedPointer<T>::get() {
 
 template <typename T>
 void SharedPointer<T>::reset(T* ptr) {
-    delete ptr_;
+    if (refCounter_->getShared() == 1) {
+        delete ptr_;
+    } else {
+        refCounter_ = new ControlBlock();
+        ++(*refCounter_);
+    }
     ptr_ = ptr;
 }
 
 template <typename T>
-int SharedPointer<T>::use_count() {
-    return *refCounter_;
+size_t SharedPointer<T>::use_count() {
+    return refCounter_->getShared();
 }
 
 template <typename T>
@@ -79,25 +98,37 @@ template <typename T>
 T* SharedPointer<T>::operator->() const {
     return ptr_;
 }
+template <typename T>
+SharedPointer<T>& SharedPointer<T>::operator=(SharedPointer<T>& anotherPtr) {
+    --(*refCounter_);
+    checkControlBlock();
+    refCounter_ = anotherPtr.refCounter_;
+    ptr_ = anotherPtr.ptr_;
+    ++(*refCounter_);
+
+    return *this;
+}
 
 template <typename T>
 SharedPointer<T>& SharedPointer<T>::operator=(SharedPointer<T>&& anotherPtr) {
     if (this != &anotherPtr) {
-        delete ptr_;
+        --(*refCounter_);
+        checkControlBlock();
         ptr_ = anotherPtr.ptr_;
+        refCounter_ = anotherPtr.refCounter_;
         anotherPtr.ptr_ = nullptr;
+        anotherPtr.refCounter_ = nullptr;
     }
 
     return *this;
 }
 
 template <typename T>
-SharedPointer<T>& SharedPointer<T>::operator=(SharedPointer<T>& anotherPtr) {
-    if (this != &anotherPtr) {
-        ptr_ = anotherPtr.ptr_;
-        refCounter_ = anotherPtr.refCounter_;
-        *refCounter_ += 1;
+void SharedPointer<T>::checkControlBlock() {
+    if (refCounter_->getShared() == 0) {
+        delete ptr_;
+        if (refCounter_->getWeak() == 0) {
+            delete refCounter_;
+        }
     }
-
-    return *this;
 }
