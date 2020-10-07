@@ -74,7 +74,7 @@ WeakPointer<T>::~WeakPointer() {
 template <typename T>
 size_t WeakPointer<T>::use_count() {
     if (refCounter_) {
-        return refCounter_->getWeak();
+        return refCounter_->getShared();
     }
     return 0;
 }
