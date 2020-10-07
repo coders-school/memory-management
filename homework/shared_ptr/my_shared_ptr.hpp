@@ -1,6 +1,9 @@
 #pragma once
 
-#include "Counter.hpp"
+struct Counter
+{
+    size_t count_ = 0;
+};
 
 template <typename T>
 class my_shared_ptr
@@ -31,41 +34,64 @@ public:
         counter_ptr->count_++;
     };
 
-    my_shared_ptr(my_shared_ptr<T>&& ptr_m) { ptr_ = ptr_m.release(); }
-
-    void operator=(const my_shared_ptr<T>& other_shared_ptr)
+    my_shared_ptr(my_shared_ptr<T>&& ptr_moved)
     {
-        this->ptr_ = other_shared_ptr.get();
+        ptr_ = ptr_moved.get();
+        if (counter_ptr != nullptr)
+        {
+            counter_ptr->count_ = ptr_moved.getCounter()->count_;
+        }
+        else
+        {
+            counter_ptr = new Counter();
+            counter_ptr->count_ = ptr_moved.getCounter()->count_;
+        }
+        ptr_moved.getCounter()->count_ = 0;
+        delete ptr_moved.get();
+    }
+
+    T& operator=(const my_shared_ptr<T>& other_shared_ptr)
+    {
+        ptr_ = other_shared_ptr.get();
         counter_ptr = other_shared_ptr.getCounter();
         counter_ptr->count_++;
     };
 
-    T* get() { return ptr_; }
-    Counter* getCounter() { return counter_ptr; }
-
-    T* release()
+    T& operator=(my_shared_ptr<T>&& some_ptr)
     {
-        T* tmp = ptr_;
-        ptr_ = nullptr;
-        return tmp;
-    };
-
-    void reset(T* new_ptr)
-    {
-        delete ptr_;
-        ptr_ = new_ptr;
-    };
-
-    ~my_shared_ptr() 
-    { 
-        if(counter_ptr->count_ == 0)
+        if (some_ptr != this)
         {
             delete ptr_;
             delete counter_ptr;
+
+            ptr_ = some_ptr.get();
+            counter_ptr = some_ptr.getCounter();
+            some_ptr.reset(nullptr);
         }
-        else 
+        return *this;
+    }
+
+    T* get() { return ptr_; }
+    Counter* getCounter() { return counter_ptr; }
+
+    void reset(T* new_ptr) // update!!
+    {
+        delete ptr_;
+        ptr_ = new_ptr;
+        delete counter_ptr;
+        counter_ptr = new Counter();
+    };
+
+    ~my_shared_ptr()
+    {
+        if (ptr_)
         {
             counter_ptr->count_--;
+        }
+        else if (counter_ptr->count_ == 0)
+        {
+            delete ptr_;
+            delete counter_ptr;
         }
     }
 

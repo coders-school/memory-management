@@ -24,8 +24,27 @@ TEST(Test, empty)
 {
     my_shared_ptr<SomeUsefulClass> ptr = my_shared_ptr<SomeUsefulClass>();
     EXPECT_EQ(ptr.get(), nullptr);
+    EXPECT_EQ(ptr.getCounter()->count_, 0);
 }
 
+
+TEST(Test, notEmpty)
+{
+    my_shared_ptr<SomeUsefulClass> ptr = my_shared_ptr<SomeUsefulClass>(new SomeUsefulClass());
+    EXPECT_NE(ptr.get(), nullptr);
+    EXPECT_EQ(ptr.getCounter()->count_, 1);
+}
+
+//TEST(Test, moreReferences)
+//{
+//    my_shared_ptr<SomeUsefulClass> ptr = my_shared_ptr<SomeUsefulClass>(new SomeUsefulClass());
+//    EXPECT_NE(ptr.get(), nullptr);
+//    EXPECT_EQ(ptr.getCounter()->count_, 1);
+//    my_shared_ptr<SomeUsefulClass> another_ptr(ptr);
+//    EXPECT_EQ(ptr.getCounter()->count_, 2);
+//
+//}
+//
 TEST(Test, passedAsTemporary)
 {
     std::string msg("some important message");
@@ -37,25 +56,6 @@ TEST(Test, passedWithMove)
     std::string someString("provided by provider");
     my_shared_ptr<SomeUsefulClass> ptr = provider(someString);
     EXPECT_EQ(functionSharedPtrAsArg(std::move(ptr)), someString);
-}
-
-TEST(Test, ShouldRelease)
-{
-    int initial_value = 42;
-    int new_value = 100;
-
-    my_shared_ptr<int> pointer_ = my_shared_ptr<int>(new int(initial_value));
-
-    int* raw_pointer = &new_value;
-
-    EXPECT_EQ(*(pointer_.get()), initial_value);
-
-    raw_pointer = pointer_.release();
-
-    EXPECT_EQ(pointer_.get(), nullptr);
-    EXPECT_EQ(*raw_pointer, 42);
-
-    delete raw_pointer;
 }
 
 TEST(Test, ShouldReset)
