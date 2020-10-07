@@ -5,8 +5,7 @@
 
 class ControlBlock {
 public:
-    ControlBlock()
-        : sharedRefs_(0), weakRefs_(0){};
+    ControlBlock() : sharedRefs_(0), weakRefs_(0){};
     ControlBlock(const ControlBlock&) = delete;
     ControlBlock& operator=(const ControlBlock&) = delete;
     ~ControlBlock(){};
@@ -15,11 +14,10 @@ public:
     size_t getWeak();
 
     void increaseWeak();
+    void increaseShared();
 
-    ControlBlock& operator++();
-    ControlBlock& operator--();
-    //   ControlBlock operator++(int);
-    //   ControlBlock operator--(int);
+    void decreaseWeak();
+    void decreaseShared();
 
 private:
     std::atomic<size_t> sharedRefs_;
@@ -27,36 +25,25 @@ private:
 };
 
 size_t ControlBlock::getShared() {
-    return sharedRefs_;
+    return sharedRefs_.load();
 }
 
 size_t ControlBlock::getWeak() {
-    return weakRefs_;
+    return weakRefs_.load();
 }
 
 void ControlBlock::increaseWeak() {
-    weakRefs_ += 1;
+    ++weakRefs_;
 }
 
-ControlBlock& ControlBlock::operator--() {
-    --sharedRefs_;
-    return *this;
-}
-
-ControlBlock& ControlBlock::operator++() {
+void ControlBlock::increaseShared() {
     ++sharedRefs_;
-    return *this;
-}
-/*
-ControlBlock ControlBlock::operator--(int) {
-    ControlBlock Temp;
-    Temp.weakRefs_ = (weakRefs_)--;
-    return *this;
 }
 
-ControlBlock ControlBlock::operator++(int) {
-    ControlBlock Temp;
-    Temp.weakRefs_ = (weakRefs_)++;
-    return Temp;
+void ControlBlock::decreaseWeak() {
+    --weakRefs_;
 }
-*/
+
+void ControlBlock::decreaseShared() {
+    --sharedRefs_;
+}

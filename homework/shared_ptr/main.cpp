@@ -11,11 +11,11 @@ int main() {
     std::cout << *ptr2.get() << "\n";
     std::cout << ptr2.use_count() << "\n";
     SharedPointer<int> ptr3(ptr2);
-    {
-        SharedPointer<int> ptr4(ptr2);
-        std::cout << ptr2.use_count() << "\n";
-    }
     *ptr3 += 5;
+
+    SharedPointer<int> ptr4(ptr2);
+    std::cout << ptr2.use_count() << "\n";
+
     std::cout << *ptr3.get() << "\n";
     std::cout << *ptr2.get() << "\n";
     std::cout << ptr3.use_count() << "\n";
@@ -27,7 +27,7 @@ int main() {
     std::cout << "Shared counter = " << s_ptr.use_count() << "\n";
     std::cout << "Weak counter = " << w_ptr.use_count() << "\n";
 
-    //w_ptr = s_ptr;
+    w_ptr = s_ptr;
     auto sp = w_ptr.lock();
     if (!w_ptr.expired()) {
         std::cout << "sp = " << *sp << "\n";
