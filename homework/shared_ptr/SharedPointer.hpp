@@ -1,13 +1,12 @@
 #pragma once
 
-#include "ControlBlock.hpp"
-
 #include <stdexcept>
 #include <string>
 
 template <typename T>
 class SharedPointer;
 
+#include "ControlBlock.hpp"
 #include "WeakPointer.hpp"
 
 class NullPtrException : public std::runtime_error {
@@ -112,6 +111,7 @@ template <typename T>
 T* SharedPointer<T>::operator->() const {
     return ptr_;
 }
+
 template <typename T>
 SharedPointer<T>& SharedPointer<T>::operator=(SharedPointer<T>& anotherPtr) {
     refCounter_->decreaseShared();
