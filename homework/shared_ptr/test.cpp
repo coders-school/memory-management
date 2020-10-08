@@ -131,7 +131,7 @@ TEST_F(weakPtrTest, testMoveConstructorFromWeak) {
 
 TEST_F(weakPtrTest, testMoveAssignment) {
     cs::weak_ptr<int> wPtr(sPtr);
-    auto wPtr2 = std::move(wPtr)
+    auto wPtr2 = std::move(wPtr);
     ASSERT_EQ(*(wPtr2.lock()), *sPtr);
     ASSERT_EQ(wPtr2.use_count(), 1);
 }
