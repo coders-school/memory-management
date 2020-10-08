@@ -2,10 +2,9 @@
 
 #include <iostream>
 #include <stdexcept>
-#include <string>
 
 template <typename T>
-class weak_ptr;
+class WeakPointer;
 
 #include "ControlBlock.hpp"
 #include "SharedPointer.hpp"
