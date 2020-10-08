@@ -56,9 +56,9 @@ public:
 
         this->ptr_ = other_shared_ptr.ptr_;
         this->counter_ptr = other_shared_ptr.counter_ptr;
-        if(other_shared_ptr)
+        if (other_shared_ptr)
         {
-        this->counter_ptr->count_++;
+            this->counter_ptr->count_++;
         }
     };
 
@@ -81,13 +81,13 @@ public:
 
     ~my_shared_ptr()
     {
-		counter_ptr->count_--;
-		if (counter_ptr->count_ == 0)
-		{
-			if (nullptr != ptr_)
-				delete ptr_;
-			delete counter_ptr;
-		}
+        counter_ptr->count_--;
+        if (counter_ptr->count_ == 0)
+        {
+            if (nullptr != ptr_)
+                delete ptr_;
+            delete counter_ptr;
+        }
     }
 
     T operator*() { return *ptr_; };
@@ -96,6 +96,4 @@ public:
 private:
     T* ptr_ = nullptr;
     Counter* counter_ptr = nullptr;
-
-
 };

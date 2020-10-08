@@ -49,7 +49,6 @@ TEST(Test, moreReferences)
 
     EXPECT_EQ(another_ptr->message_, "");
     EXPECT_EQ(ptr.getCounter()->count_, 2);
-
 }
 
 TEST(Test, passedAsTemporary)
@@ -79,13 +78,12 @@ TEST(Test, dereferencingAfterGet)
 
 TEST(Test, asgnOperator)
 {
-    my_shared_ptr<int> ptr  = my_shared_ptr<int>(new int(10));
+    my_shared_ptr<int> ptr = my_shared_ptr<int>(new int(10));
     my_shared_ptr<int> copy_ptr = ptr;
 }
 
 TEST(Test, CopyConstructor)
 {
-    my_shared_ptr<int> ptr  = my_shared_ptr<int>(new int(10));
+    my_shared_ptr<int> ptr = my_shared_ptr<int>(new int(10));
     my_shared_ptr<int> copy_ptr = my_shared_ptr<int>(ptr);
 }
-
