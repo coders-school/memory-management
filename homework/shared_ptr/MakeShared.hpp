@@ -8,3 +8,10 @@ SharedPointer<T> MakeShared(T object)
     SharedPointer<T> ptr(new decltype(object){object});
     return ptr;
 }
+
+
+/*
+
+[data] [shared refs] [weak refs] [deleter]
+
+/*
