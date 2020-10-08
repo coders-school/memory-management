@@ -65,17 +65,6 @@ TEST(Test, passedWithMove)
     EXPECT_EQ(functionSharedPtrAsArg(std::move(ptr)), someString);
 }
 
-TEST(Test, ShouldReset)
-{
-    int initial_value = 42;
-    int another_initial_value = 43;
-
-    my_shared_ptr<int> pointer_ = my_shared_ptr<int>(new int(initial_value));
-    pointer_.reset(new int(another_initial_value));
-
-    EXPECT_EQ(*(pointer_.get()), another_initial_value);
-}
-
 TEST(Test, emptyDefaultCtor)
 {
     my_shared_ptr<SomeUsefulClass> ptr = my_shared_ptr<SomeUsefulClass>(new SomeUsefulClass());

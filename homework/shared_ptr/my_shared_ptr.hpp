@@ -36,8 +36,6 @@ public:
 
     my_shared_ptr(my_shared_ptr<T>&& ptr_moved)
     {
-        std::cout << "move ctor called" << "\n";
-
         ptr_ = ptr_moved.get();
         if (counter_ptr != nullptr)
         {
@@ -48,7 +46,7 @@ public:
             counter_ptr = new Counter();
             counter_ptr->count_ = ptr_moved.getCounter()->count_;
         }
-        ptr_moved.reset(nullptr);
+        ptr_moved.~my_shared_ptr<T>;
     }
 
     T& operator=(const my_shared_ptr<T>& other_shared_ptr)
@@ -81,25 +79,15 @@ public:
     T* get() { return ptr_; }
     Counter* getCounter() { return counter_ptr; }
 
-    void reset(T* new_ptr) // update!!
-    {
-        delete ptr_;
-        ptr_ = new_ptr;
-        delete counter_ptr;
-        counter_ptr = new Counter();
-    };
-
     ~my_shared_ptr()
     {
-        if (ptr_)
-        {
-            counter_ptr->count_--;
-        }
-        else if (counter_ptr->count_ == 0)
-        {
-            delete ptr_;
-            delete counter_ptr;
-        }
+		counter_ptr->count_--;
+		if (counter_ptr->count_ == 0)
+		{
+			if (nullptr != ptr_)
+				delete ptr_;
+			delete counter_ptr;
+		}
     }
 
     T operator*() { return *ptr_; };
@@ -108,4 +96,6 @@ public:
 private:
     T* ptr_ = nullptr;
     Counter* counter_ptr = nullptr;
+
+
 };
