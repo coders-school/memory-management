@@ -10,7 +10,12 @@ struct SomeUsefulClass
     std::string message_;
 };
 
-std::string functionSharedPtrAsArg(my_shared_ptr<SomeUsefulClass> ptr)
+std::string functionSharedPtrAsArg(my_shared_ptr<SomeUsefulClass>& ptr)
+{
+    return ptr->message_;
+}
+
+std::string functionSharedPtrAsArg(my_shared_ptr<SomeUsefulClass>&& ptr)
 {
     return ptr->message_;
 }
@@ -27,7 +32,6 @@ TEST(Test, empty)
     EXPECT_EQ(ptr.getCounter()->count_, 0);
 }
 
-
 TEST(Test, notEmpty)
 {
     my_shared_ptr<SomeUsefulClass> ptr = my_shared_ptr<SomeUsefulClass>(new SomeUsefulClass());
@@ -35,16 +39,19 @@ TEST(Test, notEmpty)
     EXPECT_EQ(ptr.getCounter()->count_, 1);
 }
 
-//TEST(Test, moreReferences)
-//{
-//    my_shared_ptr<SomeUsefulClass> ptr = my_shared_ptr<SomeUsefulClass>(new SomeUsefulClass());
-//    EXPECT_NE(ptr.get(), nullptr);
-//    EXPECT_EQ(ptr.getCounter()->count_, 1);
-//    my_shared_ptr<SomeUsefulClass> another_ptr(ptr);
-//    EXPECT_EQ(ptr.getCounter()->count_, 2);
-//
-//}
-//
+TEST(Test, moreReferences)
+{
+    my_shared_ptr<SomeUsefulClass> ptr = my_shared_ptr<SomeUsefulClass>(new SomeUsefulClass());
+    EXPECT_NE(ptr.get(), nullptr);
+    EXPECT_EQ(ptr.getCounter()->count_, 1);
+    my_shared_ptr<SomeUsefulClass>& another_ptr = ptr;
+    my_shared_ptr<SomeUsefulClass> yet_another_ptr(another_ptr);
+
+    EXPECT_EQ(another_ptr->message_, "");
+    EXPECT_EQ(ptr.getCounter()->count_, 2);
+
+}
+
 TEST(Test, passedAsTemporary)
 {
     std::string msg("some important message");
@@ -81,19 +88,15 @@ TEST(Test, dereferencingAfterGet)
     EXPECT_EQ(*(ptr.get()), 10);
 }
 
-/*
-TEST(Test, deletedAsgnOperator_shouldNotCompile_withUseOfDeletedFunction)
+TEST(Test, asgnOperator)
 {
     my_shared_ptr<int> ptr  = my_shared_ptr<int>(new int(10));
     my_shared_ptr<int> copy_ptr = ptr;
 }
-*/
 
-/*
-
-TEST(Test, deletedCopyConstructor_shouldNotCompile_withDeletedMethodError)
+TEST(Test, CopyConstructor)
 {
     my_shared_ptr<int> ptr  = my_shared_ptr<int>(new int(10));
     my_shared_ptr<int> copy_ptr = my_shared_ptr<int>(ptr);
 }
-*/
+

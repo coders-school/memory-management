@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 
 struct Counter
 {
@@ -27,15 +28,16 @@ public:
 
     my_shared_ptr(const my_shared_ptr<T>& other_shared_ptr)
     {
-        ptr_ = other_shared_ptr.get();
-
-        counter_ptr = other_shared_ptr.getCounter();
+        this->ptr_ = other_shared_ptr.ptr_;
+        this->counter_ptr = other_shared_ptr.counter_ptr;
 
         counter_ptr->count_++;
     };
 
     my_shared_ptr(my_shared_ptr<T>&& ptr_moved)
     {
+        std::cout << "move ctor called" << "\n";
+
         ptr_ = ptr_moved.get();
         if (counter_ptr != nullptr)
         {
@@ -46,26 +48,31 @@ public:
             counter_ptr = new Counter();
             counter_ptr->count_ = ptr_moved.getCounter()->count_;
         }
-        ptr_moved.getCounter()->count_ = 0;
-        delete ptr_moved.get();
+        ptr_moved.reset(nullptr);
     }
 
     T& operator=(const my_shared_ptr<T>& other_shared_ptr)
     {
-        ptr_ = other_shared_ptr.get();
-        counter_ptr = other_shared_ptr.getCounter();
-        counter_ptr->count_++;
+        delete ptr_;
+        delete counter_ptr;
+
+        this->ptr_ = other_shared_ptr.ptr_;
+        this->counter_ptr = other_shared_ptr.counter_ptr;
+        if(other_shared_ptr)
+        {
+        this->counter_ptr->count_++;
+        }
     };
 
-    T& operator=(my_shared_ptr<T>&& some_ptr)
+    T& operator=(const my_shared_ptr<T>&& some_ptr)
     {
         if (some_ptr != this)
         {
             delete ptr_;
             delete counter_ptr;
 
-            ptr_ = some_ptr.get();
-            counter_ptr = some_ptr.getCounter();
+            this->ptr_ = some_ptr.ptr_;
+            this->counter_ptr = some_ptr.counter_ptr;
             some_ptr.reset(nullptr);
         }
         return *this;
