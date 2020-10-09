@@ -3,18 +3,18 @@
 #include "make_shared.hpp"
 
 struct A {
-    A(int a, int b, int c)
+    A(int a, int b, double c)
         : a_(a), b_(b), c_(c) {}
 
     int a_;
     int b_;
-    int c_;
+    double c_;
 };
 
 TEST(MakeSharedTest, shouldCreateSharedPtrUsingMakeShared) {
     constexpr int firstValue = 1;
     constexpr int secondValue = 2;
-    constexpr int thirdValue = 3;
+    constexpr double thirdValue = 3;
 
     cs::shared_ptr<A> ptr = cs::make_shared<A>(firstValue, secondValue, thirdValue);
 
