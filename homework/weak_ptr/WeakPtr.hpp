@@ -51,10 +51,12 @@ SharedPtr<T> WeakPtr<T>::lock() const noexcept {
 template <typename T>
 void WeakPtr<T>::reset() noexcept {
     if (ControlBlock_) {
-        ControlBlock_->weakRefsCounter_--;
+        ControlBlock_->weakRefsCounter_.exchange(ControlBlock_->weakRefsCounter_.load(std::memory_order_relaxed) - 1,
+        std::memory_order_relaxed);
         if (ControlBlock_->sharedRefsCounter_ == 0 && ControlBlock_->weakRefsCounter_ == 0) {
             delete ControlBlock_;
         }
     }
     rawPtr_ = nullptr;
+    //ControlBlock_ = nullptr;
 }

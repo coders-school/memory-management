@@ -40,16 +40,16 @@ SCENARIO("Testing all WeakPtr functions") {
         }
     }
 
-    GIVEN("WeakPtr made from SharedPtr of Scooter with Power = 200") {
-        int power{200};
-        SharedPtr<Scooter> sharedscooter(new Scooter(power));
-        WeakPtr<Scooter> weakscooter(sharedscooter);
-        WHEN("removing the object") {
-            weakscooter.reset();
-            THEN("expired should be true") {
-                REQUIRE(weakscooter.expired() == true);
-            }
-        }
-    }
+    // GIVEN("WeakPtr made from SharedPtr of Scooter with Power = 200") {
+    //     int power{200};
+    //     SharedPtr<Scooter> sharedscooter(new Scooter(power));
+    //     WeakPtr<Scooter> weakscooter(sharedscooter);
+    //     WHEN("removing the object") {
+    //         weakscooter.reset();
+    //         THEN("expired should be true") {
+    //             REQUIRE(weakscooter.expired() == true);
+    //         }
+    //     }
+    // }
 
 }
