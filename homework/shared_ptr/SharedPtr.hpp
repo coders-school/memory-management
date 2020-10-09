@@ -18,7 +18,8 @@ public:
   SharedPtr(SharedPtr<T> &&other) noexcept;      // move constructor
   SharedPtr(const SharedPtr<T> &other) noexcept; // copy constructor
   ~SharedPtr();
-  T *get() const;
+  T *getPtr() const;
+  ControlBlock<T> *getControlBlock() const;
   T &operator*() const noexcept;
   T *operator->() const noexcept;
   SharedPtr<T> &operator=(const SharedPtr<T> &other) noexcept;
@@ -65,12 +66,17 @@ template <typename T> SharedPtr<T>::~SharedPtr() {
   }
 }
 
-template <typename T> T *SharedPtr<T>::get() const {
+template <typename T> T *SharedPtr<T>::getPtr() const {
   if (rawPtr_) {
     return rawPtr_;
   } else
     return nullptr;
 }
+
+template <typename T> ControlBlock<T> *SharedPtr<T>::getControlBlock() const {
+  return ControlBlock_;
+}
+
 
 template <typename T> T &SharedPtr<T>::operator*() const noexcept {
   return *rawPtr_;
@@ -144,7 +150,7 @@ SharedPtr<T> &SharedPtr<T>::operator=(SharedPtr<T> &&other) noexcept {
 }
 
 template <typename T> SharedPtr<T>::operator bool() const noexcept {
-  return (this->get() != nullptr);
+  return (this->getPtr() != nullptr);
 }
 
 template <typename T> void SharedPtr<T>::reset(T *NewRawPtr) {
