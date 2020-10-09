@@ -4,6 +4,7 @@
 
 template <typename T> class WeakPtr {
 public:
+    constexpr WeakPtr() noexcept = default;
     WeakPtr(const SharedPtr<T> & otherPtr) noexcept;
 
     size_t useCount() const noexcept;
