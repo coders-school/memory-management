@@ -3,7 +3,7 @@ name: C/C++ CI
 on: [push, pull_request]
 
 jobs:
-  UniquePointer:
+  SharedPointer:
 
     runs-on: [ubuntu-20.04]
 
