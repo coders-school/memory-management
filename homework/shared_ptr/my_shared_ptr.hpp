@@ -3,7 +3,7 @@
 
 struct Counter
 {
-    size_t count_ = 0;
+    int count_ = 0;
 };
 
 template <typename T>
@@ -82,10 +82,9 @@ public:
     ~my_shared_ptr()
     {
         counter_ptr->count_--;
-        if (counter_ptr->count_ == 0)
+        if (counter_ptr->count_ <= 0)
         {
-            if (nullptr != ptr_)
-                delete ptr_;
+            delete ptr_;
             delete counter_ptr;
         }
     }
