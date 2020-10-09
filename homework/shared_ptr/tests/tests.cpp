@@ -9,7 +9,7 @@ SCENARIO("Testing all SharedPtr functions") {
     int power{200};
     SharedPtr<Scooter> scooter(new Scooter(power));
     WHEN("getting power from SharedPtr::get() function result") {
-      auto result = scooter.get()->power_;
+      auto result = scooter.getPtr()->power_;
       THEN("power value inside SharedPtr is same value as passed one") {
         REQUIRE(result == power);
       }
@@ -24,7 +24,7 @@ SCENARIO("Testing all SharedPtr functions") {
       NewScooterVector.push_back(std::move(scooter));
       THEN("ControlBlock SharedCounter is still with same value") {
         REQUIRE(NewScooterVector.size() == 1);
-        REQUIRE(NewScooterVector.at(0).get()->power_ == power);
+        REQUIRE(NewScooterVector.at(0).getPtr()->power_ == power);
       }
     }
   }
@@ -36,7 +36,7 @@ SCENARIO("Testing all SharedPtr functions") {
       std::vector<SharedPtr<Scooter>> NewScooterVector;
       NewScooterVector.push_back(scooter);
       THEN("ControlBlock Shared Counter is incremented to 2") {
-        REQUIRE(NewScooterVector.at(0).get()->power_ == power);
+        REQUIRE(NewScooterVector.at(0).getPtr()->power_ == power);
         REQUIRE(NewScooterVector.at(0).use_count() == 2);
       }
     }
@@ -76,7 +76,7 @@ SCENARIO("Testing all SharedPtr functions") {
     WHEN("using copy assigment operator from SharedPtr") {
       scooter2 = scooter;
       THEN("ControlBlock of scooter SharedPtr is incremented to 2") {
-        REQUIRE(scooter.get()->power_ == power);
+        REQUIRE(scooter.getPtr()->power_ == power);
         REQUIRE(scooter.use_count() == 2);
       }
     }
@@ -85,7 +85,7 @@ SCENARIO("Testing all SharedPtr functions") {
   GIVEN("Empty scooter SharedPtr") {
     SharedPtr<Scooter> scooter(nullptr);
     WHEN("Get is returning nullptr") {
-      auto result = scooter.get();
+      auto result = scooter.getPtr();
       THEN("empty SharedPtr is returning nullptr through get()") {
         REQUIRE(result == nullptr);
       }
@@ -100,7 +100,7 @@ SCENARIO("Testing all SharedPtr functions") {
       Scooter *TurboScooter = new Scooter(TurboPower);
       scooter.reset(TurboScooter);
       THEN("ControlBlock Shared Counter is still = 1") {
-        REQUIRE(scooter.get()->power_ == TurboPower);
+        REQUIRE(scooter.getPtr()->power_ == TurboPower);
         REQUIRE(scooter.use_count() == 1);
       }
     }
@@ -131,8 +131,8 @@ SCENARIO("Testing all SharedPtr functions") {
     WHEN("Using move assignment operator from SharedPtr") {
       NewScooter = std::move(scooter);
       THEN("ControlBlock Shared Counter is incremented to 2") {
-        REQUIRE(NewScooter.get()->power_ == power);
-        REQUIRE(scooter.get() == nullptr);
+        REQUIRE(NewScooter.getPtr()->power_ == power);
+        REQUIRE(scooter.getPtr() == nullptr);
       }
     }
   }
@@ -145,7 +145,7 @@ SCENARIO("Testing all SharedPtr functions") {
     WHEN("Using reset to insert NewScooter") {
       scooter.reset(NewScooter);
       THEN("scooter has power of NewScooter") {
-        REQUIRE(scooter.get()->power_ == power2);
+        REQUIRE(scooter.getPtr()->power_ == power2);
       }
     }
   }

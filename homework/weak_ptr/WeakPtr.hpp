@@ -27,12 +27,12 @@ WeakPtr<T>::WeakPtr(const SharedPtr<T> & otherPtr) noexcept // copy constructor
 
 template <typename T>
 size_t WeakPtr<T>::useCount() const noexcept {
-    return static_cast<size_t>(ControlBlock_->sharedRefsCounter_);
+    return ControlBlock_->sharedRefsCounter_;
 }
 
 template <typename T>
 size_t WeakPtr<T>::useWeakCount() const noexcept {
-    return static_cast<size_t>(ControlBlock_->weakRefsCounter_);
+    return ControlBlock_->weakRefsCounter_;
 }
 
 template <typename T>
@@ -52,10 +52,9 @@ template <typename T>
 void WeakPtr<T>::reset() noexcept {
     if (ControlBlock_) {
         ControlBlock_->weakRefsCounter_--;
-        if (ControlBlock_->sharedRefsCounter_ == 0 && ControlBlock_->weakRefsCounter_() == 0) {
+        if (ControlBlock_->sharedRefsCounter_ == 0 && ControlBlock_->weakRefsCounter_ == 0) {
             delete ControlBlock_;
         }
     }
     rawPtr_ = nullptr;
-    ControlBlock_ = nullptr;
 }
