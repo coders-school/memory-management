@@ -9,6 +9,7 @@ public:
     constexpr WeakPtr() noexcept = default;
     WeakPtr(const WeakPtr<T> & otherPtr) noexcept;
     WeakPtr(const SharedPtr<T> & otherPtr) noexcept;
+    WeakPtr(WeakPtr && otherPtr) noexcept;
     ~WeakPtr();
 
     WeakPtr & operator=(const WeakPtr & otherPtr) noexcept;
@@ -58,6 +59,13 @@ template <typename T>
 WeakPtr<T>::WeakPtr(const WeakPtr<T> & otherPtr) noexcept
     : rawPtr_(otherPtr.getPtr()), ControlBlock_(otherPtr.getControlBlock()) {
       weakCounterIncrementer();
+}
+
+template <typename T>
+WeakPtr<T>::WeakPtr(WeakPtr<T> && otherPtr) noexcept
+    : rawPtr_(otherPtr.getPtr()), ControlBlock_(otherPtr.getControlBlock()) {
+      otherPtr.rawPtr_ = nullptr;
+      otherPtr.ControlBlock_ = nullptr;
 }
 
 template <typename T>
@@ -129,5 +137,5 @@ void WeakPtr<T>::reset() noexcept {
         controlBlockRemover();
     }
     rawPtr_ = nullptr;
-    //ControlBlock_ = nullptr;
+    ControlBlock_ = nullptr;
 }
