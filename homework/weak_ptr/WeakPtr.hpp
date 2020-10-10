@@ -16,6 +16,7 @@ public:
     void reset() noexcept;
     void controlBlockRemover();
     void weakCounterDecrementer();
+    void weakCounterIncrementer();
 
 private:
     T * rawPtr_;
@@ -36,17 +37,21 @@ void WeakPtr<T>::weakCounterDecrementer() {
 }
 
 template <typename T>
+void WeakPtr<T>::weakCounterIncrementer() {
+    ControlBlock_->weakRefsCounter_.exchange(ControlBlock_->weakRefsCounter_.load(std::memory_order_relaxed) + 1,
+    std::memory_order_relaxed);
+}
+
+template <typename T>
 WeakPtr<T>::WeakPtr(const SharedPtr<T> & otherPtr) noexcept
     : rawPtr_(otherPtr.getPtr()), ControlBlock_(otherPtr.getControlBlock()) {
-        ControlBlock_->weakRefsCounter_.exchange(ControlBlock_->weakRefsCounter_.load(std::memory_order_relaxed) + 1,
-        std::memory_order_relaxed);
+      weakCounterIncrementer();
 }
 
 template <typename T>
 WeakPtr<T>::WeakPtr(const WeakPtr<T> & otherPtr) noexcept
     : rawPtr_(otherPtr.getPtr()), ControlBlock_(otherPtr.getControlBlock()) {
-        ControlBlock_->weakRefsCounter_.exchange(ControlBlock_->weakRefsCounter_.load(std::memory_order_relaxed) + 1,
-        std::memory_order_relaxed);
+      weakCounterIncrementer();
 }
 
 template <typename T>
