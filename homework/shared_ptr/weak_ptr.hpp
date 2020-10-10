@@ -2,7 +2,7 @@
 
 #include "shared_ptr.hpp"
 #include "control_block.hpp"
-
+#include <memory>
 namespace cs {
 template <typename T>
 class shared_ptr;
@@ -23,7 +23,6 @@ public:
     weak_ptr& operator=(weak_ptr&& ptr) noexcept;
     T& operator*() = delete;
     T* operator->() = delete;
-
     long use_count() const { return static_cast<long>(cb_->getShared()); }
     bool expired() const noexcept { use_count() == 0; }  // musi byc lepszy sposob...
     cs::shared_ptr<T> lock() const noexcept;

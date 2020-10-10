@@ -1,7 +1,7 @@
 #pragma once
 
-#include <functional>
 #include <atomic>
+#include <functional>
 
 class ControlBlock {
 public:
@@ -19,4 +19,15 @@ private:
     std::atomic<size_t> shared_refs = 1;
     std::atomic<size_t> weak_refs = 0;
     std::function<void()> deleter;
+};
+
+template <typename T>
+class BlockAndData : public ControlBlock {
+public:
+    template <typename... Args>
+    BlockAndData(Args&&... args) : object_(std::forward(args)...){};
+    T getObject() const { return object_; }
+
+private:
+    T object_;
 };

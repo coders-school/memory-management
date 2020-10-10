@@ -2,8 +2,8 @@
 
 #include <atomic>
 #include <functional>
-#include "weak_ptr.hpp"
 #include "control_block.hpp"
+#include "weak_ptr.hpp"
 
 namespace cs {
 template <typename T>
@@ -26,6 +26,9 @@ public:
 
 private:
     void deletePointers();
+    template <typename Y, typename... Args>
+    friend shared_ptr<Y> make_shared(Args&&... args);
+    shared_ptr(T* ptr, ControlBlock* cb);
     T* ptr_;
     ControlBlock* cb_;
 };
@@ -74,7 +77,7 @@ shared_ptr<T>::shared_ptr(shared_ptr&& ptr) {
 template <typename T>
 shared_ptr<T>& shared_ptr<T>::operator=(const shared_ptr& ptr) {
     if (&ptr != this) {
-        deletePointers(); 
+        deletePointers();
         ptr_ = ptr.ptr_;
         cb_ = ptr.cb_;
         cb_->increaseSharedRef();
@@ -99,5 +102,11 @@ template <typename T>
 void shared_ptr<T>::reset(T* ptr) {
     *ptr_ = *ptr;
     delete ptr;
+}
+
+template <typename Y, typename... Args>
+shared_ptr<Y> make_shared(Args&&... args) {
+    auto blockWithData = new BlockAndData<Y>(std::forward<Args>(args)...);
+    return shared_ptr<Y>(&blockWithData->getObject(), blockWithData);
 }
 }  // namespace cs
