@@ -46,7 +46,7 @@ SCENARIO("Testing all WeakPtr functions") {
     //     WeakPtr<Scooter> weakscooter(sharedscooter);
     //     WHEN("removing the object") {
     //         weakscooter.reset();
-    //         THEN("expired should be true") {
+    //         THEN("WeakPtr should expired") {
     //             REQUIRE(weakscooter.expired() == true);
     //         }
     //     }
