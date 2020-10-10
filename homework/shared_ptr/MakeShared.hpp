@@ -1,17 +1,10 @@
 #pragma once
 
+#include <utility>
 #include "SharedPointer.hpp"
 
-template <class T>
-SharedPointer<T> MakeShared(T object)
+template <class T, class... Args>
+SharedPointer<T> MakeShared(Args&&... args)
 {
-    SharedPointer<T> ptr(new decltype(object){object});
-    return ptr;
+    return SharedPointer<T>(new T(std::forward<Args>(args)...));
 }
-
-
-/*
-
-[data] [shared refs] [weak refs] [deleter]
-
-/*
