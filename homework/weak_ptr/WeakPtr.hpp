@@ -5,6 +5,7 @@
 template <typename T> class WeakPtr {
 public:
     constexpr WeakPtr() noexcept = default;
+    WeakPtr(const WeakPtr<T> & otherPtr) noexcept;
     WeakPtr(const SharedPtr<T> & otherPtr) noexcept;
     ~WeakPtr();
 
@@ -20,11 +21,18 @@ private:
 };
 
 template <typename T>
-WeakPtr<T>::WeakPtr(const SharedPtr<T> & otherPtr) noexcept // copy constructor
+WeakPtr<T>::WeakPtr(const SharedPtr<T> & otherPtr) noexcept
     : rawPtr_(otherPtr.getPtr()), ControlBlock_(otherPtr.getControlBlock()) {
         ControlBlock_->weakRefsCounter_.exchange(ControlBlock_->weakRefsCounter_.load(std::memory_order_relaxed) + 1,
         std::memory_order_relaxed);
-    }
+}
+
+template <typename T>
+WeakPtr<T>::WeakPtr(const WeakPtr<T> & otherPtr) noexcept
+    : rawPtr_(otherPtr.getPtr()), ControlBlock_(otherPtr.getControlBlock()) {
+        ControlBlock_->weakRefsCounter_.exchange(ControlBlock_->weakRefsCounter_.load(std::memory_order_relaxed) + 1,
+        std::memory_order_relaxed);
+}
 
 template <typename T>
 size_t WeakPtr<T>::useCount() const noexcept {
