@@ -6,6 +6,7 @@ template <typename T> class WeakPtr {
 public:
     constexpr WeakPtr() noexcept = default;
     WeakPtr(const SharedPtr<T> & otherPtr) noexcept;
+    ~WeakPtr();
 
     size_t useCount() const noexcept;
     size_t useWeakCount() const noexcept;
@@ -28,6 +29,17 @@ WeakPtr<T>::WeakPtr(const SharedPtr<T> & otherPtr) noexcept // copy constructor
 template <typename T>
 size_t WeakPtr<T>::useCount() const noexcept {
     return ControlBlock_->sharedRefsCounter_;
+}
+
+template <typename T>
+WeakPtr<T>::~WeakPtr() {
+    if (ControlBlock_) {
+        ControlBlock_->weakRefsCounter_.exchange(ControlBlock_->weakRefsCounter_.load(std::memory_order_relaxed) - 1,
+        std::memory_order_relaxed);
+        if (ControlBlock_->sharedRefsCounter_ == 0 && ControlBlock_->weakRefsCounter_ == 0) {
+            delete ControlBlock_;
+        }
+    }
 }
 
 template <typename T>
