@@ -1,21 +1,7 @@
 #include <atomic>
-
+#include "control.hpp"
 namespace cs
 {
-class control_block
-{
-    std::atomic_size_t sharedRef_{1};
-    std::atomic_size_t weakRef_{0};
-
-   public:
-    control_block() = default;
-    int getSharedRef() const noexcept { return sharedRef_; }
-    int getWeakRef() const noexcept { return weakRef_; }
-    void incrementSharedRef() noexcept { sharedRef_++; }
-    void decrementSharedRef() noexcept { sharedRef_--; }
-    void incrementWeakRef() noexcept { weakRef_++; }
-};
-
 template <typename T>
 class shared_ptr
 {
