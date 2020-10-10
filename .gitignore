@@ -20,6 +20,16 @@ build/
 .vscode/
 googletest/
 
+# emacs 
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
 # Compiled Object files
 *.slo
 *.lo

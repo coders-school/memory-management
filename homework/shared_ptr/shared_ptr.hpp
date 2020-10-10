@@ -2,30 +2,17 @@
 
 #include <atomic>
 #include <functional>
+#include "weak_ptr.hpp"
+#include "control_block.hpp"
 
-class ControlBlock {
-public:
-    ControlBlock(std::function<void()> del) : deleter(del) {}
-    void increaseSharedRef() { shared_refs += 1; }
-    void decreaseSharedRef() { shared_refs -= 1; }
-    void increaseWeakRef() { weak_refs += 1; }
-    void decreaseWeakRef() { weak_refs -= 1; }
-    std::atomic<size_t>& getShared() { return shared_refs; }
-    std::atomic<size_t>& getWeak() { return weak_refs; }
-    void callDeleter() const { deleter(); }
-    void setDeleter(std::function<void()> del) { deleter = del; }
-
-private:
-    std::atomic<size_t> shared_refs = 1;
-    std::atomic<size_t> weak_refs = 0;
-    std::function<void()> deleter;
-};
-
+namespace cs {
 template <typename T>
 class shared_ptr {
 public:
-    shared_ptr(T* ptr = nullptr) : ptr_(ptr), cb_(new ControlBlock([&]() { delete ptr_; })) {}
+    shared_ptr(T* ptr = nullptr)
+        : ptr_(ptr), cb_(new ControlBlock([&]() { delete ptr_; })) {}
     shared_ptr(const shared_ptr& ptr);
+    shared_ptr(const cs::weak_ptr<T>& ptr);
     shared_ptr(shared_ptr&& ptr);
     shared_ptr& operator=(const shared_ptr& ptr);
     shared_ptr& operator=(shared_ptr&& ptr);
@@ -45,7 +32,7 @@ private:
 
 template <typename T>
 void shared_ptr<T>::deletePointers() {
-    if(cb_) {
+    if (cb_) {
         cb_->decreaseSharedRef();
         if (cb_->getShared() == 0) {
             cb_->callDeleter();
@@ -69,10 +56,17 @@ shared_ptr<T>::shared_ptr(const shared_ptr& ptr) {
 }
 
 template <typename T>
+shared_ptr<T>::shared_ptr(const cs::weak_ptr<T>& ptr) {
+    ptr_ = ptr.ptr_;
+    cb_ = ptr.cb_;
+    cb_->increaseSharedRef();
+}
+
+template <typename T>
 shared_ptr<T>::shared_ptr(shared_ptr&& ptr) {
     ptr_ = ptr.ptr_;
     cb_ = ptr.cb_;
-    cb_->setDeleter([&](){ delete ptr_; });
+    cb_->setDeleter([&]() { delete ptr_; });
     ptr.ptr_ = nullptr;
     ptr.cb_ = nullptr;
 }
@@ -80,7 +74,7 @@ shared_ptr<T>::shared_ptr(shared_ptr&& ptr) {
 template <typename T>
 shared_ptr<T>& shared_ptr<T>::operator=(const shared_ptr& ptr) {
     if (&ptr != this) {
-        deletePointers();
+        deletePointers(); 
         ptr_ = ptr.ptr_;
         cb_ = ptr.cb_;
         cb_->increaseSharedRef();
@@ -94,7 +88,7 @@ shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr&& ptr) {
         deletePointers();
         ptr_ = ptr.ptr_;
         cb_ = ptr.cb_;
-        cb_->setDeleter([&](){ delete ptr_; });
+        cb_->setDeleter([&]() { delete ptr_; });
         ptr.ptr_ = nullptr;
         ptr.cb_ = nullptr;
     }
@@ -106,3 +100,4 @@ void shared_ptr<T>::reset(T* ptr) {
     *ptr_ = *ptr;
     delete ptr;
 }
+}  // namespace cs
