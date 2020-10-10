@@ -1,8 +1,16 @@
+#include "MakeShared.hpp"
+#include "SharedPointer.hpp"
+
 #include <iostream>
 #include <memory>
 #include <utility>
-#include "MakeShared.hpp"
-#include "SharedPointer.hpp"
+
+#include <chrono>
+#include <ctime>
+#include <ratio>
+#include <vector>
+
+using namespace std::chrono;
 
 int main()
 {
@@ -39,6 +47,37 @@ int main()
     std::cout << (*msPtrPair).first << "\n";
     std::cout << (*msPtrPair).second << "\n";
 
-  
+    std::vector<SharedPointer<int>> testVector1{};
+    std::vector<SharedPointer<int>> testVector2{};
+    testVector1.reserve(50000);
+    testVector2.reserve(50000);
+
+    {
+        high_resolution_clock::time_point timeStart2 = high_resolution_clock::now();
+
+        for (int i = 0; i < 50000; ++i) {
+            testVector2.emplace_back(MakeShared<int>(i));
+        }
+
+        high_resolution_clock::time_point timeStop2 = high_resolution_clock::now();
+
+        duration<double> fullTime2 = duration_cast<duration<double>>(timeStop2 - timeStart2);
+
+        std::cout << "Timer MakeShared: " << fullTime2.count() << " seconds.\n";
+
+        high_resolution_clock::time_point timeStart = high_resolution_clock::now();
+
+        for (int i = 0; i < 50000; ++i) {
+            testVector1.emplace_back(new int{i});
+        }
+
+        high_resolution_clock::time_point timeStop = high_resolution_clock::now();
+
+        duration<double> fullTime = duration_cast<duration<double>>(timeStop - timeStart);
+
+        std::cout << "Timer SharedPointer: " << fullTime.count() << " seconds.\n";
+   
+    }
+
     return 0;
 }
