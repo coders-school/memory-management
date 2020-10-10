@@ -35,5 +35,10 @@ int main()
     }
     std::cout << msPtr.use_count() << "\n";
 
+    auto msPtrPair = MakeShared<std::pair<int, int>>(std::make_pair(555, 111));
+    std::cout << (*msPtrPair).first << "\n";
+    std::cout << (*msPtrPair).second << "\n";
+
+  
     return 0;
 }
