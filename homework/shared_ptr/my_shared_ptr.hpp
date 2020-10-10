@@ -1,8 +1,9 @@
 #pragma once
+#include<atomic> 
 
 struct Counter
 {
-    int count_ = 0;
+    std::atomic<int> count_ = 0;
 };
 
 template <typename T>
