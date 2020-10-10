@@ -2,8 +2,6 @@
 #include <algorithm>
 #include "../shared_ptr/SharedPtr.hpp"
 
-#include <iostream>
-
 template <typename T> class WeakPtr {
 public:
     constexpr WeakPtr() noexcept = default;
@@ -132,10 +130,11 @@ SharedPtr<T> WeakPtr<T>::lock() const noexcept {
 
 template <typename T>
 void WeakPtr<T>::reset() noexcept {
+    rawPtr_ = nullptr;
     if (ControlBlock_) {
         weakCounterDecrementer();
         controlBlockRemover();
+    } else {
+        ControlBlock_ = nullptr;
     }
-    rawPtr_ = nullptr;
-    ControlBlock_ = nullptr;
 }
