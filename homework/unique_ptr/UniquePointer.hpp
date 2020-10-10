@@ -22,12 +22,7 @@ UniquePointer<T>::UniquePointer(T* pointer)
 template <class T>
 UniquePointer<T>::~UniquePointer()
 {
-    if (std::is_scalar<T>::value) {
-        delete pointer_;
-    }
-    else {
-        delete[] pointer_;
-    }
+    delete pointer_;
 }
 
 template <class T>
