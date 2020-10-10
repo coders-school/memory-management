@@ -32,10 +32,11 @@ TEST_F(SharedTest, sharedWhenCopiedShouldIncreaseRefCount)
 TEST_F(SharedTest, sharedDestructorShouldDecreaseRefCount)
 {
     cs::shared_ptr<int> test(new int{defaultValue});
-    cs::shared_ptr<int> test2(test);
-    EXPECT_EQ(test.use_count(), 2);
-    EXPECT_EQ(test2.use_count(), 2);
-    test2.~shared_ptr();
+    {
+        cs::shared_ptr<int> test2(test);
+        EXPECT_EQ(test.use_count(), 2);
+        EXPECT_EQ(test2.use_count(), 2);
+    }
     EXPECT_EQ(test.use_count(), 1);
 }
 
@@ -61,9 +62,21 @@ TEST_F(SharedTest, sharedCopyAssignmentShouldIncreaseRefCounter)
 {
     cs::shared_ptr<int> test(new int{defaultValue});
     EXPECT_EQ(test.use_count(), 1);
-    cs::shared_ptr<int> test2 = test;
+    cs::shared_ptr<int> test2;
+    test2 = test;
     EXPECT_EQ(test2.use_count(), 2);
     EXPECT_EQ(test.use_count(), 2);
+}
+
+TEST_F(SharedTest, sharedCopyAssignmentShouldReleaseMemoryIfSharedRefIs0)
+{
+    cs::shared_ptr<int> test(new int{defaultValue});
+    cs::shared_ptr<int> test2(new int{anotherValue});
+    EXPECT_EQ(test.use_count(), 1);
+    EXPECT_EQ(test2.use_count(), 1);
+    test2 = test;
+    EXPECT_EQ(test.use_count(), 2);
+    EXPECT_EQ(test2.use_count(), 2);
 }
 
 TEST_F(SharedTest, sharedDereferenceShouldReturnTheObject)
