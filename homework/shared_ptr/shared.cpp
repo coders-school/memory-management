@@ -1,10 +1,14 @@
 #include <atomic>
 #include "control.hpp"
+
+template <typename T>
+class weak_ptr;
 namespace cs
 {
 template <typename T>
 class shared_ptr
 {
+    template<typename U> friend class weak_ptr;
     T* data_{nullptr};
     control_block* controlBlock_{nullptr};
 

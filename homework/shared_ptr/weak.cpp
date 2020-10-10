@@ -4,8 +4,6 @@ namespace cs {
 
 template <typename T>
 class weak_ptr {
-    friend class cs::shared_ptr<T>;
-
     control_block* controlBlock_{nullptr};
     T* data_;
 
