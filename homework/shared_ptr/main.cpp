@@ -47,68 +47,142 @@ int main()
     std::cout << (*msPtrPair).first << "\n";
     std::cout << (*msPtrPair).second << "\n";
 
-    std::vector<SharedPointer<int>> testVector1{};
-    std::vector<SharedPointer<int>> testVector2{};
-    testVector1.reserve(50000);
-    testVector2.reserve(50000);
+    std::vector<SharedPointer<int>> ownSharedPointerVector{};
+    std::vector<SharedPointer<int>> ownMakeSharedVector{};
+    ownSharedPointerVector.reserve(50000);
+    ownMakeSharedVector.reserve(50000);
 
-    std::vector<std::shared_ptr<int>> testVector3{};
-    std::vector<std::shared_ptr<int>> testVector4{};
-    testVector3.reserve(50000);
-    testVector4.reserve(50000);
+    std::vector<std::shared_ptr<int>> libraryMakeSharedVector{};
+    std::vector<std::shared_ptr<int>> librarySharedPointerVector{};
+    libraryMakeSharedVector.reserve(50000);
+    librarySharedPointerVector.reserve(50000);
+
+    //CREATING OWN SHARED POINTER AND MAKE SHARED
 
     {
-        high_resolution_clock::time_point timeStart2 = high_resolution_clock::now();
-
-        for (int i = 0; i < 50000; ++i) {
-            testVector2.emplace_back(MakeShared<int>(i));
-        }
-
-        high_resolution_clock::time_point timeStop2 = high_resolution_clock::now();
-
-        duration<double> fullTime2 = duration_cast<duration<double>>(timeStop2 - timeStart2);
-
-        std::cout << "Timer MakeShared: " << fullTime2.count() << " seconds.\n";
-
         high_resolution_clock::time_point timeStart = high_resolution_clock::now();
 
         for (int i = 0; i < 50000; ++i) {
-            testVector1.emplace_back(new int{i});
+            ownMakeSharedVector.emplace_back(MakeShared<int>(i));
         }
 
         high_resolution_clock::time_point timeStop = high_resolution_clock::now();
 
         duration<double> fullTime = duration_cast<duration<double>>(timeStop - timeStart);
 
-        std::cout << "Timer SharedPointer: " << fullTime.count() << " seconds.\n";
-   
+        std::cout << "Timer Create Own MakeShared: " << fullTime.count() << " seconds.\n";
+    }
+    {
+        high_resolution_clock::time_point timeStart = high_resolution_clock::now();
+
+        for (int i = 0; i < 50000; ++i) {
+            ownSharedPointerVector.emplace_back(new int{i});
+        }
+
+        high_resolution_clock::time_point timeStop = high_resolution_clock::now();
+
+        duration<double> fullTime = duration_cast<duration<double>>(timeStop - timeStart);
+
+        std::cout << "Timer Create Own SharedPointer: " << fullTime.count() << " seconds.\n";
     }
 
+    //CREATING STDANDARD LIBRARY SHARED POINTER AND MAKE SHARED
+
     {
-        high_resolution_clock::time_point timeStart2 = high_resolution_clock::now();
-
-        for (int i = 0; i < 50000; ++i) {
-            testVector3.emplace_back(std::make_shared<int>(i));
-        }
-
-        high_resolution_clock::time_point timeStop2 = high_resolution_clock::now();
-
-        duration<double> fullTime2 = duration_cast<duration<double>>(timeStop2 - timeStart2);
-
-        std::cout << "Timer LibraryMakeShared: " << fullTime2.count() << " seconds.\n";
-
         high_resolution_clock::time_point timeStart = high_resolution_clock::now();
 
         for (int i = 0; i < 50000; ++i) {
-            testVector4.emplace_back(new int{i});
+            libraryMakeSharedVector.emplace_back(std::make_shared<int>(i));
         }
 
         high_resolution_clock::time_point timeStop = high_resolution_clock::now();
 
         duration<double> fullTime = duration_cast<duration<double>>(timeStop - timeStart);
 
-        std::cout << "Timer LibrarySharedPointer: " << fullTime.count() << " seconds.\n";
-   
+        std::cout << "Timer Create Library MakeShared: " << fullTime.count() << " seconds.\n";
+    }
+    {
+        high_resolution_clock::time_point timeStart = high_resolution_clock::now();
+
+        for (int i = 0; i < 50000; ++i) {
+            librarySharedPointerVector.emplace_back(new int{i});
+        }
+
+        high_resolution_clock::time_point timeStop = high_resolution_clock::now();
+
+        duration<double> fullTime = duration_cast<duration<double>>(timeStop - timeStart);
+
+        std::cout << "Timer Create Library SharedPointer: " << fullTime.count() << " seconds.\n";
+    }
+
+    //USING OWN SHARED POINTER AND MAKE SHARED
+
+    {
+        high_resolution_clock::time_point timeStart = high_resolution_clock::now();
+
+        for (int i = 0; i < 50000; ++i) {
+            ownMakeSharedVector[i];
+            for (int i = 0; i < 10000; ++i) {
+                ownMakeSharedVector[i];
+            }
+        }
+
+        high_resolution_clock::time_point timeStop = high_resolution_clock::now();
+
+        duration<double> fullTime = duration_cast<duration<double>>(timeStop - timeStart);
+
+        std::cout << "Timer Using Own MakeShared: " << fullTime.count() << " seconds.\n";
+    }
+    {
+        high_resolution_clock::time_point timeStart = high_resolution_clock::now();
+
+        for (int i = 0; i < 50000; ++i) {
+            ownSharedPointerVector[i];
+            for (int i = 0; i < 10000; ++i) {
+                ownSharedPointerVector[i];
+            }
+        }
+
+        high_resolution_clock::time_point timeStop = high_resolution_clock::now();
+
+        duration<double> fullTime = duration_cast<duration<double>>(timeStop - timeStart);
+
+        std::cout << "Timer Using Own SharedPointer: " << fullTime.count() << " seconds.\n";
+    }
+
+    //USING STDANDARD LIBRARY SHARED POINTER AND MAKE SHARED
+
+    {
+        high_resolution_clock::time_point timeStart = high_resolution_clock::now();
+
+        for (int i = 0; i < 50000; ++i) {
+            libraryMakeSharedVector[i];
+            for (int i = 0; i < 10000; ++i) {
+                libraryMakeSharedVector[i];
+            }
+        }
+
+        high_resolution_clock::time_point timeStop = high_resolution_clock::now();
+
+        duration<double> fullTime = duration_cast<duration<double>>(timeStop - timeStart);
+
+        std::cout << "Timer Using Library MakeShared: " << fullTime.count() << " seconds.\n";
+    }
+    {
+        high_resolution_clock::time_point timeStart = high_resolution_clock::now();
+
+        for (int i = 0; i < 50000; ++i) {
+            librarySharedPointerVector[i];
+            for (int i = 0; i < 10000; ++i) {
+                librarySharedPointerVector[i];
+            }
+        }
+
+        high_resolution_clock::time_point timeStop = high_resolution_clock::now();
+
+        duration<double> fullTime = duration_cast<duration<double>>(timeStop - timeStart);
+
+        std::cout << "Timer Using Library SharedPointer: " << fullTime.count() << " seconds.\n";
     }
 
     return 0;
