@@ -6,6 +6,7 @@ class WeakTest : public ::testing::Test {
     public:
     int defaultValue{5};
     int anotherValue{10};
+    cs::shared_ptr<int> defaultShared{new int{defaultValue}};
 };
 
 TEST_F(WeakTest, canBeDefaultCreated) {
@@ -13,6 +14,33 @@ TEST_F(WeakTest, canBeDefaultCreated) {
 }
 
 TEST_F(WeakTest, canBeCreatedFromSharedPtr) {
-    cs::shared_ptr<int> shared{new int{defaultValue}};
-    cs::weak_ptr<int> ptr{shared};
+    cs::weak_ptr<int> ptr{defaultShared};
+}
+
+TEST_F(WeakTest, expiredShouldBeFalseWhenNotDangling) {
+    cs::weak_ptr<int> ptr{defaultShared};
+    EXPECT_EQ(ptr.expired(), false);
+}
+
+TEST_F(WeakTest, expiredShouldBeTrueWhenDangling) {
+    cs::weak_ptr<int> ptr{defaultShared};
+    defaultShared.reset();
+    EXPECT_EQ(ptr.expired(), true);
+}
+
+TEST_F(WeakTest, useCountShouldReturnTheNumberOfSharedReferences) {
+    cs::weak_ptr<int> ptr{defaultShared};
+    int expectedUseCount{1};
+    EXPECT_EQ(ptr.use_count(), defaultShared.use_count());
+    EXPECT_EQ(ptr.use_count(), expectedUseCount);
+    EXPECT_EQ(defaultShared.use_count(), expectedUseCount);
+}
+
+TEST_F(WeakTest, useCountShouldReturn0WhenNoSharedManagesObject) {
+    cs::weak_ptr<int> ptr{defaultShared};
+    int expectedUseCount{0};
+    defaultShared.reset();
+    EXPECT_EQ(ptr.use_count(), defaultShared.use_count());
+    EXPECT_EQ(ptr.use_count(), expectedUseCount);
+    EXPECT_EQ(defaultShared.use_count(), expectedUseCount);
 }

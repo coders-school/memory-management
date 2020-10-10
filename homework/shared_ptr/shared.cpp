@@ -1,5 +1,6 @@
-#include <atomic>
 #include "control.hpp"
+
+#include <atomic>
 
 template <typename T>
 class weak_ptr;
@@ -8,7 +9,8 @@ namespace cs
 template <typename T>
 class shared_ptr
 {
-    template<typename U> friend class weak_ptr;
+    template <typename U>
+    friend class weak_ptr;
     T* data_{nullptr};
     control_block* controlBlock_{nullptr};
 
@@ -93,7 +95,11 @@ void shared_ptr<T>::releaseMemory() noexcept
         controlBlock_->decrementSharedRef();
         if (controlBlock_->getSharedRef() == 0) {
             delete data_;
-            delete controlBlock_;
+            data_ = nullptr;
+            if (controlBlock_->getWeakRef() == 0) {
+                delete controlBlock_;
+                controlBlock_ = nullptr;
+            }
         }
     }
 }
@@ -103,7 +109,11 @@ void shared_ptr<T>::reset(T* data) noexcept
 {
     releaseMemory();
     data_ = data;
-    controlBlock_ = new control_block();
+    if (data != nullptr) {
+        controlBlock_ = new control_block();
+    } else {
+        controlBlock_ = nullptr;
+    }
 }
 
 template <typename T>
