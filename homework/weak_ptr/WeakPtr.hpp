@@ -14,11 +14,26 @@ public:
     bool expired() const noexcept;
     SharedPtr<T> lock() const noexcept;
     void reset() noexcept;
+    void controlBlockRemover();
+    void weakCounterDecrementer();
 
 private:
     T * rawPtr_;
     ControlBlock<T> * ControlBlock_;
 };
+
+template <typename T>
+void WeakPtr<T>::controlBlockRemover() {
+    if (ControlBlock_->sharedRefsCounter_ == 0 && ControlBlock_->weakRefsCounter_ == 0) {
+        delete ControlBlock_;
+    }
+}
+
+template <typename T>
+void WeakPtr<T>::weakCounterDecrementer() {
+    ControlBlock_->weakRefsCounter_.exchange(ControlBlock_->weakRefsCounter_.load(std::memory_order_relaxed) - 1,
+    std::memory_order_relaxed);
+}
 
 template <typename T>
 WeakPtr<T>::WeakPtr(const SharedPtr<T> & otherPtr) noexcept
@@ -42,11 +57,8 @@ size_t WeakPtr<T>::useCount() const noexcept {
 template <typename T>
 WeakPtr<T>::~WeakPtr() {
     if (ControlBlock_) {
-        ControlBlock_->weakRefsCounter_.exchange(ControlBlock_->weakRefsCounter_.load(std::memory_order_relaxed) - 1,
-        std::memory_order_relaxed);
-        if (ControlBlock_->sharedRefsCounter_ == 0 && ControlBlock_->weakRefsCounter_ == 0) {
-            delete ControlBlock_;
-        }
+        weakCounterDecrementer();
+        controlBlockRemover();
     }
 }
 
@@ -71,11 +83,8 @@ SharedPtr<T> WeakPtr<T>::lock() const noexcept {
 template <typename T>
 void WeakPtr<T>::reset() noexcept {
     if (ControlBlock_) {
-        ControlBlock_->weakRefsCounter_.exchange(ControlBlock_->weakRefsCounter_.load(std::memory_order_relaxed) - 1,
-        std::memory_order_relaxed);
-        if (ControlBlock_->sharedRefsCounter_ == 0 && ControlBlock_->weakRefsCounter_ == 0) {
-            delete ControlBlock_;
-        }
+        weakCounterDecrementer();
+        controlBlockRemover();
     }
     rawPtr_ = nullptr;
     //ControlBlock_ = nullptr;
