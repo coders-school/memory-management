@@ -14,6 +14,7 @@ class control_block
     void incrementSharedRef() noexcept;
     void decrementSharedRef() noexcept;
     void incrementWeakRef() noexcept;
+    void decrementWeakRef() noexcept;
 };
 
 };

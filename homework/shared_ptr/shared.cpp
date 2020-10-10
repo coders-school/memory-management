@@ -6,7 +6,7 @@ template <typename T>
 class shared_ptr
 {
     T* data_{nullptr};
-    control_block* controlBlock{nullptr};
+    control_block* controlBlock_{nullptr};
 
     void releaseMemory() noexcept;
 
@@ -31,20 +31,20 @@ class shared_ptr
 template <typename T>
 shared_ptr<T>::shared_ptr(T* data) noexcept : data_(data)
 {
-    controlBlock = new control_block();
+    controlBlock_ = new control_block();
 }
 
 template <typename T>
-shared_ptr<T>::shared_ptr(const shared_ptr& rhs) noexcept : data_(rhs.data_), controlBlock(rhs.controlBlock)
+shared_ptr<T>::shared_ptr(const shared_ptr& rhs) noexcept : data_(rhs.data_), controlBlock_(rhs.controlBlock_)
 {
-    controlBlock->incrementSharedRef();
+    controlBlock_->incrementSharedRef();
 }
 
 template <typename T>
-shared_ptr<T>::shared_ptr(shared_ptr&& rhs) noexcept : data_(rhs.data_), controlBlock(rhs.controlBlock)
+shared_ptr<T>::shared_ptr(shared_ptr&& rhs) noexcept : data_(rhs.data_), controlBlock_(rhs.controlBlock_)
 {
     rhs.data_ = nullptr;
-    rhs.controlBlock = nullptr;
+    rhs.controlBlock_ = nullptr;
 }
 
 template <typename T>
@@ -55,9 +55,9 @@ shared_ptr<T>& shared_ptr<T>::operator=(const shared_ptr& rhs) noexcept
     }
     releaseMemory();
     data_ = rhs.data_;
-    controlBlock = rhs.controlBlock;
-    if (controlBlock) {
-        controlBlock->incrementSharedRef();
+    controlBlock_ = rhs.controlBlock_;
+    if (controlBlock_) {
+        controlBlock_->incrementSharedRef();
     }
     return *this;
 }
@@ -70,9 +70,9 @@ shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr&& rhs) noexcept
     }
     releaseMemory();
     data_ = rhs.data_;
-    controlBlock = rhs.controlBlock;
+    controlBlock_ = rhs.controlBlock_;
     rhs.data_ = nullptr;
-    rhs.controlBlock = nullptr;
+    rhs.controlBlock_ = nullptr;
     return *this;
 }
 
@@ -85,11 +85,11 @@ shared_ptr<T>::~shared_ptr() noexcept
 template <typename T>
 void shared_ptr<T>::releaseMemory() noexcept
 {
-    if (controlBlock) {
-        controlBlock->decrementSharedRef();
-        if (controlBlock->getSharedRef() == 0) {
+    if (controlBlock_) {
+        controlBlock_->decrementSharedRef();
+        if (controlBlock_->getSharedRef() == 0) {
             delete data_;
-            delete controlBlock;
+            delete controlBlock_;
         }
     }
 }
@@ -99,14 +99,14 @@ void shared_ptr<T>::reset(T* data) noexcept
 {
     releaseMemory();
     data_ = data;
-    controlBlock = new control_block();
+    controlBlock_ = new control_block();
 }
 
 template <typename T>
 int shared_ptr<T>::use_count() const noexcept
 {
-    if (controlBlock) {
-        return controlBlock->getSharedRef();
+    if (controlBlock_) {
+        return controlBlock_->getSharedRef();
     }
     return 0;
 }
