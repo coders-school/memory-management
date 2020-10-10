@@ -29,26 +29,26 @@ TEST(Test, empty)
 {
     my_shared_ptr<SomeUsefulClass> ptr = my_shared_ptr<SomeUsefulClass>();
     EXPECT_EQ(ptr.get(), nullptr);
-    EXPECT_EQ(ptr.getCounter()->count_, 0);
+    EXPECT_EQ(ptr.use_count(), 0);
 }
 
 TEST(Test, notEmpty)
 {
     my_shared_ptr<SomeUsefulClass> ptr = my_shared_ptr<SomeUsefulClass>(new SomeUsefulClass());
     EXPECT_NE(ptr.get(), nullptr);
-    EXPECT_EQ(ptr.getCounter()->count_, 1);
+    EXPECT_EQ(ptr.use_count(), 1);
 }
 
 TEST(Test, moreReferences)
 {
     my_shared_ptr<SomeUsefulClass> ptr = my_shared_ptr<SomeUsefulClass>(new SomeUsefulClass());
     EXPECT_NE(ptr.get(), nullptr);
-    EXPECT_EQ(ptr.getCounter()->count_, 1);
+    EXPECT_EQ(ptr.use_count(), 1);
     my_shared_ptr<SomeUsefulClass>& another_ptr = ptr;
     my_shared_ptr<SomeUsefulClass> yet_another_ptr(another_ptr);
 
     EXPECT_EQ(another_ptr->message_, "");
-    EXPECT_EQ(ptr.getCounter()->count_, 2);
+    EXPECT_EQ(ptr.use_count(), 2);
 }
 
 TEST(Test, passedAsTemporary)
@@ -85,5 +85,22 @@ TEST(Test, asgnOperator)
 TEST(Test, CopyConstructor)
 {
     my_shared_ptr<int> ptr = my_shared_ptr<int>(new int(10));
+    ASSERT_TRUE(ptr);
     my_shared_ptr<int> copy_ptr = my_shared_ptr<int>(ptr);
+    ASSERT_TRUE(copy_ptr);
 }
+
+
+TEST(Test, ShouldReset)
+{
+    int initial_value = 42;
+    int another_initial_value = 43;
+
+    my_shared_ptr<int> pointer_ = my_shared_ptr<int>(new int(initial_value));
+    pointer_.reset(new int(another_initial_value));
+
+    EXPECT_EQ(*(pointer_.get()), another_initial_value);
+
+}
+
+

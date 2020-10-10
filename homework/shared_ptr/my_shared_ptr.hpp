@@ -1,5 +1,4 @@
 #pragma once
-#include <iostream>
 
 struct Counter
 {
@@ -39,12 +38,12 @@ public:
         ptr_ = ptr_moved.get();
         if (counter_ptr != nullptr)
         {
-            counter_ptr->count_ = ptr_moved.getCounter()->count_;
+            counter_ptr->count_ = ptr_moved.use_count();
         }
         else
         {
             counter_ptr = new Counter();
-            counter_ptr->count_ = ptr_moved.getCounter()->count_;
+            counter_ptr->count_ = ptr_moved.use_count();
         }
         ptr_moved.~my_shared_ptr<T>;
     }
@@ -76,8 +75,17 @@ public:
         return *this;
     }
 
+    void reset(T* new_ptr)
+    {
+        delete ptr_;
+        counter_ptr->count_ = 0;
+        ptr_ = new_ptr;
+    };
+
+
+
     T* get() { return ptr_; }
-    Counter* getCounter() { return counter_ptr; }
+    int use_count() { return counter_ptr->count_; }
 
     ~my_shared_ptr()
     {
@@ -91,6 +99,7 @@ public:
 
     T operator*() { return *ptr_; };
     T* operator->() { return this->ptr_; };
+    operator bool() const { return ptr_ != nullptr; }
 
 private:
     T* ptr_ = nullptr;
