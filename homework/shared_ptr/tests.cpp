@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include "MakeShared.hpp"
 #include "SharedPointer.hpp"
 #include "WeakPointer.hpp"
 
@@ -23,6 +24,11 @@ protected:
     WeakPointerTest() : ss_ptr(new int{testValue}) {}
     SharedPointer<int> ss_ptr;
     WeakPointer<int> w_ptr{ss_ptr};
+};
+
+class ControlBlockTest : public ::testing::Test {
+protected:
+    ControlBlock<int> testControlBlock;
 };
 
 TEST_F(SharedPointerTest, shouldCreateSharedPointerFromWeakPointer) {
@@ -107,4 +113,52 @@ TEST_F(WeakPointerTest, shouldUseCopyAssignment) {
     WeakPointer<int> w_ptrNew{};
     w_ptrNew = w_ptr;
     ASSERT_EQ(w_ptr.use_count(), 1);
+}
+
+TEST_F(ControlBlockTest, shouldGetSharedRefs) {
+    ASSERT_EQ(testControlBlock.getShared(), 0);
+}
+
+TEST_F(ControlBlockTest, shouldGetWeakRefs) {
+    ASSERT_EQ(testControlBlock.getWeak(), 0);
+}
+
+TEST_F(ControlBlockTest, shouldIncreaseSharedRefs) {
+    testControlBlock.increaseShared();
+    ASSERT_EQ(testControlBlock.getShared(), 1);
+}
+
+TEST_F(ControlBlockTest, shouldIncreaseWeakRefs) {
+    testControlBlock.increaseWeak();
+    ASSERT_EQ(testControlBlock.getWeak(), 1);
+}
+
+TEST_F(ControlBlockTest, shouldDecreaseSharedRefs) {
+    testControlBlock.increaseShared();
+    testControlBlock.decreaseShared();
+    ASSERT_EQ(testControlBlock.getShared(), 0);
+}
+
+TEST_F(ControlBlockTest, shouldDecreaseWeakRefs) {
+    testControlBlock.increaseWeak();
+    testControlBlock.decreaseWeak();
+    ASSERT_EQ(testControlBlock.getWeak(), 0);
+}
+
+TEST(MakeSharedTest, shouldUseMakeSharedOnSingleTestValue) {
+    auto ms_ptr = MakeShared<int>(testValue);
+    ASSERT_EQ(*ms_ptr, testValue);
+}
+
+TEST(MakeSharedTest, shouldUseMakeSharedOnExampleStructure) {
+    struct TestStructure {
+        TestStructure(int x, int y, int z) : x_(x), y_(y), z_(z){};
+        int x_;
+        int y_;
+        int z_;
+    };
+    auto ms_ptr = MakeShared<TestStructure>(testValue, testValue, testValue);
+    ASSERT_EQ(ms_ptr->x_, testValue);
+    ASSERT_EQ(ms_ptr->y_, testValue);
+    ASSERT_EQ(ms_ptr->z_, testValue);
 }

@@ -41,7 +41,7 @@ project(sharedPtr)
 enable_testing()
 
 add_executable(${PROJECT_NAME} main.cpp)
-add_executable(${PROJECT_NAME}-ut MakeShared-ut.cpp tests.cpp)
+add_executable(${PROJECT_NAME}-ut tests.cpp)
 target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Werror -Wconversion -pedantic -Wextra -g)
 target_compile_options(${PROJECT_NAME}-ut PRIVATE -Wall -Werror -Wconversion -pedantic -Wextra -g)
 target_link_libraries(${PROJECT_NAME}-ut PUBLIC gtest_main)
