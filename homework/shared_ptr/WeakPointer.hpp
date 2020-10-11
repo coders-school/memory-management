@@ -20,7 +20,6 @@ public:
     WeakPointer(WeakPointer&& anotherPtr) noexcept;
     ~WeakPointer();
 
-    void swap(WeakPointer& anotherPtr);
     void reset();
     size_t use_count();
     bool expired();
@@ -34,7 +33,7 @@ public:
 
 private:
     T* ptr_{nullptr};
-    ControlBlock* refCounter_{nullptr};
+    ControlBlock<T>* refCounter_{nullptr};
 
     void checkControlBlock();
 };
@@ -63,9 +62,7 @@ WeakPointer<T>::WeakPointer(WeakPointer&& anotherPtr) noexcept
 template <typename T>
 WeakPointer<T>::~WeakPointer() {
     if (refCounter_ != nullptr) {
-        // std::cout << "BEFORE: " << refCounter_->getWeak() << "\n";
         refCounter_->decreaseWeak();
-        // std::cout << "AFTER: " << refCounter_->getWeak() << "\n";
         checkControlBlock();
     }
 }
@@ -132,7 +129,7 @@ WeakPointer<T>& WeakPointer<T>::operator=(WeakPointer<T>&& anotherPtr) {
 template <typename T>
 void WeakPointer<T>::checkControlBlock() {
     if (refCounter_->getShared() == 0 && refCounter_->getWeak() == 0) {
-        delete ptr_;
+        refCounter_->deleter_(ptr_);
         delete refCounter_;
     }
 }

@@ -1,13 +1,12 @@
 #pragma once
 
 #include <atomic>
+#include <functional>
 
+template <typename T>
 class ControlBlock {
 public:
-    ControlBlock() : sharedRefs_(0), weakRefs_(0){};
-    ControlBlock(const ControlBlock&) = delete;
-    ControlBlock& operator=(const ControlBlock&) = delete;
-    ~ControlBlock(){};
+    ControlBlock(std::function<void(T*)> deleter = [](T* ptrToDelete) { delete ptrToDelete; }) : deleter_(deleter) {}
 
     size_t getShared();
     size_t getWeak();
@@ -18,31 +17,39 @@ public:
     void decreaseWeak();
     void decreaseShared();
 
+    std::function<void(T*)> deleter_;
+
 private:
-    std::atomic<size_t> sharedRefs_;
-    std::atomic<size_t> weakRefs_;
+    std::atomic<size_t> sharedRefs_{0};
+    std::atomic<size_t> weakRefs_{0};
 };
 
-size_t ControlBlock::getShared() {
+template <typename T>
+size_t ControlBlock<T>::getShared() {
     return sharedRefs_.load();
 }
 
-size_t ControlBlock::getWeak() {
+template <typename T>
+size_t ControlBlock<T>::getWeak() {
     return weakRefs_.load();
 }
 
-void ControlBlock::increaseWeak() {
+template <typename T>
+void ControlBlock<T>::increaseWeak() {
     ++weakRefs_;
 }
 
-void ControlBlock::increaseShared() {
+template <typename T>
+void ControlBlock<T>::increaseShared() {
     ++sharedRefs_;
 }
 
-void ControlBlock::decreaseWeak() {
+template <typename T>
+void ControlBlock<T>::decreaseWeak() {
     --weakRefs_;
 }
 
-void ControlBlock::decreaseShared() {
+template <typename T>
+void ControlBlock<T>::decreaseShared() {
     --sharedRefs_;
 }
