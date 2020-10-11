@@ -26,3 +26,5 @@ jobs:
       run: | 
         sudo apt install valgrind
         valgrind ./shared-ut
+        valgrind ./weak-ut
+        valgrind ./make_shared-ut
