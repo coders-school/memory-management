@@ -20,7 +20,7 @@ public:
     WeakPointer(WeakPointer&& anotherPtr) noexcept;
     ~WeakPointer();
 
-    void swap(WeakPointer& anotherPtr);
+    // void swap(WeakPointer& anotherPtr);
     void reset();
     size_t use_count();
     bool expired();
@@ -34,7 +34,7 @@ public:
 
 private:
     T* ptr_{nullptr};
-    ControlBlock* refCounter_{nullptr};
+    ControlBlock<T>* refCounter_{nullptr};
 
     void checkControlBlock();
 };
