@@ -7,6 +7,7 @@ class SharedTest : public ::testing::Test
    protected:
     int defaultValue{5};
     int anotherValue{10};
+    cs::shared_ptr<int> defaultShared{new int{defaultValue}};
 };
 
 TEST_F(SharedTest, defaultSharedShouldBeNullptr)
@@ -130,4 +131,10 @@ TEST_F(SharedTest, sharedCanBeCreatedWithCustomDeleter) {
     int arraySize{10};
     auto arrayDeleter = [](int* data) { delete [] data; };
     cs::shared_ptr<int> test(new int[arraySize]{}, arrayDeleter);
+}
+
+TEST_F(SharedTest, customDeleterShouldNotChangeSize) {
+    auto arrayDeleter = [](int* data) { delete [] data; };
+    cs::shared_ptr<int> customShared(new int[defaultValue]{}, arrayDeleter);
+    EXPECT_EQ(sizeof(customShared), sizeof(defaultShared));
 }
