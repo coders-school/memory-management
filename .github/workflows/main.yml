@@ -28,3 +28,8 @@ jobs:
         valgrind ./shared-ut
         valgrind ./weak-ut
         valgrind ./make_shared-ut
+    - name: Run efficiency tests
+      working-directory: homework/shared_ptr/build
+      run: |
+        time ./make-shared-efficiency
+        time ./shared-ctor-efficiency
