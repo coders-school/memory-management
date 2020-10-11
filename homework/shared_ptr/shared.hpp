@@ -1,15 +1,13 @@
 #pragma once
 #include "control.hpp"
-#include "weak.hpp"
-
-#include <atomic>
+#include "weak.hpp" //necessary to create c-tor with cs::weak_ptr as argument
 
 
 namespace cs
 {
 
-template <typename T>
-class weak_ptr;
+template <typename T> //this forward declaration is a must-have in order to be able to use weak.hpp as a stand-alone file
+class weak_ptr; //without this line weak.hpp on it's own would not compile!
 
 template <typename T>
 class shared_ptr

@@ -1,19 +1,17 @@
 #pragma once
-#include "shared.hpp"
-
-
+#include "shared.hpp" //needed in order to create weak_ptr out of shared_ptr
 
 namespace cs
 {
 
-template <typename T>
-class shared_ptr;
+template <typename T> //this forward declaration is a must have in order to use shared_ptr as a stand-alone file
+class shared_ptr; //without this code shared_ptr would not compile on it's own!
 
 template <typename T>
 class weak_ptr
 {
     template <typename U> friend class shared_ptr;
-    
+
     control_block* controlBlock_{nullptr};
     T* data_{nullptr};
 
