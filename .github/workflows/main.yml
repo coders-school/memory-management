@@ -9,7 +9,7 @@ jobs:
     - name: Check out code
       uses: actions/checkout@v2
       with:
-        ref: shared_ptr
+        ref: make_shared
     - name: mkdir build
       working-directory: homework/shared_ptr/
       run: mkdir build
@@ -26,3 +26,12 @@ jobs:
       run: | 
         sudo apt install valgrind
         valgrind ./shared-ut
+        valgrind ./weak-ut
+        valgrind ./make_shared-ut
+    - name: Run efficiency tests
+      working-directory: homework/shared_ptr/build
+      run: |
+        time ./make-shared-efficiency
+        time ./shared-ctor-efficiency
+        valgrind ./make-shared-efficiency
+        valgrind ./shared-ctor-efficiency
