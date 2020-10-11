@@ -40,6 +40,9 @@ int main()
     /* throw std::runtime_exception dereference null pointer, because std::move(uniquePtrToInt)
     std::cout << *uniquePtrToInt3 << "\n";
     */
+
+    uniquePtrToInt5.reset(new int{77});
+    std::cout << "uniquePtrToInt5: " << *uniquePtrToInt5 << "\n";
    
     return 0;
 }
