@@ -1,23 +1,34 @@
 #pragma once
 #include "control.hpp"
-#include "weak.hpp" //necessary to create c-tor with cs::weak_ptr as argument
-
+#include "controlObject.hpp"
+#include "weak.hpp"  //necessary to create c-tor with cs::weak_ptr as argument
 
 namespace cs
 {
+template <typename T>  // this forward declaration is a must-have in order to be able to use weak.hpp as a stand-alone
+                       // file
+class weak_ptr;  // without this line weak.hpp on it's own would not compile!
 
-template <typename T> //this forward declaration is a must-have in order to be able to use weak.hpp as a stand-alone file
-class weak_ptr; //without this line weak.hpp on it's own would not compile!
+template <typename T>
+class shared_ptr;
+
+template <typename T, typename... Ts>
+shared_ptr<T> make_shared(Ts&&...);
 
 template <typename T>
 class shared_ptr
 {
     template <typename U>
     friend class weak_ptr;
+
+    template <typename U, typename... Ts>
+    friend shared_ptr<U> make_shared(Ts&&...);
+
     T* data_{nullptr};
-    control_block* controlBlock_{nullptr};
+    control_block<T>* controlBlock_{nullptr};
 
     void releaseMemory() noexcept;
+    shared_ptr(control_block<T>*) noexcept;
 
    public:
     shared_ptr() noexcept = default;
@@ -38,10 +49,26 @@ class shared_ptr
     void reset(T* data = nullptr) noexcept;
 };
 
+template <typename T, typename... Ts>
+shared_ptr<T> make_shared(Ts&&... args)
+{
+    // auto f = std::forward<T>(args...);
+    return shared_ptr<T>{new controlObject<T>(std::forward<T>(args)...)};
+    // return {};
+}
+
+template <typename T>
+shared_ptr<T>::shared_ptr(control_block<T>* block) noexcept
+{
+    if (block->getObject()) {
+        data_ = block->getObject();
+        controlBlock_ = block;
+    }
+}
 template <typename T>
 shared_ptr<T>::shared_ptr(T* data) noexcept : data_(data)
 {
-    controlBlock_ = new control_block();
+    controlBlock_ = new control_block<T>();
 }
 
 template <typename T>
@@ -58,11 +85,10 @@ shared_ptr<T>::shared_ptr(shared_ptr&& rhs) noexcept : data_(rhs.data_), control
 }
 
 template <typename T>
-shared_ptr<T>::shared_ptr(const weak_ptr<T>& rhs) noexcept
-: data_(rhs.data_), controlBlock_(rhs.controlBlock_) {
+shared_ptr<T>::shared_ptr(const weak_ptr<T>& rhs) noexcept : data_(rhs.data_), controlBlock_(rhs.controlBlock_)
+{
     controlBlock_->incrementSharedRef();
 }
-
 
 template <typename T>
 shared_ptr<T>& shared_ptr<T>::operator=(const shared_ptr& rhs) noexcept
@@ -102,8 +128,16 @@ shared_ptr<T>::~shared_ptr() noexcept
 template <typename T>
 void shared_ptr<T>::releaseMemory() noexcept
 {
-    if (controlBlock_) {
-        controlBlock_->decrementSharedRef();
+    if (!controlBlock_) {
+        return;
+    }
+    controlBlock_->decrementSharedRef();
+    if (controlBlock_->getObject()) {
+        if (controlBlock_->getSharedRef() == 0 && controlBlock_->getWeakRef() == 0) {
+            delete controlBlock_;
+            controlBlock_ = nullptr;
+        }
+    } else {
         if (controlBlock_->getSharedRef() == 0) {
             delete data_;
             data_ = nullptr;
@@ -114,14 +148,13 @@ void shared_ptr<T>::releaseMemory() noexcept
         }
     }
 }
-
 template <typename T>
 void shared_ptr<T>::reset(T* data) noexcept
 {
     releaseMemory();
     data_ = data;
     if (data != nullptr) {
-        controlBlock_ = new control_block();
+        controlBlock_ = new control_block<T>();
     } else {
         controlBlock_ = nullptr;
     }

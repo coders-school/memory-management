@@ -12,7 +12,7 @@ class weak_ptr
 {
     template <typename U> friend class shared_ptr;
 
-    control_block* controlBlock_{nullptr};
+    control_block<T>* controlBlock_{nullptr};
     T* data_{nullptr};
 
     void releaseMemory() noexcept;
@@ -130,7 +130,7 @@ void weak_ptr<T>::reset() noexcept {
 template <typename T>
 shared_ptr<T> weak_ptr<T>::lock() noexcept {
     if (use_count() == 0) {
-        return nullptr;
+        return {};
     }
     return shared_ptr<T>(*this);
 }
