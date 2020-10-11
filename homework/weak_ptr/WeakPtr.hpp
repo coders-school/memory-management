@@ -15,7 +15,7 @@ public:
     WeakPtr & operator=(WeakPtr && otherPtr) noexcept;
 
     size_t useCount() const noexcept;
-    size_t useWeakCount() const noexcept;
+    size_t useSCount() const noexcept;
     bool expired() const noexcept;
     SharedPtr<T> lock() const noexcept;
     void reset() noexcept;
@@ -55,7 +55,7 @@ WeakPtr<T>::WeakPtr(const SharedPtr<T> & otherPtr) noexcept
 
 template <typename T>
 WeakPtr<T>::WeakPtr(const WeakPtr<T> & otherPtr) noexcept
-    : rawPtr_(otherPtr.getPtr()), ControlBlock_(otherPtr.getControlBlock()) {
+    : rawPtr_(otherPtr.rawPtr_), ControlBlock_(otherPtr.ControlBlock_) {
       weakCounterIncrementer();
 }
 
@@ -107,12 +107,12 @@ WeakPtr<T> & WeakPtr<T>::operator=(WeakPtr && otherPtr) noexcept {
 
 template <typename T>
 size_t WeakPtr<T>::useCount() const noexcept {
-    return ControlBlock_->sharedRefsCounter_;
+    return ControlBlock_->weakRefsCounter_;
 }
 
 template <typename T>
-size_t WeakPtr<T>::useWeakCount() const noexcept {
-    return ControlBlock_->weakRefsCounter_;
+size_t WeakPtr<T>::useSCount() const noexcept {
+    return ControlBlock_->sharedRefsCounter_;
 }
 
 template <typename T>
