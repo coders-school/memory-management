@@ -55,6 +55,9 @@ int main()
     */
     std::cout << "rawPtrToInt5Replace: " << *rawPtrToInt5Replace << "\n";
     delete rawPtrToInt5Replace;
-    
+
+    UniquePointer<TestingClass> uniquePtrToClass {new TestingClass(std::string("Testing class"))};
+    std::cout << uniquePtrToClass->testingGetter() << "\n";
+
     return 0;
 }

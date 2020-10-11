@@ -21,6 +21,7 @@ public:
     UniquePointer<T>& operator=(UniquePointer& anotherUniquePointerToAssign) = delete;
     UniquePointer<T>& operator=(UniquePointer&& anotherUniquePointerToMoveAssing);
     ~UniquePointer();
+    T* operator->();
     T operator*();
     T* get();
     T* replace();
@@ -76,6 +77,13 @@ T UniquePointer<T>::operator*()
         throw DereferenceNullPtr(std::string("Dereference null pointer\n"));
     }
 }
+
+template <class T>
+T* UniquePointer<T>::operator->()
+{
+    return pointer_;
+}
+
 
 template <class T>
 void UniquePointer<T>::reset(T* pointer)
