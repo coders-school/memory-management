@@ -1,7 +1,7 @@
 #pragma once
 
+#include "CounterBlock.hpp"
 #include "InvalidDereference.hpp"
-#include "ReferenceCounterBlock.hpp"
 
 namespace coders_school {
 
@@ -19,11 +19,11 @@ public:
     operator bool() const noexcept;
     T* get() const noexcept;
     unsigned int use_count() noexcept;
-    void reset(T* ptr);
+    void reset(T* otherPtr = nullptr);
 
 private:
     T* ptr_;
-    ReferenceCounterBlock* counter_;
+    CounterBlock* counter_;
 
     void deleter();
 };
@@ -31,20 +31,21 @@ private:
 template <typename T>
 void shared_ptr<T>::deleter() {
     if (ptr_) {
-        counter_->operator--();
+        counter_->decrementCounter();
     }
 
     if (use_count() == 0) {
         delete counter_;
+        counter_ = nullptr;
         delete ptr_;
     }
 }
 
 template <typename T>
 shared_ptr<T>::shared_ptr(T* ptr)
-    : ptr_(ptr), counter_(new ReferenceCounterBlock) {
+    : ptr_(ptr), counter_(new CounterBlock) {
     if (ptr) {
-        counter_->operator++();
+        counter_->incrementCounter();
     }
 }
 
@@ -53,7 +54,7 @@ shared_ptr<T>::shared_ptr(const shared_ptr& otherPtr) noexcept {
     ptr_ = otherPtr.ptr_;
     counter_ = otherPtr.counter_;
     if (ptr_) {
-        counter_->operator++();
+        counter_->incrementCounter();
     }
 }
 
@@ -67,6 +68,9 @@ shared_ptr<T>::shared_ptr(shared_ptr&& otherPtr) noexcept {
 
 template <typename T>
 shared_ptr<T>::~shared_ptr() {
+    if (!counter_) {
+        return;
+    }
     deleter();
 }
 
@@ -76,7 +80,7 @@ shared_ptr<T>& shared_ptr<T>::operator=(const shared_ptr& otherPtr) noexcept {
         deleter();
         ptr_ = otherPtr.ptr_;
         counter_ = otherPtr.counter_;
-        counter_->operator++();
+        counter_->incrementCounter();
     }
 
     return *this;
@@ -111,11 +115,7 @@ T* shared_ptr<T>::operator->() const noexcept {
 
 template <typename T>
 shared_ptr<T>::operator bool() const noexcept {
-    if (!ptr_) {
-        return false;
-    }
-
-    return true;
+    return ptr_ != nullptr;
 }
 
 template <typename T>
@@ -129,12 +129,10 @@ unsigned int shared_ptr<T>::use_count() noexcept {
 }
 
 template <typename T>
-void shared_ptr<T>::reset(T* ptr) {
-    if (ptr_) {
-        deleter();
-    }
-    ptr_ = ptr;
-    delete ptr;
+void shared_ptr<T>::reset(T* otherPtr) {
+    delete ptr_;
+    counter_->resetCounter();
+    ptr_ = otherPtr;
 }
 
 }  // namespace coders_school
