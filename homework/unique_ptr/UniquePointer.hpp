@@ -23,6 +23,7 @@ public:
     ~UniquePointer();
     T operator*();
     T* get();
+    T* replace();
     void reset(T* pointer);
 
 private:
@@ -86,4 +87,12 @@ template <class T>
 T* UniquePointer<T>::get()
 {
     return pointer_;
+}
+
+template <class T>
+T* UniquePointer<T>::replace()
+{
+    T* temp = pointer_;
+    pointer_ = nullptr;
+    return temp;
 }
