@@ -57,7 +57,7 @@ SharedPointer<T>::SharedPointer(std::nullptr_t) {
 template <typename T>
 SharedPointer<T>::SharedPointer(T* ptr) : ptr_(ptr) {
     if (ptr_) {
-        refCounter_ = new ControlBlock<T>();
+        refCounter_ = new ControlBlock<T>{};
         refCounter_->increaseShared();
     }
 }
@@ -65,7 +65,7 @@ SharedPointer<T>::SharedPointer(T* ptr) : ptr_(ptr) {
 template <typename T>
 SharedPointer<T>::SharedPointer(T* ptr, std::function<void(T*)> deleter) : ptr_(ptr) {
     if (ptr_) {
-        refCounter_ = new ControlBlock<T>{ptr, deleter};
+        refCounter_ = new ControlBlock<T>{deleter};
         refCounter_->increaseShared();
     }
 }
@@ -106,7 +106,7 @@ void SharedPointer<T>::reset(T* ptr, std::function<void(T*)> deleter) {
     if (refCounter_->getShared() == 1) {
         delete ptr_;
     } else {
-        refCounter_ = new ControlBlock<T>{ptr, deleter};
+        refCounter_ = new ControlBlock<T>{deleter};
         refCounter_->increaseShared();
     }
     ptr_ = ptr;
@@ -168,7 +168,7 @@ ControlBlock<T>* SharedPointer<T>::getRefCounter() {
 template <typename T>
 void SharedPointer<T>::checkControlBlock() {
     if (refCounter_->getShared() == 0) {
-        delete ptr_;
+        refCounter_->deleter_(ptr_);
         if (refCounter_->getWeak() == 0) {
             delete refCounter_;
         }

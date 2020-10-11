@@ -129,7 +129,7 @@ WeakPointer<T>& WeakPointer<T>::operator=(WeakPointer<T>&& anotherPtr) {
 template <typename T>
 void WeakPointer<T>::checkControlBlock() {
     if (refCounter_->getShared() == 0 && refCounter_->getWeak() == 0) {
-        delete ptr_;
+        refCounter_->deleter_(ptr_);
         delete refCounter_;
     }
 }
