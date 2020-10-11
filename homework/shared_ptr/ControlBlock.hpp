@@ -6,9 +6,11 @@
 template <typename T>
 class ControlBlock {
 public:
-    ControlBlock(){};
-    ControlBlock(std::function<void(T*)> deleter) : deleter_(deleter) {}
-    ~ControlBlock(){};
+    ControlBlock() : ptr_(nullptr){};
+    ControlBlock(T* ptr, std::function<void(T*)> deleter) : ptr_(ptr), deleter_(deleter) {}
+    ~ControlBlock() {
+        deleter_(ptr_);
+    };
 
     size_t getShared();
     size_t getWeak();
@@ -20,6 +22,7 @@ public:
     void decreaseShared();
 
 private:
+    T* ptr_;
     std::function<void(T*)> deleter_ = [](T* ptrToDelete) { delete ptrToDelete; };
     std::atomic<size_t> sharedRefs_ = 0;
     std::atomic<size_t> weakRefs_ = 0;
