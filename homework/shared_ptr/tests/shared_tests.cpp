@@ -125,3 +125,9 @@ TEST_F(SharedTest, sharedOperatorBoolShouldCheckIfManagedObjectIsNotNullptr)
     test.reset();
     EXPECT_EQ(test, false);
 }
+
+TEST_F(SharedTest, sharedCanBeCreatedWithCustomDeleter) {
+    int arraySize{10};
+    auto arrayDeleter = [](int* data) { delete [] data; };
+    cs::shared_ptr<int> test(new int[arraySize]{}, arrayDeleter);
+}
