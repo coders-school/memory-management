@@ -16,6 +16,17 @@ SCENARIO("Testing all WeakPtr functions") {
         }
     }
 
+    GIVEN("WeakPtr made of SharedPtr of Scooter with Power = 200") {
+        SharedPtr<Scooter> sharedscooter(new Scooter(power));
+        WeakPtr<Scooter> weakscooter(sharedscooter);
+        WHEN("making another WeakPtr from existing first WeakPtr") {
+            WeakPtr<Scooter> weakscootermove(std::move(weakscooter));
+            THEN("the first WeakPtr should expired") {
+                REQUIRE(weakscooter.expired() == true);
+            }
+        }
+    }
+
     GIVEN("SharedPtr of Scooter with Power = 200") {
         SharedPtr<Scooter> sharedscooter(new Scooter(power));
         WHEN("making a WeakPtr from SharedPtr") {

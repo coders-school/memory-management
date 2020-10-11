@@ -61,7 +61,7 @@ WeakPtr<T>::WeakPtr(const WeakPtr<T> & otherPtr) noexcept
 
 template <typename T>
 WeakPtr<T>::WeakPtr(WeakPtr<T> && otherPtr) noexcept
-    : rawPtr_(otherPtr.getPtr()), ControlBlock_(otherPtr.getControlBlock()) {
+    : rawPtr_(otherPtr.rawPtr_), ControlBlock_(otherPtr.ControlBlock_) {
       otherPtr.rawPtr_ = nullptr;
       otherPtr.ControlBlock_ = nullptr;
 }
@@ -117,7 +117,10 @@ size_t WeakPtr<T>::useSCount() const noexcept {
 
 template <typename T>
 bool WeakPtr<T>::expired() const noexcept {
-    return useCount() == 0;
+    if (ControlBlock_) {
+        return useCount() == 0;
+    }
+    return true;
 }
 
 template <typename T>
