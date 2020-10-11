@@ -1,4 +1,8 @@
 #pragma once
+
+#include <stdexcept>
+
+#include "bad_weak_ptr.hpp"
 #include "control.hpp"
 #include "controlObject.hpp"
 #include "weak.hpp"  //necessary to create c-tor with cs::weak_ptr as argument
@@ -32,10 +36,10 @@ class shared_ptr
 
    public:
     shared_ptr() noexcept = default;
-    shared_ptr(T* data, Deleter<T>deleter = defaultDeleter) noexcept;
+    shared_ptr(T* data, Deleter<T>deleter = defaultDeleter);
     shared_ptr(const shared_ptr&) noexcept;
     shared_ptr(shared_ptr&&) noexcept;
-    shared_ptr(const weak_ptr<T>&) noexcept;
+    shared_ptr(const weak_ptr<T>&);
     ~shared_ptr() noexcept;
 
     shared_ptr& operator=(shared_ptr&&) noexcept;
@@ -64,9 +68,15 @@ shared_ptr<T>::shared_ptr(control_block<T>* block) noexcept
     }
 }
 template <typename T>
-shared_ptr<T>::shared_ptr(T* data, Deleter<T> deleter) noexcept : data_(data)
+shared_ptr<T>::shared_ptr(T* data, Deleter<T> deleter): data_(data)
 {
-    controlBlock_ = new control_block<T>(deleter);
+    try {
+        controlBlock_ = new control_block<T>(deleter);
+    }
+    catch (const std::bad_alloc&) {
+        delete data_;
+        throw;
+    }
 }
 
 template <typename T>
@@ -83,8 +93,13 @@ shared_ptr<T>::shared_ptr(shared_ptr&& rhs) noexcept : data_(rhs.data_), control
 }
 
 template <typename T>
-shared_ptr<T>::shared_ptr(const weak_ptr<T>& rhs) noexcept : data_(rhs.data_), controlBlock_(rhs.controlBlock_)
+shared_ptr<T>::shared_ptr(const weak_ptr<T>& rhs)
 {
+    if (rhs.expired()) {
+        throw cs::bad_weak_ptr{};
+    }
+    data_ = rhs.data_;
+    controlBlock_ = rhs.controlBlock_;
     controlBlock_->incrementSharedRef();
 }
 

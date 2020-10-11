@@ -8,6 +8,9 @@ class SharedTest : public ::testing::Test
     int defaultValue{5};
     int anotherValue{10};
     cs::shared_ptr<int> defaultShared{new int{defaultValue}};
+    void release() {
+    throw std::exception();
+}
 };
 
 TEST_F(SharedTest, defaultSharedShouldBeNullptr)
@@ -137,4 +140,10 @@ TEST_F(SharedTest, customDeleterShouldNotChangeSize) {
     auto arrayDeleter = [](int* data) { delete [] data; };
     cs::shared_ptr<int> customShared(new int[defaultValue]{}, arrayDeleter);
     EXPECT_EQ(sizeof(customShared), sizeof(defaultShared));
+}
+
+TEST_F(SharedTest, sharedShouldThrowExcepetionWhenCreatedFromHangingWeakPtr) {
+    cs::weak_ptr<int> dangling{defaultShared};
+    defaultShared.reset();
+    EXPECT_THROW(cs::shared_ptr<int> shared{dangling}, cs::bad_weak_ptr);
 }
