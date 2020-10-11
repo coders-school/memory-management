@@ -32,7 +32,7 @@ class shared_ptr
 
    public:
     shared_ptr() noexcept = default;
-    shared_ptr(T* data) noexcept;
+    shared_ptr(T* data, Deleter<T>deleter = defaultDeleter) noexcept;
     shared_ptr(const shared_ptr&) noexcept;
     shared_ptr(shared_ptr&&) noexcept;
     shared_ptr(const weak_ptr<T>&) noexcept;
@@ -64,9 +64,9 @@ shared_ptr<T>::shared_ptr(control_block<T>* block) noexcept
     }
 }
 template <typename T>
-shared_ptr<T>::shared_ptr(T* data) noexcept : data_(data)
+shared_ptr<T>::shared_ptr(T* data, Deleter<T> deleter) noexcept : data_(data)
 {
-    controlBlock_ = new control_block<T>();
+    controlBlock_ = new control_block<T>(deleter);
 }
 
 template <typename T>
@@ -137,7 +137,7 @@ void shared_ptr<T>::releaseMemory() noexcept
         }
     } else {
         if (controlBlock_->getSharedRef() == 0) {
-            delete data_;
+            controlBlock_->getDeleter()(data_);
             data_ = nullptr;
             if (controlBlock_->getWeakRef() == 0) {
                 delete controlBlock_;

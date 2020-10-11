@@ -6,20 +6,20 @@ template <typename T>
 class controlObject :public control_block<T> {
     T data_;
     public:
-    controlObject(T data);
+    controlObject(T data, Deleter<T> deleter = defaultDeleter);
     ~controlObject();
     T* getObject() noexcept override;
 };
 
 template <typename T>
-controlObject<T>::controlObject(T data)
-:control_block<T>(), data_(data) {
+controlObject<T>::controlObject(T data, Deleter<T> deleter)
+:control_block<T>(deleter), data_(data) {
 
 }
 
 template <typename T>
 controlObject<T>::~controlObject() {
-    delete data_;
+    control_block<T>::getDeleter()(data_);
 }
 
 template <typename T>
