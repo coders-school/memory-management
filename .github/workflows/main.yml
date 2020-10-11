@@ -33,3 +33,5 @@ jobs:
       run: |
         time ./make-shared-efficiency
         time ./shared-ctor-efficiency
+        valgrind ./make-shared-efficiency
+        valgrind ./shared-ctor-efficiency
