@@ -23,7 +23,7 @@ public:
     ~UniquePointer();
     T* operator->();
     T operator*();
-    T* get();
+    T* get() const;
     T* replace();
     void reset(T* pointer);
 
@@ -96,7 +96,7 @@ void UniquePointer<T>::reset(T* pointer)
 }
 
 template <class T>
-T* UniquePointer<T>::get()
+T* UniquePointer<T>::get() const
 {
     return pointer_;
 }
