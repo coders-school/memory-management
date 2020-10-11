@@ -23,6 +23,8 @@ class weak_ptr
     weak_ptr(const weak_ptr<T>&) noexcept;
     weak_ptr(weak_ptr<T>&&) noexcept;
     ~weak_ptr() noexcept;
+    weak_ptr<T>& operator=(const weak_ptr<T>&) noexcept;
+    weak_ptr<T>& operator=(weak_ptr<T>&&) noexcept;
 
     bool expired() const noexcept;
     int use_count() const noexcept;
@@ -37,17 +39,16 @@ weak_ptr<T>::weak_ptr(const cs::shared_ptr<T>& rhs) noexcept : data_(rhs.data_),
 }
 
 template <typename T>
-weak_ptr<T>::weak_ptr(const weak_ptr<T>& rhs) noexcept : data_(rhs.data_)
+weak_ptr<T>::weak_ptr(const weak_ptr<T>& rhs) noexcept : data_(rhs.data_), controlBlock_(rhs.controlBlock_)
 {
-    releaseMemory();
-    controlBlock_ = rhs.controlBlock_;
     controlBlock_->incrementWeakRef();
 }
 
 template <typename T>
-bool weak_ptr<T>::expired() const noexcept
+weak_ptr<T>::weak_ptr(weak_ptr<T>&& rhs) noexcept : data_(rhs.data_), controlBlock_(rhs.controlBlock_)
 {
-    return controlBlock_->getSharedRef() == 0;
+    rhs.data_ = nullptr;
+    rhs.controlBlock_ = nullptr;
 }
 
 template <typename T>
@@ -66,6 +67,38 @@ void weak_ptr<T>::releaseMemory() noexcept
             controlBlock_ = nullptr;
         }
     }
+}
+
+template <typename T>
+weak_ptr<T>& weak_ptr<T>::operator=(const weak_ptr<T>& rhs) noexcept {
+    if (this == &rhs) {
+        return *this;
+    }
+    releaseMemory();
+    data_ = rhs.data_;
+    controlBlock_ = rhs.controlBlock_;
+    controlBlock_->incrementWeakRef();
+    return *this;
+}
+
+template <typename T>
+weak_ptr<T>& weak_ptr<T>::operator=(weak_ptr<T>&& rhs) noexcept
+{
+    if (this == &rhs) {
+        return *this;
+    }
+    releaseMemory();
+    data_ = rhs.data_;
+    controlBlock_ = rhs.controlBlock_;
+    rhs.data_ = nullptr;
+    rhs.controlBlock_ = nullptr;
+    return *this;
+}
+
+template <typename T>
+bool weak_ptr<T>::expired() const noexcept
+{
+    return controlBlock_->getSharedRef() == 0;
 }
 
 template <typename T>
@@ -91,4 +124,5 @@ shared_ptr<T> weak_ptr<T>::lock() noexcept {
     }
     return shared_ptr<T>(*this);
 }
+
 };  // namespace cs
