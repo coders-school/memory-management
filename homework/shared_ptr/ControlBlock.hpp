@@ -1,7 +1,6 @@
 #pragma once
 
 #include <atomic>
-#include <cstddef>
 
 class ControlBlock {
 public:
@@ -13,8 +12,11 @@ public:
     size_t getShared();
     size_t getWeak();
 
-    ControlBlock& operator++();
-    ControlBlock& operator--();
+    void increaseWeak();
+    void increaseShared();
+
+    void decreaseWeak();
+    void decreaseShared();
 
 private:
     std::atomic<size_t> sharedRefs_;
@@ -22,19 +24,25 @@ private:
 };
 
 size_t ControlBlock::getShared() {
-    return sharedRefs_;
+    return sharedRefs_.load();
 }
 
 size_t ControlBlock::getWeak() {
-    return weakRefs_;
+    return weakRefs_.load();
 }
 
-ControlBlock& ControlBlock::operator--() {
-    --sharedRefs_;
-    return *this;
+void ControlBlock::increaseWeak() {
+    ++weakRefs_;
 }
 
-ControlBlock& ControlBlock::operator++() {
+void ControlBlock::increaseShared() {
     ++sharedRefs_;
-    return *this;
+}
+
+void ControlBlock::decreaseWeak() {
+    --weakRefs_;
+}
+
+void ControlBlock::decreaseShared() {
+    --sharedRefs_;
 }
