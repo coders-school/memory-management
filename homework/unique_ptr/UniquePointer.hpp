@@ -46,13 +46,13 @@ UniquePointer<T>::UniquePointer(UniquePointer&& anotherUniquePointerToMove)
 }
 
 template <class T>
-UniquePointer<T>& UniquePointer<T>::operator=(UniquePointer&& anotherUniquePointerToMoveAssing)
+UniquePointer<T>& UniquePointer<T>::operator=(UniquePointer&& anotherUniquePointerToMoveAssign)
 {
     if (pointer_ != nullptr) {
         delete pointer_;
     }
-    pointer_ = anotherUniquePointerToMoveAssing.pointer_;
-    anotherUniquePointerToMoveAssing.pointer_ = nullptr;
+    pointer_ = anotherUniquePointerToMoveAssign.pointer_;
+    anotherUniquePointerToMoveAssign.pointer_ = nullptr;
     return *this;
 }
 

@@ -26,7 +26,7 @@ int main()
     std::cout << "up to int: " << *uniquePtrToInt << "\n"; 
     */
 
-    /* can't use assigment operator 
+    /* can't use assignment operator 
     UniquePointer<int> uniquePtrToInt4;
     uniquePtrToInt4 = uniquePtrToInt3;
     */
