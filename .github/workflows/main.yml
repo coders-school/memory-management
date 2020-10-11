@@ -9,7 +9,7 @@ jobs:
     - name: Check out code
       uses: actions/checkout@v2
       with:
-        ref: shared_ptr
+        ref: make_shared
     - name: mkdir build
       working-directory: homework/shared_ptr/
       run: mkdir build
