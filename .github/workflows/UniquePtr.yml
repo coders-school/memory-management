@@ -1,4 +1,4 @@
-name: UniquePtr with CMake CI and Valgrind
+name: SharedPtr with CMake CI and Valgrind
 
 on: 
   push:
@@ -14,16 +14,16 @@ jobs:
     - name: Check out code
       uses: actions/checkout@master
     - name: Create folder - build
-      working-directory: homework/unique_ptr/
+      working-directory: homework/shared_ptr/
       run: mkdir build
     - name: Compile
-      working-directory: homework/unique_ptr/build
+      working-directory: homework/shared_ptr/build
       run: |
         cmake ..
         make
     - name: Run tests
-      working-directory: homework/unique_ptr/build
-      run: ./uniquePtr-ut
+      working-directory: homework/shared_ptr/build
+      run: ./sharedPtr-ut
       
   valgrind:
     runs-on: ubuntu-latest
@@ -34,13 +34,13 @@ jobs:
     - name: Valgrind Instalation
       run: sudo apt install valgrind
     - name: Create folder - build
-      working-directory: homework/unique_ptr/
+      working-directory: homework/shared_ptr/
       run: mkdir build
     - name: Compile
-      working-directory: homework/unique_ptr/build
+      working-directory: homework/shared_ptr/build
       run: |
         cmake ..
         make
     - name: Run Valgrind
-      working-directory: homework/unique_ptr/build
-      run: valgrind --leak-check=full ./uniquePtr-ut
+      working-directory: homework/shared_ptr/build
+      run: valgrind --leak-check=full ./shared-ut
