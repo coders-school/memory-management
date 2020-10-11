@@ -1,11 +1,19 @@
 #pragma once
 #include "shared.hpp"
 
+
+
 namespace cs
 {
+
+template <typename T>
+class shared_ptr;
+
 template <typename T>
 class weak_ptr
 {
+    template <typename U> friend class shared_ptr;
+    
     control_block* controlBlock_{nullptr};
     T* data_{nullptr};
 
@@ -13,7 +21,7 @@ class weak_ptr
 
    public:
     weak_ptr() noexcept = default;
-    weak_ptr(const cs::shared_ptr<T>&) noexcept;
+    weak_ptr(const shared_ptr<T>&) noexcept;
     weak_ptr(const weak_ptr<T>&) noexcept;
     weak_ptr(weak_ptr<T>&&) noexcept;
     ~weak_ptr() noexcept;
@@ -21,7 +29,7 @@ class weak_ptr
     bool expired() const noexcept;
     int use_count() const noexcept;
     void reset() noexcept;
-    cs::shared_ptr<T> lock() noexcept;
+    shared_ptr<T> lock() noexcept;
 };
 
 template <typename T>
@@ -79,7 +87,10 @@ void weak_ptr<T>::reset() noexcept {
 }
 
 template <typename T>
-cs::shared_ptr<T> weak_ptr<T>::lock() noexcept {
-    return nullptr;
+shared_ptr<T> weak_ptr<T>::lock() noexcept {
+    if (use_count() == 0) {
+        return nullptr;
+    }
+    return shared_ptr<T>(*this);
 }
 };  // namespace cs

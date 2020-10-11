@@ -1,12 +1,16 @@
 #pragma once
 #include "control.hpp"
+#include "weak.hpp"
 
 #include <atomic>
 
-template <typename T>
-class weak_ptr;
+
 namespace cs
 {
+
+template <typename T>
+class weak_ptr;
+
 template <typename T>
 class shared_ptr
 {
@@ -22,6 +26,7 @@ class shared_ptr
     shared_ptr(T* data) noexcept;
     shared_ptr(const shared_ptr&) noexcept;
     shared_ptr(shared_ptr&&) noexcept;
+    shared_ptr(const weak_ptr<T>&) noexcept;
     ~shared_ptr() noexcept;
 
     shared_ptr& operator=(shared_ptr&&) noexcept;
@@ -53,6 +58,13 @@ shared_ptr<T>::shared_ptr(shared_ptr&& rhs) noexcept : data_(rhs.data_), control
     rhs.data_ = nullptr;
     rhs.controlBlock_ = nullptr;
 }
+
+template <typename T>
+shared_ptr<T>::shared_ptr(const weak_ptr<T>& rhs) noexcept
+: data_(rhs.data_), controlBlock_(rhs.controlBlock_) {
+    controlBlock_->incrementSharedRef();
+}
+
 
 template <typename T>
 shared_ptr<T>& shared_ptr<T>::operator=(const shared_ptr& rhs) noexcept
