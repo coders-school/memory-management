@@ -1,5 +1,7 @@
 #define CATCH_CONFIG_MAIN
 #include "UniquePointer.hpp"
+#include "TestingClass.hpp"
+
 #include "catch.hpp"
 
 SCENARIO("Using unique pointers", "[uniquePtr]")

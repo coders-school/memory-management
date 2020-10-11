@@ -1,4 +1,5 @@
 #include "UniquePointer.hpp"
+#include "TestingClass.hpp"
 
 #include <iostream>
 #include <utility>
@@ -54,6 +55,6 @@ int main()
     */
     std::cout << "rawPtrToInt5Replace: " << *rawPtrToInt5Replace << "\n";
     delete rawPtrToInt5Replace;
-
+    
     return 0;
 }
