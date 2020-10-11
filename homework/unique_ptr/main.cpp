@@ -46,8 +46,12 @@ int main()
    
     int* rawPtrToInt5 = uniquePtrToInt5.get();
     std::cout << "rawPtrToInt5: " << *rawPtrToInt5 << "\n";
-
+    std::cout << "uniquePtrToInt5: " << *uniquePtrToInt5 << "\n";
+    
     int* rawPtrToInt5Replace = uniquePtrToInt5.replace();
+    /* throw std::runtime_exception dereference null pointer, because UniquePointer::replace()
+    std::cout << *uniquePtrToInt5 << "\n";
+    */
     std::cout << "rawPtrToInt5Replace: " << *rawPtrToInt5Replace << "\n";
     delete rawPtrToInt5Replace;
 
