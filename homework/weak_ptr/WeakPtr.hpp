@@ -2,17 +2,18 @@
 #include <algorithm>
 #include "../shared_ptr/SharedPtr.hpp"
 
-template <typename T> class WeakPtr {
+template <typename T>
+class WeakPtr {
 public:
     constexpr WeakPtr() noexcept = default;
-    WeakPtr(const WeakPtr<T> & otherPtr) noexcept;
-    WeakPtr(const SharedPtr<T> & otherPtr) noexcept;
-    WeakPtr(WeakPtr && otherPtr) noexcept;
+    WeakPtr(const WeakPtr<T>& otherPtr) noexcept;
+    WeakPtr(const SharedPtr<T>& otherPtr) noexcept;
+    WeakPtr(WeakPtr&& otherPtr) noexcept;
     ~WeakPtr();
 
-    WeakPtr & operator=(const WeakPtr & otherPtr) noexcept;
-    WeakPtr & operator=(const SharedPtr<T> & otherPtr) noexcept;
-    WeakPtr & operator=(WeakPtr && otherPtr) noexcept;
+    WeakPtr& operator=(const WeakPtr& otherPtr) noexcept;
+    WeakPtr& operator=(const SharedPtr<T>& otherPtr) noexcept;
+    WeakPtr& operator=(WeakPtr&& otherPtr) noexcept;
 
     size_t useCount() const noexcept;
     size_t useSCount() const noexcept;
@@ -24,8 +25,8 @@ public:
     void weakCounterIncrementer();
 
 private:
-    T * rawPtr_;
-    ControlBlock<T> * ControlBlock_;
+    T* rawPtr_;
+    ControlBlock<T>* ControlBlock_;
 };
 
 template <typename T>
@@ -38,32 +39,32 @@ void WeakPtr<T>::controlBlockRemover() {
 template <typename T>
 void WeakPtr<T>::weakCounterDecrementer() {
     ControlBlock_->weakRefsCounter_.exchange(ControlBlock_->weakRefsCounter_.load(std::memory_order_relaxed) - 1,
-    std::memory_order_relaxed);
+                                             std::memory_order_relaxed);
 }
 
 template <typename T>
 void WeakPtr<T>::weakCounterIncrementer() {
     ControlBlock_->weakRefsCounter_.exchange(ControlBlock_->weakRefsCounter_.load(std::memory_order_relaxed) + 1,
-    std::memory_order_relaxed);
+                                             std::memory_order_relaxed);
 }
 
 template <typename T>
-WeakPtr<T>::WeakPtr(const SharedPtr<T> & otherPtr) noexcept
+WeakPtr<T>::WeakPtr(const SharedPtr<T>& otherPtr) noexcept
     : rawPtr_(otherPtr.getPtr()), ControlBlock_(otherPtr.getControlBlock()) {
-      weakCounterIncrementer();
+    weakCounterIncrementer();
 }
 
 template <typename T>
-WeakPtr<T>::WeakPtr(const WeakPtr<T> & otherPtr) noexcept
+WeakPtr<T>::WeakPtr(const WeakPtr<T>& otherPtr) noexcept
     : rawPtr_(otherPtr.rawPtr_), ControlBlock_(otherPtr.ControlBlock_) {
-      weakCounterIncrementer();
+    weakCounterIncrementer();
 }
 
 template <typename T>
-WeakPtr<T>::WeakPtr(WeakPtr<T> && otherPtr) noexcept
+WeakPtr<T>::WeakPtr(WeakPtr<T>&& otherPtr) noexcept
     : rawPtr_(otherPtr.rawPtr_), ControlBlock_(otherPtr.ControlBlock_) {
-      otherPtr.rawPtr_ = nullptr;
-      otherPtr.ControlBlock_ = nullptr;
+    otherPtr.rawPtr_ = nullptr;
+    otherPtr.ControlBlock_ = nullptr;
 }
 
 template <typename T>
@@ -74,9 +75,9 @@ WeakPtr<T>::~WeakPtr() {
     }
 }
 
-template <typename T> 
-WeakPtr<T> & WeakPtr<T>::operator=(const WeakPtr & otherPtr) noexcept {
-    if (this != & otherPtr) {
+template <typename T>
+WeakPtr<T>& WeakPtr<T>::operator=(const WeakPtr& otherPtr) noexcept {
+    if (this != &otherPtr) {
         rawPtr_ = otherPtr.rawPtr_;
         ControlBlock_ = otherPtr.ControlBlock_;
         weakCounterIncrementer();
@@ -84,8 +85,8 @@ WeakPtr<T> & WeakPtr<T>::operator=(const WeakPtr & otherPtr) noexcept {
     return *this;
 }
 
-template <typename T> 
-WeakPtr<T> & WeakPtr<T>::operator=(const SharedPtr<T> & otherPtr) noexcept {
+template <typename T>
+WeakPtr<T>& WeakPtr<T>::operator=(const SharedPtr<T>& otherPtr) noexcept {
     if (ControlBlock_) {
         rawPtr_ = otherPtr.rawPtr_;
         ControlBlock_ = otherPtr.ControlBlock_;
@@ -94,8 +95,8 @@ WeakPtr<T> & WeakPtr<T>::operator=(const SharedPtr<T> & otherPtr) noexcept {
     return *this;
 }
 
-template <typename T> 
-WeakPtr<T> & WeakPtr<T>::operator=(WeakPtr && otherPtr) noexcept {
+template <typename T>
+WeakPtr<T>& WeakPtr<T>::operator=(WeakPtr&& otherPtr) noexcept {
     if (this != otherPtr) {
         rawPtr_ = otherPtr.rawPtr_;
         ControlBlock_ = otherPtr.ControlBlock_;

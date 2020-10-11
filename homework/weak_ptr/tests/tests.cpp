@@ -5,7 +5,6 @@
 constexpr size_t power = 200;
 
 SCENARIO("Testing all WeakPtr functions") {
-
     GIVEN("SharedPtr of Scooter with Power = 200") {
         SharedPtr<Scooter> sharedscooter(new Scooter(power));
         WHEN("making a WeakPtr from SharedPtr") {
@@ -71,5 +70,4 @@ SCENARIO("Testing all WeakPtr functions") {
             }
         }
     }
-
 }
