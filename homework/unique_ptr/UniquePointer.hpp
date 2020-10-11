@@ -81,7 +81,12 @@ T UniquePointer<T>::operator*()
 template <class T>
 T* UniquePointer<T>::operator->()
 {
-    return pointer_;
+    if (pointer_ != nullptr) {
+        return pointer_;
+    }
+    else {
+        throw DereferenceNullPtr(std::string("Dereference null pointer\n"));
+    }
 }
 
 
