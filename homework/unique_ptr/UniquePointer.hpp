@@ -22,6 +22,7 @@ public:
     UniquePointer<T>& operator=(UniquePointer&& anotherUniquePointerToMoveAssing);
     ~UniquePointer();
     T operator*();
+    T* get();
     void reset(T* pointer);
 
 private:
@@ -79,4 +80,10 @@ void UniquePointer<T>::reset(T* pointer)
         delete pointer_;
     }
     pointer_ = pointer;
+}
+
+template <class T>
+T* UniquePointer<T>::get()
+{
+    return pointer_;
 }

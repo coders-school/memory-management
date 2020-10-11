@@ -44,5 +44,8 @@ int main()
     uniquePtrToInt5.reset(new int{77});
     std::cout << "uniquePtrToInt5: " << *uniquePtrToInt5 << "\n";
    
+    int* rawPtrToInt5 = uniquePtrToInt5.get();
+    std::cout << "rawPtrToInt5: " << *rawPtrToInt5 << "\n";
+
     return 0;
 }
