@@ -36,10 +36,10 @@ class shared_ptr
 
    public:
     shared_ptr() noexcept = default;
-    shared_ptr(T* data, Deleter<T>deleter = defaultDeleter);
+    explicit shared_ptr(T* data, Deleter<T>deleter = defaultDeleter);
     shared_ptr(const shared_ptr&) noexcept;
     shared_ptr(shared_ptr&&) noexcept;
-    shared_ptr(const weak_ptr<T>&);
+    explicit shared_ptr(const weak_ptr<T>&);
     ~shared_ptr() noexcept;
 
     shared_ptr& operator=(shared_ptr&&) noexcept;

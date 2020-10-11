@@ -19,7 +19,7 @@ class weak_ptr
 
    public:
     weak_ptr() noexcept = default;
-    weak_ptr(const shared_ptr<T>&) noexcept;
+    explicit weak_ptr(const shared_ptr<T>&) noexcept;
     weak_ptr(const weak_ptr<T>&) noexcept;
     weak_ptr(weak_ptr<T>&&) noexcept;
     ~weak_ptr() noexcept;
