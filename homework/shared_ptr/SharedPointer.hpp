@@ -44,14 +44,14 @@ public:
 
 private:
     T* ptr_{nullptr};
-    ControlBlock<T>* refCounter_{nullptr};
+    ControlBlock<T>* refCounter_;
 
     void checkControlBlock();
 };
 
 template <typename T>
 SharedPointer<T>::SharedPointer(std::nullptr_t) {
-    refCounter_ = new ControlBlock<T>{};
+    refCounter_ = new ControlBlock<T>();
 }
 
 template <typename T>
@@ -65,7 +65,7 @@ SharedPointer<T>::SharedPointer(T* ptr) : ptr_(ptr) {
 template <typename T>
 SharedPointer<T>::SharedPointer(T* ptr, std::function<void(T*)> deleter) : ptr_(ptr) {
     if (ptr_) {
-        refCounter_ = new ControlBlock<T>{ptr, deleter};
+        refCounter_ = new ControlBlock<T>(deleter);
         refCounter_->increaseShared();
     }
 }
@@ -106,7 +106,7 @@ void SharedPointer<T>::reset(T* ptr, std::function<void(T*)> deleter) {
     if (refCounter_->getShared() == 1) {
         delete ptr_;
     } else {
-        refCounter_ = new ControlBlock<T>{ptr, deleter};
+        refCounter_ = new ControlBlock<T>(deleter);
         refCounter_->increaseShared();
     }
     ptr_ = ptr;
