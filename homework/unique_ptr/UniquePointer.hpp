@@ -41,6 +41,7 @@ UniquePointer<T>::UniquePointer(UniquePointer&& anotherUniquePointerToMove)
 {
     if (pointer_ != nullptr) {
         delete pointer_;
+        pointer_ = nullptr;
     }
     pointer_ = anotherUniquePointerToMove.pointer_;
     anotherUniquePointerToMove.pointer_ = nullptr;
@@ -51,6 +52,7 @@ UniquePointer<T>& UniquePointer<T>::operator=(UniquePointer&& anotherUniquePoint
 {
     if (pointer_ != nullptr) {
         delete pointer_;
+        pointer_ = nullptr;
     }
     pointer_ = anotherUniquePointerToMoveAssign.pointer_;
     anotherUniquePointerToMoveAssign.pointer_ = nullptr;
@@ -61,6 +63,7 @@ template <class T>
 UniquePointer<T>::~UniquePointer()
 {
     delete pointer_;
+    pointer_ = nullptr;
 }
 
 template <class T>
@@ -79,6 +82,7 @@ void UniquePointer<T>::reset(T* pointer)
 {
     if (pointer_ != nullptr) {
         delete pointer_;
+        pointer_ = nullptr;
     }
     pointer_ = pointer;
 }
