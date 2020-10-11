@@ -103,3 +103,16 @@ TEST_F(WeakTest, moveConstructorShouldMoveDataAndDecreaseRefCount) {
     cs::weak_ptr<int> ptr2{std::move(ptr1)};
     EXPECT_EQ(ptr2.lock(), defaultShared);
 }
+
+TEST_F(WeakTest, weakCanBeCopiedFromSharedPtr) {
+    cs::weak_ptr<int> ptr;
+    ptr = defaultShared;
+    EXPECT_EQ(ptr.lock(), defaultShared);
+}
+
+TEST_F(WeakTest, weakWhenCopiedShouldReleaseMemoryWhenIsTheLastWeakPtrAndSharedCountIs0) {
+    cs::weak_ptr<int> ptr{defaultShared};
+    defaultShared.reset();
+    ptr = anotherShared;
+    EXPECT_EQ(ptr.lock(), anotherShared);
+}
