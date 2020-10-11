@@ -22,7 +22,7 @@ public:
 
     SharedPointer(std::nullptr_t);
     SharedPointer(T* ptr = nullptr);
-    SharedPointer(T* ptr, std::function<void(T*)> defDeleter);
+    SharedPointer(T* ptr, std::function<void(T*)> deleter);
     SharedPointer(WeakPointer<T>& weakPtr);
     SharedPointer(SharedPointer& anotherPtr);
     SharedPointer(SharedPointer&& anotherPtr) noexcept;

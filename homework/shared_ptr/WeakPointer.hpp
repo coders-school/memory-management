@@ -20,7 +20,6 @@ public:
     WeakPointer(WeakPointer&& anotherPtr) noexcept;
     ~WeakPointer();
 
-    // void swap(WeakPointer& anotherPtr);
     void reset();
     size_t use_count();
     bool expired();
@@ -63,9 +62,7 @@ WeakPointer<T>::WeakPointer(WeakPointer&& anotherPtr) noexcept
 template <typename T>
 WeakPointer<T>::~WeakPointer() {
     if (refCounter_ != nullptr) {
-        // std::cout << "BEFORE: " << refCounter_->getWeak() << "\n";
         refCounter_->decreaseWeak();
-        // std::cout << "AFTER: " << refCounter_->getWeak() << "\n";
         checkControlBlock();
     }
 }

@@ -7,10 +7,7 @@ template <typename T>
 class ControlBlock {
 public:
     ControlBlock() : ptr_(nullptr){};
-    ControlBlock(
-        T* ptr,
-        std::function<void(T*)> deleter = [](T* ptrToDelete) { delete ptrToDelete; })
-        : ptr_(ptr), deleter_(deleter) {}
+    ControlBlock(T* ptr, std::function<void(T*)> deleter) : ptr_(ptr), deleter_(deleter) {}
     ~ControlBlock() {
         deleter_(ptr_);
     };
@@ -60,5 +57,3 @@ template <typename T>
 void ControlBlock<T>::decreaseShared() {
     --sharedRefs_;
 }
-
-// template <typename T>
