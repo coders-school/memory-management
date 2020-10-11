@@ -1,0 +1,46 @@
+name: SharedPtr with CMake CI and Valgrind
+
+on: 
+  push:
+  pull_request:
+    branches:
+      - sharedPtr
+
+jobs:
+  ctest:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Check out code
+      uses: actions/checkout@master
+    - name: Create folder - build
+      working-directory: homework/shared_ptr/
+      run: mkdir build
+    - name: Compile
+      working-directory: homework/shared_ptr/build
+      run: |
+        cmake ..
+        make
+    - name: Run tests
+      working-directory: homework/shared_ptr/build
+      run: ./SharedPtr-ut
+      
+  valgrind:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Run valgrind
+      uses: actions/checkout@master
+    - name: Valgrind Instalation
+      run: sudo apt install valgrind
+    - name: Create folder - build
+      working-directory: homework/shared_ptr/
+      run: mkdir build
+    - name: Compile
+      working-directory: homework/shared_ptr/build
+      run: |
+        cmake ..
+        make
+    - name: Run Valgrind
+      working-directory: homework/shared_ptr/build
+      run: valgrind --leak-check=full ./SharedPtr-ut
