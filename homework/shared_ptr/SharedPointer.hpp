@@ -31,7 +31,7 @@ public:
     T* get();
     void reset(
         T* ptr = nullptr,
-        std::function<void(T*)> newDeleter = [](T* ptrToDelete) { delete ptrToDelete; });
+        std::function<void(T*)> deleter = [](T* ptrToDelete) { delete ptrToDelete; });
     size_t use_count();
 
     T& operator*() const;
@@ -51,21 +51,21 @@ private:
 
 template <typename T>
 SharedPointer<T>::SharedPointer(std::nullptr_t) {
-    refCounter_ = new ControlBlockPtr<T>{};
+    refCounter_ = new ControlBlock<T>{};
 }
 
 template <typename T>
 SharedPointer<T>::SharedPointer(T* ptr) : ptr_(ptr) {
     if (ptr_) {
-        refCounter_ = new ControlBlockPtr<T>();
+        refCounter_ = new ControlBlock<T>();
         refCounter_->increaseShared();
     }
 }
 
 template <typename T>
-SharedPointer<T>::SharedPointer(T* ptr, std::function<void(T*)> defDeleter) : ptr_(ptr) {
+SharedPointer<T>::SharedPointer(T* ptr, std::function<void(T*)> deleter) : ptr_(ptr) {
     if (ptr_) {
-        refCounter_ = new ControlBlockPtr<T>{ptr, defDeleter};
+        refCounter_ = new ControlBlock<T>{ptr, deleter};
         refCounter_->increaseShared();
     }
 }
@@ -102,11 +102,11 @@ T* SharedPointer<T>::get() {
 }
 
 template <typename T>
-void SharedPointer<T>::reset(T* ptr, std::function<void(T*)> newDeleter) {
+void SharedPointer<T>::reset(T* ptr, std::function<void(T*)> deleter) {
     if (refCounter_->getShared() == 1) {
         delete ptr_;
     } else {
-        refCounter_ = new ControlBlockPtr<T>{ptr, newDeleter};
+        refCounter_ = new ControlBlock<T>{ptr, deleter};
         refCounter_->increaseShared();
     }
     ptr_ = ptr;
