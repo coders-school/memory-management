@@ -1,4 +1,5 @@
-#include "shared.cpp"
+#pragma once
+#include "shared.hpp"
 
 namespace cs
 {
@@ -19,6 +20,8 @@ class weak_ptr
 
     bool expired() const noexcept;
     int use_count() const noexcept;
+    void reset() noexcept;
+    cs::shared_ptr<T> lock() noexcept;
 };
 
 template <typename T>
@@ -65,5 +68,18 @@ int weak_ptr<T>::use_count() const noexcept {
         return controlBlock_->getSharedRef();
     }
     return 0;
+}
+
+template <typename T>
+
+void weak_ptr<T>::reset() noexcept {
+    releaseMemory();
+    data_ = nullptr;
+    controlBlock_ = nullptr;
+}
+
+template <typename T>
+cs::shared_ptr<T> weak_ptr<T>::lock() noexcept {
+    return nullptr;
 }
 };  // namespace cs

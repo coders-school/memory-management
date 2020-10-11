@@ -1,3 +1,4 @@
+#pragma once
 #include "control.hpp"
 
 #include <atomic>

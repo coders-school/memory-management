@@ -38,8 +38,8 @@ set(CXX_STANDARD_REQUIRED ON)
 
 # Now simply link against gtest or gtest_main as needed. Eg
 include_directories(${CMAKE_SOURCE_DIR})
-add_executable(shared-ut control.cpp shared.cpp tests/shared_tests.cpp)
-add_executable(${PROJECT_NAME}-ut control.cpp weak.cpp tests/weak_tests.cpp)
+add_executable(shared-ut control.cpp tests/shared_tests.cpp)
+add_executable(${PROJECT_NAME}-ut control.cpp tests/weak_tests.cpp)
 target_link_libraries(shared-ut gtest_main)
 target_link_libraries(${PROJECT_NAME}-ut gtest_main)
 enable_testing()

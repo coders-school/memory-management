@@ -1,4 +1,4 @@
-#include "weak.cpp"
+#include "weak.hpp"
 
 #include <gtest/gtest.h>
 
@@ -43,4 +43,19 @@ TEST_F(WeakTest, useCountShouldReturn0WhenNoSharedManagesObject) {
     EXPECT_EQ(ptr.use_count(), defaultShared.use_count());
     EXPECT_EQ(ptr.use_count(), expectedUseCount);
     EXPECT_EQ(defaultShared.use_count(), expectedUseCount);
+}
+
+TEST_F(WeakTest, resetShouldReleaseReferenceToManagedObject) {
+    cs::weak_ptr<int> ptr{defaultShared};
+    ptr.reset();
+    int expectedWeakPtrUseCount{0};
+    int expectedSharedPtrUseCount{1};
+    EXPECT_EQ(ptr.use_count(), expectedWeakPtrUseCount);
+    EXPECT_EQ(defaultShared.use_count(), expectedSharedPtrUseCount);
+}
+
+TEST_F(WeakTest, lockShouldReturnNullptrWhenNoManagedObject) {
+    cs::weak_ptr<int> ptr{defaultShared};
+    ptr.reset();
+    EXPECT_EQ(ptr.lock().get(), nullptr);
 }
