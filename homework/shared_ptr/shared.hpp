@@ -51,7 +51,6 @@ class shared_ptr
     operator bool() const noexcept { return data_ != nullptr; }
     int use_count() const noexcept;
     void reset(T* data = nullptr, Deleter<T> deleter = defaultDeleter) noexcept;
-    // void reset(T* data, Deleter<T> deleter) noexcept;
 };
 
 template <typename T, typename... Ts>
