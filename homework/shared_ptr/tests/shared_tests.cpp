@@ -147,3 +147,13 @@ TEST_F(SharedTest, sharedShouldThrowExcepetionWhenCreatedFromHangingWeakPtr) {
     defaultShared.reset();
     EXPECT_THROW(cs::shared_ptr<int> shared{dangling}, cs::bad_weak_ptr);
 }
+
+TEST_F(SharedTest, resetCanBeUseWithOneArgument) {
+    defaultShared.reset(new int{anotherValue});
+    EXPECT_EQ(*defaultShared, anotherValue);
+}
+
+TEST_F(SharedTest, resetCanBeUseWithCustomDeleter) {
+    auto customDeleter = [](int* data) { delete [] data; };
+    defaultShared.reset(new int[defaultValue]{}, customDeleter);
+}
