@@ -1,4 +1,4 @@
-name: Unique Ptr CMake CI
+name: Shared Ptr CMake CI
 
 on: [push, pull_request]
 
