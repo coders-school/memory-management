@@ -3,7 +3,6 @@
 #include "control_block.hpp"
 
 #include <stdexcept>
-#include <iostream>
 namespace cs {
     
 template <typename T>

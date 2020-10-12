@@ -56,17 +56,3 @@ private:
     T object_;
 };
 
-template <typename T>
-class normal_block : public control_block<T> {
-public:
-    normal_block(T* ptr = nullptr) {
-        object_ = ptr;
-    }
-    T* getObjectPointer() override {
-        return object_;
-    }
-    
-
-private:
-    T* object_{nullptr};
-};
