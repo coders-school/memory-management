@@ -98,6 +98,7 @@ SharedPointer<T> WeakPointer<T>::lock() {
 
 template <typename T>
 WeakPointer<T>& WeakPointer<T>::operator=(SharedPointer<T>& anotherPtr) {
+    refCounter_->decreaseWeak();
     ptr_ = anotherPtr.ptr_;
     refCounter_ = anotherPtr.refCounter_;
     refCounter_->increaseWeak();
@@ -107,10 +108,11 @@ WeakPointer<T>& WeakPointer<T>::operator=(SharedPointer<T>& anotherPtr) {
 
 template <typename T>
 WeakPointer<T>& WeakPointer<T>::operator=(WeakPointer<T>& anotherPtr) {
-    ptr_ = anotherPtr.ptr_;
-    refCounter_ = anotherPtr.refCounter_;
-    refCounter_->increaseWeak();
-
+    if (this != &anotherPtr) {
+        ptr_ = anotherPtr.ptr_;
+        refCounter_ = anotherPtr.refCounter_;
+        refCounter_->increaseWeak();
+    }
     return *this;
 }
 
@@ -122,7 +124,6 @@ WeakPointer<T>& WeakPointer<T>::operator=(WeakPointer<T>&& anotherPtr) {
         anotherPtr.ptr_ = nullptr;
         anotherPtr.refCounter_ = nullptr;
     }
-
     return *this;
 }
 
