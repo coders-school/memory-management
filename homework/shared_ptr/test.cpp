@@ -2,7 +2,6 @@
 #include "gtest/gtest.h"
 #include "control_block.hpp"
 #include "shared_ptr.hpp"
-#include "weak_ptr.hpp"
 
 const std::string testString{"Ala ma kota"};
 constexpr int testValueOne = 10;
@@ -107,28 +106,3 @@ TEST(makeSharedTest, shouldCreateCustomStruct) {
     ASSERT_EQ(ptr->b, testString);
 }
 
-struct weakPtrTest : ::testing::Test {
-    weakPtrTest()
-        : sPtr(new int{testValueOne}) {}
-    cs::shared_ptr<int> sPtr;
-};
-
-TEST_F(weakPtrTest, shouldConstruct) {
-    cs::weak_ptr<int> weak(sPtr);
-
-    ASSERT_EQ(*(weak.lock()), *sPtr);
-}
-
-TEST_F(weakPtrTest, shouldCopyAssign) {
-    cs::weak_ptr<int> weakOne(sPtr);
-    cs::weak_ptr<int> weakTwo;
-    weakTwo = weakOne;
-
-    ASSERT_EQ(*(weakOne.lock()), *(weakTwo.lock()));
-}
-
-TEST_F(weakPtrTest, testLock) {
-    cs::weak_ptr<int> weak(sPtr);
-
-    ASSERT_EQ(*(weak.lock()), testValueOne);
-}
