@@ -119,14 +119,7 @@ const T* shared_ptr<T>::get() const {
 
 template <typename T>
 void shared_ptr<T>::reset(T* newPtr, std::function<void(T*)> deleter) {
-    if (counter_->getRefs() == 1) {
-        counter_->deleter_(ptr_);
-    }
-    else {
-        counter_ = new control_block<T>(deleter);
-        ++(*counter_);
-    }
-    ptr_ = newPtr;
+    shared_ptr{newPtr, deleter}.swap(*this);
 }
 
 template <typename T>

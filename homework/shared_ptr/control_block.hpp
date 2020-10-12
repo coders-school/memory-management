@@ -38,11 +38,11 @@ public:
     virtual T* getObjectPointer() {return nullptr;};
 
     std::function<void(T*)> deleter_;
+    bool expired() const noexcept { return sharedRefs_ == 0; }
 
-protected:
-    std::atomic<size_t> sharedRefs_;
-    std::atomic<size_t> weakRefs_;
-
+private:
+    std::atomic<size_t> sharedRefs_ {};
+    std::atomic<size_t> weakRefs_{};
 };
 
 template <typename T>
