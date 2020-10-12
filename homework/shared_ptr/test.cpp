@@ -63,14 +63,46 @@ TEST_F(sharedPtrTest, testSwap) {
     ASSERT_EQ(sPtr.use_count(), lowerUseCount);
 }
 
-TEST(PointerTest, shouldCreateWithoutArguments) {
-    cs::shared_ptr<int> ptr;
-
-    ASSERT_EQ(ptr.get(), nullptr);
-}
-
 TEST_F(sharedPtrTest, testAccessOperator) {
     cs::shared_ptr<std::string> uPtr2(new std::string{testString});
     ASSERT_EQ(uPtr2->at(0), 'A');
     ASSERT_EQ(uPtr2->at(1), 'l');
 }
+
+TEST(sharedPointerTest, shouldCreateWithoutArguments) {
+    cs::shared_ptr<int> ptr;
+
+    ASSERT_EQ(ptr.get(), nullptr);
+}
+
+TEST(makeSharedTest, shouldUseMakeShared) {
+    auto ptr = cs::make_shared<int>(testValueOne);
+
+    ASSERT_EQ(*ptr, testValueOne);
+}
+
+TEST(makeSharedTest, shouldUseMakeSharedOnSTLDataStructs) {
+    std::vector<int> testVector{1,2};
+
+    auto ptr = cs::make_shared<std::vector<int>, std::initializer_list<int>>({1,2});
+    ASSERT_EQ(*ptr, testVector);
+}
+
+TEST(makeSharedTest, shouldUseVariadicMakeShared) {
+    std::vector<int> testVector{1,2};
+
+    auto ptr = cs::make_shared<std::vector<int>>(1,2);
+
+    ASSERT_EQ(*ptr, testVector);
+}
+TEST(makeSharedTest, shouldCreateCustomStruct) {
+    struct A {
+        int a;
+        std::string b;
+    };
+    auto ptr = cs::make_shared<A>(testValueOne, testString);
+
+    ASSERT_EQ(ptr->a, testValueOne);
+    ASSERT_EQ(ptr->b, testString);
+}
+

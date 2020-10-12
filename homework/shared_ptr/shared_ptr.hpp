@@ -2,19 +2,22 @@
 
 #include "control_block.hpp"
 
-#include <algorithm> //for swap method
 #include <stdexcept>
-
 namespace cs {
+    
+template <typename T>
+class weak_ptr;
+
 template <typename T>
 class shared_ptr {
 public:
+    template <typename B> friend class weak_ptr;
+    template<typename D, typename... Args> friend shared_ptr<D> make_shared(Args&& ... args);
     shared_ptr(T* ptr = nullptr);
     shared_ptr(const shared_ptr& ptr) noexcept;  //copy c-tor
     shared_ptr(shared_ptr&& previousOwner) noexcept;      //move c-tor
     ~shared_ptr();
 
-    //TODO Implement swap
     void swap(shared_ptr<T>& secondPointer) noexcept;
     const T* get() const;
     void reset(T* newPtr = nullptr);
@@ -28,8 +31,11 @@ public:
     size_t use_count() { return counter_->getRefs(); }
 
 private:
-    control_block* counter_{nullptr};
+    shared_ptr(T* ptr, control_block<T>* counter);
     T* ptr_{nullptr};
+    control_block<T>* counter_{nullptr};
+    bool madeShared_{false};
+
 
     void checkAndDeletePointers();
 };
@@ -37,7 +43,9 @@ private:
 template <typename T>
 void shared_ptr<T>::checkAndDeletePointers() {
     if (!counter_->getRefs()) {
-        delete ptr_;
+        if(!madeShared_) {
+            delete ptr_;
+        }
         if (!counter_->getWeakRefs()) {
             delete counter_;
         }
@@ -45,23 +53,29 @@ void shared_ptr<T>::checkAndDeletePointers() {
 }
 
 template <typename T>
+shared_ptr<T>::shared_ptr(T* ptr, control_block<T>* counter) : ptr_(ptr), counter_(counter), madeShared_(true) {
+    ++*counter_;
+}
+
+template <typename T>
 shared_ptr<T>::shared_ptr(T* ptr)
     : ptr_(ptr) {
     if (ptr_) {
-        counter_ = new control_block();
+        counter_ = new control_block<T>();
         ++(*counter_);
     }
 }
 
+
 template <typename T>
 shared_ptr<T>::shared_ptr(const shared_ptr& ptr) noexcept
-    : counter_(ptr.counter_), ptr_(ptr.ptr_) {
+    : counter_(ptr.counter_), ptr_(ptr.ptr_), madeShared_(ptr.madeShared_) {
     ++(*counter_);
 }
 
 template <typename T>
 shared_ptr<T>::shared_ptr(shared_ptr&& previousOwner) noexcept
-    :   ptr_(previousOwner.ptr_), counter_(previousOwner.counter_) {
+    :   ptr_(previousOwner.ptr_), counter_(previousOwner.counter_), madeShared_(previousOwner.madeShared_) {
     previousOwner.ptr_ = nullptr;
     previousOwner.counter_ = nullptr;
 }
@@ -78,10 +92,13 @@ template <typename T>
 void shared_ptr<T>::swap(shared_ptr<T>& secondPointer) noexcept {
     auto ptrTmp = secondPointer.ptr_;
     auto counterTmp = secondPointer.counter_;
+    auto madeShared = secondPointer.madeShared_;
     secondPointer.ptr_ = ptr_;
     secondPointer.counter_ = counter_;
+    secondPointer.madeShared_ = madeShared_;
     ptr_ = ptrTmp;
     counter_ = counterTmp;
+    madeShared_ = madeShared;
 }
 
 template <typename T>
@@ -95,7 +112,7 @@ void shared_ptr<T>::reset(T* newPtr) {
         delete ptr_;
     }
     else {
-        counter_ = new control_block();
+        counter_ = new control_block<T>();
         ++(*counter_);
     }
     ptr_ = newPtr;
@@ -127,6 +144,7 @@ shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr<T>&& previousOwner) {
 
         ptr_ = previousOwner.ptr_;
         counter_ = previousOwner.counter_;
+        madeShared_ = previousOwner.madeShared_;
         previousOwner.ptr_ = nullptr;
         previousOwner.counter_ = nullptr;
     }
@@ -140,7 +158,14 @@ shared_ptr<T>& shared_ptr<T>::operator=(const shared_ptr<T>& ptr) noexcept {
     checkAndDeletePointers();
     counter_ = ptr.counter_;
     ptr_ = ptr.ptr_;
+    madeShared_ = ptr.madeShared_;
     ++(*counter_);
+}
+
+template<typename D, typename... Args>
+shared_ptr<D> make_shared(Args&&... args) {
+    auto tempCounter = new continuous_block<D>(std::forward<Args>(args)...);
+    return shared_ptr<D>(tempCounter->getObjectPointer(), tempCounter);
 }
 
 }  // namespace cs
