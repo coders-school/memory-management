@@ -106,3 +106,21 @@ TEST(makeSharedTest, shouldCreateCustomStruct) {
     ASSERT_EQ(ptr->b, testString);
 }
 
+TEST(customDeleterTest, shouldUseCustomDeleter) {
+    struct A {
+        int a;
+        std::string b;
+    };
+    std::string testString = "Deleted";
+    int testNumber = 0;
+
+    std::function<void(A* ptr)> deleter = [](A* ptr) { ptr->a = 0; ptr->b = "Deleted"; };
+    A* testStruct = new A();
+    {
+        cs::shared_ptr<A> ptr(testStruct, deleter);
+    }
+
+    ASSERT_EQ(testNumber, testStruct->a);
+    ASSERT_EQ(testString, testStruct->b);
+    delete testStruct;
+}

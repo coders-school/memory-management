@@ -1,12 +1,14 @@
 #pragma once
 
 #include <atomic>
+#include <functional>
+#include <iostream>
 
 template <typename T>
 class control_block {
 public:
-    control_block()
-        : sharedRefs_(0), weakRefs_(0) {}
+    control_block(std::function<void(T*)> deleter = [](T* ptr) { delete ptr;} )
+        : sharedRefs_(0), weakRefs_(0), deleter_(deleter) {};
     control_block(const control_block&) = delete; 
     control_block& operator=(const control_block&) = delete;
     virtual ~control_block() {
@@ -35,7 +37,9 @@ public:
     size_t getWeakRefs() { return weakRefs_; }
     virtual T* getObjectPointer() {return nullptr;};
 
-private:
+    std::function<void(T*)> deleter_ = [](T* ptr) { delete ptr;};
+
+protected:
     std::atomic<size_t> sharedRefs_;
     std::atomic<size_t> weakRefs_;
 
@@ -46,12 +50,15 @@ class continuous_block : public control_block<T> {
 public: 
     
     template<typename ...Args>
-    continuous_block(Args&& ...args) : object_{std::forward<Args>(args)...} {
+    continuous_block(Args&& ...args) : object_{std::forward<Args>(args)...}, control_block<T>([](T* ptr) {}) {
     }
 
     T* getObjectPointer() override{
         return &object_;
     }
+    ~continuous_block() {
+    }
+
 private:
     T object_;
 };
