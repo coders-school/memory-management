@@ -8,7 +8,7 @@ template <typename T>
 class control_block {
 public:
     control_block(std::function<void(T*)> deleter = [](T* ptr) { delete ptr;} )
-        : sharedRefs_(0), weakRefs_(0), deleter_(deleter) {};
+        : deleter_(deleter), sharedRefs_(0), weakRefs_(0) {};
     control_block(const control_block&) = delete; 
     control_block& operator=(const control_block&) = delete;
     virtual ~control_block() {
@@ -43,6 +43,7 @@ public:
 private:
     std::atomic<size_t> sharedRefs_ {};
     std::atomic<size_t> weakRefs_{};
+    
 };
 
 template <typename T>
@@ -50,7 +51,7 @@ class continuous_block : public control_block<T> {
 public: 
     
     template<typename ...Args>
-    continuous_block(Args&& ...args) : object_{std::forward<Args>(args)...}, control_block<T>([](T* ptr) {}) {
+    continuous_block(Args&& ...args) : control_block<T>([](T*) {}), object_{std::forward<Args>(args)...} {
     }
 
     T* getObjectPointer() override{
