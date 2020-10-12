@@ -18,6 +18,7 @@ public:
     void decreaseShared();
 
     std::function<void(T*)> deleter_;
+    // auto defaultDeleter = [](T* ptrToDelete) { delete ptrToDelete;};
 
 private:
     std::atomic<size_t> sharedRefs_{0};

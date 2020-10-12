@@ -15,7 +15,7 @@ public:
     template <typename>
     friend class SharedPointer;
     WeakPointer() noexcept = default;
-    WeakPointer(SharedPointer<T>& sharedPtr);
+    explicit WeakPointer(SharedPointer<T>& sharedPtr);
     WeakPointer(WeakPointer& anotherPtr);
     WeakPointer(WeakPointer&& anotherPtr) noexcept;
     ~WeakPointer();
