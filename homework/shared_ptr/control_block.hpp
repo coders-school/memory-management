@@ -37,7 +37,7 @@ public:
     size_t getWeakRefs() { return weakRefs_; }
     virtual T* getObjectPointer() {return nullptr;};
 
-    std::function<void(T*)> deleter_ = [](T* ptr) { delete ptr;};
+    std::function<void(T*)> deleter_;
 
 protected:
     std::atomic<size_t> sharedRefs_;

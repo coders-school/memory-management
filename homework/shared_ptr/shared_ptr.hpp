@@ -15,7 +15,6 @@ public:
     template <typename B> friend class weak_ptr;
     template<typename D, typename... Args> friend shared_ptr<D> make_shared(Args&& ... args);
     explicit shared_ptr() = default;
-    explicit shared_ptr(std::nullptr_t) {};
     explicit shared_ptr(T* ptr);
     shared_ptr(T* ptr, std::function<void(T*)> deleter);
     shared_ptr(std::nullptr_t, std::function<void(T*)> deleter);
@@ -25,7 +24,7 @@ public:
 
     void swap(shared_ptr<T>& secondPointer) noexcept;
     const T* get() const;
-    void reset(T* newPtr = nullptr);
+    void reset(T* newPtr = nullptr, std::function<void(T*)> deleter = [](T* ptr) { delete ptr;});
 
     const T* operator->();
     T& operator*();
@@ -119,12 +118,12 @@ const T* shared_ptr<T>::get() const {
 }
 
 template <typename T>
-void shared_ptr<T>::reset(T* newPtr) {
+void shared_ptr<T>::reset(T* newPtr, std::function<void(T*)> deleter) {
     if (counter_->getRefs() == 1) {
         counter_->deleter_(ptr_);
     }
     else {
-        counter_ = new control_block<T>();
+        counter_ = new control_block<T>(deleter);
         ++(*counter_);
     }
     ptr_ = newPtr;
