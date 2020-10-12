@@ -50,7 +50,7 @@ class shared_ptr
     T* operator->() noexcept { return data_; }
     operator bool() const noexcept { return data_ != nullptr; }
     int use_count() const noexcept;
-    void reset(T* data = nullptr) noexcept;
+    void reset(T* data = nullptr, Deleter<T> deleter = defaultDeleter) noexcept;
 };
 
 template <typename T, typename... Ts>
@@ -162,12 +162,12 @@ void shared_ptr<T>::releaseMemory() noexcept
     }
 }
 template <typename T>
-void shared_ptr<T>::reset(T* data) noexcept
+void shared_ptr<T>::reset(T* data, Deleter<T> deleter) noexcept
 {
     releaseMemory();
     data_ = data;
     if (data != nullptr) {
-        controlBlock_ = new control_block<T>();
+        controlBlock_ = new control_block<T>(deleter);
     } else {
         controlBlock_ = nullptr;
     }

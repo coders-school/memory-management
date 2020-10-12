@@ -18,6 +18,7 @@ class control_block
    public:
     control_block() = default;
     control_block(Deleter<T> deleter);
+    virtual ~control_block() = default;
     int getSharedRef() const noexcept;
     int getWeakRef() const noexcept;
     void incrementSharedRef() noexcept;
