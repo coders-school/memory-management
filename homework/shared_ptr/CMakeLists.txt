@@ -39,7 +39,10 @@ endif()
 
 # Now simply link against gtest or gtest_main as needed. Eg
 enable_testing()
-add_executable(${PROJECT_NAME}-ut shared_ptr-ut.cpp)
+set (TEST_FILES
+    shared_ptr-ut.cpp
+    weak_ptr-ut.cpp)
+add_executable(${PROJECT_NAME}-ut ${TEST_FILES})
 add_compile_options(${PROJECT_NAME}-ut -Wall -pedantic -Wextra)
 
 target_link_libraries(${PROJECT_NAME}-ut gtest_main -fsanitize=address)
