@@ -143,8 +143,10 @@ shared_ptr<T>::operator bool() const noexcept {
 template <typename T>
 shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr<T>&& previousOwner) noexcept{
     if (this != &previousOwner) {
-        --*counter_;
-        checkAndDeletePointers();
+        if(counter_) {
+            --*counter_;
+            checkAndDeletePointers();
+        }
 
         ptr_ = previousOwner.ptr_;
         counter_ = previousOwner.counter_;
@@ -157,11 +159,16 @@ shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr<T>&& previousOwner) noexcept{
 
 template <typename T>
 shared_ptr<T>& shared_ptr<T>::operator=(const shared_ptr<T>& ptr) noexcept {
-    --*counter_;
-    checkAndDeletePointers();
+    if(counter_){
+        --*counter_;
+        checkAndDeletePointers();
+    }
+
     counter_ = ptr.counter_;
     ptr_ = ptr.ptr_;
     ++(*counter_);
+
+    return *this;
 }
 
 template<typename D, typename... Args>

@@ -42,12 +42,31 @@ TEST_F(sharedPtrTest, testCopyConstructor) {
     ASSERT_EQ(sPtr3.use_count(), 3);
 }
 
+TEST_F(sharedPtrTest, testCopyAssignment) {
+    ASSERT_EQ(*sPtr, testValueOne);
+    ASSERT_EQ(sPtr.use_count(), 1);
+    cs::shared_ptr<int> sPtr2;
+    sPtr2 = sPtr;
+    cs::shared_ptr<int> sPtr3;
+    sPtr3 = sPtr;
+    ASSERT_EQ(*sPtr, *sPtr2);
+    ASSERT_EQ(*sPtr, *sPtr3);
+    ASSERT_EQ(sPtr3.use_count(), 3);
+}
+
 TEST_F(sharedPtrTest, testMoveConstructor) {
     auto sPtr2(std::move(sPtr));
     ASSERT_EQ(*sPtr2, testValueOne);
     auto sPtr3 = std::move(sPtr2);
     ASSERT_EQ(*sPtr3, testValueOne);
     ASSERT_EQ(sPtr3.use_count(), 1);
+}
+
+TEST_F(sharedPtrTest, testMoveAssignment) {
+    cs::shared_ptr<int> sPtr2; 
+    sPtr2 = std::move(sPtr);
+    ASSERT_EQ(*sPtr2, testValueOne);
+    ASSERT_EQ(sPtr2.use_count(), 1);
 }
 
 TEST_F(sharedPtrTest, testGet) {
