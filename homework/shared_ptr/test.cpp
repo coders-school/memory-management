@@ -2,6 +2,7 @@
 #include "gtest/gtest.h"
 #include "control_block.hpp"
 #include "shared_ptr.hpp"
+#include "weak_ptr.hpp"
 
 const std::string testString{"Ala ma kota"};
 constexpr int testValueOne = 10;
@@ -106,3 +107,77 @@ TEST(makeSharedTest, shouldCreateCustomStruct) {
     ASSERT_EQ(ptr->b, testString);
 }
 
+TEST(customDeleterTest, shouldUseCustomDeleter) {
+    struct A {
+        int a;
+        std::string b;
+    };
+    std::string testString = "Deleted";
+    int testNumber = 0;
+
+    std::function<void(A* ptr)> deleter = [](A* ptr) { ptr->a = 0; ptr->b = "Deleted"; };
+    A* testStruct = new A();
+    {
+        cs::shared_ptr<A> ptr(testStruct, deleter);
+    }
+
+    ASSERT_EQ(testNumber, testStruct->a);
+    ASSERT_EQ(testString, testStruct->b);
+    delete testStruct;
+}
+
+struct weakPtrTest : ::testing::Test {
+    weakPtrTest()
+        : sPtr(new int{testValueOne}) {}
+    cs::shared_ptr<int> sPtr;
+};
+
+TEST_F(weakPtrTest, testLock) {
+    cs::weak_ptr<int> wPtr(sPtr);
+    ASSERT_EQ(*(wPtr.lock()), testValueOne);
+}
+
+TEST_F(weakPtrTest, testCopyConstructorFromShared) {
+    cs::weak_ptr<int> wPtr(sPtr);
+    ASSERT_EQ(*(wPtr.lock()), *sPtr);
+    ASSERT_EQ(wPtr.use_count(), 1);
+}
+
+TEST_F(weakPtrTest, testCopyConstructorFromWeak) {
+    cs::weak_ptr<int> wPtr(sPtr);
+    auto wPtr2(wPtr);
+    ASSERT_FALSE(wPtr.expired());
+    ASSERT_EQ(*(wPtr.lock()), *sPtr);
+    ASSERT_EQ(wPtr.use_count(), 2);
+}
+
+TEST_F(weakPtrTest, testCopyAssignment) {
+    cs::weak_ptr<int> wPtr = sPtr;
+    ASSERT_EQ(*(wPtr.lock()), *sPtr);
+    ASSERT_EQ(wPtr.use_count(), 1);
+}
+
+TEST_F(weakPtrTest, testMoveConstructorFromWeak) {
+    cs::weak_ptr<int> wPtr{sPtr};
+    auto wPtr2(std::move(wPtr));
+    ASSERT_EQ(*(wPtr2.lock()), *sPtr);
+    ASSERT_EQ(wPtr2.use_count(), 1);
+    ASSERT_TRUE(wPtr.expired());
+}
+
+TEST_F(weakPtrTest, testMoveAssignment) {
+    cs::weak_ptr<int> wPtr(sPtr);
+    auto wPtr2 = std::move(wPtr);
+    ASSERT_EQ(*(wPtr2.lock()), *sPtr);
+    ASSERT_EQ(wPtr2.use_count(), 1);
+}
+
+TEST_F(weakPtrTest, testExpired) {
+    cs::weak_ptr<int> wPtr(sPtr);
+    ASSERT_FALSE(wPtr.expired());
+    wPtr.reset();
+    ASSERT_TRUE(wPtr.expired());
+    cs::weak_ptr<int> wPtr2(sPtr);
+    sPtr.reset();
+    ASSERT_TRUE(wPtr2.expired());
+}
