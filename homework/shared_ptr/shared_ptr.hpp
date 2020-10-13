@@ -107,12 +107,14 @@ shared_ptr<T>& shared_ptr<T>::operator=(const shared_ptr<T>& other) noexcept {
 
 template <typename T>
 shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr<T>&& other) noexcept {
-    deleteSeq();
+    if (this != &other) {
+        deleteSeq();
 
-    ptr_ = other.ptr_;
-    controlBlock_ = other.controlBlock_;
-    other.ptr_ = nullptr;
-    other.controlBlock_ = nullptr;
+        ptr_ = other.ptr_;
+        controlBlock_ = other.controlBlock_;
+        other.ptr_ = nullptr;
+        other.controlBlock_ = nullptr;
+    }
     return *this;
 }
 
