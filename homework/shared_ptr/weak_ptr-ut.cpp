@@ -13,7 +13,7 @@ TEST(WeakPointerTests, WeakPointerCreation) {
     ASSERT_EQ(shared_something.use_count(), 1);
 }
 
-TEST(WeakPointerTests, WeakPointerExpired) { // double delete
+TEST(WeakPointerTests, WeakPointerExpired) {
   cs::weak_ptr<int> w_ptr;
   {
     auto s_ptr = cs::shared_ptr<int>(new int{5});
@@ -21,6 +21,6 @@ TEST(WeakPointerTests, WeakPointerExpired) { // double delete
     ASSERT_EQ(w_ptr.use_count(), 1);
     
   }
-  ASSERT_EQ(w_ptr.expired(), true);
+  ASSERT_TRUE(w_ptr.expired());
   
 }

@@ -39,7 +39,6 @@ void weak_ptr<T>::deletePointers() {
     if (cb_) {
         cb_->decreaseWeakRef();
         if (cb_->getShared() == 0) {
-            cb_->callDeleter();
             if (cb_->getWeak() == 0) {
                 delete cb_;
             }
