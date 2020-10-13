@@ -1,30 +1,26 @@
 #pragma once
 
-#include "shared_ptr.hpp"
-#include "control_block.hpp"
 #include <memory>
+#include "control_block.hpp"
+#include "shared_ptr.hpp"
 namespace cs {
 template <typename T>
 class shared_ptr;
-}  // namespace cs (forward declaration)
-
+}  // namespace cs
 
 namespace cs {
 template <typename T>
 class weak_ptr {
 public:
-    weak_ptr() noexcept
-        : ptr_(nullptr), cb_(new ControlBlock([&]() { delete ptr_; })) {}
+    weak_ptr() noexcept : ptr_(nullptr), cb_(new ControlBlock([&]() { delete ptr_; })) {}
     weak_ptr(const weak_ptr& ptr) noexcept;
     weak_ptr(const cs::shared_ptr<T>& ptr) noexcept;
     weak_ptr(weak_ptr&& ptr) noexcept;
     weak_ptr& operator=(const weak_ptr& ptr) noexcept;
     weak_ptr& operator=(const cs::shared_ptr<T>& ptr) noexcept;
     weak_ptr& operator=(weak_ptr&& ptr) noexcept;
-    T& operator*() = delete;
-    T* operator->() = delete;
     long use_count() const { return static_cast<long>(cb_->getShared()); }
-    bool expired() const noexcept { use_count() == 0; }  // musi byc lepszy sposob...
+    bool expired() const noexcept { return use_count() == 0; }  // musi byc lepszy sposob...
     cs::shared_ptr<T> lock() const noexcept;
     void reset() noexcept;
     ~weak_ptr();
@@ -33,6 +29,9 @@ private:
     T* ptr_;
     ControlBlock* cb_;
     void deletePointers();
+
+    template <typename>
+    friend class shared_ptr;
 };
 
 template <typename T>
@@ -102,14 +101,10 @@ weak_ptr<T>& weak_ptr<T>::operator=(weak_ptr&& ptr) noexcept {
 
 template <typename T>
 weak_ptr<T>& weak_ptr<T>::operator=(const cs::shared_ptr<T>& ptr) noexcept {
-    if (&ptr != this) {
-        deletePointers();
-        ptr_ = ptr.ptr_;
-        cb_ = ptr.cb_;
-        cb_->setDeleter([&]() { delete ptr_; });
-        ptr.ptr_ = nullptr;
-        ptr.cb_ = nullptr;
-    }
+    ptr_ = ptr.ptr_;
+    cb_ = ptr.cb_;
+    cb_->increaseWeakRef();
+
     return *this;
 }
 

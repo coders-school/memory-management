@@ -4,13 +4,19 @@
 #include <functional>
 #include "control_block.hpp"
 #include "weak_ptr.hpp"
+#include "iostream"
+namespace cs {
+template <typename T>
+class weak_ptr;
+}  // namespace cs
 
 namespace cs {
 template <typename T>
 class shared_ptr {
 public:
     shared_ptr(T* ptr = nullptr)
-        : ptr_(ptr), cb_(new ControlBlock([&]() { delete ptr_; })) {}
+        : ptr_(ptr), cb_(new ControlBlock([&]() { delete ptr_; })) {
+    }
     shared_ptr(const shared_ptr& ptr);
     shared_ptr(const cs::weak_ptr<T>& ptr);
     shared_ptr(shared_ptr&& ptr);
@@ -26,8 +32,13 @@ public:
 
 private:
     void deletePointers();
+
     template <typename Y, typename... Args>
     friend shared_ptr<Y> make_shared(Args&&... args);
+
+    template <typename>
+    friend class cs::weak_ptr;
+
     shared_ptr(T* ptr, ControlBlock* cb);
     T* ptr_;
     ControlBlock* cb_;
