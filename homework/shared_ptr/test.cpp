@@ -7,6 +7,15 @@
 const std::string testString{"Ala ma kota"};
 constexpr int testValueOne = 10;
 constexpr int testValueTwo = 20;
+const std::string deleterString = "Deleted";
+constexpr int testNumber = 0;
+
+struct A {
+    int a;
+    std::string b;
+};
+
+std::function<void(A* ptr)> deleter = [](A* ptr) { ptr->a = 0; ptr->b = "Deleted"; };
 
 struct sharedPtrTest : ::testing::Test {
     sharedPtrTest()
@@ -108,23 +117,31 @@ TEST(makeSharedTest, shouldCreateCustomStruct) {
 }
 
 TEST(customDeleterTest, shouldUseCustomDeleter) {
-    struct A {
-        int a;
-        std::string b;
-    };
-    std::string testString = "Deleted";
-    int testNumber = 0;
 
-    std::function<void(A* ptr)> deleter = [](A* ptr) { ptr->a = 0; ptr->b = "Deleted"; };
     A* testStruct = new A();
     {
         cs::shared_ptr<A> ptr(testStruct, deleter);
     }
 
     ASSERT_EQ(testNumber, testStruct->a);
-    ASSERT_EQ(testString, testStruct->b);
+    ASSERT_EQ(deleterString, testStruct->b);
     delete testStruct;
 }
+
+TEST(customDeleterTest, shouldNotDeleteOnMakeShared) {
+    const A* object;
+    cs::weak_ptr<A> wPtr;
+
+    {
+        auto ptr = cs::make_shared<A>(testNumber, testString);
+        wPtr = ptr;
+        object = ptr.get();
+    }
+
+    ASSERT_EQ(testNumber, object->a);
+    ASSERT_EQ(testString, object->b);
+}
+
 
 struct weakPtrTest : ::testing::Test {
     weakPtrTest()
@@ -148,7 +165,7 @@ TEST_F(weakPtrTest, testCopyConstructorFromWeak) {
     auto wPtr2(wPtr);
     ASSERT_FALSE(wPtr.expired());
     ASSERT_EQ(*(wPtr.lock()), *sPtr);
-    ASSERT_EQ(wPtr.use_count(), 2);
+    ASSERT_EQ(*(wPtr2.lock()), *sPtr);
 }
 
 TEST_F(weakPtrTest, testCopyAssignment) {

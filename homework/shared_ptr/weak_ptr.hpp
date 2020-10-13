@@ -21,7 +21,7 @@ public:
     void reset() noexcept;
     bool expired() const noexcept;
     shared_ptr<T> lock() const noexcept;
-    size_t use_count() { return counter_->getWeakRefs(); } 
+    size_t use_count() { return counter_->getRefs(); } 
     void swap(weak_ptr& ptr) noexcept;
 
 private:
