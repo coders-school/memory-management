@@ -20,37 +20,47 @@ my_unique_ptr<SomeUsefulClass> provider(std::string someString)
     return my_unique_ptr<SomeUsefulClass>(new SomeUsefulClass(someString));
 }
 
-TEST(Test, empty)
+class UniquePointerTestSuite : public ::testing::Test {
+public:
+  UniquePointerTestSuite()
+      : m_someString("provided by provider"),
+        m_msg("some important message"),
+        m_sut(my_unique_ptr<SomeUsefulClass>()) {}
+
+  std::string m_someString;
+  std::string m_msg;
+  my_unique_ptr<SomeUsefulClass> m_sut; 
+
+  int initial_value = 42;
+  int new_value = 100;
+
+};
+
+
+TEST_F(UniquePointerTestSuite, empty)
 {
-    my_unique_ptr<SomeUsefulClass> ptr = my_unique_ptr<SomeUsefulClass>();
-    EXPECT_EQ(ptr.get(), nullptr);
+    EXPECT_EQ(m_sut.get(), nullptr);
 }
 
-TEST(Test, passedAsTemporary)
+TEST_F(UniquePointerTestSuite, passedAsTemporary)
 {
-    std::string msg("some important message");
-    EXPECT_EQ(msg, functionUptrAsArg(provider(msg)));
+    EXPECT_EQ(m_msg, functionUptrAsArg(provider(m_msg)));
 }
 
-TEST(Test, passedResetOwneship)
+TEST_F(UniquePointerTestSuite, passedAndResetOwneship)
 {
-
-    std::string msg("some important message");
-    EXPECT_EQ(msg, functionUptrAsArg(provider(msg)));
+    EXPECT_EQ(m_msg, functionUptrAsArg(provider(m_msg)));
+    EXPECT_EQ(m_sut.get(), nullptr);
 }
 
-TEST(Test, passedWithMove)
+TEST_F(UniquePointerTestSuite, passedWithMove)
 {
-    std::string someString("provided by provider");
-    my_unique_ptr<SomeUsefulClass> ptr = provider(someString);
-    EXPECT_EQ(functionUptrAsArg(std::move(ptr)), someString);
+    my_unique_ptr<SomeUsefulClass> ptr = provider(m_someString);
+    EXPECT_EQ(functionUptrAsArg(std::move(ptr)), m_someString);
 }
 
-TEST(Test, ShouldRelease)
+TEST_F(UniquePointerTestSuite, ShouldRelease)
 {
-    int initial_value = 42;
-    int new_value = 100;
-
     my_unique_ptr<int> pointer_ = my_unique_ptr<int>(new int(initial_value));
 
     int* raw_pointer = &new_value;
@@ -65,42 +75,23 @@ TEST(Test, ShouldRelease)
     delete raw_pointer;
 }
 
-TEST(Test, ShouldReset)
+TEST_F(UniquePointerTestSuite, ShouldReset)
 {
-    int initial_value = 42;
-    int another_initial_value = 43;
-
     my_unique_ptr<int> pointer_ = my_unique_ptr<int>(new int(initial_value));
-    pointer_.reset(new int(another_initial_value));
+    pointer_.reset(new int(new_value));
 
-    EXPECT_EQ(*(pointer_.get()), another_initial_value);
+    EXPECT_EQ(*(pointer_.get()), new_value);
 }
 
-TEST(Test, emptyDefaultCtor)
+TEST_F(UniquePointerTestSuite, emptyDefaultCtor)
 {
     my_unique_ptr<SomeUsefulClass> ptr = my_unique_ptr<SomeUsefulClass>(new SomeUsefulClass());
     EXPECT_EQ(ptr->message_, "");
 }
 
-TEST(Test, dereferencingAfterGet)
+TEST_F(UniquePointerTestSuite, dereferencingAfterGet)
 {
-    my_unique_ptr<int> ptr = my_unique_ptr<int>(new int(10));
-    EXPECT_EQ(*(ptr.get()), 10);
+    my_unique_ptr<int> ptr = my_unique_ptr<int>(new int(initial_value));
+    EXPECT_EQ(*(ptr.get()), initial_value);
 }
 
-/*
-TEST(Test, deletedAsgnOperator_shouldNotCompile_withUseOfDeletedFunction)
-{
-    my_unique_ptr<int> ptr  = my_unique_ptr<int>(new int(10));
-    my_unique_ptr<int> copy_ptr = ptr;
-}
-*/
-
-/*
-
-TEST(Test, deletedCopyConstructor_shouldNotCompile_withDeletedMethodError)
-{
-    my_unique_ptr<int> ptr  = my_unique_ptr<int>(new int(10));
-    my_unique_ptr<int> copy_ptr = my_unique_ptr<int>(ptr);
-}
-*/
