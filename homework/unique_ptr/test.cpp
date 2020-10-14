@@ -60,7 +60,7 @@ TEST(Test, ShouldRelease)
     raw_pointer = pointer_.release();
 
     EXPECT_EQ(pointer_.get(), nullptr);
-    EXPECT_EQ(*raw_pointer, 42);
+    EXPECT_EQ(*raw_pointer, initial_value);
 
     delete raw_pointer;
 }
