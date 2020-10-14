@@ -24,7 +24,7 @@ public:
         return tmp;
     };
 
-    void reset(T* new_ptr)
+    void reset(T* new_ptr = nullptr)
     {
         delete ptr_;
         ptr_ = new_ptr;
