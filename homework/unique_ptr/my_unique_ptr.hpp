@@ -7,7 +7,7 @@ class my_unique_ptr
 public:
     explicit my_unique_ptr(T* ptr) : ptr_(ptr){};
 
-    my_unique_ptr() { ptr_ = nullptr; };
+    my_unique_ptr() : ptr_{nullptr} {}
 
     my_unique_ptr(const my_unique_ptr<T>&) = delete;
 
