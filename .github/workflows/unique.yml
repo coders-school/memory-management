@@ -34,5 +34,5 @@ jobs:
     - name: Run valgrind 
       working-directory: homework/unique_ptr/build
       run: |
-        valgrind ./test
-        valgrind ./UniquePointer
+        valgrind ./unique_ptr-ut
+        valgrind ./unique_ptr
