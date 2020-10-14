@@ -17,7 +17,7 @@ public:
   my_unique_ptr(const my_unique_ptr<T> &) = delete;
   void operator=(const my_unique_ptr<T> &) = delete;
 
-  T *get() { return ptr_; }
+  T *get() const { return ptr_; }
 
   T *release() {
     T *tmp = ptr_;
