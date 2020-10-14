@@ -33,7 +33,7 @@ public:
 
 private:
     T* ptr_{nullptr};
-    ControlBlock<T>* refCounter_{nullptr};
+    ControlBlockBase<T>* refCounter_{nullptr};
 
     void checkControlBlock();
 };

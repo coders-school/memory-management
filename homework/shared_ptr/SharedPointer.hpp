@@ -19,6 +19,8 @@ class SharedPointer {
 public:
     template <typename>
     friend class WeakPointer;
+    template <class M, class... Args>
+    friend SharedPointer<M> MakeShared(Args&... args);
 
     SharedPointer(std::nullptr_t);
     SharedPointer(T* ptr = nullptr);
@@ -26,6 +28,14 @@ public:
     explicit SharedPointer(WeakPointer<T>& weakPtr);
     SharedPointer(SharedPointer& anotherPtr);
     SharedPointer(SharedPointer&& anotherPtr) noexcept;
+    SharedPointer(ControlBlockData<T>* refCounter) {
+        refCounter_ = refCounter;
+        ptr_ = refCounter_->getData();
+        // std::cout << "Private works\n";
+        // std::cout << refCounter_->getData() << "\n";
+        // std::cout << ptr_ << "\n";
+    }
+
     ~SharedPointer();
 
     T* get();
@@ -41,8 +51,8 @@ public:
     SharedPointer<T>& operator=(SharedPointer<T>&& anotherPtr);
 
 private:
-    T* ptr_{nullptr};
-    ControlBlock<T>* refCounter_{nullptr};
+        T* ptr_{nullptr};
+    ControlBlockBase<T>* refCounter_{nullptr};
 
     void checkControlBlock();
 };
@@ -109,7 +119,7 @@ void SharedPointer<T>::reset(T* ptr, std::function<void(T*)> deleter) {
         delete ptr_;
     } else {
         refCounter_->decreaseShared();
-        refCounter_ = new ControlBlock<T>{deleter};
+        refCounter_ = new ControlBlock<T>{ptr, deleter};
         refCounter_->increaseShared();
     }
     ptr_ = ptr;
