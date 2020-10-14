@@ -17,11 +17,6 @@ controlObject<T>::controlObject(T data, Deleter<T> deleter)
 
 }
 
-// template <typename T>
-// controlObject<T>::~controlObject() {
-//     control_block<T>::getDeleter()(data_);
-// }
-
 template <typename T>
 T* controlObject<T>::getObject() noexcept {
     return &data_;
