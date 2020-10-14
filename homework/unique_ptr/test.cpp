@@ -83,6 +83,14 @@ TEST_F(UniquePointerTestSuite, ShouldReset)
     EXPECT_EQ(*(pointer_.get()), new_value);
 }
 
+TEST_F(UniquePointerTestSuite, ShouldResetWhenEmpty)
+{
+    my_unique_ptr<int> pointer_ = my_unique_ptr<int>(new int(initial_value));
+    pointer_.reset(nullptr);
+
+    EXPECT_EQ(pointer_.get(), nullptr);
+}
+
 TEST_F(UniquePointerTestSuite, emptyDefaultCtor)
 {
     my_unique_ptr<SomeUsefulClass> ptr = my_unique_ptr<SomeUsefulClass>(new SomeUsefulClass());
