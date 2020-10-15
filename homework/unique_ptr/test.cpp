@@ -61,6 +61,13 @@ TEST_F(UniquePointerTestSuite, moveOperator)
     EXPECT_EQ(ptr2->message_,m_msg);
 }
 
+TEST_F(UniquePointerTestSuite, moveOperatorTestWithCast)
+{
+    my_unique_ptr<SomeUsefulClass> ptr2 = std::move(m_sut);
+    EXPECT_EQ(m_sut.get(), nullptr);
+    EXPECT_EQ(ptr2->message_,m_msg);
+}
+
 TEST_F(UniquePointerTestSuite, ShouldRelease)
 {
     my_unique_ptr<int> pointer_ = my_unique_ptr<int>(new int(initial_value));

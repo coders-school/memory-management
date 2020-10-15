@@ -9,7 +9,7 @@ public:
 
   my_unique_ptr(my_unique_ptr<T> &&ptr_m) : ptr_{ptr_m.release()} {}
 
-  T &operator&&(my_unique_ptr<T> &&ptr_m) {
+  T &operator=(my_unique_ptr<T> &&ptr_m) {
     this->ptr_ = ptr_.release();
     return *(this->ptr_);
   }
