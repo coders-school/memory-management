@@ -86,7 +86,7 @@ TEST_F(UniquePointerTestSuite, ShouldReset)
 TEST_F(UniquePointerTestSuite, ShouldResetWhenEmpty)
 {
     my_unique_ptr<int> pointer_ = my_unique_ptr<int>(new int(initial_value));
-    pointer_.reset(nullptr);
+    pointer_.reset();
 
     EXPECT_EQ(pointer_.get(), nullptr);
 }
@@ -102,4 +102,3 @@ TEST_F(UniquePointerTestSuite, dereferencingAfterGet)
     my_unique_ptr<int> ptr = my_unique_ptr<int>(new int(initial_value));
     EXPECT_EQ(*(ptr.get()), initial_value);
 }
-
