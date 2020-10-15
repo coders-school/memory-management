@@ -25,11 +25,11 @@ public:
   UniquePointerTestSuite()
       : m_someString("provided by provider"),
         m_msg("some important message"),
-        m_sut(my_unique_ptr<SomeUsefulClass>()) {}
+        m_sut(provider(m_msg)) {}
 
   std::string m_someString;
   std::string m_msg;
-  my_unique_ptr<SomeUsefulClass> m_sut; 
+  my_unique_ptr<SomeUsefulClass> m_sut;
 
   int initial_value = 42;
   int new_value = 100;
@@ -37,19 +37,14 @@ public:
 };
 
 
-TEST_F(UniquePointerTestSuite, empty)
-{
-    EXPECT_EQ(m_sut.get(), nullptr);
-}
-
 TEST_F(UniquePointerTestSuite, passedAsTemporary)
 {
     EXPECT_EQ(m_msg, functionUptrAsArg(provider(m_msg)));
 }
 
-TEST_F(UniquePointerTestSuite, passedAndResetOwneship)
+TEST_F(UniquePointerTestSuite, passedWithMoveAndResetOwneship)
 {
-    EXPECT_EQ(m_msg, functionUptrAsArg(provider(m_msg)));
+    EXPECT_EQ(m_msg, functionUptrAsArg(std::move(m_sut)));
     EXPECT_EQ(m_sut.get(), nullptr);
 }
 
@@ -57,6 +52,13 @@ TEST_F(UniquePointerTestSuite, passedWithMove)
 {
     my_unique_ptr<SomeUsefulClass> ptr = provider(m_someString);
     EXPECT_EQ(functionUptrAsArg(std::move(ptr)), m_someString);
+}
+
+TEST_F(UniquePointerTestSuite, moveOperator)
+{
+    my_unique_ptr<SomeUsefulClass> ptr2 = std::move(m_sut);
+    EXPECT_EQ(m_sut.get(), nullptr);
+    EXPECT_EQ(ptr2->message_,m_msg);
 }
 
 TEST_F(UniquePointerTestSuite, ShouldRelease)
