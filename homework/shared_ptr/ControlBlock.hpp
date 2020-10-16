@@ -18,16 +18,15 @@ public:
     void decreaseShared();
 
     virtual T* getData() = 0;
-    std::function<void(T*)> deleter_;
-    // auto defaultDeleter = [](T* ptrToDelete) { delete ptrToDelete;};
+    std::function<void(T*)> deleter_ = [](T* ptrToDelete) { delete ptrToDelete; };
 
 private:
-    std::atomic<size_t> sharedRefs_{0};
+    std::atomic<size_t> sharedRefs_{1};
     std::atomic<size_t> weakRefs_{0};
 };
 
-template <class T>
-class ControlBlock : public virtual ControlBlockBase<T> {
+template <typename T>
+class ControlBlock : public ControlBlockBase<T> {
 public:
     ControlBlock(
         T* ptr = nullptr,
@@ -46,8 +45,8 @@ private:
     std::function<void(T*)> deleter_;
 };
 
-template <class T>
-class ControlBlockData : public virtual ControlBlockBase<T> {
+template <typename T>
+class ControlBlockData : public ControlBlockBase<T> {
 public:
     template <typename... Args>
     ControlBlockData(Args... args) : data_(args...) {}
