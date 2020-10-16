@@ -50,6 +50,8 @@ TEST_F(sharedPtrTest, testGet) {
 TEST_F(sharedPtrTest, testReset) {
     sPtr.reset(new int{testValueTwo});
     ASSERT_EQ(*sPtr, testValueTwo);
+    sPtr.reset();
+    ASSERT_EQ(sPtr.get(), nullptr);
 }
 
 TEST_F(sharedPtrTest, testSwap) {
@@ -143,5 +145,6 @@ TEST_F(weakPtrTest, testExpired) {
     ASSERT_TRUE(wPtr.expired());
     cs::weak_ptr<int> wPtr2(sPtr);
     sPtr.reset();
+    ASSERT_EQ(sPtr.get(), nullptr);
     ASSERT_TRUE(wPtr2.expired());
 }
