@@ -35,6 +35,8 @@ public:
   std::string m_someString;
   std::string m_msg;
   my_shared_ptr<SomeUsefulClass> m_sut;
+  my_shared_ptr<SomeUsefulClass> m_sut_empty = my_shared_ptr<SomeUsefulClass>();
+
 
   int initial_value = 42;
   int new_value = 100;
@@ -44,16 +46,14 @@ public:
 
 TEST_F(SharedPointerTestSuite, emptySharedPtr)
 {
-    my_shared_ptr<SomeUsefulClass> ptr = my_shared_ptr<SomeUsefulClass>();
-    EXPECT_EQ(ptr.get(), nullptr);
-    EXPECT_EQ(ptr.use_count(), 0);
+    EXPECT_EQ(m_sut_empty.get(), nullptr);
+    EXPECT_EQ(m_sut_empty.use_count(), 0);
 }
 
 TEST_F(SharedPointerTestSuite, notEmptySharedPtr)
 {
-    my_shared_ptr<SomeUsefulClass> ptr = my_shared_ptr<SomeUsefulClass>(new SomeUsefulClass());
-    EXPECT_NE(ptr.get(), nullptr);
-    EXPECT_EQ(ptr.use_count(), 1);
+    EXPECT_NE(m_sut.get(), nullptr);
+    EXPECT_EQ(m_sut.use_count(), 1);
 }
 
 TEST_F(SharedPointerTestSuite, moreReferencesSharedPointerTestSuite)
@@ -75,8 +75,7 @@ TEST_F(SharedPointerTestSuite, passedAsTemporary)
 
 TEST_F(SharedPointerTestSuite, passedWithMove)
 {
-    my_shared_ptr<SomeUsefulClass> ptr = provider(m_someString);
-    EXPECT_EQ(functionSharedPtrAsArg(std::move(ptr)), m_someString);
+    EXPECT_EQ(m_msg, functionSharedPtrAsArg(std::move(m_sut)));
 }
 
 TEST_F(SharedPointerTestSuite, moveAssigmenOperator)
@@ -93,8 +92,7 @@ TEST_F(SharedPointerTestSuite, emptyDefaultCtor)
 
 TEST_F(SharedPointerTestSuite, dereferencingAfterGet)
 {
-    my_shared_ptr<int> ptr = my_shared_ptr<int>(new int(initial_value));
-    EXPECT_EQ(*(ptr.get()), initial_value);
+    EXPECT_EQ( (*(m_sut.get())).message_, m_msg);
 }
 
 TEST_F(SharedPointerTestSuite, asgnOperator)
@@ -109,6 +107,7 @@ TEST_F(SharedPointerTestSuite, CopyConstructor)
     ASSERT_TRUE(ptr);
     my_shared_ptr<int> copy_ptr = my_shared_ptr<int>(ptr);
     ASSERT_TRUE(copy_ptr);
+
 }
 
 TEST_F(SharedPointerTestSuite, ShouldReset)
@@ -117,5 +116,18 @@ TEST_F(SharedPointerTestSuite, ShouldReset)
     pointer_.reset(new int(new_value));
     EXPECT_EQ(*(pointer_.get()), new_value);
 }
+
+TEST_F(SharedPointerTestSuite, ShouldResetWithSimpleClass)
+{
+    m_sut.reset(new SomeUsefulClass(m_someString));
+    EXPECT_EQ((*m_sut.get()).message_, m_someString);
+}
+
+TEST_F(SharedPointerTestSuite, ShouldResetWithNullptr)
+{
+    m_sut.reset(nullptr);
+    EXPECT_EQ(m_sut.get(), nullptr);
+}
+
 
 
