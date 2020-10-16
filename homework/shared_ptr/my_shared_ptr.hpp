@@ -1,5 +1,6 @@
 #pragma once
-#include<atomic> 
+#include <atomic>
+#include <iostream>
 
 struct Counter
 {
@@ -46,11 +47,12 @@ public:
             counter_ptr = new Counter();
             counter_ptr->count_ = ptr_moved.use_count();
         }
-        ptr_moved.~my_shared_ptr<T>;
+        ptr_moved.reset(nullptr);
     }
 
     T& operator=(const my_shared_ptr<T>& other_shared_ptr)
     {
+        std::cout << "operator move assigment" << "\n";
         delete ptr_;
         delete counter_ptr;
 

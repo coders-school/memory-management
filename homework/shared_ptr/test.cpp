@@ -25,21 +25,38 @@ my_shared_ptr<SomeUsefulClass> provider(std::string someString)
     return my_shared_ptr<SomeUsefulClass>(new SomeUsefulClass(someString));
 }
 
-TEST(Test, empty)
+class SharedPointerTestSuite : public ::testing::Test {
+public:
+  SharedPointerTestSuite()
+      : m_someString("provided by provider"),
+        m_msg("some important message"),
+        m_sut(provider(m_msg)) {}
+
+  std::string m_someString;
+  std::string m_msg;
+  my_shared_ptr<SomeUsefulClass> m_sut;
+
+  int initial_value = 42;
+  int new_value = 100;
+
+};
+
+
+TEST_F(SharedPointerTestSuite, emptySharedPtr)
 {
     my_shared_ptr<SomeUsefulClass> ptr = my_shared_ptr<SomeUsefulClass>();
     EXPECT_EQ(ptr.get(), nullptr);
     EXPECT_EQ(ptr.use_count(), 0);
 }
 
-TEST(Test, notEmpty)
+TEST_F(SharedPointerTestSuite, notEmptySharedPtr)
 {
     my_shared_ptr<SomeUsefulClass> ptr = my_shared_ptr<SomeUsefulClass>(new SomeUsefulClass());
     EXPECT_NE(ptr.get(), nullptr);
     EXPECT_EQ(ptr.use_count(), 1);
 }
 
-TEST(Test, moreReferences)
+TEST_F(SharedPointerTestSuite, moreReferencesSharedPointerTestSuite)
 {
     my_shared_ptr<SomeUsefulClass> ptr = my_shared_ptr<SomeUsefulClass>(new SomeUsefulClass());
     EXPECT_NE(ptr.get(), nullptr);
@@ -51,56 +68,54 @@ TEST(Test, moreReferences)
     EXPECT_EQ(ptr.use_count(), 2);
 }
 
-TEST(Test, passedAsTemporary)
+TEST_F(SharedPointerTestSuite, passedAsTemporary)
 {
-    std::string msg("some important message");
-    EXPECT_EQ(msg, functionSharedPtrAsArg(provider(msg)));
+    EXPECT_EQ(m_msg, functionSharedPtrAsArg(provider(m_msg)));
 }
 
-TEST(Test, passedWithMove)
+TEST_F(SharedPointerTestSuite, passedWithMove)
 {
-    std::string someString("provided by provider");
-    my_shared_ptr<SomeUsefulClass> ptr = provider(someString);
-    EXPECT_EQ(functionSharedPtrAsArg(std::move(ptr)), someString);
+    my_shared_ptr<SomeUsefulClass> ptr = provider(m_someString);
+    EXPECT_EQ(functionSharedPtrAsArg(std::move(ptr)), m_someString);
 }
 
-TEST(Test, emptyDefaultCtor)
+TEST_F(SharedPointerTestSuite, moveAssigmenOperator)
+{
+    my_shared_ptr<SomeUsefulClass>&& ptr = std::move(m_sut);
+    EXPECT_EQ(ptr->message_, m_msg);
+}
+
+TEST_F(SharedPointerTestSuite, emptyDefaultCtor)
 {
     my_shared_ptr<SomeUsefulClass> ptr = my_shared_ptr<SomeUsefulClass>(new SomeUsefulClass());
     EXPECT_EQ(ptr->message_, "");
 }
 
-TEST(Test, dereferencingAfterGet)
+TEST_F(SharedPointerTestSuite, dereferencingAfterGet)
 {
-    my_shared_ptr<int> ptr = my_shared_ptr<int>(new int(10));
-    EXPECT_EQ(*(ptr.get()), 10);
+    my_shared_ptr<int> ptr = my_shared_ptr<int>(new int(initial_value));
+    EXPECT_EQ(*(ptr.get()), initial_value);
 }
 
-TEST(Test, asgnOperator)
+TEST_F(SharedPointerTestSuite, asgnOperator)
 {
-    my_shared_ptr<int> ptr = my_shared_ptr<int>(new int(10));
-    my_shared_ptr<int> copy_ptr = ptr;
+    my_shared_ptr<SomeUsefulClass> copy_ptr = m_sut;
+    EXPECT_EQ(copy_ptr.use_count(), 2);
 }
 
-TEST(Test, CopyConstructor)
+TEST_F(SharedPointerTestSuite, CopyConstructor)
 {
-    my_shared_ptr<int> ptr = my_shared_ptr<int>(new int(10));
+    my_shared_ptr<int> ptr = my_shared_ptr<int>(new int(initial_value));
     ASSERT_TRUE(ptr);
     my_shared_ptr<int> copy_ptr = my_shared_ptr<int>(ptr);
     ASSERT_TRUE(copy_ptr);
 }
 
-
-TEST(Test, ShouldReset)
+TEST_F(SharedPointerTestSuite, ShouldReset)
 {
-    int initial_value = 42;
-    int another_initial_value = 43;
-
     my_shared_ptr<int> pointer_ = my_shared_ptr<int>(new int(initial_value));
-    pointer_.reset(new int(another_initial_value));
-
-    EXPECT_EQ(*(pointer_.get()), another_initial_value);
-
+    pointer_.reset(new int(new_value));
+    EXPECT_EQ(*(pointer_.get()), new_value);
 }
 
 
