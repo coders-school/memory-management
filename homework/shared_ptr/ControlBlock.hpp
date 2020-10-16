@@ -4,9 +4,9 @@
 #include <functional>
 
 template <typename T>
-class ControlBlock {
+class ControlBlockBase {
 public:
-    ControlBlock(std::function<void(T*)> deleter = [](T* ptrToDelete) { delete ptrToDelete; }) : deleter_(deleter) {}
+    virtual ~ControlBlockBase() = default;
 
     size_t getShared();
     size_t getWeak();
@@ -17,40 +17,73 @@ public:
     void decreaseWeak();
     void decreaseShared();
 
-    std::function<void(T*)> deleter_;
-    // auto defaultDeleter = [](T* ptrToDelete) { delete ptrToDelete;};
+    virtual T* getData() = 0;
+    std::function<void(T*)> deleter_ = [](T* ptrToDelete) { delete ptrToDelete; };
 
 private:
-    std::atomic<size_t> sharedRefs_{0};
+    std::atomic<size_t> sharedRefs_{1};
     std::atomic<size_t> weakRefs_{0};
 };
 
 template <typename T>
-size_t ControlBlock<T>::getShared() {
+class ControlBlock : public ControlBlockBase<T> {
+public:
+    ControlBlock(
+        T* ptr = nullptr,
+        std::function<void(T*)> deleter = [](T* ptrToDelete) { delete ptrToDelete; })
+        : refs_(ptr), deleter_(deleter) {}
+    ~ControlBlock() {
+        deleter_(refs_);
+    }
+
+    T* getData() override {
+        return refs_;
+    }
+
+private:
+    T* refs_;
+    std::function<void(T*)> deleter_;
+};
+
+template <typename T>
+class ControlBlockData : public ControlBlockBase<T> {
+public:
+    template <typename... Args>
+    ControlBlockData(Args... args) : data_(args...) {}
+    T* getData() override {
+        return &data_;
+    }
+
+private:
+    T data_{};
+};
+
+template <typename T>
+size_t ControlBlockBase<T>::getShared() {
     return sharedRefs_.load();
 }
 
 template <typename T>
-size_t ControlBlock<T>::getWeak() {
+size_t ControlBlockBase<T>::getWeak() {
     return weakRefs_.load();
 }
 
 template <typename T>
-void ControlBlock<T>::increaseWeak() {
+void ControlBlockBase<T>::increaseWeak() {
     ++weakRefs_;
 }
 
 template <typename T>
-void ControlBlock<T>::increaseShared() {
+void ControlBlockBase<T>::increaseShared() {
     ++sharedRefs_;
 }
 
 template <typename T>
-void ControlBlock<T>::decreaseWeak() {
+void ControlBlockBase<T>::decreaseWeak() {
     --weakRefs_;
 }
 
 template <typename T>
-void ControlBlock<T>::decreaseShared() {
+void ControlBlockBase<T>::decreaseShared() {
     --sharedRefs_;
 }
