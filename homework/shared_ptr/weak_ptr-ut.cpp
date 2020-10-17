@@ -3,7 +3,6 @@
 #include "weak_ptr.hpp"
 
 
-
 TEST(WeakPointerTests, WeakPointerCreation) {
     struct Something {};
     cs::shared_ptr<Something> shared_something(new Something{});
