@@ -7,12 +7,7 @@
 
 int main()
 {
-  cs::weak_ptr<int> w_ptr;
-  {
-    auto s_ptr = cs::shared_ptr<int>(new int{5});
-    w_ptr = s_ptr;
-    
-  }
-  w_ptr.expired();
+  cs::shared_ptr<int> someInt(new int{42});
+  auto makeSomeInt = cs::make_shared<int>(42);
   return 0;
 }

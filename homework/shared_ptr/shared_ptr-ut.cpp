@@ -1,7 +1,7 @@
+#include <string>
 #include "gtest/gtest.h"
 #include "shared_ptr.hpp"
 #include "weak_ptr.hpp"
-#include <string>
 
 TEST(sharedPointerTest, getFunctionShouldReturnRawPointer) {
     cs::shared_ptr<int> ptr(new int{1});
@@ -71,4 +71,10 @@ TEST(sharedPointerTest, useCountMethodShouldReturnNumberOfReferences) {
     cs::shared_ptr<int> ptr(copied_ptr);
     ASSERT_EQ(copied_ptr.use_count(), 2);
     ASSERT_EQ(ptr.use_count(), 2);
+}
+
+TEST(makeSharedTest, makeSharedCreatesTheSameValueAsSharedPtr) {
+    cs::shared_ptr<int> someInt(new int{42});
+    auto makeSomeInt = cs::make_shared<int>(42);
+    ASSERT_EQ(*makeSomeInt, *someInt);
 }

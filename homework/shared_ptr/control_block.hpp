@@ -25,8 +25,9 @@ template <typename T>
 class BlockAndData : public ControlBlock {
 public:
     template <typename... Args>
-    BlockAndData(Args&&... args) : object_(std::forward(args)...){};
-    T getObject() const { return object_; }
+    BlockAndData<T>(Args... args)
+        : object_(args...), ControlBlock([&]() {}) {}
+    T* getObject() { return &object_; }
 
 private:
     T object_;

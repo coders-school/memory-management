@@ -2,9 +2,11 @@
 
 #include <atomic>
 #include <functional>
+#include <memory>
+
 #include "control_block.hpp"
-#include "weak_ptr.hpp"
 #include "iostream"
+#include "weak_ptr.hpp"
 namespace cs {
 template <typename T>
 class weak_ptr;
@@ -15,8 +17,7 @@ template <typename T>
 class shared_ptr {
 public:
     shared_ptr(T* ptr = nullptr)
-        : ptr_(ptr), cb_(new ControlBlock([&]() { delete ptr_; })) {
-    }
+        : ptr_(ptr), cb_(new ControlBlock([&]() { delete ptr_; })) {}
     shared_ptr(const shared_ptr& ptr);
     shared_ptr(const cs::weak_ptr<T>& ptr);
     shared_ptr(shared_ptr&& ptr);
@@ -39,7 +40,7 @@ private:
     template <typename>
     friend class cs::weak_ptr;
 
-    shared_ptr(T* ptr, ControlBlock* cb);
+    shared_ptr(T* ptr, ControlBlock* cb) : ptr_(ptr), cb_(cb){};
     T* ptr_;
     ControlBlock* cb_;
 };
@@ -117,7 +118,7 @@ void shared_ptr<T>::reset(T* ptr) {
 
 template <typename Y, typename... Args>
 shared_ptr<Y> make_shared(Args&&... args) {
-    auto blockWithData = new BlockAndData<Y>(std::forward<Args>(args)...);
-    return shared_ptr<Y>(&blockWithData->getObject(), blockWithData);
+    auto blockWithData = new BlockAndData<Y>(std::forward<Y>(args)...);
+    return cs::shared_ptr<Y>(blockWithData->getObject(), blockWithData);
 }
 }  // namespace cs
