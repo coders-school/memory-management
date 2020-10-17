@@ -42,7 +42,7 @@ TEST_F(UniquePointerTestSuite, passedAsTemporary)
     EXPECT_EQ(m_msg, functionUptrAsArg(provider(m_msg)));
 }
 
-TEST_F(UniquePointerTestSuite, passedWithMoveAndResetOwneship)
+TEST_F(UniquePointerTestSuite, arrowOperatorShouldReturnMessage)
 {
     EXPECT_EQ(m_msg, functionUptrAsArg(std::move(m_sut)));
     EXPECT_EQ(m_sut.get(), nullptr);
@@ -62,12 +62,6 @@ TEST_F(UniquePointerTestSuite, moveOperator)
     EXPECT_EQ(ptr2->message_,m_msg);
 }
 
-TEST_F(UniquePointerTestSuite, moveOperatorTestWithCast)
-{
-    my_unique_ptr<SomeUsefulClass> ptr2 = std::move(m_sut);
-    EXPECT_EQ(m_sut.get(), nullptr);
-    EXPECT_EQ(ptr2->message_,m_msg);
-}
 
 TEST_F(UniquePointerTestSuite, ShouldRelease)
 {
