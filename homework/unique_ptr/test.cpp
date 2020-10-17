@@ -56,7 +56,8 @@ TEST_F(UniquePointerTestSuite, passedWithMove)
 
 TEST_F(UniquePointerTestSuite, moveOperator)
 {
-    my_unique_ptr<SomeUsefulClass> ptr2 = std::move(m_sut);
+    my_unique_ptr<SomeUsefulClass> ptr2{new SomeUsefulClass{}};
+    ptr2 = std::move(m_sut);
     EXPECT_EQ(m_sut.get(), nullptr);
     EXPECT_EQ(ptr2->message_,m_msg);
 }
