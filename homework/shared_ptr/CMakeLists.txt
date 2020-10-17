@@ -43,7 +43,9 @@ set (TEST_FILES
     shared_ptr-ut.cpp
     weak_ptr-ut.cpp)
 add_executable(${PROJECT_NAME}-ut ${TEST_FILES})
+add_executable(${PROJECT_NAME} main.cpp)
 add_compile_options(${PROJECT_NAME}-ut -Wall -pedantic -Wextra)
+add_compile_options(${PROJECT_NAME} -Wall -pedantic -Wextra)
 
 target_link_libraries(${PROJECT_NAME}-ut gtest_main -fsanitize=address)
 add_test(NAME ${PROJECT_NAME}_tests COMMAND ${PROJECT_NAME}-ut)

@@ -12,7 +12,7 @@ namespace cs {
 template <typename T>
 class weak_ptr {
 public:
-    weak_ptr() noexcept : ptr_(nullptr), cb_(new ControlBlock([&]() { delete ptr_; })) {}
+    weak_ptr() = default;
     weak_ptr(const weak_ptr& ptr) noexcept;
     weak_ptr(const cs::shared_ptr<T>& ptr) noexcept;
     weak_ptr(weak_ptr&& ptr) noexcept;
@@ -40,10 +40,8 @@ template <typename T>
 void weak_ptr<T>::deletePointers() {
     if (cb_) {
         cb_->decreaseWeakRef();
-        if (cb_->getShared() == 0) {
-            if (cb_->getWeak() == 0) {
-                delete cb_;
-            }
+        if (cb_->getShared() == 0 && cb_->getWeak() == 0) {
+            delete cb_;
         }
     }
 }
@@ -55,9 +53,11 @@ weak_ptr<T>::~weak_ptr() {
 
 template <typename T>
 weak_ptr<T>::weak_ptr(const weak_ptr& ptr) noexcept {
-    ptr_ = ptr.ptr_;
-    cb_ = ptr.cb_;
-    cb_->increaseWeakRef();
+    if (this != &ptr) {
+        ptr_ = ptr.ptr_;
+        cb_ = ptr.cb_;
+        cb_->increaseWeakRef();
+    }
 }
 
 template <typename T>
@@ -69,17 +69,18 @@ weak_ptr<T>::weak_ptr(const cs::shared_ptr<T>& ptr) noexcept {
 
 template <typename T>
 weak_ptr<T>::weak_ptr(weak_ptr&& ptr) noexcept {
-    ptr_ = ptr.ptr_;
-    cb_ = ptr.cb_;
-    cb_->setDeleter([&]() { delete ptr_; });
-    ptr.ptr_ = nullptr;
-    ptr.cb_ = nullptr;
+    if (this != &ptr) {
+        ptr_ = ptr.ptr_;
+        cb_ = ptr.cb_;
+        cb_->setDeleter([&]() { delete ptr_; });
+        ptr.ptr_ = nullptr;
+        ptr.cb_ = nullptr;
+    }
 }
 
 template <typename T>
 weak_ptr<T>& weak_ptr<T>::operator=(const weak_ptr& ptr) noexcept {
     if (&ptr != this) {
-        deletePointers();
         ptr_ = ptr.ptr_;
         cb_ = ptr.cb_;
         cb_->increaseWeakRef();
@@ -102,7 +103,6 @@ weak_ptr<T>& weak_ptr<T>::operator=(weak_ptr&& ptr) noexcept {
 
 template <typename T>
 weak_ptr<T>& weak_ptr<T>::operator=(const cs::shared_ptr<T>& ptr) noexcept {
-    deletePointers();
     ptr_ = ptr.ptr_;
     cb_ = ptr.cb_;
     cb_->increaseWeakRef();
@@ -117,7 +117,9 @@ cs::shared_ptr<T> weak_ptr<T>::lock() const noexcept {
 
 template <typename T>
 void weak_ptr<T>::reset() noexcept {
+    cb_->decreaseWeakRef();
     deletePointers();
     ptr_ = nullptr;
+    cb_ = nullptr;
 }
 }  // namespace cs
