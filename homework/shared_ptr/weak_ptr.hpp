@@ -21,11 +21,11 @@ public:
     void reset() noexcept;
     bool expired() const noexcept;
     shared_ptr<T> lock() const noexcept;
-    size_t use_count() { return counter_->getWeakRefs(); } 
+    size_t use_count() { return counter_->getRefs(); } 
     void swap(weak_ptr& ptr) noexcept;
 
 private:
-    control_block* counter_{nullptr};
+    control_block<T>* counter_{nullptr};
     T* ptr_{nullptr};
 
     void checkAndDeletePointers();

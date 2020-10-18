@@ -2,9 +2,8 @@
 
 #include "control_block.hpp"
 
-#include <algorithm> //for swap method
 #include <stdexcept>
-
+#include <functional>
 namespace cs {
     
 template <typename T>
@@ -14,28 +13,31 @@ template <typename T>
 class shared_ptr {
 public:
     template <typename B> friend class weak_ptr;
-    shared_ptr(T* ptr = nullptr);
+    template<typename D, typename... Args> friend shared_ptr<D> make_shared(Args&& ... args);
+    explicit shared_ptr() = default;
+    explicit shared_ptr(T* ptr);
+    shared_ptr(T* ptr, std::function<void(T*)> deleter);
+    shared_ptr(std::nullptr_t, std::function<void(T*)> deleter);
     shared_ptr(const shared_ptr& ptr) noexcept;  //copy c-tor
     shared_ptr(shared_ptr&& previousOwner) noexcept;      //move c-tor
     ~shared_ptr();
 
-    //TODO Implement swap
     void swap(shared_ptr<T>& secondPointer) noexcept;
     const T* get() const;
-    void reset(T* newPtr = nullptr);
+    void reset(T* newPtr = nullptr, std::function<void(T*)> deleter = [](T* ptr) { delete ptr;});
 
     const T* operator->();
     T& operator*();
     explicit operator bool() const noexcept;
     shared_ptr<T>& operator=(const shared_ptr<T>& ptr) noexcept;             //copy assignment
-    shared_ptr<T>& operator=(shared_ptr<T>&& previousOwner);  //move assignment
+    shared_ptr<T>& operator=(shared_ptr<T>&& previousOwner) noexcept;  //move assignment
 
     size_t use_count() { return counter_->getRefs(); }
 
 private:
-    shared_ptr(T* ptr, control_block* counter);
-    control_block* counter_{nullptr};
+    shared_ptr(T* ptr, control_block<T>* counter);
     T* ptr_{nullptr};
+    control_block<T>* counter_{nullptr};
 
     void checkAndDeletePointers();
 };
@@ -43,7 +45,7 @@ private:
 template <typename T>
 void shared_ptr<T>::checkAndDeletePointers() {
     if (!counter_->getRefs()) {
-        delete ptr_;
+            counter_->deleter_(ptr_);
         if (!counter_->getWeakRefs()) {
             delete counter_;
         }
@@ -51,7 +53,7 @@ void shared_ptr<T>::checkAndDeletePointers() {
 }
 
 template <typename T>
-shared_ptr<T>::shared_ptr(T* ptr, control_block* counter) : ptr_(ptr), counter_(counter) {
+shared_ptr<T>::shared_ptr(T* ptr, control_block<T>* counter) : ptr_(ptr), counter_(counter) {
     ++*counter_;
 }
 
@@ -59,10 +61,25 @@ template <typename T>
 shared_ptr<T>::shared_ptr(T* ptr)
     : ptr_(ptr) {
     if (ptr_) {
-        counter_ = new control_block();
+        counter_ = new control_block<T>();
         ++(*counter_);
     }
 }
+
+template <typename T>
+shared_ptr<T>::shared_ptr(T* ptr, std::function<void(T*)> deleter)
+    : ptr_(ptr) {
+    if (ptr_) {
+        counter_ = new control_block<T>(deleter);
+        ++(*counter_);
+    }
+}
+template <typename T>
+shared_ptr<T>::shared_ptr(std::nullptr_t, std::function<void(T*)> deleter) {
+    counter_ = new control_block<T>(deleter);
+    ++(*counter_);
+}
+
 
 template <typename T>
 shared_ptr<T>::shared_ptr(const shared_ptr& ptr) noexcept
@@ -101,8 +118,8 @@ const T* shared_ptr<T>::get() const {
 }
 
 template <typename T>
-void shared_ptr<T>::reset(T* newPtr) {
-    shared_ptr{newPtr}.swap(*this);
+void shared_ptr<T>::reset(T* newPtr, std::function<void(T*)> deleter) {
+    shared_ptr{newPtr, deleter}.swap(*this);
 }
 
 template <typename T>
@@ -124,10 +141,12 @@ shared_ptr<T>::operator bool() const noexcept {
 }
 
 template <typename T>
-shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr<T>&& previousOwner) {
+shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr<T>&& previousOwner) noexcept{
     if (this != &previousOwner) {
-        --*counter_;
-        checkAndDeletePointers();
+        if(counter_) {
+            --*counter_;
+            checkAndDeletePointers();
+        }
 
         ptr_ = previousOwner.ptr_;
         counter_ = previousOwner.counter_;
@@ -140,11 +159,22 @@ shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr<T>&& previousOwner) {
 
 template <typename T>
 shared_ptr<T>& shared_ptr<T>::operator=(const shared_ptr<T>& ptr) noexcept {
-    --*counter_;
-    checkAndDeletePointers();
+    if(counter_){
+        --*counter_;
+        checkAndDeletePointers();
+    }
+
     counter_ = ptr.counter_;
     ptr_ = ptr.ptr_;
     ++(*counter_);
+
+    return *this;
+}
+
+template<typename D, typename... Args>
+shared_ptr<D> make_shared(Args&&... args) {
+    auto tempCounter = new continuous_block<D>(std::forward<Args>(args)...);
+    return shared_ptr<D>(tempCounter->getObjectPointer(), tempCounter);
 }
 
 }  // namespace cs
