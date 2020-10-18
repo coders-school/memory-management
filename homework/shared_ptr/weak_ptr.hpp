@@ -2,6 +2,7 @@
 
 #include "control_block.hpp"
 #include "shared_ptr.hpp"
+#include <iostream>
 namespace cs {
 template <typename T>
 class shared_ptr;
@@ -11,7 +12,7 @@ namespace cs {
 template <typename T>
 class weak_ptr {
 public:
-    weak_ptr() = default;
+    weak_ptr() : ptr_(nullptr), cb_(nullptr) {}
     weak_ptr(const weak_ptr& ptr) noexcept;
     weak_ptr(const cs::shared_ptr<T>& ptr) noexcept;
     weak_ptr(weak_ptr&& ptr) noexcept;
@@ -80,6 +81,7 @@ weak_ptr<T>::weak_ptr(weak_ptr&& ptr) noexcept {
 template <typename T>
 weak_ptr<T>& weak_ptr<T>::operator=(const weak_ptr& ptr) noexcept {
     if (&ptr != this) {
+        deletePointers();
         ptr_ = ptr.ptr_;
         cb_ = ptr.cb_;
         cb_->increaseWeakRef();
@@ -116,7 +118,6 @@ cs::shared_ptr<T> weak_ptr<T>::lock() const noexcept {
 
 template <typename T>
 void weak_ptr<T>::reset() noexcept {
-    cb_->decreaseWeakRef();
     deletePointers();
     ptr_ = nullptr;
     cb_ = nullptr;

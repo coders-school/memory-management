@@ -33,3 +33,26 @@ TEST(WeakPointerTests, WeakPointerLock) {
     ASSERT_EQ(shared_something.use_count(), numberOfUseCount);
     ASSERT_EQ(*locked, expectedValue);
 }
+
+TEST(WeakPointerTest, moveAssignmentOperatorShouldMovePointer) {
+    constexpr size_t numberOfUseCount = 1;
+    struct Something {};
+    cs::shared_ptr<Something> shared_something(new Something{});
+    cs::weak_ptr<Something> weak_something{shared_something};
+    cs::weak_ptr<Something> weak_ptr;
+    weak_ptr = std::move(weak_something);
+
+    ASSERT_EQ(weak_ptr.use_count(), numberOfUseCount);
+}
+
+TEST(WeakPointerTest, copyAssignmentOperatorShouldMovePointer) {
+    constexpr size_t numberOfUseCount = 1;
+    struct Something {};
+    cs::shared_ptr<Something> shared_something(new Something{});
+    cs::weak_ptr<Something> weak_something{shared_something};
+    cs::weak_ptr<Something> weak_ptr;
+    weak_ptr = weak_something;
+
+    ASSERT_EQ(weak_ptr.use_count(), numberOfUseCount);
+    ASSERT_EQ(weak_something.use_count(), numberOfUseCount);
+}
