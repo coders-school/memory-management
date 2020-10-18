@@ -66,11 +66,13 @@ TEST(sharedPointerTest, resetMethodShouldChangePointedObject) {
 
 TEST(sharedPointerTest, useCountMethodShouldReturnNumberOfReferences) {
     cs::shared_ptr<int> copied_ptr(new int{1});
-    ASSERT_EQ(copied_ptr.use_count(), 1);
+    size_t numberOfUseCount = 1;
+    ASSERT_EQ(copied_ptr.use_count(), numberOfUseCount);
 
     cs::shared_ptr<int> ptr(copied_ptr);
-    ASSERT_EQ(copied_ptr.use_count(), 2);
-    ASSERT_EQ(ptr.use_count(), 2);
+    ++numberOfUseCount;
+    ASSERT_EQ(copied_ptr.use_count(), numberOfUseCount);
+    ASSERT_EQ(ptr.use_count(), numberOfUseCount);
 }
 
 TEST(makeSharedTest, makeSharedCreatesTheSameValueAsSharedPtr) {

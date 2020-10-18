@@ -3,7 +3,7 @@
 #include "weak_ptr.hpp"
 
 TEST(WeakPointerTests, WeakPointerCreation) {
-    size_t numberOfUseCount = 1;
+    constexpr size_t numberOfUseCount = 1;
     struct Something {};
     cs::shared_ptr<Something> shared_something(new Something{});
     cs::weak_ptr<Something> weak_something{shared_something};
@@ -13,7 +13,7 @@ TEST(WeakPointerTests, WeakPointerCreation) {
 }
 
 TEST(WeakPointerTests, WeakPointerExpired) {
-    size_t numberOfUseCount = 1;
+    constexpr size_t numberOfUseCount = 1;
     cs::weak_ptr<int> w_ptr;
     {
         auto s_ptr = cs::shared_ptr<int>(new int{5});
@@ -24,8 +24,8 @@ TEST(WeakPointerTests, WeakPointerExpired) {
 }
 
 TEST(WeakPointerTests, WeakPointerLock) {
-    size_t numberOfUseCount = 2;
-    int expectedValue{42};
+    constexpr size_t numberOfUseCount = 2;
+    constexpr int expectedValue{42};
     cs::shared_ptr<int> shared_something(new int{42});
     cs::weak_ptr<int> weak_something{shared_something};
     auto locked = weak_something.lock();

@@ -2,7 +2,6 @@
 
 #include <atomic>
 #include <functional>
-#include <memory>
 #include "control_block.hpp"
 #include "iostream"
 #include "weak_ptr.hpp"

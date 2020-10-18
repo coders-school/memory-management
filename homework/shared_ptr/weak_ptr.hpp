@@ -1,6 +1,5 @@
 #pragma once
 
-#include <memory>
 #include "control_block.hpp"
 #include "shared_ptr.hpp"
 namespace cs {
