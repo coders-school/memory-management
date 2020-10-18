@@ -3,7 +3,6 @@
 #include <atomic>
 #include <functional>
 #include <memory>
-
 #include "control_block.hpp"
 #include "iostream"
 #include "weak_ptr.hpp"
@@ -40,7 +39,7 @@ private:
     template <typename>
     friend class cs::weak_ptr;
 
-    shared_ptr(T* ptr, ControlBlock* cb) : ptr_(ptr), cb_(cb){};
+    shared_ptr(BlockAndData<T>* cb) : cb_(cb) { ptr_ = cb->getObject(); };
     T* ptr_;
     ControlBlock* cb_;
 };
@@ -118,7 +117,6 @@ void shared_ptr<T>::reset(T* ptr) {
 
 template <typename Y, typename... Args>
 shared_ptr<Y> make_shared(Args&&... args) {
-    auto blockWithData = new BlockAndData<Y>(std::forward<Y>(args)...);
-    return cs::shared_ptr<Y>(blockWithData->getObject(), blockWithData);
+    return cs::shared_ptr<Y>(new BlockAndData<Y>(std::forward<decltype(args)>(args)...));
 }
 }  // namespace cs

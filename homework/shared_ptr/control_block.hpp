@@ -14,6 +14,7 @@ public:
     std::atomic<size_t>& getWeak() { return weak_refs; }
     void callDeleter() const { deleter(); }
     void setDeleter(std::function<void()> del) { deleter = del; }
+    virtual ~ControlBlock() = default;
 
 private:
     std::atomic<size_t> shared_refs = 1;
@@ -25,8 +26,7 @@ template <typename T>
 class BlockAndData : public ControlBlock {
 public:
     template <typename... Args>
-    BlockAndData<T>(Args... args)
-        : object_(args...), ControlBlock([&]() {}) {}
+    BlockAndData<T>(Args... args) : object_(args...), ControlBlock([]() {}) {}
     T* getObject() { return &object_; }
 
 private:
