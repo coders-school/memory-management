@@ -29,6 +29,7 @@ private:
     T* ptr_{nullptr};
 
     void checkAndDeletePointers();
+    void checkWeakAndDeletePointers();
 };
 
 
@@ -36,7 +37,7 @@ template <typename T>
 void weak_ptr<T>::checkAndDeletePointers() {
     if (!counter_->getWeakRefs() && !counter_->getRefs()) {
             delete counter_;
-        }
+    }
 }
 
 template <typename T>
@@ -72,9 +73,13 @@ weak_ptr<T>::~weak_ptr() {
 
 template <typename T>
 weak_ptr<T>& weak_ptr<T>::operator=(const weak_ptr& ptr) noexcept {
+    if (this != &ptr) {
+        if(counter_) {
+            counter_->decreaseWeakRefs();
+            checkAndDeletePointers();
+        }
     ptr_ = ptr.ptr_;
     counter_ = ptr.counter_;
-    if (counter_) {
         counter_->increaseWeakRefs();
     }
     return *this;
@@ -82,6 +87,10 @@ weak_ptr<T>& weak_ptr<T>::operator=(const weak_ptr& ptr) noexcept {
 
 template <typename T>
 weak_ptr<T>& weak_ptr<T>::operator=(const shared_ptr<T>& ptr) noexcept {
+    if(counter_) {
+        counter_->decreaseWeakRefs();
+        checkAndDeletePointers();
+    }
     ptr_ = ptr.ptr_;
     counter_ = ptr.counter_;
     if (counter_) {
@@ -89,7 +98,6 @@ weak_ptr<T>& weak_ptr<T>::operator=(const shared_ptr<T>& ptr) noexcept {
     }
     return *this;
 }
-
 
 template <typename T>
 weak_ptr<T>& weak_ptr<T>::operator=(weak_ptr&& previousOwner) noexcept {
