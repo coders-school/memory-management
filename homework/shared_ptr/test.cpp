@@ -78,6 +78,8 @@ TEST_F(sharedPtrTest, testGet) {
 TEST_F(sharedPtrTest, testReset) {
     sPtr.reset(new int{testValueTwo});
     ASSERT_EQ(*sPtr, testValueTwo);
+    sPtr.reset();
+    ASSERT_EQ(sPtr.get(), nullptr);
 }
 
 TEST_F(sharedPtrTest, testSwap) {
@@ -170,7 +172,7 @@ struct weakPtrTest : ::testing::Test {
 
 TEST_F(weakPtrTest, testLock) {
     cs::weak_ptr<int> wPtr(sPtr);
-    ASSERT_EQ(*(wPtr.lock()), testValueOne);
+    ASSERT_EQ(*(wPtr.lock()), *sPtr);
 }
 
 TEST_F(weakPtrTest, testCopyConstructorFromShared) {
@@ -202,7 +204,7 @@ TEST_F(weakPtrTest, testMoveConstructorFromWeak) {
 }
 
 TEST_F(weakPtrTest, testMoveAssignment) {
-    cs::weak_ptr<int> wPtr(sPtr);
+    cs::weak_ptr<int> wPtr{sPtr};
     auto wPtr2 = std::move(wPtr);
     ASSERT_EQ(*(wPtr2.lock()), *sPtr);
     ASSERT_EQ(wPtr2.use_count(), 1);
@@ -215,5 +217,6 @@ TEST_F(weakPtrTest, testExpired) {
     ASSERT_TRUE(wPtr.expired());
     cs::weak_ptr<int> wPtr2(sPtr);
     sPtr.reset();
+    ASSERT_EQ(sPtr.get(), nullptr);
     ASSERT_TRUE(wPtr2.expired());
 }
