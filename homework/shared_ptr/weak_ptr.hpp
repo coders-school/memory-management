@@ -29,7 +29,6 @@ private:
     T* ptr_{nullptr};
 
     void checkAndDeletePointers();
-    void checkWeakAndDeletePointers();
 };
 
 
