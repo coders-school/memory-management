@@ -102,7 +102,10 @@ void UniquePointer<T>::reset(T* pointer)
 template <class T>
 void UniquePointer<T>::reset()
 {
-    pointer_ = nullptr;
+    if (pointer_ != nullptr) {
+        delete pointer_;
+        pointer_ = nullptr;
+    }
 }
 
 template <class T>
