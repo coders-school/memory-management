@@ -19,4 +19,6 @@ target_compile_options(${PROJECT_NAME} PRIVATE ${FLAGS})
 add_executable(${PROJECT_NAME}-ut ${TESTS})
 target_compile_options(${PROJECT_NAME}-ut PRIVATE ${FLAGS})
 
+add_test(NAME UniquePointerTests COMMAND ${PROJECT_NAME}-ut)
+
 enable_testing()
