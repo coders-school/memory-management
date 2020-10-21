@@ -28,6 +28,29 @@ SCENARIO("Using unique pointers", "[uniquePtr]")
             }
         }
 
+        WHEN("Using move constructor")
+        {
+            UniquePointer<int> anyPtr = std::move(ptr1);
+
+            THEN("Should create unique pointer using move constructor and free memory")
+            {
+                REQUIRE(ptr1.get() == nullptr);
+                REQUIRE(*anyPtr == firstNumber);
+            }
+        }
+
+        WHEN("Using move assigment operator")
+        {
+            UniquePointer<int> anyPtr;
+            anyPtr = std::move(ptr1);
+
+            THEN("Should move data to a new pointer using move assigment operator and free memory")
+            {
+                REQUIRE(ptr1.get() == nullptr);
+                REQUIRE(*anyPtr == firstNumber);
+            }
+        }
+
         WHEN("Using UniquePointer::get()")
         {
             int* rawPtr1 = ptr1.get();
@@ -152,6 +175,29 @@ SCENARIO("Using unique pointers", "[uniquePtr]")
             }
         }
 
+        WHEN("Using move constructor")
+        {
+            UniquePointer<TestingClass> anyPtr = std::move(ptr1);
+
+            THEN("Should create unique pointer using move constructor and free memory")
+            {
+                REQUIRE(ptr1.get() == nullptr);
+                REQUIRE(anyPtr->testingGetter() == firstText);
+            }
+        }
+
+        WHEN("Using move assigment operator")
+        {
+            UniquePointer<TestingClass> anyPtr;
+            anyPtr = std::move(ptr1);
+
+            THEN("Should move data to a new pointer using move assigment operator and free memory")
+            {
+                REQUIRE(ptr1.get() == nullptr);
+                REQUIRE(anyPtr->testingGetter()  == firstText);
+            }
+        }
+
         WHEN("Using UniquePointer::get()")
         {
             TestingClass* rawPtr1 = ptr1.get();
@@ -159,14 +205,12 @@ SCENARIO("Using unique pointers", "[uniquePtr]")
             THEN("Should return raw pointer")
             {
                 REQUIRE(rawPtr1->testingGetter() == firstText);
-                ;
             }
 
             THEN("Shouldnt move memory managment to a raw pointer, just create a raw pointer")
             {
                 REQUIRE(ptr1->testingGetter() == firstText);
                 REQUIRE_NOTHROW(ptr1->testingGetter());
-                ;
             }
         }
 
