@@ -21,7 +21,7 @@ public:
     UniquePointer<T>& operator=(UniquePointer&& anotherUniquePointerToMoveAssing);
     ~UniquePointer();
     T* operator->();
-    T operator*();
+    T& operator*();
     T* get() const;
     T* release();
     void reset();
@@ -68,7 +68,7 @@ UniquePointer<T>::~UniquePointer()
 }
 
 template <class T>
-T UniquePointer<T>::operator*()
+T& UniquePointer<T>::operator*()
 {
     if (!pointer_) {
         throw DereferenceNullPtr(std::string("Dereference null pointer\n"));
