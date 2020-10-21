@@ -49,12 +49,12 @@ int main()
     std::cout << "rawPtrToInt5: " << *rawPtrToInt5 << "\n";
     std::cout << "uniquePtrToInt5: " << *uniquePtrToInt5 << "\n";
     
-    int* rawPtrToInt5Replace = uniquePtrToInt5.replace();
-    /* throw std::runtime_exception dereference null pointer, because UniquePointer::replace()
+    int* rawPtrToInt5release = uniquePtrToInt5.release();
+    /* throw std::runtime_exception dereference null pointer, because UniquePointer::release()
     std::cout << *uniquePtrToInt5 << "\n";
     */
-    std::cout << "rawPtrToInt5Replace: " << *rawPtrToInt5Replace << "\n";
-    delete rawPtrToInt5Replace;
+    std::cout << "rawPtrToInt5release: " << *rawPtrToInt5release << "\n";
+    delete rawPtrToInt5release;
 
     UniquePointer<TestingClass> uniquePtrToClass {new TestingClass(std::string("Testing class"))};
     std::cout << uniquePtrToClass->testingGetter() << "\n";
