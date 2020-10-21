@@ -14,8 +14,7 @@ public:
 template <class T>
 class UniquePointer {
 public:
-    UniquePointer() = default;
-    UniquePointer(T* pointer);
+    UniquePointer(T* pointer = nullptr);
     UniquePointer(UniquePointer& anotherUniquePointerToCopy) = delete;
     UniquePointer(UniquePointer&& anotherUniquePointerToMove);
     UniquePointer<T>& operator=(UniquePointer& anotherUniquePointerToAssign) = delete;
