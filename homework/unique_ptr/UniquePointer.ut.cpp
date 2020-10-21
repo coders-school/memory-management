@@ -4,6 +4,8 @@
 
 #include "catch.hpp"
 
+#include <cstddef>
+
 SCENARIO("Using unique pointers", "[uniquePtr]")
 {
     const int firstNumber{5};
@@ -157,7 +159,7 @@ SCENARIO("Using unique pointers", "[uniquePtr]")
             delete rawPtr3;
         }
 
-        WHEN("Using UniquePointer::reset()")
+        WHEN("Using UniquePointer::reset() with argument")
         {
             ptr1.reset(new int{fourthNumber});
             ptr2.reset(new int{fifthNumber});
@@ -175,6 +177,27 @@ SCENARIO("Using unique pointers", "[uniquePtr]")
                 REQUIRE_NOTHROW(*ptr1);
                 REQUIRE_NOTHROW(*ptr2);
                 REQUIRE_NOTHROW(*ptr3);
+            }
+        }
+
+        WHEN("Using UniquePointer::reset() without argument")
+        {
+            ptr1.reset();
+            ptr2.reset();
+            ptr3.reset();
+
+            THEN("Should free memory")
+            {
+                REQUIRE(ptr1.get() == nullptr);
+                REQUIRE(ptr2.get() == nullptr);
+                REQUIRE(ptr3.get() == nullptr);
+            }
+
+            THEN("Shouldnt throw exception because memory is free and pointer is set as nullptr")
+            {
+                REQUIRE_THROWS_AS(*ptr1, DereferenceNullPtr);
+                REQUIRE_THROWS_AS(*ptr2, DereferenceNullPtr);
+                REQUIRE_THROWS_AS(*ptr3, DereferenceNullPtr);
             }
         }
     }
