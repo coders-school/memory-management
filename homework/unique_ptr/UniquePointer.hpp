@@ -23,7 +23,7 @@ public:
     T* operator->();
     T operator*();
     T* get() const;
-    T* replace();
+    T* release();
     void reset();
     void reset(T* pointer);
 
@@ -111,7 +111,7 @@ T* UniquePointer<T>::get() const
 }
 
 template <class T>
-T* UniquePointer<T>::replace()
+T* UniquePointer<T>::release()
 {
     T* temp = pointer_;
     pointer_ = nullptr;

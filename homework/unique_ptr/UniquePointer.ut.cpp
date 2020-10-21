@@ -64,11 +64,11 @@ SCENARIO("Using unique pointers", "[uniquePtr]")
             }
         }
 
-        WHEN("Using UniquePointer::replace()")
+        WHEN("Using UniquePointer::release()")
         {
-            int* rawPtr1 = ptr1.replace();
-            int* rawPtr2 = ptr2.replace();
-            int* rawPtr3 = ptr3.replace();
+            int* rawPtr1 = ptr1.release();
+            int* rawPtr2 = ptr2.release();
+            int* rawPtr3 = ptr3.release();
 
             THEN("Should return raw pointer")
             {
@@ -134,11 +134,11 @@ SCENARIO("Using unique pointers", "[uniquePtr]")
             }
         }
 
-        WHEN("Using UniquePointer::replace()")
+        WHEN("Using UniquePointer::release()")
         {
-            int* rawPtr1 = ptr1.replace();
-            int* rawPtr2 = ptr2.replace();
-            int* rawPtr3 = ptr3.replace();
+            int* rawPtr1 = ptr1.release();
+            int* rawPtr2 = ptr2.release();
+            int* rawPtr3 = ptr3.release();
 
             THEN("Should return raw pointer")
             {
@@ -242,11 +242,11 @@ SCENARIO("Using unique pointers", "[uniquePtr]")
             }
         }
 
-        WHEN("Using UniquePointer::replace()")
+        WHEN("Using UniquePointer::release()")
         {
-            TestingClass* rawPtr1 = ptr1.replace();
-            TestingClass* rawPtr2 = ptr2.replace();
-            TestingClass* rawPtr3 = ptr3.replace();
+            TestingClass* rawPtr1 = ptr1.release();
+            TestingClass* rawPtr2 = ptr2.release();
+            TestingClass* rawPtr3 = ptr3.release();
 
             THEN("Should return raw pointer")
             {
