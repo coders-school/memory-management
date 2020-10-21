@@ -1,13 +1,15 @@
-name: UniquePointer
+name: C/C++ CI
 
 on: [push, pull_request]
 
 jobs:
-  ut:
-    runs-on: ubuntu-latest
+  SharedPointer:
+
+    runs-on: [ubuntu-20.04]
+
     steps:
-    - name: Check out code
-      uses: actions/checkout@master
+    - name: Checkout code
+      uses: actions/checkout@v2
     - name: mkdir homework/unique_ptr/build
       run: mkdir homework/unique_ptr/build
     - name: Compile
@@ -17,22 +19,10 @@ jobs:
         make
     - name: Run tests
       working-directory: homework/unique_ptr/build
-      run: ctest -V
-
-  ut_valgrind:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Check out code
-      uses: actions/checkout@master
-    - name: Install valgrind
-      run: sudo apt-get install valgrind
-    - name: mkdir homework/unique_ptr/build
-      run: mkdir homework/unique_ptr/build
-    - name: Compile
+      run: ctest -V 
+    - name: Run Valgrind
       working-directory: homework/unique_ptr/build
       run: |
-        cmake ..
-        make
-    - name: Run valgrind
-      working-directory: homework/unique_ptr/build
-      run: valgrind ./uniquePointer-ut
+          sudo apt-get update -y    
+          sudo apt-get install -y valgrind
+          valgrind --leak-check=yes ./uniquePointer-ut
