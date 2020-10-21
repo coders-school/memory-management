@@ -24,6 +24,7 @@ public:
     T operator*();
     T* get() const;
     T* replace();
+    void reset();
     void reset(T* pointer);
 
 private:
@@ -88,7 +89,6 @@ T* UniquePointer<T>::operator->()
     }
 }
 
-
 template <class T>
 void UniquePointer<T>::reset(T* pointer)
 {
@@ -97,6 +97,12 @@ void UniquePointer<T>::reset(T* pointer)
         pointer_ = nullptr;
     }
     pointer_ = pointer;
+}
+
+template <class T>
+void UniquePointer<T>::reset()
+{
+    pointer_ = nullptr;
 }
 
 template <class T>
