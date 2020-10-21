@@ -193,7 +193,7 @@ SCENARIO("Using unique pointers", "[uniquePtr]")
                 REQUIRE(ptr3.get() == nullptr);
             }
 
-            THEN("Shouldnt throw exception because memory is free and pointer is set as nullptr")
+            THEN("Should throw exception because memory is free and pointer is set as nullptr")
             {
                 REQUIRE_THROWS_AS(*ptr1, DereferenceNullPtr);
                 REQUIRE_THROWS_AS(*ptr2, DereferenceNullPtr);
