@@ -1,5 +1,5 @@
-#include "UniquePointer.hpp"
 #include "TestingClass.hpp"
+#include "UniquePointer.hpp"
 
 #include <iostream>
 #include <utility>
@@ -15,48 +15,27 @@ int main()
         std::cout << el << "\n";
     }
 
-    /* can't use copy constructor
-    UniquePointer<int> uniquePtrToInt2 {uniquePtrToInt};
-    std::cout << *uniquePtrToInt2 << "\n";
-    */
-
-    UniquePointer<int> uniquePtrToInt3 {std::move(uniquePtrToInt)};
+    UniquePointer<int> uniquePtrToInt3{std::move(uniquePtrToInt)};
     std::cout << "uniquePtrToInt3: " << *uniquePtrToInt3 << "\n";
 
-    /* throw std::runtime_exception dereference null pointer, because std::move(uniquePtrToInt)
-    std::cout << "up to int: " << *uniquePtrToInt << "\n"; 
-    */
-
-    /* can't use assignment operator 
-    UniquePointer<int> uniquePtrToInt4;
-    uniquePtrToInt4 = uniquePtrToInt3;
-    */
-
     UniquePointer<int> uniquePtrToInt5;
-    /* throw std::runtime_exception dereference null pointer, because std::move(uniquePtrToInt)
-    std::cout << *uniquePtrToInt5 << "\n";
-    */
+
     uniquePtrToInt5 = std::move(uniquePtrToInt3);
     std::cout << "uniquePtrToInt5: " << *uniquePtrToInt5 << "\n";
-    /* throw std::runtime_exception dereference null pointer, because std::move(uniquePtrToInt)
-    std::cout << *uniquePtrToInt3 << "\n";
-    */
 
     uniquePtrToInt5.reset(new int{77});
     std::cout << "uniquePtrToInt5: " << *uniquePtrToInt5 << "\n";
-   
+
     int* rawPtrToInt5 = uniquePtrToInt5.get();
     std::cout << "rawPtrToInt5: " << *rawPtrToInt5 << "\n";
     std::cout << "uniquePtrToInt5: " << *uniquePtrToInt5 << "\n";
-    
+
     int* rawPtrToInt5release = uniquePtrToInt5.release();
-    /* throw std::runtime_exception dereference null pointer, because UniquePointer::release()
-    std::cout << *uniquePtrToInt5 << "\n";
-    */
+
     std::cout << "rawPtrToInt5release: " << *rawPtrToInt5release << "\n";
     delete rawPtrToInt5release;
 
-    UniquePointer<TestingClass> uniquePtrToClass {new TestingClass(std::string("Testing class"))};
+    UniquePointer<TestingClass> uniquePtrToClass{new TestingClass(std::string("Testing class"))};
     std::cout << uniquePtrToClass->testingGetter() << "\n";
 
     return 0;
