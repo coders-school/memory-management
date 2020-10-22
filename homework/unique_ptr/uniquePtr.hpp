@@ -47,10 +47,9 @@ public:
         std::swap(result, nullptr);
         return result;
     }
-    void reset(T* data) noexcept
+    void reset(T* data = nullptr) noexcept
     {
         delete m_data;
-        m_data = nullptr;
         m_data = data;
     }
 };
