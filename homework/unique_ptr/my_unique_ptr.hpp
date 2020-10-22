@@ -11,10 +11,11 @@ public:
 
     my_unique_ptr(my_unique_ptr<T>&& ptr_m) : ptr_{ptr_m.release()} {}
 
-    T& operator=(my_unique_ptr<T>&& ptr_m)
+    my_unique_ptr<T>& operator=(my_unique_ptr<T>&& ptr_m) noexcept
     {
-        this->ptr_ = ptr_m.release();
-        return *(this->ptr_);
+        delete ptr_;
+        ptr_ = ptr_m.release();
+        return *this;
     }
 
     my_unique_ptr(const my_unique_ptr<T>&) = delete;
