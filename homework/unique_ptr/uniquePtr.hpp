@@ -44,7 +44,7 @@ public:
     T* release() noexcept
     {
         T* result = nullptr;
-        std::swap(result, nullptr);
+        std::swap(result, m_data);
         return result;
     }
     void reset(T* data = nullptr) noexcept
