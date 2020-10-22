@@ -46,7 +46,8 @@ TEST_F(unique_ptr_test, shouldCreateByMoveConstructor) {
 
 TEST_F(unique_ptr_test, shoudlMoveByOperator) {
     unique_ptr<int> ptr{new int {expected}};
-    unique_ptr<int> ptr2 = std::move(ptr);
+    unique_ptr<int> ptr2{new int {-expected}};
+    ptr2 = std::move(ptr);
     ASSERT_EQ(ptr.get(), nullptr);
     ASSERT_EQ(*ptr2, expected);
 }
