@@ -77,12 +77,12 @@ TEST_F(SharedPointerTest, shouldUseArrowOperatorOfSharedPointer) {
     ASSERT_EQ(s_ptr->testFunction(), testValue);
 }
 
-// TEST_F(SharedPointerTest, shouldReturnBoolWhenUsingBoolOperator) {
-//     SharedPointer<int> s_ptrNew;
+TEST_F(SharedPointerTest, shouldReturnBoolWhenUsingBoolOperator) {
+    SharedPointer<int> s_ptrNew;
 
-//     ASSERT_TRUE(s_ptr);
-//     ASSERT_FALSE(s_ptrNew);
-// }
+    ASSERT_TRUE(s_ptr);
+    ASSERT_FALSE(s_ptrNew);
+}
 
 TEST_F(WeakPointerTest, shouldReturnUseCountEqualTo0WhenCreatedByDefault) {
     WeakPointer<int> w_ptr{};
