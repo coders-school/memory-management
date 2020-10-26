@@ -1,8 +1,7 @@
-#define CATCH_CONFIG_MAIN
+#include "catch.hpp"
+
 #include "TestingClass.hpp"
 #include "UniquePointer.hpp"
-
-#include "catch.hpp"
 
 #include <cstddef>
 
@@ -194,7 +193,7 @@ SCENARIO("Using unique pointers", "[uniquePtr]")
             THEN("Should move data to a new pointer using move assigment operator and free memory")
             {
                 REQUIRE(ptr1.get() == nullptr);
-                REQUIRE(anyPtr->testingGetter()  == firstText);
+                REQUIRE(anyPtr->testingGetter() == firstText);
             }
         }
 

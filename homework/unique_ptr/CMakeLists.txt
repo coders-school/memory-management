@@ -9,14 +9,15 @@ set(MAIN
     main.cpp)
 
 set(TESTS
-    UniquePointer.ut.cpp)
+    UniquePointer.ut.cpp
+    MakeUnique.ut.cpp)
 
 set(FLAGS -Wall -Wextra -pedantic -Wconversion -Werror -O3 -std=c++17)
 
 add_executable(${PROJECT_NAME} ${MAIN})
 target_compile_options(${PROJECT_NAME} PRIVATE ${FLAGS})
 
-add_executable(${PROJECT_NAME}-ut ${TESTS})
+add_executable(${PROJECT_NAME}-ut catchMain.cpp ${TESTS})
 target_compile_options(${PROJECT_NAME}-ut PRIVATE ${FLAGS})
 
 add_test(NAME UniquePointerTests COMMAND ${PROJECT_NAME}-ut)

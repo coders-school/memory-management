@@ -11,6 +11,7 @@ public:
         : std::runtime_error(error) {}
 };
 
+
 template <class T>
 class UniquePointer {
 public:
@@ -26,6 +27,9 @@ public:
     T* release();
     void reset();
     void reset(T* pointer);
+
+    template<typename MUType, typename... Args>
+    friend UniquePointer<MUType> MakeUnique(Args&&... args); 
 
 private:
     T* pointer_{};
@@ -116,4 +120,10 @@ T* UniquePointer<T>::release()
     T* temp = pointer_;
     pointer_ = nullptr;
     return temp;
+}
+
+template<typename MUType, typename... Args>
+UniquePointer<MUType> MakeUnique(Args&&... args)
+{
+    return UniquePointer<MUType>(new MUType(std::forward<Args>(args)...));
 }
