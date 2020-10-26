@@ -4,6 +4,7 @@
 #include "UniquePointer.hpp"
 
 #include <cstddef>
+#include <string>
 
 SCENARIO("Using unique pointers", "[uniquePtr]")
 {
