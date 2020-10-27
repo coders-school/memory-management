@@ -9,13 +9,15 @@
 SCENARIO("Using make unique to initialize unique pointers", "[makeUniquePtr]")
 {
     int firstNumber{5};
-    //int secondNumber{77};
+    [[maybe_unused]] int secondNumber{77};
 
     std::string firstText{"Lololo"};
-    // std::string secondText{"Bitwa pod Grunwaldem"};
+    [[maybe_unused]] std::string secondText{"Bitwa pod Grunwaldem"};
 
-    auto uniqueInt = MakeUnique<int>(firstNumber);
-    //auto uniqueTestingClass = MakeUnique<TestingClass>("any text");
+    auto uniqueIntRValue = MakeUnique<int>(99);
+    auto uniqueIntLValue = MakeUnique<int>(firstNumber);
+    auto uniqueTestingClassRValue = MakeUnique<TestingClass>("any text");
+    auto uniqueTestingClassLValue = MakeUnique<TestingClass>(firstText);
     GIVEN("Create an object wiht MakeUnique")
     {
         WHEN("Its run")
