@@ -5,7 +5,7 @@
 
 #include "shared_ptr.hpp"
 
-TEST(SharedPointerTest, ShouldCreateSharedPointerToIntegerUsingDefaultConstructor)
+TEST(SharedPointerTest, ShouldCreateNullptrSharedPointerToIntegerUsingDefaultConstructor)
 {
     // Given
     size_t sharedPtrCnt = 1;

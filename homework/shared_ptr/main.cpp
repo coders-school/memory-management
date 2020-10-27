@@ -8,8 +8,9 @@ void myDel(void* p) {
 }
 
 int main() {
-    coders::shared_ptr<int> SharedPtr{new int(23)};
-    // SharedPtr.setDeleter(myDel);
+    coders::shared_ptr<int> testPtr{new int(23), myDel};
+    coders::shared_ptr<int> testPtr_2{new int(666), myDel};
+    // testPtr.setDeleter(myDel);
     
 
     return 0;
