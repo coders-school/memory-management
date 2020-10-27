@@ -12,7 +12,3 @@ private:
     std::string text_{};
 };
 
-std::string TestingClass::testingGetter()
-{
-    return text_;
-}
