@@ -12,8 +12,8 @@ class shared_ptr {
 public:
     shared_ptr(T* ptr = nullptr) noexcept;
     shared_ptr(T* ptr, Deleter<T> deleter) noexcept;
-    shared_ptr(const shared_ptr<T>& ptr) noexcept;
-    shared_ptr(shared_ptr<T>&& ptr) noexcept;
+    shared_ptr(const shared_ptr& ptr) noexcept;
+    shared_ptr(shared_ptr&& ptr) noexcept;
     ~shared_ptr();
 
     shared_ptr<T>& operator=(const shared_ptr<T>& ptr) noexcept;
@@ -38,6 +38,7 @@ void shared_ptr<T>::deleteStoredPointers() {
     if (!ctrl_) {
         return;
     }
+    ctrl_->decrementSharedRefs();
     if (!ctrl_->getSharedRefs()) {
         ctrl_->getDeleter()(rawPtr_);
         rawPtr_ = nullptr;
@@ -63,13 +64,13 @@ shared_ptr<T>::shared_ptr(T* ptr, Deleter<T> deleter) noexcept
 }
 
 template <typename T>
-shared_ptr<T>::shared_ptr(const shared_ptr<T>& ptr) noexcept
+shared_ptr<T>::shared_ptr(const shared_ptr& ptr) noexcept
     : rawPtr_(ptr.rawPtr_), ctrl_(ptr.ctrl_) {
     ctrl_->incrementSharedRefs();
 }
 
 template <typename T>
-shared_ptr<T>::shared_ptr(shared_ptr<T>&& ptr) noexcept
+shared_ptr<T>::shared_ptr(shared_ptr&& ptr) noexcept
     : rawPtr_(ptr.rawPtr_), ctrl_(ptr.ctrl_) {
     ptr.rawPtr_ = nullptr;
     ptr.ctrl_ = nullptr;
@@ -77,14 +78,12 @@ shared_ptr<T>::shared_ptr(shared_ptr<T>&& ptr) noexcept
 
 template <typename T>
 shared_ptr<T>::~shared_ptr() {
-    ctrl_->decrementSharedRefs();
     deleteStoredPointers();
 }
 
 template <typename T>
 shared_ptr<T>& shared_ptr<T>::operator=(const shared_ptr<T>& ptr) noexcept {
     if (this != &ptr) {
-        ctrl_->decrementSharedRefs();
         deleteStoredPointers();
         rawPtr_ = ptr.rawPtr_;
         ctrl_ = ptr.ctrl_;
@@ -98,7 +97,6 @@ shared_ptr<T>& shared_ptr<T>::operator=(const shared_ptr<T>& ptr) noexcept {
 template <typename T>
 shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr<T>&& ptr) noexcept {
     if (this != &ptr) {
-        ctrl_->decrementSharedRefs();
         deleteStoredPointers();
         rawPtr_ = ptr.rawPtr_;
         ctrl_ = ptr.ctrl_;
@@ -110,9 +108,6 @@ shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr<T>&& ptr) noexcept {
 
 template <typename T>
 T& shared_ptr<T>::operator*() const noexcept {
-    if (!rawPtr_) {
-        throw std::runtime_error("nullptr dererefence");
-    }
     return *get();
 }
 
@@ -128,10 +123,10 @@ T* shared_ptr<T>::get() const noexcept {
 
 template <typename T>
 void shared_ptr<T>::reset(T* ptr, Deleter<T> deleter) {
-    ctrl_->decrementSharedRefs();
     deleteStoredPointers();
     rawPtr_ = ptr;
     ctrl_ = new control_block<T>(deleter);
+    ctrl_->incrementSharedRefs();
 }
 
 template <typename T>

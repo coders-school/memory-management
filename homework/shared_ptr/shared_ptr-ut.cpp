@@ -5,113 +5,164 @@
 
 #include "shared_ptr.hpp"
 
-TEST(SharedPointerTest, ShouldCreateNullptrSharedPointerToIntegerUsingDefaultConstructor)
-{
+constexpr int testValue = 10;
+constexpr int secondTestValue = 666;
+
+struct SharedPointerTest : ::testing::Test {
+    SharedPointerTest()
+        : sharedPtr(new int(testValue)) {}
+    coders::shared_ptr<int> sharedPtr;
+};
+
+TEST_F(SharedPointerTest, ShouldCreateNullptrSharedPointerToIntegerUsingDefaultConstructor) {
     // Given
     size_t sharedPtrCnt = 1;
 
     // When
-    coders::shared_ptr<int> sharedPtr{};
+    coders::shared_ptr<int> emptySharedPtr{};
 
     // Then
-    ASSERT_FALSE(sharedPtr);
-    ASSERT_EQ(sharedPtr.get(), nullptr);
-    ASSERT_EQ(sharedPtr.operator->(), nullptr);
-    ASSERT_EQ(sharedPtr.use_count(), sharedPtrCnt);
+    ASSERT_FALSE(emptySharedPtr);
+    ASSERT_EQ(emptySharedPtr.get(), nullptr);
+    ASSERT_EQ(emptySharedPtr.operator->(), nullptr);
+    ASSERT_EQ(emptySharedPtr.use_count(), sharedPtrCnt);
 }
 
-TEST(SharedPointerTest, ShouldCreateSharedPointerToIntegerUsingBasicConstructor)
-{
+TEST_F(SharedPointerTest, ShouldCreateSharedPointerToIntegerUsingBasicConstructor) {
     // Given
     size_t sharedPtrCnt = 1;
-    int testValue = 10;
 
     // When
-    coders::shared_ptr<int> sharedPtr(new int(testValue));
-
     // Then
     ASSERT_TRUE(sharedPtr);
     ASSERT_EQ(sharedPtr.use_count(), sharedPtrCnt);
     ASSERT_EQ(*sharedPtr.get(), testValue);
 }
 
-// TEST(SharedPointerTest, ShouldGetRawPointerFromSharedPointerToInteger)
-// {
-//     // Given
-//     int testValue = 10;
-//     coders::unique_ptr<int> uniquePtr(new int(testValue));
+TEST_F(SharedPointerTest, ShouldCreateSharedPointerUsingCopyConstructor) {
+    // Given
+    size_t sharedPtrCnt = 1;
+    ASSERT_EQ(sharedPtr.use_count(), sharedPtrCnt);
+    ASSERT_EQ(*sharedPtr.get(), testValue);
 
-//     // When
-//     // Then
-//     ASSERT_EQ(*uniquePtr.get(), testValue);
-// }
+    // When
+    auto newShared(sharedPtr);
+    ++sharedPtrCnt;
 
-// TEST(SharedPointerTest, ShouldReleaseSharedPointerToString)
-// {
-//     // Given
-//     coders::unique_ptr<std::string> uniquePtr(new std::string("Hello world!"));
+    // Then
+    ASSERT_TRUE(newShared);
+    ASSERT_EQ(newShared.use_count(), sharedPtrCnt);
+    ASSERT_EQ(*newShared.get(), testValue);
+}
 
-//     // When
-//     auto rawPtrBeforeRelease = uniquePtr.get();
-//     auto releasedRawPtr = uniquePtr.release();
+TEST_F(SharedPointerTest, ShouldCreateSharedPointerUsingCopyAssignmentOperator) {
+    // Given
+    size_t sharedPtrCnt = 1;
+    ASSERT_EQ(sharedPtr.use_count(), sharedPtrCnt);
+    ASSERT_EQ(*sharedPtr.get(), testValue);
 
-//     // Then
-//     ASSERT_EQ(rawPtrBeforeRelease, releasedRawPtr);
-//     ASSERT_EQ(uniquePtr.get(), nullptr);
+    // When
+    coders::shared_ptr<int> newShared;
+    newShared = sharedPtr;
+    ++sharedPtrCnt;
 
-//     delete releasedRawPtr;
-// }
+    // Then
+    ASSERT_TRUE(newShared);
+    ASSERT_EQ(newShared.use_count(), sharedPtrCnt);
+    ASSERT_EQ(*newShared.get(), testValue);
+}
 
-// TEST(SharedPointerTest, ShouldResetSharedPointerToVectorOfInts)
-// {
-//     // Given
-//     coders::unique_ptr<std::vector<int>> uniquePtr(new std::vector<int>{1, 2, 3});
+TEST_F(SharedPointerTest, ShouldCreateSharedPointerUsingMoveConstructor) {
+    // Given
+    size_t sharedPtrCnt = 1;
+    ASSERT_EQ(sharedPtr.use_count(), sharedPtrCnt);
+    ASSERT_EQ(*sharedPtr.get(), testValue);
 
-//     // When
-//     uniquePtr.reset(new std::vector<int>{10, 11});
+    // When
+    coders::shared_ptr<int> newShared(std::move(sharedPtr));
 
-//     // Then
-//     ASSERT_EQ(uniquePtr->at(0), 10);
-//     ASSERT_EQ(uniquePtr->at(1), 11);
-// }
+    // Then
+    ASSERT_FALSE(sharedPtr);
+    ASSERT_TRUE(newShared);
+    ASSERT_EQ(newShared.use_count(), sharedPtrCnt);
+    ASSERT_EQ(*newShared.get(), testValue);
+}
 
-// TEST(SharedPointerTest, ShouldResetSharedPointerWithoutArgument)
-// {
-//     // Given
-//     coders::unique_ptr<std::vector<int>> uniquePtr(new std::vector<int>{1, 2, 3});
+TEST_F(SharedPointerTest, ShouldCreateSharedPointerUsingMoveAssignmentOperator) {
+    // Given
+    size_t sharedPtrCnt = 1;
+    ASSERT_EQ(sharedPtr.use_count(), sharedPtrCnt);
+    ASSERT_EQ(*sharedPtr.get(), testValue);
 
-//     // When
-//     uniquePtr.reset();
+    // When
+    coders::shared_ptr<int> newShared;
+    newShared = std::move(sharedPtr);
 
-//     // Then
-//     ASSERT_EQ(uniquePtr.get(), nullptr);
-// }
+    // Then
+    ASSERT_FALSE(sharedPtr);
+    ASSERT_TRUE(newShared);
+    ASSERT_EQ(newShared.use_count(), sharedPtrCnt);
+    ASSERT_EQ(*newShared.get(), testValue);
+}
 
-// TEST(SharedPointerTest, ShouldCreateSharedPointerToIntegerUsingMoveConstructor)
-// {
-//     // Given
-//     int testValue = 10;
-//     coders::unique_ptr<int> ptr1(new int(testValue));
+TEST_F(SharedPointerTest, ShouldResetSharedPointerToGivenValue) {
+    // Given
+    size_t sharedPtrCnt = 1;
+    int newValue = 666;
+    ASSERT_EQ(sharedPtr.use_count(), sharedPtrCnt);
+    ASSERT_EQ(*sharedPtr.get(), testValue);
 
-//     // When
-//     coders::unique_ptr<int> ptr2(std::move(ptr1));
+    // When
+    sharedPtr.reset(new int(newValue));
 
-//     // Then
-//     ASSERT_EQ(ptr1.get(), nullptr);
-//     ASSERT_EQ(*ptr2, testValue);
-// }
+    // Then
+    ASSERT_TRUE(sharedPtr);
+    ASSERT_EQ(sharedPtr.use_count(), sharedPtrCnt);
+    ASSERT_EQ(*sharedPtr.get(), newValue);
+}
 
-// TEST(SharedPointerTest, ShouldUseMoveAssignmentOnSharedPointerToDouble)
-// {
-//     // Given
-//     double testValue = 66.6;
-//     coders::unique_ptr<double> ptr1(new double(testValue));
-//     coders::unique_ptr<double> ptr2(new double(123.45));
+TEST_F(SharedPointerTest, ShouldResetSharedPointerToNullptr) {
+    // Given
+    size_t sharedPtrCnt = 1;
+    ASSERT_EQ(sharedPtr.use_count(), sharedPtrCnt);
+    ASSERT_EQ(*sharedPtr.get(), testValue);
 
-//     // When
-//     ptr2 = std::move(ptr1);
+    // When
+    sharedPtr.reset();
 
-//     // Then
-//     ASSERT_EQ(ptr1.get(), nullptr);
-//     ASSERT_EQ(*ptr2, testValue);
-// }
+    // Then
+    ASSERT_FALSE(sharedPtr);
+    ASSERT_EQ(sharedPtr.get(), nullptr);
+}
+
+TEST_F(SharedPointerTest, ShouldUseOperators) {
+    // Given
+    std::vector<int> testVector{7, 3, 5};
+    coders::shared_ptr<std::vector<int>> sharedPtr(new std::vector<int>(testVector));
+
+    // When
+    // Then
+    ASSERT_EQ(*(sharedPtr->begin()), 7);
+    ASSERT_EQ(*sharedPtr, testVector);
+}
+
+TEST(SharedPointerTestWithDeleter, ShouldUseGivenDeleter) {
+    // Given
+    struct testStruct {
+        int a = 20;
+    };
+    testStruct* tStruct = new testStruct();
+    auto testDeleter = [](testStruct* p) {
+        std::cout << "My deleter!\n";
+        p->a = -1;
+    };
+
+    // When
+    {
+        coders::shared_ptr<testStruct> testPtr(tStruct, testDeleter);
+    }
+
+    // Then
+    ASSERT_EQ(tStruct->a, -1);
+    delete tStruct;
+}

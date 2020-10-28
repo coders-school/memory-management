@@ -17,7 +17,9 @@ public:
     control_block(Deleter<T> deleter = defaultDeleter)
         : deleter_(deleter) {}
     control_block(const control_block&) = delete;
+    control_block(control_block&&) = delete;
     control_block& operator=(const control_block&) = delete;
+    control_block& operator=(control_block&&) = delete;
 
     size_t getSharedRefs() const noexcept { return sharedRefs_; }
     size_t getWeakRefs() const noexcept { return weakRefs_; }

@@ -2,16 +2,16 @@
 
 #include <iostream>
 
-void myDel(void* p) {
+void myDeleter(int* p) {
     std::cout << "My deleter!\n";
-    delete (int*)p;
+    delete p;
 }
 
 int main() {
-    coders::shared_ptr<int> testPtr{new int(23), myDel};
-    coders::shared_ptr<int> testPtr_2{new int(666), myDel};
-    // testPtr.setDeleter(myDel);
-    
+    coders::shared_ptr<int> testPtr{new int(23),myDeleter};
+    coders::shared_ptr<int> testPtr_2{new int(666), myDeleter};
+
+    coders::shared_ptr<int> moved(std::move(testPtr));
 
     return 0;
 }
