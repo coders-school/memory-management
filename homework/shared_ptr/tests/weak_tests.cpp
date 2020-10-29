@@ -116,3 +116,17 @@ TEST_F(WeakTest, weakWhenCopiedShouldReleaseMemoryWhenIsTheLastWeakPtrAndSharedC
     ptr = anotherShared;
     EXPECT_EQ(ptr.lock(), anotherShared);
 }
+
+TEST_F(WeakTest, weakWhenCopiedFromEmptySharedPtrShouldBeEmpty) {
+    cs::shared_ptr<int> emptyShared{};
+    cs::weak_ptr<int> emptyWeak{};
+    emptyWeak = emptyShared;
+    EXPECT_EQ(emptyWeak.lock().get(), nullptr);
+}
+
+TEST_F(WeakTest, weakWhenCopiedFromEmptyWeakPtrShouldBeEmpty) {
+    cs::weak_ptr<int> emptyWeak1{};
+    cs::weak_ptr<int> emptyWeak2{};
+    emptyWeak1 = emptyWeak2;
+    EXPECT_EQ(emptyWeak1.lock().get(), nullptr);
+}

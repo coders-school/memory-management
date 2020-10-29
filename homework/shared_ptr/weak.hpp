@@ -78,7 +78,9 @@ weak_ptr<T>& weak_ptr<T>::operator=(const weak_ptr<T>& rhs) noexcept {
     releaseMemory();
     data_ = rhs.data_;
     controlBlock_ = rhs.controlBlock_;
-    controlBlock_->incrementWeakRef();
+    if (controlBlock_) {
+        controlBlock_->incrementWeakRef();
+    }
     return *this;
 }
 
@@ -101,13 +103,18 @@ weak_ptr<T>& weak_ptr<T>::operator=(const shared_ptr<T>& rhs) noexcept {
     releaseMemory();
     data_ = rhs.data_;
     controlBlock_ = rhs.controlBlock_;
-    controlBlock_->incrementWeakRef();
+    if (controlBlock_) {
+        controlBlock_->incrementWeakRef();
+    }
     return *this;
 }
 
 template <typename T>
 bool weak_ptr<T>::expired() const noexcept
 {
+    if (!controlBlock_) {
+        return true;
+    }
     return controlBlock_->getSharedRef() == 0;
 }
 
