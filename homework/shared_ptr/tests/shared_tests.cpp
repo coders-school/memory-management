@@ -148,6 +148,11 @@ TEST_F(SharedTest, sharedShouldThrowExcepetionWhenCreatedFromHangingWeakPtr) {
     EXPECT_THROW(cs::shared_ptr<int> shared{dangling}, cs::bad_weak_ptr);
 }
 
+TEST_F(SharedTest, sharedShouldThrowExceptionWhenCreatedFromEmptyWeakPtr) {
+    cs::weak_ptr<int> emptyWeak{};
+    EXPECT_THROW(cs::shared_ptr<int> shared{emptyWeak}, cs::bad_weak_ptr);
+}
+
 TEST_F(SharedTest, resetCanBeUseWithOneArgument) {
     defaultShared.reset(new int{anotherValue});
     EXPECT_EQ(*defaultShared, anotherValue);
@@ -156,4 +161,11 @@ TEST_F(SharedTest, resetCanBeUseWithOneArgument) {
 TEST_F(SharedTest, resetCanBeUseWithCustomDeleter) {
     auto customDeleter = [](int* data) { delete [] data; };
     defaultShared.reset(new int[defaultValue]{}, customDeleter);
+}
+
+TEST_F(SharedTest, sharedPtrCanBeCopiedFromEmptySharedPtr) {
+    cs::shared_ptr<int> emptyShared1{};
+    cs::shared_ptr<int> emptyShared2{};
+    emptyShared1 = emptyShared2;
+    EXPECT_EQ(emptyShared1.get(), nullptr);
 }
