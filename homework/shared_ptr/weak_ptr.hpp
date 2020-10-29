@@ -1,8 +1,8 @@
 #pragma once
 
+#include <iostream>
 #include "control_block.hpp"
 #include "shared_ptr.hpp"
-#include <iostream>
 namespace cs {
 template <typename T>
 class shared_ptr;
@@ -20,9 +20,7 @@ public:
     weak_ptr& operator=(const cs::shared_ptr<T>& ptr) noexcept;
     weak_ptr& operator=(weak_ptr&& ptr) noexcept;
     long use_count() const { return static_cast<long>(cb_->getShared()); }
-    bool expired() const noexcept {
-        return use_count() == 0;
-    }  // musi byc lepszy sposob...
+    bool expired() const noexcept { return use_count() == 0; }
     cs::shared_ptr<T> lock() const noexcept;
     void reset() noexcept;
     ~weak_ptr();
