@@ -3,7 +3,7 @@ name: CMake CI
 on: [push, pull_request]
 
 jobs:
-  ctest:
+  unique_ptr_compile_and_run:
     runs-on: ubuntu-20.04
 
     steps:
@@ -21,7 +21,7 @@ jobs:
       working-directory: homework/unique_ptr/build
       run: ctest -V
 
-  valgrind:
+  unique_ptr_valgrind_run:
     runs-on: ubuntu-20.04
     steps:
     - name: Check out code
@@ -38,3 +38,39 @@ jobs:
     - name: Run valgrind
       working-directory: homework/unique_ptr/build
       run: valgrind ./UniquePtr-ut
+
+shared_ptr_compile_and_run:
+    runs-on: ubuntu-20.04
+
+    steps:
+    - uses: actions/checkout@master
+
+    - name: Create build folder
+      working-directory: homework/shared_ptr
+      run: mkdir build
+    - name: Compile
+      working-directory: homework/shared_ptr/build
+      run: |
+        cmake ..
+        make
+    - name: Run tests
+      working-directory: homework/shared_ptr/build
+      run: ctest -V
+
+  shared_ptr_valgrind_run:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Check out code
+      uses: actions/checkout@master
+    - name: Install valgrind
+      run: sudo apt-get install valgrind
+    - name: Create build dir
+      run: mkdir homework/shared_ptr/build
+    - name: Compile
+      working-directory: homework/shared_ptr/build
+      run: |
+        cmake ..
+        make
+    - name: Run valgrind
+      working-directory: homework/shared_ptr/build
+      run: valgrind ./Shared_ptr-ut
