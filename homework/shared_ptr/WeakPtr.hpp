@@ -23,8 +23,8 @@ public:
     WeakPtr& operator=(const cs::SharedPtr<T>& ptr) noexcept;
     WeakPtr& operator=(WeakPtr&& ptr) noexcept;
 
-    long useCount() const noexcept; 
-    bool expired() const noexcept { return useCount() == 0; }
+    long use_count() const noexcept; 
+    bool expired() const noexcept { return use_count() == 0; }
     void reset() noexcept;
     cs::SharedPtr<T> lock() const noexcept;
 
@@ -124,7 +124,7 @@ void WeakPtr<T>::reset() noexcept {
 }
 
 template <typename T>
-long WeakPtr<T>::useCount() const noexcept {
+long WeakPtr<T>::use_count() const noexcept {
     if (cb_) {
         return cb_->getSharedCounter();
     }

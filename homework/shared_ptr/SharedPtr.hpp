@@ -28,7 +28,7 @@ public:
     explicit operator bool() const noexcept { return ptr_ != nullptr; }
 
     T* get() const noexcept { return ptr_; }
-    long useCount() const noexcept { return static_cast<long>(cb_->getSharedCounter()); }
+    long use_count() const noexcept { return static_cast<long>(cb_->getSharedCounter()); }
     void reset(
         T* ptr = nullptr,
         std::function<void(T*)> deleter = [](T* ptr = nullptr) { delete ptr; }) noexcept;
@@ -73,14 +73,12 @@ SharedPtr<T>::SharedPtr(const cs::WeakPtr<T>& ptr) noexcept {
 
 template <typename T>
 SharedPtr<T>::~SharedPtr() {
-    std::cout << "\ndeleteResources form destructor sharedPtr\n";
     deleteResources();
 }
 
 template <typename T>
 SharedPtr<T>& SharedPtr<T>::operator=(const SharedPtr& ptr) noexcept {
     if (&ptr != this) {
-        std::cout << "\ndeleteResources from operator=\n";
         deleteResources();
         ptr_ = ptr.ptr_;
         cb_ = ptr.cb_;
@@ -114,15 +112,11 @@ template <typename T>
 void SharedPtr<T>::deleteResources() {
     if (cb_) {
         cb_->decrementSharedRefCounter();
-        if (cb_->getSharedCounter() == 0) {
-            //cb_->callDeleter();
-            if (cb_->getWeakCounter() == 0) {
-                std::cout << "\ndeleteResources in sharedPtr\n";
-                delete cb_;
-            }
+        if (cb_->getSharedCounter() == 0 && cb_->getWeakCounter() == 0) {
+            delete cb_;
         }
     }
-}
+}  // namespace cs
 
 template <typename T, typename... Args>
 SharedPtr<T> make_shared(Args&&... args) {

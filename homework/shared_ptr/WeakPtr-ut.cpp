@@ -11,13 +11,13 @@ constexpr int intValue = 42;
 
 TEST(WeakPtrTest, EmptyWeakPtrShouldReturnUseCounterZero) {
     cs::WeakPtr<int> weakPtr{};
-    ASSERT_EQ(weakPtr.useCount(), WeakPtrTestConst::zeroUseCount);
+    ASSERT_EQ(weakPtr.use_count(), WeakPtrTestConst::zeroUseCount);
 }
 
 TEST(WeakPtrTest, WeakPtrInitiatedWithSharedPtrShouldReturnCounterEqualOne) {
     cs::SharedPtr<int> sharedPtr{new int{WeakPtrTestConst::intValue}};
     cs::WeakPtr<int> weakPtr{sharedPtr};
-    ASSERT_EQ(weakPtr.useCount(), WeakPtrTestConst::oneUseCount);
+    ASSERT_EQ(weakPtr.use_count(), WeakPtrTestConst::oneUseCount);
 }
 
 TEST(WeakPtrTest, weakPtrShoulGetSharedPtrWithLockFunction) {
