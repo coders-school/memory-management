@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 
+<<<<<<< HEAD
 class FileOpeningError : public std::runtime_error {
     public:
     FileOpeningError(std::string path)
@@ -20,6 +21,14 @@ public:
     }
     ~FileHandler() {
         std::fclose(file_);
+=======
+int main()
+{
+    FILE* fp = std::fopen("thisFileDoesNotExist.cpp", "r");
+    if(!fp) {
+        std::perror("File opening failed");
+        return EXIT_FAILURE;
+>>>>>>> 9addd5891723a1d66eecbe4dfdc328007e9895c7
     }
 
     friend std::ostream& operator<<(std::ostream& out, const FileHandler& f) {
@@ -42,6 +51,7 @@ private:
     FILE* file_ = nullptr;
 };
 
+<<<<<<< HEAD
 int main() {
     try {
     FileHandler fh("../ResourceD.cpp");
@@ -49,4 +59,7 @@ int main() {
     } catch (FileOpeningError& foe) {
         std::cerr << foe.what();
     }
+=======
+    std::fclose(fp);
+>>>>>>> 9addd5891723a1d66eecbe4dfdc328007e9895c7
 }
