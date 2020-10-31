@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-project(shared_ptr)
+project(SharedPtr)
 
 configure_file(CMakeLists.txt.in googletest-download/CMakeLists.txt)
 execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
@@ -31,8 +31,8 @@ endif()
 
 enable_testing()
 set (TEST_FILES
-    shared_ptr-ut.cpp
-    weak_ptr-ut.cpp)
+    SharedPtr-ut.cpp
+    WeakPtr-ut.cpp)
 add_executable(${PROJECT_NAME}-ut ${TEST_FILES})
 add_executable(${PROJECT_NAME} main.cpp)
 add_compile_options(${PROJECT_NAME}-ut -Wall -pedantic -Wextra)
