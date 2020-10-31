@@ -21,7 +21,7 @@ jobs:
       working-directory: homework/shared_ptr/build
       run: ctest -V
 
-  unique_ptr_valgrind_run:
+  shared_ptr_valgrind_run:
     runs-on: ubuntu-20.04
     steps:
     - name: Check out code
