@@ -1,9 +1,9 @@
 #pragma once
 #include <atomic>
 #include <functional>
+#include <iostream>
 #include "ControlBlock.hpp"
 #include "WeakPtr.hpp"
-#include <iostream>
 
 namespace cs {
 template <typename T>
@@ -13,7 +13,8 @@ template <typename T>
 class SharedPtr {
 public:
     SharedPtr(
-        T* ptr = nullptr, std::function<void(T*)> deleter = [](T* ptr = nullptr) { delete ptr; }) noexcept
+        T* ptr = nullptr,
+        std::function<void(T*)> deleter = [](T* ptr = nullptr) { delete ptr; }) noexcept
         : ptr_(ptr), cb_(new ControlBlockData<T>{ptr, deleter}) {}
     SharedPtr(const SharedPtr& ptr) noexcept;
     SharedPtr(SharedPtr&& ptr) noexcept;
@@ -22,17 +23,15 @@ public:
 
     SharedPtr& operator=(const SharedPtr& ptr) noexcept;
     SharedPtr& operator=(SharedPtr&& ptr) noexcept;
-    T& operator*() const noexcept { 
-        if(!ptr_)
-        std::cout << "\nDUPA\n";
-        return *ptr_; 
-        }
+    T& operator*() const noexcept { return *ptr_; }
     T* operator->() const noexcept { return ptr_; }
     explicit operator bool() const noexcept { return ptr_ != nullptr; }
 
     T* get() const noexcept { return ptr_; }
     long useCount() const noexcept { return static_cast<long>(cb_->getSharedCounter()); }
-    void reset(T* ptr) noexcept;
+    void reset(
+        T* ptr = nullptr,
+        std::function<void(T*)> deleter = [](T* ptr = nullptr) { delete ptr; }) noexcept;
 
 private:
     explicit SharedPtr(ControlBlockData<T>* cb) noexcept
@@ -104,9 +103,11 @@ SharedPtr<T>& SharedPtr<T>::operator=(SharedPtr&& ptr) noexcept {
 }
 
 template <typename T>
-void SharedPtr<T>::reset(T* ptr) noexcept {
-    *ptr_ = *ptr;
-    delete ptr;
+void SharedPtr<T>::reset(T* ptr /* = nullptr*/,
+                         std::function<void(T*)> deleter /* = [](T* ptr = nullptr) { delete ptr; }*/) noexcept {
+    deleteResources();
+    ptr_ = ptr;
+    cb_ = new ControlBlockData<T>(ptr, deleter);
 }
 
 template <typename T>
@@ -123,9 +124,9 @@ void SharedPtr<T>::deleteResources() {
     }
 }
 
-template <typename Y, typename... Args>
-SharedPtr<Y> make_shared(Args&&... args) {
-    return cs::SharedPtr<Y>(new ControlBlockData<Y>(std::forward<decltype(args)>(args)...));
+template <typename T, typename... Args>
+SharedPtr<T> make_shared(Args&&... args) {
+    return cs::SharedPtr<T>(new ControlBlockData<T>(std::forward<decltype(args)>(args)...));
 }
 
 }  // namespace cs
