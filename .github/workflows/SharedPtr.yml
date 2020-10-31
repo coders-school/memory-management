@@ -3,7 +3,7 @@ name: CMake CI
 on: [push, pull_request]
 
 jobs:
-shared_ptr_compile_and_run:
+  shared_ptr_compile_and_run:
     runs-on: ubuntu-20.04
 
     steps:
@@ -21,7 +21,7 @@ shared_ptr_compile_and_run:
       working-directory: homework/shared_ptr/build
       run: ctest -V
 
-  shared_ptr_valgrind_run:
+  unique_ptr_valgrind_run:
     runs-on: ubuntu-20.04
     steps:
     - name: Check out code
@@ -37,4 +37,4 @@ shared_ptr_compile_and_run:
         make
     - name: Run valgrind
       working-directory: homework/shared_ptr/build
-      run: valgrind ./Shared_ptr-ut
+      run: valgrind ./SharedPtr-ut
