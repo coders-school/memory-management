@@ -8,6 +8,9 @@ constexpr double dobuleValue = 4.2;
 constexpr double point_x = 2.2;
 constexpr double point_y = 4.2;
 constexpr double pointsMultiplication = point_x * point_y;
+constexpr size_t oneUseCount = 1;
+constexpr size_t twoUseCount = 2;
+constexpr size_t threeUseCount = 3;
 }  // namespace SharedPtrTestConst
 
 struct SharedPtrTest : ::testing::Test {
@@ -58,19 +61,19 @@ TEST_F(SharedPtrTest, shouldMoveSharedPtr) {
 }
 
 TEST_F(SharedPtrTest, shouldReturnUseCountAndIncrementCounterAndDecrementCounter) {
-    ASSERT_EQ(intValuePtr.useCount(), 1);
+    ASSERT_EQ(intValuePtr.useCount(), SharedPtrTestConst::oneUseCount);
     auto ptr2 = intValuePtr;
-    ASSERT_EQ(intValuePtr.useCount(), 2);
-    ASSERT_EQ(ptr2.useCount(), 2);
+    ASSERT_EQ(intValuePtr.useCount(), SharedPtrTestConst::twoUseCount);
+    ASSERT_EQ(ptr2.useCount(), SharedPtrTestConst::twoUseCount);
     {
         auto ptr3 = intValuePtr;
-        ASSERT_EQ(intValuePtr.useCount(), 3);
-        ASSERT_EQ(ptr2.useCount(), 3);
-        ASSERT_EQ(ptr3.useCount(), 3);
+        ASSERT_EQ(intValuePtr.useCount(), SharedPtrTestConst::threeUseCount);
+        ASSERT_EQ(ptr2.useCount(), SharedPtrTestConst::threeUseCount);
+        ASSERT_EQ(ptr3.useCount(), SharedPtrTestConst::threeUseCount);
     }
 
-    ASSERT_EQ(intValuePtr.useCount(), 2);
-    ASSERT_EQ(ptr2.useCount(), 2);
+    ASSERT_EQ(intValuePtr.useCount(), SharedPtrTestConst::twoUseCount);
+    ASSERT_EQ(ptr2.useCount(), SharedPtrTestConst::twoUseCount);
 }
 
 TEST_F(SharedPtrTest, shouldCastSharedPtrToBool) {
@@ -97,9 +100,9 @@ TEST_F(SharedPtrTest, shouldResetSharedPtr) {
 
 TEST_F(SharedPtrTest, shouldDecrementCounterAfterReset) {
     auto newPtr = intValuePtr;
-    ASSERT_EQ(intValuePtr.useCount(), 2);
+    ASSERT_EQ(intValuePtr.useCount(), SharedPtrTestConst::twoUseCount);
     intValuePtr.reset(nullptr);
-    ASSERT_EQ(intValuePtr.useCount(), 1);
+    ASSERT_EQ(intValuePtr.useCount(), SharedPtrTestConst::oneUseCount);
 }
 
 TEST_F(SharedPtrTest, decrementCounterShouldntDestroyObject) {
@@ -128,5 +131,5 @@ TEST_F(SharedPtrTest, shouldCreateSharedPtrFromWeakPtr) {
     cs::SharedPtr<int> sharedPtr{weakPtr};
 
     ASSERT_EQ(sharedPtr.get(), intValuePtr.get());
-    ASSERT_EQ(sharedPtr.useCount(), 2);
+    ASSERT_EQ(sharedPtr.useCount(), SharedPtrTestConst::twoUseCount);
 }

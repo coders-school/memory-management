@@ -13,8 +13,7 @@ namespace cs {
 template <typename T>
 class WeakPtr {
 public:
-    WeakPtr()
-        : ptr_(nullptr), cb_(nullptr) {}
+    WeakPtr() noexcept = default;
     WeakPtr(const WeakPtr& ptr) noexcept;
     WeakPtr(const cs::SharedPtr<T>& ptr) noexcept;
     WeakPtr(WeakPtr&& ptr) noexcept;
@@ -24,7 +23,7 @@ public:
     WeakPtr& operator=(const cs::SharedPtr<T>& ptr) noexcept;
     WeakPtr& operator=(WeakPtr&& ptr) noexcept;
 
-    long useCount() const { return static_cast<long>(cb_->getSharedCounter()); }
+    long useCount() const noexcept; 
     bool expired() const noexcept { return useCount() == 0; }
     void reset() noexcept;
     cs::SharedPtr<T> lock() const noexcept;
@@ -53,7 +52,6 @@ WeakPtr<T>::WeakPtr(WeakPtr&& ptr) noexcept {
     if (this != &ptr) {
         ptr_ = ptr.ptr_;
         cb_ = ptr.cb_;
-        cb_->setDeleter([&]() { delete ptr_; });
         ptr.ptr_ = nullptr;
         ptr.cb_ = nullptr;
     }
@@ -98,7 +96,6 @@ WeakPtr<T>& WeakPtr<T>::operator=(WeakPtr&& ptr) noexcept {
         deleteResources();
         ptr_ = ptr.ptr_;
         cb_ = ptr.cb_;
-        cb_->setDeleter([&]() { delete ptr_; });
         ptr.ptr_ = nullptr;
         ptr.cb_ = nullptr;
     }
@@ -124,5 +121,13 @@ void WeakPtr<T>::reset() noexcept {
     deleteResources();
     ptr_ = nullptr;
     cb_ = nullptr;
+}
+
+template <typename T>
+long WeakPtr<T>::useCount() const noexcept {
+    if (cb_) {
+        return cb_->getSharedCounter();
+    }
+    return 0l;
 }
 }  // namespace cs
