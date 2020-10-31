@@ -2,32 +2,32 @@
 
 #include "SharedPtr.hpp"
 
-namespace TestConst {
+namespace SharedPtrTestConst {
 constexpr int intValue = 5;
 constexpr double dobuleValue = 4.2;
 constexpr double point_x = 2.2;
 constexpr double point_y = 4.2;
 constexpr double pointsMultiplication = point_x * point_y;
-}  // namespace TestConst
+}  // namespace SharedPtrTestConst
 
 struct SharedPtrTest : ::testing::Test {
     SharedPtrTest()
-        : intValuePtr(new int{TestConst::intValue}),
-          doubleValuePtr(new double{TestConst::dobuleValue}) {}
+        : intValuePtr(new int{SharedPtrTestConst::intValue}),
+          doubleValuePtr(new double{SharedPtrTestConst::dobuleValue}) {}
 
     cs::SharedPtr<int> intValuePtr;
     cs::SharedPtr<double> doubleValuePtr;
 };
 
 struct Point2D {
-    double x = TestConst::point_x;
-    double y = TestConst::point_y;
+    double x = SharedPtrTestConst::point_x;
+    double y = SharedPtrTestConst::point_y;
     double ComputeMultiplication() { return x * y; }
 };
 
 TEST_F(SharedPtrTest, shouldDereferencePointer) {
-    ASSERT_EQ(*intValuePtr, TestConst::intValue);
-    ASSERT_EQ(*doubleValuePtr, TestConst::dobuleValue);
+    ASSERT_EQ(*intValuePtr, SharedPtrTestConst::intValue);
+    ASSERT_EQ(*doubleValuePtr, SharedPtrTestConst::dobuleValue);
 }
 
 TEST_F(SharedPtrTest, shouldCopySharedPtr) {
@@ -48,10 +48,10 @@ TEST_F(SharedPtrTest, operationCopySharedPtrShouldStorePointerToTheSameAddress) 
 
 TEST_F(SharedPtrTest, shouldMoveSharedPtr) {
     auto anotherIntPtr(std::move(intValuePtr));
-    ASSERT_EQ(*anotherIntPtr, TestConst::intValue);
+    ASSERT_EQ(*anotherIntPtr, SharedPtrTestConst::intValue);
 
     auto nextPtr = std::move(anotherIntPtr);
-    ASSERT_EQ(*nextPtr, TestConst::intValue);
+    ASSERT_EQ(*nextPtr, SharedPtrTestConst::intValue);
 
     ASSERT_EQ(intValuePtr.get(), nullptr);
     ASSERT_EQ(anotherIntPtr.get(), nullptr);
@@ -106,20 +106,20 @@ TEST_F(SharedPtrTest, decrementCounterShouldntDestroyObject) {
     {
         auto newPtr = intValuePtr;
     }
-    ASSERT_EQ(*intValuePtr, TestConst::intValue);
+    ASSERT_EQ(*intValuePtr, SharedPtrTestConst::intValue);
 }
 
 TEST(Point2D, shouldUseArrowOperator) {
     cs::SharedPtr<Point2D> ptr(new Point2D{});
 
-    ASSERT_EQ(ptr->ComputeMultiplication(), TestConst::pointsMultiplication);
+    ASSERT_EQ(ptr->ComputeMultiplication(), SharedPtrTestConst::pointsMultiplication);
 }
 
 TEST(Point2D, shouldCreateSharedPtrWithMakeShared) {
     auto point = new Point2D{};
     cs::SharedPtr<Point2D> sharedPtr = cs::make_shared<Point2D>(point);
 
-    ASSERT_EQ(sharedPtr->ComputeMultiplication(), TestConst::pointsMultiplication);
+    ASSERT_EQ(sharedPtr->ComputeMultiplication(), SharedPtrTestConst::pointsMultiplication);
 }
 
 TEST_F(SharedPtrTest, shouldCreateSharedPtrFromWeakPtr) {
