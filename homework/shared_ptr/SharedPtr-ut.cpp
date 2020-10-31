@@ -121,12 +121,12 @@ TEST(Point2D, shouldCreateSharedPtrWithMakeShared) {
 
     ASSERT_EQ(sharedPtr->ComputeMultiplication(), TestConst::pointsMultiplication);
 }
-/*
+
 TEST_F(SharedPtrTest, shouldCreateSharedPtrFromWeakPtr) {
-    cs::weak_ptr<int> wptr{ptr};
+    cs::WeakPtr<int> weakPtr{intValuePtr};
 
-    cs::shared_ptr<int> sptr{wptr};
+    cs::SharedPtr<int> sharedPtr{weakPtr};
 
-    ASSERT_EQ(sptr.get(), ptr.get());
+    ASSERT_EQ(sharedPtr.get(), intValuePtr.get());
+    ASSERT_EQ(sharedPtr.useCount(), 2);
 }
-*/
