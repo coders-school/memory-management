@@ -1,4 +1,4 @@
-name: SharedPointer
+name: SmartPointers
 
 on: [push, pull_request]
 
