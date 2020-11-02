@@ -1,0 +1,28 @@
+name: C/C++ CI
+
+on: [push, pull_request]
+
+jobs:
+  UniquePointer:
+
+    runs-on: [ubuntu-20.04]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: mkdir homework/unique_ptr/build
+      run: mkdir homework/unique_ptr/build
+    - name: Compile
+      working-directory: homework/unique_ptr/build
+      run: |
+        cmake ..
+        make
+    - name: Run tests
+      working-directory: homework/unique_ptr/build
+      run: ctest -V 
+    - name: Run Valgrind
+      working-directory: homework/unique_ptr/build
+      run: |
+          sudo apt-get update -y    
+          sudo apt-get install -y valgrind
+          valgrind --leak-check=yes ./UniquePointer-TestsExe
