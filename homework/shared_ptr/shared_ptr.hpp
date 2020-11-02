@@ -1,6 +1,7 @@
 #pragma once
 
 #include "control_block.hpp"
+#include "exceptions.hpp"
 
 #include <cstddef>
 #include <functional>
@@ -8,12 +9,19 @@
 namespace coders {
 
 template <typename T>
+class weak_ptr;
+
+template <typename T>
 class shared_ptr {
 public:
+    template <typename Y>
+    friend class weak_ptr;
+
     shared_ptr(T* ptr = nullptr) noexcept;
     shared_ptr(T* ptr, Deleter<T> deleter) noexcept;
     shared_ptr(const shared_ptr& ptr) noexcept;
     shared_ptr(shared_ptr&& ptr) noexcept;
+    explicit shared_ptr(const weak_ptr<T>& wPtr);
     ~shared_ptr();
 
     shared_ptr<T>& operator=(const shared_ptr<T>& ptr) noexcept;
@@ -74,6 +82,16 @@ shared_ptr<T>::shared_ptr(shared_ptr&& ptr) noexcept
     : rawPtr_(ptr.rawPtr_), ctrl_(ptr.ctrl_) {
     ptr.rawPtr_ = nullptr;
     ptr.ctrl_ = nullptr;
+}
+
+template <typename T>
+shared_ptr<T>::shared_ptr(const weak_ptr<T>& wPtr) {
+    if (wPtr.expired()) {
+        throw coders::ExpiredWeakPtr("Expired weak pointer\n");
+    }
+    rawPtr_ = wPtr.rawPtr_;
+    ctrl_ = wPtr.ctrl_;
+    ctrl_->incrementSharedRefs();
 }
 
 template <typename T>

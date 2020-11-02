@@ -38,14 +38,14 @@ endif()
 
 ##-----------------G-test SCRIPT FROM CODERS SCHOOL----------------##
 
-project(SharedPointer)
+project(SmartPointers)
 
 add_executable(${PROJECT_NAME} main.cpp)
-add_executable(${PROJECT_NAME}-ut shared_ptr-ut.cpp)
+add_executable(${PROJECT_NAME}-ut shared_ptr-ut.cpp weak_ptr-ut.cpp)
 
 target_link_libraries(${PROJECT_NAME}-ut gtest_main)
 
 target_compile_options(${PROJECT_NAME} PUBLIC -Wall -Wextra -Werror -Wconversion -pedantic -O3)
 target_compile_options(${PROJECT_NAME}-ut PRIVATE -Wall -Wextra -Werror -Wconversion -pedantic -O3)
 enable_testing()
-add_test(NAME SharedPointerTests COMMAND ${PROJECT_NAME}-ut)
+add_test(NAME SmartPointersTests COMMAND ${PROJECT_NAME}-ut)

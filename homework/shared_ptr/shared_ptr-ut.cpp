@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "shared_ptr.hpp"
+#include "weak_ptr.hpp"
 
 constexpr int testValue = 10;
 constexpr int secondTestValue = 666;
@@ -165,4 +166,25 @@ TEST(SharedPointerTestWithDeleter, ShouldUseGivenDeleter) {
     // Then
     ASSERT_EQ(tStruct->a, -1);
     delete tStruct;
+}
+
+TEST(SharedPointerTestWithWeaks, ShouldThrowWhenConstructedFromEmptyWeakPtr) {
+    // Given
+    coders::weak_ptr<int> wPtr{};
+
+    // When
+    // Then
+    EXPECT_THROW(coders::shared_ptr<int> sharedPtr{wPtr}, coders::ExpiredWeakPtr);
+}
+
+TEST(SharedPointerTestWithWeaks, ShouldThrowWhenConstructedFromDanglingWeakPtr) {
+    // Given
+    coders::shared_ptr<int> sharedPtr(new int(testValue));
+    coders::weak_ptr<int> wPtr{sharedPtr};
+    
+    // When
+    wPtr.reset();
+    
+    // Then
+    EXPECT_THROW(coders::shared_ptr<int> sPtr{wPtr}, coders::ExpiredWeakPtr);
 }
