@@ -18,8 +18,6 @@ public:
 
     virtual T* getPtr() = 0;
 
-    std::function<void(T*)> deleter;
-
 protected:
     std::atomic<size_t> sharedRefs_ = 1;
     std::atomic<size_t> weakRefs_ = 0;
