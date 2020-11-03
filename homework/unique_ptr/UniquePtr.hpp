@@ -23,7 +23,7 @@ UniquePtr<T>::UniquePtr(T * rawPtr) : rawPtr_(rawPtr) {}
 template <typename T>
 UniquePtr<T>::UniquePtr(UniquePtr<T> && otherPtr) noexcept
     : rawPtr_(otherPtr.rawPtr_) {
-        other.rawPtr_ = nullptr;
+        otherPtr.rawPtr_ = nullptr;
     }
 
 template <typename T>
