@@ -2,15 +2,13 @@
 
 #include <iostream>
 
-namespace cs {
-template <typename T>
-class weak_ptr;
-}  // namespace cs
-
 #include "sharedControlBlock.hpp"
 #include "shared_ptr.hpp"
 
 namespace cs {
+
+template <typename T>
+class shared_ptr;
 
 template <typename T>
 class weak_ptr {
