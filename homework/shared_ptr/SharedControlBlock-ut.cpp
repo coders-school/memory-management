@@ -7,7 +7,7 @@ constexpr size_t initSharedValue = 1;
 constexpr size_t initWeakValue = 0;
 
 struct SharedControlBlockTest : public ::testing::Test {
-    SharedControlBlock<int> testSharedControlBlock;
+    SharedControlBlockObj<int> testSharedControlBlock;
 };
 
 TEST_F(SharedControlBlockTest, ShouldGetSharedRefsCount) {

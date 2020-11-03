@@ -1,5 +1,10 @@
 #pragma once
 #include "SharedControlBlock.hpp"
+#include "WeakPtr.hpp"
+
+namespace cs {
+template <typename T>
+class WeakPtr;
 
 template <typename T>
 class SharedPtr {
@@ -27,10 +32,16 @@ public:
 
 private:
     T* ptr_ = nullptr;
-    SharedControlBlock<T>* shControlBlock_ = nullptr;
+    SharedControlBlockObj<T>* shControlBlock_ = nullptr;
+
+    explicit SharedPtr(SharedControlBlockObj<T>* newBlock)
+        : shControlBlock_(newBlock) { ptr_ = newBlock->getObj(); }
 
     template <typename>
-    friend class WeakPtr;
+    friend class cs::WeakPtr;
+
+    template <typename M, typename... Args>
+    friend SharedPtr<M> make_shared(Args&&... args);
 };
 
 template <typename T>
@@ -38,7 +49,7 @@ void SharedPtr<T>::handleSharedPtrAndControlBlockDelete() {
     if (shControlBlock_ != nullptr) {
         shControlBlock_->decrementSharedRefsCount();
         if (shControlBlock_->getSharedRefsCount() == 0) {
-            shControlBlock_->defaultDeleter(ptr_);
+            shControlBlock_->callDefaultDeleter();
         } else if (shControlBlock_->getSharedRefsCount() == 0 && shControlBlock_->getWeakRefsCount() == 0) {
             delete shControlBlock_;
         }
@@ -47,11 +58,11 @@ void SharedPtr<T>::handleSharedPtrAndControlBlockDelete() {
 
 template <typename T>
 SharedPtr<T>::SharedPtr(T* ptr)
-    : ptr_(ptr), shControlBlock_(new SharedControlBlock<T>{}) {}
+    : ptr_(ptr), shControlBlock_(new SharedControlBlockObj<T>{}) {}
 
 template <typename T>
 SharedPtr<T>::SharedPtr(T* ptr, std::function<void(T*)> deleter)
-    : ptr_(ptr), shControlBlock_(new SharedControlBlock<T>{deleter}) {}
+    : ptr_(ptr), shControlBlock_(new SharedControlBlockObj<T>{deleter}) {}
 
 template <typename T>
 SharedPtr<T>::~SharedPtr() {
@@ -100,5 +111,6 @@ template <typename T>
 void SharedPtr<T>::reset(T* newPtr, std::function<void(T*)> newDeleter) noexcept {
     handleSharedPtrAndControlBlockDelete();
     ptr_ = newPtr;
-    shControlBlock_ = new SharedControlBlock<T>{newDeleter};
+    shControlBlock_ = new SharedControlBlockObj<T>{newPtr, newDeleter};
 }
+}  // namespace cs

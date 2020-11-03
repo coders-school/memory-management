@@ -3,6 +3,10 @@
 #include "SharedControlBlock.hpp"
 #include "SharedPtr.hpp"
 
+namespace cs {
+template <typename T>
+class SharedPtr;
+
 template <typename T>
 class WeakPtr {
 public:
@@ -10,23 +14,26 @@ public:
     ~WeakPtr();
 
     WeakPtr(const WeakPtr& otherWeakPtr) noexcept;
-    WeakPtr(const SharedPtr<T>& sharedPtr) noexcept;
+    WeakPtr(const cs::SharedPtr<T>& sharedPtr) noexcept;
     WeakPtr(WeakPtr&& otherWeakPtr) noexcept;
 
     WeakPtr& operator=(const WeakPtr& otherWeakPtr) noexcept;
-    WeakPtr& operator=(const SharedPtr<T>& sharedPtr) noexcept;
+    WeakPtr& operator=(const cs::SharedPtr<T>& sharedPtr) noexcept;
     WeakPtr& operator=(WeakPtr&& otherWeakPtr) noexcept;
 
     size_t use_count() const noexcept;
     bool expired() const noexcept;
-    SharedPtr<T> lock() const noexcept;
+    cs::SharedPtr<T> lock() const noexcept;
     void reset() noexcept;
 
     void handleWeakPtrAndControlBlockDelete();
 
 private:
     T* ptr_ = nullptr;
-    SharedControlBlock<T>* controlBlock_ = nullptr;
+    SharedControlBlockObj<T>* controlBlock_ = nullptr;
+
+    template <typename>
+    friend class cs::SharedPtr;
 };
 
 template <typename T>
@@ -53,7 +60,7 @@ WeakPtr<T>::WeakPtr(const WeakPtr& otherWeakPtr) noexcept
 }
 
 template <typename T>
-WeakPtr<T>::WeakPtr(const SharedPtr<T>& sharedPtr) noexcept
+WeakPtr<T>::WeakPtr(const cs::SharedPtr<T>& sharedPtr) noexcept
     : ptr_(sharedPtr.ptr_), controlBlock_(sharedPtr.shControlBlock_) {
     if (controlBlock_ != nullptr) {
         controlBlock_->incrementWeakRefsCount();
@@ -80,7 +87,7 @@ WeakPtr<T>& WeakPtr<T>::operator=(const WeakPtr& otherWeakPtr) noexcept {
 }
 
 template <typename T>
-WeakPtr<T>& WeakPtr<T>::operator=(const SharedPtr<T>& sharedPtr) noexcept {
+WeakPtr<T>& WeakPtr<T>::operator=(const cs::SharedPtr<T>& sharedPtr) noexcept {
     if (controlBlock_ != nullptr) {
         controlBlock_->incrementWeakRefsCount();
     }
@@ -115,11 +122,11 @@ bool WeakPtr<T>::expired() const noexcept {
 }
 
 template <typename T>
-SharedPtr<T> WeakPtr<T>::lock() const noexcept {
+cs::SharedPtr<T> WeakPtr<T>::lock() const noexcept {
     if (expired()) {
-        return SharedPtr<T>();
+        return cs::SharedPtr<T>();
     } else {
-        return SharedPtr<T>(ptr_);
+        return cs::SharedPtr<T>(ptr_);
     }
 }
 
@@ -129,3 +136,4 @@ void WeakPtr<T>::reset() noexcept {
     ptr_ = nullptr;
     controlBlock_ = nullptr;
 }
+}  // namespace cs

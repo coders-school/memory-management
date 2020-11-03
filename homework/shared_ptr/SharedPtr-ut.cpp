@@ -9,7 +9,7 @@ struct SharedPtrTest : public ::testing::Test {
     SharedPtrTest()
         : testSharedPtr(new int{initValue}) {}
 
-    SharedPtr<int> testSharedPtr;
+    cs::SharedPtr<int> testSharedPtr;
 };
 
 TEST_F(SharedPtrTest, ShouldDereferenceSharedPtr) {
@@ -23,7 +23,7 @@ TEST_F(SharedPtrTest, ShouldGetReturnPtrValue) {
 }
 
 TEST_F(SharedPtrTest, ShouldUninitializedSharedPtrBeNullPtr) {
-    SharedPtr<int> SharedNullPtr{};
+    cs::SharedPtr<int> SharedNullPtr{};
 
     ASSERT_EQ(SharedNullPtr.get(), nullptr);
 }
@@ -71,7 +71,7 @@ TEST_F(SharedPtrTest, ShouldMoveSharedPtr) {
 
 TEST_F(SharedPtrTest, ShouldMoveSharedPtrToPointerThatAlreadyHoldsAnObject) {
     auto initTestSharedCounts = testSharedPtr.use_count();
-    SharedPtr<int> tempPtr(new int{newValue});
+    cs::SharedPtr<int> tempPtr(new int{newValue});
     tempPtr = std::move(testSharedPtr);
     auto tempPtrSharedCountsAfterMove = tempPtr.use_count();
 
