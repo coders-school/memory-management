@@ -23,8 +23,6 @@ TEST(WeakPtrTest, WeakPtrLockFunction) {
     cs::shared_ptr<int> sptr{new int{initialValue}};
     cs::weak_ptr<int> ptr{sptr};
     cs::shared_ptr<int> sptr2{ptr.lock()};
-    auto isShared = [&sptr2]() { return typeid(sptr2) == typeid(cs::shared_ptr<int>); }();
-    ASSERT_TRUE(isShared);
 }
 
 TEST(WeakPtrTest, SharedPtrCreatedFromWeakPtrShouldHaveSameValueAsOtherShared) {
