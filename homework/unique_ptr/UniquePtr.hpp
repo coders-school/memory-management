@@ -5,9 +5,11 @@ class UniquePtr {
 public:
     UniquePtr() = default;
     UniquePtr(T * rawPtr);
-    UniquePtr(const UniquePtr<T> &) = delete;
     UniquePtr(UniquePtr<T> && otherPtr) noexcept;
-
+   
+    UniquePtr(const UniquePtr<T> &) = delete;
+    UniquePtr<T> &operator = (const UniquePtr<T> &) = delete;
+    
 private:
     T * rawPtr_ = nullptr;
 };
