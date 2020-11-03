@@ -38,6 +38,7 @@ endif()
 project(UniquePtr)
 
 set(SRC
+    Exceptions.cpp
     main.cpp
 )
 enable_testing()
