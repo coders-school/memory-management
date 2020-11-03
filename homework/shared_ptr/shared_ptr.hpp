@@ -80,9 +80,8 @@ shared_ptr<T>::shared_ptr(const shared_ptr<T>& other) noexcept
 }
 
 template <typename T>
-shared_ptr<T>::shared_ptr(shared_ptr&& other) noexcept {
-    ptr_ = other.ptr_;
-    controlBlock_ = other.controlBlock_;
+shared_ptr<T>::shared_ptr(shared_ptr&& other) noexcept
+    : ptr_(other.ptr_), controlBlock_(other.controlBlock_) {
     other.ptr_ = nullptr;
     other.controlBlock_ = nullptr;
 }
