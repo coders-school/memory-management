@@ -51,7 +51,7 @@ UniquePtr<T> & UniquePtr<T>::operator=(UniquePtr<T> && otherUniquePtr) noexcept 
 
 template <typename T>
 T & UniquePtr<T>::operator*() const {
-    if (rawPtr) {
+    if (rawPtr_) {
         return * rawPtr_;
     } else {
         throw InvalidDereference("You can't dereference a null pointer.");
