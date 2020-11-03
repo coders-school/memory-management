@@ -21,27 +21,26 @@ TEST_F(SharedPtrTest, shouldDereferenceSharedPtr) {
 }
 
 TEST_F(SharedPtrTest, shouldCopySharedPtr) {
+    constexpr size_t numOfPtrs = 3;
     auto ptr2(ptr);
     auto ptr3 = ptr;
 
     ASSERT_EQ(*ptr, *ptr2);
     ASSERT_EQ(*ptr, *ptr3);
+
+    ASSERT_EQ(ptr.use_count(), numOfPtrs);
+    ASSERT_EQ(ptr2.use_count(), numOfPtrs);
+    ASSERT_EQ(ptr3.use_count(), numOfPtrs);
 }
 
 TEST_F(SharedPtrTest, shouldMoveSharedPtr) {
     auto ptr2(std::move(ptr));
     ASSERT_EQ(*ptr2, initialValue);
+    ASSERT_EQ(ptr2.use_count(), 1);
 
     auto ptr3 = std::move(ptr2);
     ASSERT_EQ(*ptr3, initialValue);
-}
-
-TEST_F(SharedPtrTest, shouldReturnUseCount) {
-    constexpr size_t numOfPtrs = 3;
-    auto ptr2 = ptr;
-    auto ptr3 = ptr;
-
-    ASSERT_EQ(ptr.use_count(), numOfPtrs);
+    ASSERT_EQ(ptr3.use_count(), 1);
 }
 
 TEST_F(SharedPtrTest, shouldConvertSharedPtrToBool) {
