@@ -38,7 +38,7 @@ endif()
 project(UniquePtr)
 
 set(SRC
-    UniquePtr.cpp
+    main.cpp
 )
 enable_testing()
 
