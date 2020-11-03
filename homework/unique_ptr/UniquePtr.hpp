@@ -4,9 +4,19 @@ template <typename T>
 class UniquePtr {
 public:
     UniquePtr() = default;
-    UniquePtr(T * ptr) : ptr_(ptr) {}
+    UniquePtr(T * rawPtr);
     UniquePtr(const UniquePtr<T> &) = delete;
+    UniquePtr(UniquePtr<T> && otherPtr) noexcept;
 
 private:
-    T * ptr_ = nullptr;
+    T * rawPtr_ = nullptr;
 };
+
+template <typename T>
+UniquePtr<T>::UniquePtr(T * rawPtr) : rawPtr_(rawPtr) {}
+
+template <typename T>
+UniquePtr<T>::UniquePtr(UniquePtr<T> && otherPtr) noexcept 
+    : rawPtr_(other.rawPtr_) {
+        other.rawPtr_ = nullptr;
+    }
