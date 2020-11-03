@@ -23,6 +23,8 @@ TEST(WeakPtrTest, WeakPtrLockFunction) {
     cs::shared_ptr<int> sptr{new int{initialValue}};
     cs::weak_ptr<int> ptr{sptr};
     cs::shared_ptr<int> sptr2{ptr.lock()};
+
+    ASSERT_EQ(sptr.get(), sptr2.get());
 }
 
 TEST(WeakPtrTest, SharedPtrCreatedFromWeakPtrShouldHaveSameValueAsOtherShared) {
