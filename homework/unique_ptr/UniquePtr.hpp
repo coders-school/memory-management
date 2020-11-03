@@ -72,11 +72,12 @@ T * UniquePtr<T>::get() const {
 template <typename T>
 T * UniquePtr<T>::release() {
     T * released = nullptr;
-    std::swap(released, ptr_);
+    std::swap(released, rawPtr_);
     return released;
 }
 
 template <typename T>
 void UniquePtr<T>::reset(T * newPtr) { 
-    newPtr = nullptr;
+    delete rawPtr_;
+    rawPtr = newPtr;
 }
