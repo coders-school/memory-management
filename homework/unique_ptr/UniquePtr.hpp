@@ -79,5 +79,5 @@ T * UniquePtr<T>::release() {
 template <typename T>
 void UniquePtr<T>::reset(T * newPtr) { 
     delete rawPtr_;
-    rawPtr = newPtr;
+    rawPtr_ = newPtr;
 }
