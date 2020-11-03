@@ -40,7 +40,7 @@ TEST(WeakPtrTest, WeakPtrExpireFunctionShouldReturnFalse) {
     ASSERT_FALSE(wptr.expired());
 }
 
-TEST(WeakPtrTest, WeakPtrInitializedWithSharedAfterUseOfResetFunctionShouldDecrementUserCount) {
+TEST(WeakPtrTest, WeakPtrInitializedWithSharedAfterUseOfResetFunctionShouldBeExpired) {
     cs::shared_ptr<int> sptr{new int{initialValue}};
     cs::weak_ptr<int> ptr{sptr};
     ptr.reset();
