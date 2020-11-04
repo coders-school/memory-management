@@ -37,10 +37,8 @@ public:
   my_shared_ptr<SomeUsefulClass> m_sut;
   my_shared_ptr<SomeUsefulClass> m_sut_empty = my_shared_ptr<SomeUsefulClass>();
 
-
   int initial_value = 42;
   int new_value = 100;
-
 };
 
 
@@ -81,16 +79,11 @@ TEST_F(SharedPointerTestSuite, passedWithMove)
 
 TEST_F(SharedPointerTestSuite, moveAssigmenOperator)
 {
-    my_shared_ptr<SomeUsefulClass>&& ptr = std::move(m_sut);
-    EXPECT_EQ(m_sut.get(), nullptr);
-    EXPECT_NE(ptr.get(), nullptr);
-    EXPECT_EQ(ptr->message_, m_msg);
-}
-
-TEST_F(SharedPointerTestSuite, emptyDefaultCtor)
-{
-    my_shared_ptr<SomeUsefulClass> ptr = my_shared_ptr<SomeUsefulClass>(new SomeUsefulClass());
-    EXPECT_EQ(ptr->message_, "");
+    my_shared_ptr<SomeUsefulClass> some_ptr = my_shared_ptr<SomeUsefulClass>(new SomeUsefulClass());;
+    my_shared_ptr<SomeUsefulClass> another_ptr = std::move(some_ptr);  
+    EXPECT_EQ(another_ptr->message_, "");
+    EXPECT_EQ(some_ptr.get(), nullptr);
+    ASSERT_FALSE(some_ptr);
 }
 
 TEST_F(SharedPointerTestSuite, dereferencingAfterGet)
@@ -105,13 +98,12 @@ TEST_F(SharedPointerTestSuite, asgnOperator)
     EXPECT_EQ(copy_ptr.use_count(), 2);
 }
 
-TEST_F(SharedPointerTestSuite, CopyConstructor)
+TEST_F(SharedPointerTestSuite, CopyConstructorAndBoolConversion)
 {
     my_shared_ptr<int> ptr = my_shared_ptr<int>(new int(initial_value));
     ASSERT_TRUE(ptr);
     my_shared_ptr<int> copy_ptr = my_shared_ptr<int>(ptr);
     ASSERT_TRUE(copy_ptr);
-
 }
 
 TEST_F(SharedPointerTestSuite, ShouldReset)
@@ -130,5 +122,11 @@ TEST_F(SharedPointerTestSuite, ShouldResetWithSimpleClass)
 TEST_F(SharedPointerTestSuite, ShouldResetWithNullptr)
 {
     m_sut.reset(nullptr);
+    EXPECT_EQ(m_sut.get(), nullptr);
+}
+
+TEST_F(SharedPointerTestSuite, ShouldResetWithoutArg)
+{
+    m_sut.reset();
     EXPECT_EQ(m_sut.get(), nullptr);
 }
