@@ -43,6 +43,7 @@ TEST_F(UniquePointerTest, ShouldDereferenceAndChangeValue) {
 TEST_F(UniquePointerTest, ShouldUseRelease) {
     auto releasedPtr = uniquePtr.release();
     ASSERT_EQ(uniquePtr.get(), nullptr);
+    delete releasedPtr;
 }
 
 TEST_F(UniquePointerTest, ShouldGetAPointer) {
