@@ -37,7 +37,7 @@ public:
 
     my_shared_ptr(my_shared_ptr<T>&& ptr_moved)
     {
-        ptr_ = ptr_moved.get();
+        ptr_ = ptr_moved.ptr_;
         if (counter_ptr != nullptr)
         {
             counter_ptr->count_ = ptr_moved.use_count();
