@@ -88,7 +88,7 @@ public:
 
 
     T* get() { return ptr_; }
-    int use_count() { return counter_ptr->count_; }
+    size_t use_count() { return counter_ptr->count_; }
 
     ~my_shared_ptr()
     {
