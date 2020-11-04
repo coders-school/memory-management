@@ -115,7 +115,7 @@ TEST_F(SharedPointerTestSuite, ShouldReset)
 {
     my_shared_ptr<int> pointer_ = my_shared_ptr<int>(new int(initial_value));
     pointer_.reset(new int(new_value));
-    EXPECT_EQ(*(pointer_.get()), new_value);
+    EXPECT_EQ(*pointer_, new_value);
 }
 
 TEST_F(SharedPointerTestSuite, ShouldResetWithSimpleClass)
@@ -129,5 +129,4 @@ TEST_F(SharedPointerTestSuite, ShouldResetWithNullptr)
     m_sut.reset(nullptr);
     EXPECT_EQ(m_sut.get(), nullptr);
 }
-
 
