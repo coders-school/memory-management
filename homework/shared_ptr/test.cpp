@@ -62,8 +62,9 @@ TEST_F(SharedPointerTestSuite, moreReferencesSharedPointerTestSuite)
     EXPECT_NE(ptr.get(), nullptr);
     EXPECT_EQ(ptr.use_count(), 1);
     my_shared_ptr<SomeUsefulClass>& another_ptr = ptr;
+    EXPECT_EQ(ptr.use_count(), 1);  // ref does not create a copy
+    
     my_shared_ptr<SomeUsefulClass> yet_another_ptr(another_ptr);
-
     EXPECT_EQ(another_ptr->message_, "");
     EXPECT_EQ(ptr.use_count(), 2);
 }
@@ -128,6 +129,5 @@ TEST_F(SharedPointerTestSuite, ShouldResetWithNullptr)
     m_sut.reset(nullptr);
     EXPECT_EQ(m_sut.get(), nullptr);
 }
-
 
 
