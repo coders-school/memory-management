@@ -82,6 +82,8 @@ TEST_F(SharedPointerTestSuite, passedWithMove)
 TEST_F(SharedPointerTestSuite, moveAssigmenOperator)
 {
     my_shared_ptr<SomeUsefulClass>&& ptr = std::move(m_sut);
+    EXPECT_EQ(m_sut.get(), nullptr);
+    EXPECT_NE(ptr.get(), nullptr);
     EXPECT_EQ(ptr->message_, m_msg);
 }
 
