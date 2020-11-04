@@ -66,7 +66,7 @@ public:
 
     T& operator=(my_shared_ptr<T>&& some_ptr)
     {
-        if (some_ptr != this)
+        if (&some_ptr != this)
         {
             delete ptr_;
             delete counter_ptr;
