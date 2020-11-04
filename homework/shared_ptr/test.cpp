@@ -98,7 +98,8 @@ TEST_F(SharedPointerTestSuite, dereferencingAfterGet)
 
 TEST_F(SharedPointerTestSuite, asgnOperator)
 {
-    my_shared_ptr<SomeUsefulClass> copy_ptr = m_sut;
+    auto copy_ptr = my_shared_ptr<SomeUsefulClass>(new SomeUsefulClass{});
+    copy_ptr = m_sut;  // this calls copy assignment operator
     EXPECT_EQ(copy_ptr.use_count(), 2);
 }
 
@@ -129,4 +130,3 @@ TEST_F(SharedPointerTestSuite, ShouldResetWithNullptr)
     m_sut.reset(nullptr);
     EXPECT_EQ(m_sut.get(), nullptr);
 }
-
