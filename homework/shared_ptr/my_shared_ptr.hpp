@@ -101,7 +101,7 @@ public:
     }
 
     T& operator*() { return *ptr_; };
-    T* operator->() { return this->ptr_; };
+    T* operator->() { return ptr_; };
     operator bool() const { return ptr_ != nullptr; }
 
 private:
