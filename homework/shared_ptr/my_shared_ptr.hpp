@@ -64,7 +64,7 @@ public:
         }
     };
 
-    T& operator=(const my_shared_ptr<T>&& some_ptr)
+    T& operator=(my_shared_ptr<T>&& some_ptr)
     {
         if (some_ptr != this)
         {
