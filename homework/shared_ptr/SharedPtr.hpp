@@ -12,6 +12,7 @@ public:
     SharedPtr() noexcept = default;
     explicit SharedPtr(T* ptr);
     SharedPtr(T* ptr, std::function<void(T*)> deleter);
+    explicit SharedPtr(const WeakPtr<T>& weakPtr);
     ~SharedPtr();
 
     SharedPtr(const SharedPtr& otherOtr);
@@ -41,7 +42,7 @@ private:
     friend class cs::WeakPtr;
 
     template <typename M, typename... Args>
-    friend SharedPtr<M> make_shared(Args&&... args);
+    friend cs::SharedPtr<M> cs::makeShared(Args&&... args);
 };
 
 template <typename T>
@@ -62,7 +63,15 @@ SharedPtr<T>::SharedPtr(T* ptr)
 
 template <typename T>
 SharedPtr<T>::SharedPtr(T* ptr, std::function<void(T*)> deleter)
-    : ptr_(ptr), shControlBlock_(new SharedControlBlockObj<T>{deleter}) {}
+    : ptr_(ptr), shControlBlock_(new SharedControlBlockObj<T>{ptr, deleter}) {}
+
+template <typename T>
+SharedPtr<T>::SharedPtr(const WeakPtr<T>& weakPtr)
+    : ptr_(weakPtr.ptr_), shControlBlock_(weakPtr.controlBlock_) {
+    if (shControlBlock_ != nullptr) {
+        shControlBlock_->incrementSharedRefsCount();
+    }
+}
 
 template <typename T>
 SharedPtr<T>::~SharedPtr() {

@@ -45,6 +45,7 @@ set(TEST_SRC_LIST
   SharedPtr-ut.cpp
   SharedControlBlock-ut.cpp
   WeakPtr-ut.cpp
+  MakeShared-ut.cpp
 )
 
 # Now simply link against gtest or gtest_main as needed. Eg
