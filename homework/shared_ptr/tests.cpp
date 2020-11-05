@@ -168,7 +168,7 @@ TEST_F(WeakPointerTest, shouldUseMoveAssignment)
 
 TEST_F(WeakPointerTest, shouldUseCopyAssignment)
 {
-    WeakPointer<int> w_ptrNew{};
+    WeakPointer<int> w_ptrNew;
     w_ptrNew = w_ptr;
     ASSERT_EQ(w_ptr.use_count(), oneReference);
 }
