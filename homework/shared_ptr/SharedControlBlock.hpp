@@ -3,6 +3,7 @@
 #include <atomic>
 #include <cstddef>
 #include <functional>
+#include <iostream>
 
 template <typename T>
 class SharedControlBlock {
@@ -17,13 +18,16 @@ public:
     void incrementWeakRefsCount() { ++weakRefsCount_; }
     void decrementWeakRefsCount() { --weakRefsCount_; }
 
-    std::function<void(T*)> defaultDeleter = [](T* ptr = nullptr) { delete ptr; };
+    void callDefaultDeleter() { defaultDeleter(obj_); }
 
     virtual T* getObj() = 0;
 
 private:
     std::atomic<size_t> sharedRefsCount_ = 1;
     std::atomic<size_t> weakRefsCount_ = 0;
+
+    T* obj_ = nullptr;
+    std::function<void(T*)> defaultDeleter = [](T* ptr = nullptr) { delete ptr; };
 };
 
 template <typename T>
@@ -34,12 +38,27 @@ public:
         std::function<void(T*)> deleter = [](T* ptr) { delete ptr; })
         : obj_(ptr), defaultDeleter(deleter) {}
 
-    ~SharedControlBlockObj() { callDefaultDeleter(); }
+    ~SharedControlBlockObj() { defaultDeleter(obj_); }
 
-    void callDefaultDeleter() { defaultDeleter(obj_); }
+    void callDefaultDeleter() {
+        defaultDeleter(obj_);
+    }
     T* getObj() override { return obj_; };
 
 private:
     T* obj_ = nullptr;
     std::function<void(T*)> defaultDeleter = [](T* ptr = nullptr) { delete ptr; };
+};
+
+template <typename T>
+class SharedControlBlockData : public SharedControlBlock<T> {
+public:
+    template <typename... Args>
+    SharedControlBlockData(Args... args)
+        : object_(args...) {}
+
+    T* getObj() override { return &object_; }
+
+private:
+    T object_;
 };

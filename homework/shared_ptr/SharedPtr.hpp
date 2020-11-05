@@ -26,16 +26,20 @@ public:
     void reset(
         T* newPtr = nullptr,
         std::function<void(T*)> newDeleter = [](T* ptr) { delete ptr; }) noexcept;
-    size_t use_count() const noexcept { return shControlBlock_->getSharedRefsCount(); }
+    size_t use_count() const noexcept {
+        if (shControlBlock_ != nullptr) {
+            return shControlBlock_->getSharedRefsCount();
+        }
+        return 0;
+    }
     explicit operator bool() const noexcept { return this->get() != nullptr; }
-
-    void handleSharedPtrAndControlBlockDelete();
 
 private:
     T* ptr_ = nullptr;
-    SharedControlBlockObj<T>* shControlBlock_ = nullptr;
+    SharedControlBlock<T>* shControlBlock_ = nullptr;
 
-    explicit SharedPtr(SharedControlBlockObj<T>* newBlock)
+    void handleSharedPtrAndControlBlockDelete();
+    explicit SharedPtr(SharedControlBlockData<T>* newBlock)
         : shControlBlock_(newBlock) { ptr_ = newBlock->getObj(); }
 
     template <typename>
@@ -51,7 +55,8 @@ void SharedPtr<T>::handleSharedPtrAndControlBlockDelete() {
         shControlBlock_->decrementSharedRefsCount();
         if (shControlBlock_->getSharedRefsCount() == 0) {
             shControlBlock_->callDefaultDeleter();
-        } else if (shControlBlock_->getSharedRefsCount() == 0 && shControlBlock_->getWeakRefsCount() == 0) {
+        }
+        if (shControlBlock_->getSharedRefsCount() == 0 && shControlBlock_->getWeakRefsCount() == 0) {
             delete shControlBlock_;
         }
     }
@@ -59,7 +64,7 @@ void SharedPtr<T>::handleSharedPtrAndControlBlockDelete() {
 
 template <typename T>
 SharedPtr<T>::SharedPtr(T* ptr)
-    : ptr_(ptr), shControlBlock_(new SharedControlBlockObj<T>{}) {}
+    : ptr_(ptr), shControlBlock_(new SharedControlBlockObj<T>{ptr}) {}
 
 template <typename T>
 SharedPtr<T>::SharedPtr(T* ptr, std::function<void(T*)> deleter)
@@ -79,16 +84,14 @@ SharedPtr<T>::~SharedPtr() {
 }
 
 template <typename T>
-SharedPtr<T>::SharedPtr(const SharedPtr& otherPtr) {
-    ptr_ = otherPtr.ptr_;
+SharedPtr<T>::SharedPtr(const SharedPtr& otherPtr)
+    : ptr_(otherPtr.ptr_), shControlBlock_(otherPtr.shControlBlock_) {
     otherPtr.shControlBlock_->incrementSharedRefsCount();
-    shControlBlock_ = otherPtr.shControlBlock_;
 }
 
 template <typename T>
-SharedPtr<T>::SharedPtr(SharedPtr&& otherPtr) {
-    ptr_ = otherPtr.ptr_;
-    shControlBlock_ = otherPtr.shControlBlock_;
+SharedPtr<T>::SharedPtr(SharedPtr&& otherPtr)
+    : ptr_(otherPtr.ptr_), shControlBlock_(otherPtr.shControlBlock_) {
     otherPtr.ptr_ = nullptr;
     otherPtr.shControlBlock_ = nullptr;
 }

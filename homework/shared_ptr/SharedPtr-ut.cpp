@@ -49,16 +49,6 @@ TEST_F(SharedPtrTest, ShouldUseBoolOperator) {
     ASSERT_FALSE(testSharedPtr);
 }
 
-TEST_F(SharedPtrTest, ShouldCopySharedPtr) {
-    auto tempPtr(testSharedPtr);
-    auto tempPtr2 = testSharedPtr;
-
-    ASSERT_EQ(*tempPtr, initValue);
-    ASSERT_EQ(*tempPtr2, initValue);
-    ASSERT_EQ(*testSharedPtr, initValue);
-    ASSERT_TRUE(testSharedPtr);
-}
-
 TEST_F(SharedPtrTest, ShouldMoveSharedPtr) {
     auto initTestSharedCounts = testSharedPtr.use_count();
     auto tempPtr(std::move(testSharedPtr));
@@ -67,6 +57,7 @@ TEST_F(SharedPtrTest, ShouldMoveSharedPtr) {
     ASSERT_EQ(*tempPtr, initValue);
     ASSERT_FALSE(testSharedPtr);
     ASSERT_EQ(initTestSharedCounts, tempPtrSharedCountsAfterMove);
+    ASSERT_EQ(1, tempPtrSharedCountsAfterMove);
 }
 
 TEST_F(SharedPtrTest, ShouldMoveSharedPtrToPointerThatAlreadyHoldsAnObject) {
@@ -78,9 +69,10 @@ TEST_F(SharedPtrTest, ShouldMoveSharedPtrToPointerThatAlreadyHoldsAnObject) {
     ASSERT_EQ(*tempPtr, initValue);
     ASSERT_EQ(testSharedPtr.get(), nullptr);
     ASSERT_EQ(initTestSharedCounts, tempPtrSharedCountsAfterMove);
+    ASSERT_EQ(1, tempPtrSharedCountsAfterMove);
 }
 
-TEST_F(SharedPtrTest, ShouldCalculateUseCountWhenCopyingSharedPtr) {
+TEST_F(SharedPtrTest, ShouldCopySharedPtrAndCalculateUseCountWhenCopyingSharedPtr) {
     auto initTestPtrSharedCounts = testSharedPtr.use_count();
     auto tempPtr(testSharedPtr);
     auto testPtrSharedCountsAfterFirstCopy = testSharedPtr.use_count();
@@ -89,6 +81,10 @@ TEST_F(SharedPtrTest, ShouldCalculateUseCountWhenCopyingSharedPtr) {
 
     ASSERT_EQ(initTestPtrSharedCounts + 1, testPtrSharedCountsAfterFirstCopy);
     ASSERT_EQ(initTestPtrSharedCounts + 2, testPtrSharedCountsAfterSecondCopy);
+    ASSERT_EQ(*tempPtr, initValue);
+    ASSERT_EQ(*tempPtr2, initValue);
+    ASSERT_EQ(*testSharedPtr, initValue);
+    ASSERT_TRUE(testSharedPtr);
 }
 
 TEST_F(SharedPtrTest, ShouldCalculateUseCountWhenMoveingSharedPtr) {

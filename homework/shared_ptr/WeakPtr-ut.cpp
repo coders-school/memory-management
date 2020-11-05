@@ -76,4 +76,5 @@ TEST_F(WeakPtrTest, ShouldEmptyTestWeakPtrLockReturnEmptySharedPtr) {
 
     ASSERT_EQ(lockSharedPtr.get(), nullptr);
     ASSERT_FALSE(testWeakPtr.expired());
+    ASSERT_TRUE(emptyWeakPtr.expired());
 }

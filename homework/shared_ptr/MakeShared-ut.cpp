@@ -3,13 +3,25 @@
 #include "MakeShared.hpp"
 #include "SharedPtr.hpp"
 
-int initValue = 5;
-constexpr int newValue = 10;
+constexpr int intTestVal = 15;
+constexpr int doubleTestVal = 1.5;
 
-TEST(MakeSharedPtrTest, ShouldDereferenceSharedPtr) {
-    cs::SharedPtr<int> someInt(new int{42});
-    auto intPtr = new int{42};
-    auto makeSomeInt = cs::makeShared<int>(intPtr);
-    // auto makeSomeInt = cs::makeShared<int>(initValue);
-    ASSERT_EQ(*makeSomeInt, *someInt);
+struct testStruct {
+    testStruct(int first, double second)
+        : intValue_(first), doubleValue_(second) {}
+
+    int intValue_;
+    double doubleValue_;
+};
+
+TEST(MakeSharedPtrTest, ShouldMakeSharedPtrToInt) {
+    cs::SharedPtr<int> shPtr(new int{intTestVal});
+    auto makeShPtr = cs::makeShared<int>(intTestVal);
+    ASSERT_EQ(*shPtr, *makeShPtr);
+}
+
+TEST(MakeSharedPtrTest, ShouldMakeSharedPtrToTestStruct) {
+    auto makeShPtr = cs::makeShared<testStruct>(intTestVal, doubleTestVal);
+    ASSERT_EQ(makeShPtr->intValue_, intTestVal);
+    ASSERT_EQ(makeShPtr->doubleValue_, doubleTestVal);
 }
