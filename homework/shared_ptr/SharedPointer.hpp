@@ -26,18 +26,14 @@ public:
     explicit SharedPointer(T* ptr = nullptr);
     SharedPointer(T* ptr, std::function<void(T*)> deleter);
     explicit SharedPointer(WeakPointer<T>& weakPtr);
-    SharedPointer(SharedPointer& anotherPtr);
+    SharedPointer(const SharedPointer& anotherPtr);
     SharedPointer(SharedPointer&& anotherPtr) noexcept;
-    SharedPointer(ControlBlockData<T>* refCounter) {
-        refCounter_ = refCounter;
-        ptr_ = refCounter_->getData();
-    }
     SharedPointer(std::nullptr_t, std::function<void(T*)> deleter)
         : refCounter_(new ControlBlock<T>* {nullptr, deleter}) {}
 
     ~SharedPointer();
 
-    T* get();
+    T* get() const;
     void reset(
         T* ptr = nullptr,
         std::function<void(T*)> deleter = [](T* ptrToDelete) { delete ptrToDelete; });
@@ -46,10 +42,15 @@ public:
     T& operator*() const;
     T* operator->() const;
     operator bool() const;
-    SharedPointer<T>& operator=(SharedPointer<T>& anotherPtr);
+    SharedPointer<T>& operator=(const SharedPointer<T>& anotherPtr);
     SharedPointer<T>& operator=(SharedPointer<T>&& anotherPtr);
 
 private:
+    SharedPointer(ControlBlockData<T>* refCounter) {
+        refCounter_ = refCounter;
+        ptr_ = refCounter_->getData();
+    }
+
     T* ptr_{nullptr};
     ControlBlockBase<T>* refCounter_{nullptr};
 
@@ -72,7 +73,7 @@ SharedPointer<T>::SharedPointer(WeakPointer<T>& weakPtr) : ptr_(weakPtr.ptr_), r
 }
 
 template <typename T>
-SharedPointer<T>::SharedPointer(SharedPointer& anotherPtr)
+SharedPointer<T>::SharedPointer(const SharedPointer& anotherPtr)
     : ptr_(anotherPtr.ptr_), refCounter_(anotherPtr.refCounter_) {
     refCounter_->increaseShared();
 }
@@ -90,7 +91,7 @@ SharedPointer<T>::~SharedPointer() {
 }
 
 template <typename T>
-T* SharedPointer<T>::get() {
+T* SharedPointer<T>::get() const {
     return ptr_;
 }
 
@@ -125,9 +126,8 @@ SharedPointer<T>::operator bool() const {
 }
 
 template <typename T>
-SharedPointer<T>& SharedPointer<T>::operator=(SharedPointer<T>& anotherPtr) {
+SharedPointer<T>& SharedPointer<T>::operator=(const SharedPointer<T>& anotherPtr) {
     if (this != &anotherPtr) {
-        refCounter_->decreaseShared();
         checkControlBlock();
         ptr_ = anotherPtr.ptr_;
         refCounter_ = anotherPtr.refCounter_;
@@ -140,7 +140,6 @@ SharedPointer<T>& SharedPointer<T>::operator=(SharedPointer<T>& anotherPtr) {
 template <typename T>
 SharedPointer<T>& SharedPointer<T>::operator=(SharedPointer<T>&& anotherPtr) {
     if (this != &anotherPtr) {
-        refCounter_->decreaseShared();
         checkControlBlock();
         ptr_ = anotherPtr.ptr_;
         refCounter_ = anotherPtr.refCounter_;

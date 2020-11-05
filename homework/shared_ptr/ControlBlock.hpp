@@ -49,7 +49,7 @@ template <typename T>
 class ControlBlockData : public ControlBlockBase<T> {
 public:
     template <typename... Args>
-    ControlBlockData(Args... args) : data_(args...) {}
+    ControlBlockData(Args&&... args) : data_(std::forward<Args>(args)...) {}
     T* getData() override {
         return &data_;
     }

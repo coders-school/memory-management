@@ -15,20 +15,20 @@ public:
     template <typename>
     friend class SharedPointer;
     WeakPointer() noexcept = default;
-    explicit WeakPointer(SharedPointer<T>& sharedPtr);
-    WeakPointer(WeakPointer& anotherPtr);
+    explicit WeakPointer(const SharedPointer<T>& sharedPtr);
+    WeakPointer(const WeakPointer& anotherPtr);
     WeakPointer(WeakPointer&& anotherPtr) noexcept;
     ~WeakPointer();
 
     void reset();
-    size_t use_count();
-    bool expired();
+    size_t use_count() const noexcept;
+    bool expired() const noexcept;
     SharedPointer<T> lock();
 
     T& operator*() const = delete;
     T* operator->() const = delete;
     WeakPointer<T>& operator=(SharedPointer<T>& anotherPtr);
-    WeakPointer<T>& operator=(WeakPointer<T>& anotherPtr);
+    WeakPointer<T>& operator=(const WeakPointer<T>& anotherPtr);
     WeakPointer<T>& operator=(WeakPointer<T>&& anotherPtr);
 
 private:
@@ -39,14 +39,16 @@ private:
 };
 
 template <typename T>
-WeakPointer<T>::WeakPointer(SharedPointer<T>& sharedPtr) : ptr_(sharedPtr.ptr_), refCounter_(sharedPtr.refCounter_) {
+WeakPointer<T>::WeakPointer(const SharedPointer<T>& sharedPtr)
+    : ptr_(sharedPtr.ptr_), refCounter_(sharedPtr.refCounter_) {
     if (refCounter_) {
         refCounter_->increaseWeak();
     }
 }
 
 template <typename T>
-WeakPointer<T>::WeakPointer(WeakPointer& anotherPtr) : ptr_(anotherPtr.ptr_), refCounter_(anotherPtr.refCounter_) {
+WeakPointer<T>::WeakPointer(const WeakPointer& anotherPtr)
+    : ptr_(anotherPtr.ptr_), refCounter_(anotherPtr.refCounter_) {
     if (refCounter_) {
         refCounter_->increaseWeak();
     }
@@ -62,13 +64,12 @@ WeakPointer<T>::WeakPointer(WeakPointer&& anotherPtr) noexcept
 template <typename T>
 WeakPointer<T>::~WeakPointer() {
     if (refCounter_ != nullptr) {
-        refCounter_->decreaseWeak();
         checkControlBlock();
     }
 }
 
 template <typename T>
-size_t WeakPointer<T>::use_count() {
+size_t WeakPointer<T>::use_count() const noexcept {
     if (refCounter_) {
         return refCounter_->getShared();
     }
@@ -77,14 +78,13 @@ size_t WeakPointer<T>::use_count() {
 
 template <typename T>
 void WeakPointer<T>::reset() {
-    refCounter_->decreaseWeak();
     checkControlBlock();
     ptr_ = nullptr;
     refCounter_ = nullptr;
 }
 
 template <typename T>
-bool WeakPointer<T>::expired() {
+bool WeakPointer<T>::expired() const noexcept {
     return use_count() == 0;
 }
 
@@ -98,7 +98,7 @@ SharedPointer<T> WeakPointer<T>::lock() {
 
 template <typename T>
 WeakPointer<T>& WeakPointer<T>::operator=(SharedPointer<T>& anotherPtr) {
-    refCounter_->decreaseWeak();
+    checkControlBlock();
     ptr_ = anotherPtr.ptr_;
     refCounter_ = anotherPtr.refCounter_;
     refCounter_->increaseWeak();
@@ -107,7 +107,7 @@ WeakPointer<T>& WeakPointer<T>::operator=(SharedPointer<T>& anotherPtr) {
 }
 
 template <typename T>
-WeakPointer<T>& WeakPointer<T>::operator=(WeakPointer<T>& anotherPtr) {
+WeakPointer<T>& WeakPointer<T>::operator=(const WeakPointer<T>& anotherPtr) {
     if (this != &anotherPtr) {
         ptr_ = anotherPtr.ptr_;
         refCounter_ = anotherPtr.refCounter_;
@@ -129,6 +129,7 @@ WeakPointer<T>& WeakPointer<T>::operator=(WeakPointer<T>&& anotherPtr) {
 
 template <typename T>
 void WeakPointer<T>::checkControlBlock() {
+    refCounter_->decreaseWeak();
     if (refCounter_->getShared() == 0 && refCounter_->getWeak() == 0) {
         delete refCounter_;
     }

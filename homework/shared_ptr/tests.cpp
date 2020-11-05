@@ -85,8 +85,8 @@ TEST_F(SharedPointerTest, shouldReturnBoolWhenUsingBoolOperator) {
 }
 
 TEST_F(WeakPointerTest, shouldReturnUseCountEqualTo0WhenCreatedByDefault) {
-    WeakPointer<int> w_ptr{};
-    ASSERT_EQ(w_ptr.use_count(), noReferences);
+    WeakPointer<int> test_w_ptr{};
+    ASSERT_EQ(test_w_ptr.use_count(), noReferences);
 }
 
 TEST_F(WeakPointerTest, shouldReturnUseCountEqualTo1WhenCreatedBySharedPointer) {
@@ -101,6 +101,7 @@ TEST_F(WeakPointerTest, shouldReturnSharedPointerWhenLockWeakPointer) {
 TEST_F(WeakPointerTest, shouldUseMoveConstructor) {
     WeakPointer<int> w_ptrNew{std::move(w_ptr)};
     ASSERT_TRUE(w_ptr.expired());
+    ASSERT_FALSE(w_ptrNew.expired());
     ASSERT_EQ(w_ptrNew.use_count(), oneReference);
 }
 
