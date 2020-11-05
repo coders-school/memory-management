@@ -21,13 +21,13 @@ TEST_F(WeakTest, canBeCreatedFromSharedPtr) {
 
 TEST_F(WeakTest, expiredShouldBeFalseWhenNotDangling) {
     cs::weak_ptr<int> ptr{defaultShared};
-    EXPECT_EQ(ptr.expired(), false);
+    EXPECT_FALSE(ptr.expired());
 }
 
 TEST_F(WeakTest, expiredShouldBeTrueWhenDangling) {
     cs::weak_ptr<int> ptr{defaultShared};
     defaultShared.reset();
-    EXPECT_EQ(ptr.expired(), true);
+    EXPECT_TRUE(ptr.expired());
 }
 
 TEST_F(WeakTest, useCountShouldReturnTheNumberOfSharedReferences) {
