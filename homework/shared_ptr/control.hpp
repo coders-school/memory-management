@@ -3,21 +3,21 @@
 #include <functional>
 namespace cs
 {
-template <typename T>
-using Deleter = std::function<void(T*)>;
+template <typename ObjectType>
+using Deleter = std::function<void(ObjectType*)>;
 
 auto defaultDeleter = [](auto* data) { delete data; };
 
-template <typename T>
+template <typename ObjectType>
 class control_block
 {
     std::atomic_size_t sharedRef_{1};
     std::atomic_size_t weakRef_{0};
-    Deleter<T> deleter_{defaultDeleter};
+    Deleter<ObjectType> deleter_{defaultDeleter};
 
    public:
     control_block() = default;
-    control_block(Deleter<T> deleter);
+    control_block(Deleter<ObjectType> deleter);
     virtual ~control_block() = default;
     int getSharedRef() const noexcept;
     int getWeakRef() const noexcept;
@@ -25,56 +25,56 @@ class control_block
     void decrementSharedRef() noexcept;
     void incrementWeakRef() noexcept;
     void decrementWeakRef() noexcept;
-    virtual T* getObject() noexcept;
-    Deleter<T> getDeleter() noexcept;
+    virtual ObjectType* getObject() noexcept;
+    Deleter<ObjectType> getDeleter() noexcept;
 
 };
 
-template <typename T>
-control_block<T>::control_block(Deleter<T> deleter)
+template <typename ObjectType>
+control_block<ObjectType>::control_block(Deleter<ObjectType> deleter)
 :deleter_(deleter) {
 }
 
-template <typename T>
-int control_block<T>::getSharedRef() const noexcept
+template <typename ObjectType>
+int control_block<ObjectType>::getSharedRef() const noexcept
 {
     return sharedRef_;
 }
-template <typename T>
-int control_block<T>::getWeakRef() const noexcept
+template <typename ObjectType>
+int control_block<ObjectType>::getWeakRef() const noexcept
 {
     return weakRef_;
 }
-template <typename T>
-void control_block<T>::incrementSharedRef() noexcept
+template <typename ObjectType>
+void control_block<ObjectType>::incrementSharedRef() noexcept
 {
     sharedRef_++;
 }
-template <typename T>
-void control_block<T>::decrementSharedRef() noexcept
+template <typename ObjectType>
+void control_block<ObjectType>::decrementSharedRef() noexcept
 {
     sharedRef_--;
 }
-template <typename T>
-void control_block<T>::incrementWeakRef() noexcept
+template <typename ObjectType>
+void control_block<ObjectType>::incrementWeakRef() noexcept
 {
     weakRef_++;
 }
 
-template <typename T>
-void control_block<T>::decrementWeakRef() noexcept
+template <typename ObjectType>
+void control_block<ObjectType>::decrementWeakRef() noexcept
 {
     weakRef_--;
 }
 
-template <typename T>
-T* control_block<T>::getObject() noexcept
+template <typename ObjectType>
+ObjectType* control_block<ObjectType>::getObject() noexcept
 {
     return nullptr;
 }
 
-template <typename T>
-Deleter<T> control_block<T>::getDeleter() noexcept {
+template <typename ObjectType>
+Deleter<ObjectType> control_block<ObjectType>::getDeleter() noexcept {
     return deleter_;
 }
 

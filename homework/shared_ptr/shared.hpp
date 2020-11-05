@@ -56,7 +56,7 @@ class shared_ptr
 template <typename T, typename... Ts>
 shared_ptr<T> make_shared(Ts&&... args)
 {
-    return shared_ptr<T>{new controlObject<T>(std::forward<T>(args)...)};
+    return shared_ptr<T>{new controlObject<T, Ts...>(std::forward<Ts>(args)...)};
 }
 
 template <typename T>

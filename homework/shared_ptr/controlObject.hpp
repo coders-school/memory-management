@@ -2,23 +2,24 @@
 #include "control.hpp"
 
 namespace cs {
-template <typename T>
-class controlObject :public control_block<T> {
-    T data_;
+template <typename ObjectType, typename... Args>
+class controlObject :public control_block<ObjectType> {
+    ObjectType data_{};
     public:
-    controlObject(T data, Deleter<T> deleter = defaultDeleter);
+    controlObject(Args&&... dataArgs, Deleter<ObjectType> deleter = defaultDeleter);
     ~controlObject() = default;
-    T* getObject() noexcept override;
+    ObjectType* getObject() noexcept override;
 };
 
-template <typename T>
-controlObject<T>::controlObject(T data, Deleter<T> deleter)
-:control_block<T>(deleter), data_(data) {
+template <typename ObjectType, typename... Args>
+controlObject<ObjectType, Args...>::controlObject(Args&&... dataArgs, Deleter<ObjectType> deleter)
+:control_block<ObjectType>{deleter},
+ data_{dataArgs...} {
 
 }
 
-template <typename T>
-T* controlObject<T>::getObject() noexcept {
+template <typename ObjectType, typename... Args>
+ObjectType* controlObject<ObjectType, Args...>::getObject() noexcept {
     return &data_;
 }
 };
