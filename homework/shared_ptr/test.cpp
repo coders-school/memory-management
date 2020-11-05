@@ -80,7 +80,8 @@ TEST_F(SharedPointerTestSuite, passedWithMove)
 TEST_F(SharedPointerTestSuite, moveAssigmenOperator)
 {
     my_shared_ptr<SomeUsefulClass> some_ptr = my_shared_ptr<SomeUsefulClass>(new SomeUsefulClass());;
-    my_shared_ptr<SomeUsefulClass> another_ptr = std::move(some_ptr);  
+    my_shared_ptr<SomeUsefulClass> another_ptr = my_shared_ptr<SomeUsefulClass>(new SomeUsefulClass());;
+    another_ptr  = std::move(some_ptr);  // now we have move assignment
     EXPECT_EQ(another_ptr->message_, "");
     EXPECT_EQ(some_ptr.get(), nullptr);
     ASSERT_FALSE(some_ptr);
