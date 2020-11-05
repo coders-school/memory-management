@@ -35,18 +35,11 @@ public:
   std::string m_someString;
   std::string m_msg;
   my_shared_ptr<SomeUsefulClass> m_sut;
-  my_shared_ptr<SomeUsefulClass> m_sut_empty = my_shared_ptr<SomeUsefulClass>();
 
   int initial_value = 42;
   int new_value = 100;
 };
 
-
-TEST_F(SharedPointerTestSuite, emptySharedPtr)
-{
-    EXPECT_EQ(m_sut_empty.get(), nullptr);
-    EXPECT_EQ(m_sut_empty.use_count(), 0);
-}
 
 TEST_F(SharedPointerTestSuite, notEmptySharedPtr)
 {
