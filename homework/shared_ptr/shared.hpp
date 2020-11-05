@@ -166,7 +166,7 @@ void shared_ptr<T>::reset(T* data, Deleter<T> deleter) noexcept
 {
     releaseMemory();
     data_ = data;
-    if (data != nullptr) {
+    if (data) {
         controlBlock_ = new control_block<T>(deleter);
     } else {
         controlBlock_ = nullptr;
