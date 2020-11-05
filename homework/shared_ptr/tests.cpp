@@ -8,6 +8,7 @@ constexpr int testValue = 5;
 constexpr int noReferences = 0;
 constexpr int oneReference = 1;
 constexpr int twoReferences = 2;
+constexpr int threeReferences = 3;
 
 class TestClass {
 public:
@@ -48,11 +49,13 @@ TEST_F(SharedPointerTest, shouldCopySharedPointer) {
 
     ASSERT_EQ(*s_ptr, *newPtr);
     ASSERT_EQ(*s_ptr, *newPtr1);
+    ASSERT_EQ(s_ptr.use_count(), threeReferences);
 }
 
 TEST_F(SharedPointerTest, shouldMoveSharedPointer) {
     auto newPtr(std::move(s_ptr));
     ASSERT_EQ(*newPtr, testValue);
+    ASSERT_EQ(newPtr.use_count(), oneReference);
 }
 
 TEST_F(SharedPointerTest, shouldResetSharedPtr) {
