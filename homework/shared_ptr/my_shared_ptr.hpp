@@ -61,7 +61,8 @@ public:
 
             ptr_ = some_ptr.ptr_;
             counter_ptr = some_ptr.counter_ptr;
-            some_ptr = nullptr;
+            some_ptr.ptr_ = nullptr;
+            some_ptr. counter_ptr = nullptr;
         }
         return *this;
     }
