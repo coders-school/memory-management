@@ -218,3 +218,13 @@ TEST_F(weakPtrTest, testExpired) {
     ASSERT_EQ(sPtr.get(), nullptr);
     ASSERT_TRUE(wPtr2.expired());
 }
+
+TEST_F(weakPtrTest, testSwapForMemorryLeak) {
+    cs::weak_ptr<int> wPtr(sPtr);
+    cs::weak_ptr<int> wPtr2(sPtr);
+    cs::weak_ptr<int> wPtr3(sPtr);
+    cs::weak_ptr<int> wPtr4(sPtr2);
+    wPtr3.swap(wPtr4);
+    ASSERT_EQ(*(wPtr3.lock()), *sPtr2);
+    ASSERT_EQ(*(wPtr4.lock()), *sPtr);
+}
