@@ -62,7 +62,7 @@ TEST_F(WeakTest, resetShouldReleaseReferenceToManagedObject) {
 
 TEST_F(WeakTest, lockShouldReturnNullptrWhenNoManagedObject) {
     cs::weak_ptr<int> ptr{defaultShared};
-    ptr.reset();
+    defaultShared.reset();
     EXPECT_EQ(ptr.lock().get(), nullptr);
 }
 
@@ -77,7 +77,7 @@ TEST_F(WeakTest, lockShouldReturnNullPtrAfterWeakPtrReset) {
     EXPECT_EQ(ptr.lock().get(), nullptr);
 }
 
-TEST_F(WeakTest, copyAssignmentShouldIncreaseWeakRefCount) {
+TEST_F(WeakTest, copyAssignmentShouldMakeADeepCopy) {
     cs::weak_ptr<int> ptr1{defaultShared};
     cs::weak_ptr<int> ptr2;
     ptr2 = ptr1;
