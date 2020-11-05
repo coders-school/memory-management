@@ -65,6 +65,22 @@ TEST_F(SharedPointerTest, shouldMoveSharedPointer)
     ASSERT_EQ(newPtr.use_count(), oneReference);
 }
 
+TEST_F(SharedPointerTest, shouldUseCopyAssingnmentOperatorSharedPointer)
+{
+    SharedPointer<int> newPtr;
+    newPtr = s_ptr;
+    ASSERT_EQ(*s_ptr, testValue);
+    ASSERT_EQ(s_ptr.use_count(), twoReferences);
+}
+
+TEST_F(SharedPointerTest, shouldUseMoveAssingnmentOperatorSharedPointer)
+{
+    SharedPointer<int> newPtr;
+    newPtr = std::move(s_ptr);
+    ASSERT_EQ(*newPtr, testValue);
+    ASSERT_EQ(newPtr.use_count(), oneReference);
+    ASSERT_EQ(s_ptr.get(), nullptr);
+}
 TEST_F(SharedPointerTest, shouldResetSharedPtrNoArgumentCase)
 {
     s_ptr.reset();
