@@ -98,12 +98,7 @@ TEST_F(weakPtrTest, shouldCopyAssign) {
     ASSERT_EQ(*(weakOne.lock()), *(weakTwo.lock()));
 }
 
-TEST_F(weakPtrTest, testLock) {
-    cs::weak_ptr<int> wPtr(sPtr);
-    ASSERT_EQ(*(wPtr.lock()), *sPtr);
-}
-
-TEST_F(weakPtrTest, testCopyConstructorFromShared) {
+TEST_F(weakPtrTest, testLockAndCopyConstructorFromShared) {
     cs::weak_ptr<int> wPtr(sPtr);
     ASSERT_EQ(*(wPtr.lock()), *sPtr);
     ASSERT_EQ(wPtr.use_count(), 1);
