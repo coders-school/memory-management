@@ -68,7 +68,7 @@ TEST_F(WeakTest, lockShouldReturnNullptrWhenNoManagedObject) {
 
 TEST_F(WeakTest, lockShouldReturnSharedPtrWhenIsManagedObject) {
     cs::weak_ptr<int> ptr{defaultShared};
-    EXPECT_EQ(ptr.lock(), defaultShared);
+    EXPECT_EQ(*(ptr.lock()), *defaultShared);
 }
 
 TEST_F(WeakTest, lockShouldReturnNullPtrAfterWeakPtrReset) {
