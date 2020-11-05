@@ -30,7 +30,7 @@ public:
         counter_ptr->weak_count++;
     };
 
-    my_shared_ptr(my_shared_ptr<T>&& ptr_moved) :  ptr_(ptr_moved.get())
+    my_shared_ptr(my_shared_ptr<T>&& ptr_moved) :  ptr_(ptr_moved.ptr_)
     {
             counter_ptr = ptr_moved.counter_ptr;
             ptr_moved.ptr_ = nullptr;
