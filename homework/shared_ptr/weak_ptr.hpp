@@ -21,15 +21,14 @@ public:
     void reset() noexcept;
     bool expired() const noexcept;
     shared_ptr<T> lock() const noexcept;
-    size_t use_count() { return counter_->getWeakRefs(); } 
+    size_t use_count() { return counter_->getRefs(); } 
     void swap(weak_ptr& ptr) noexcept;
 
 private:
-    control_block* counter_{nullptr};
+    control_block<T>* counter_{nullptr};
     T* ptr_{nullptr};
 
     void checkAndDeletePointers();
-    void checkWeakAndDeletePointers();
 };
 
 
@@ -73,16 +72,13 @@ weak_ptr<T>::~weak_ptr() {
 
 template <typename T>
 weak_ptr<T>& weak_ptr<T>::operator=(const weak_ptr& ptr) noexcept {
-    if (this == &ptr) {
-        return *this;
-    }
-    if(counter_) {
-        counter_->decreaseWeakRefs();
-        checkAndDeletePointers();
-    }
-    ptr_ = ptr.ptr_;
-    counter_ = ptr.counter_;
-    if (counter_) {
+    if (this != &ptr) {
+        if(counter_) {
+            counter_->decreaseWeakRefs();
+            checkAndDeletePointers();
+        }
+        ptr_ = ptr.ptr_;
+        counter_ = ptr.counter_;
         counter_->increaseWeakRefs();
     }
     return *this;
