@@ -45,7 +45,7 @@ TEST_F(sharedPtrTest, testCopyConstructor) {
 TEST_F(sharedPtrTest, testCopyAssignment) {
     ASSERT_EQ(*sPtr, testValueOne);
     ASSERT_EQ(sPtr.use_count(), 1);
-    cs::shared_ptr<int> sPtr2;
+    cs::shared_ptr<int> sPtr2{new int{testValueTwo}};
     sPtr2 = sPtr;
     cs::shared_ptr<int> sPtr3;
     sPtr3 = sPtr;
@@ -63,7 +63,7 @@ TEST_F(sharedPtrTest, testMoveConstructor) {
 }
 
 TEST_F(sharedPtrTest, testMoveAssignment) {
-    cs::shared_ptr<int> sPtr2; 
+    cs::shared_ptr<int> sPtr2{new int{testValueTwo}};
     sPtr2 = std::move(sPtr);
     ASSERT_EQ(*sPtr2, testValueOne);
     ASSERT_EQ(sPtr2.use_count(), 1);
@@ -96,8 +96,8 @@ TEST_F(sharedPtrTest, testSwap) {
 
 TEST_F(sharedPtrTest, testAccessOperator) {
     cs::shared_ptr<std::string> uPtr2(new std::string{testString});
-    ASSERT_EQ(uPtr2->at(0), 'A');
-    ASSERT_EQ(uPtr2->at(1), 'l');
+    ASSERT_EQ(uPtr2->at(0), testString[0]);
+    ASSERT_EQ(uPtr2->at(1), testString[1]);
 }
 
 TEST(sharedPointerTest, shouldCreateWithoutArguments) {
