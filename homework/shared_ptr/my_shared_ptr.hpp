@@ -75,7 +75,12 @@ public:
     {
         if (counter_ptr) 
         {
-            counter_ptr->count_--;
+           counter_ptr->count_--;
+           if(counter_ptr->count_ == 0)
+           {
+               delete ptr_;
+           }
+
             if (counter_ptr->count_ == 0 && counter_ptr->weak_count == 0) 
             {
                 delete counter_ptr;
