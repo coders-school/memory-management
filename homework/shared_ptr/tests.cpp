@@ -142,6 +142,14 @@ TEST_F(WeakPointerTest, shouldReturnSharedPointerWhenLockWeakPointer)
     ASSERT_EQ(*s_ptrNew, testValue);
 }
 
+TEST_F(WeakPointerTest, shouldReturnNullptrSharedPointerWhenLockWeakPointerWithNoSharedPointer)
+{
+    WeakPointer<int> test_w_ptr{};
+    auto s_ptrNew = test_w_ptr.lock();
+    ASSERT_EQ(s_ptrNew.get(), nullptr);
+}
+
+
 TEST_F(WeakPointerTest, shouldUseMoveConstructor)
 {
     WeakPointer<int> w_ptrNew{std::move(w_ptr)};

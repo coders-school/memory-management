@@ -93,7 +93,7 @@ SharedPointer<T> WeakPointer<T>::lock() {
     if (!expired()) {
         return SharedPointer<T>(*this);
     }
-    return nullptr;
+    return SharedPointer<T>();
 }
 
 template <typename T>
