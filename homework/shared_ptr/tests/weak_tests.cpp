@@ -36,6 +36,10 @@ TEST_F(WeakTest, useCountShouldReturnTheNumberOfSharedReferences) {
     EXPECT_EQ(ptr.use_count(), defaultShared.use_count());
     EXPECT_EQ(ptr.use_count(), expectedUseCount);
     EXPECT_EQ(defaultShared.use_count(), expectedUseCount);
+    auto secondWeakPtr = ptr;
+    EXPECT_EQ(ptr.use_count(), expectedUseCount);
+    auto secondSharedPtr = defaultShared;
+    EXPECT_EQ(ptr.use_count(), expectedUseCount + 1);
 }
 
 TEST_F(WeakTest, useCountShouldReturn0WhenNoSharedManagesObject) {
