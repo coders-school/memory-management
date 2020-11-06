@@ -4,6 +4,8 @@
 
 constexpr int testDistance = 50;
 constexpr int newTestDistance = 100;
+constexpr int otherDistance = 30;
+constexpr int otherTime = 2;
 
 class Velocity {
 public:
@@ -52,8 +54,19 @@ TEST_F(UniquePointerTest, ShouldGetAPointer) {
 }
 
 TEST_F(UniquePointerTest, ShouldCallMethodByArrowOperator) {
-    int otherDistance = 30;
-    int otherTime = 2;
     UniquePtr<Velocity> VelocityPtr = new Velocity(otherDistance, otherTime);
     ASSERT_EQ(VelocityPtr->countVelocity(), otherDistance / otherTime);
+}
+
+TEST_F(UniquePointerTest, NullptrShouldBeANullptrAfterMovingIntoAnotherPtr) {
+    UniquePtr<Velocity> VelocityPtr = nullptr;
+    auto otherVelocityPtr = std::move(VelocityPtr);
+    ASSERT_EQ(VelocityPtr.get(), nullptr);
+    ASSERT_EQ(otherVelocityPtr.get(), nullptr);
+}
+
+TEST_F(UniquePointerTest, SecondUniquePtrShouldGetValuesFromMovedOne) {
+    UniquePtr<Velocity> VelocityPtrFirst = new Velocity(otherDistance, otherTime);
+    UniquePtr<Velocity> VelocityPtrSecond = std::move(VelocityPtrFirst);
+    ASSERT_EQ(VelocityPtrSecond.get()->countVelocity(), otherDistance / otherTime);
 }
