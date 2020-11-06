@@ -48,18 +48,42 @@ TEST(WeakPtrTest, WeakPtrInitializedWithSharedAfterUseOfResetFunctionShouldBeExp
 }
 
 TEST(WeakPtrTest, WeakPtrMoveConstructor) {
+    constexpr int expectedUseCountValueSharedPtr = 1;
+    constexpr int expectedUseCountValueWeakPtr = 1;
+    constexpr int expectedUseCountValueWeakPtrAfterMoveConstructor= 0;
+
     cs::shared_ptr<int> sptr{new int{initialValue}};
     cs::weak_ptr<int> wptr{sptr};
+
+    ASSERT_EQ(wptr.use_count(), expectedUseCountValueWeakPtr);
+
     cs::weak_ptr<int> wptr2{std::move(wptr)};
+
+    ASSERT_EQ(wptr.use_count(), expectedUseCountValueWeakPtrAfterMoveConstructor);
+    ASSERT_EQ(wptr2.use_count(), expectedUseCountValueWeakPtr);
+    ASSERT_EQ(sptr.use_count(), expectedUseCountValueSharedPtr);
+
     ASSERT_TRUE(wptr.expired());
     ASSERT_FALSE(wptr2.expired());
 }
 
 TEST(WeakPtrTest, WeakPtrMoveAssignment) {
+    constexpr int expectedUseCountValueSharedPtr = 1;
+    constexpr int expectedUseCountValueWeakPtr = 1;
+    constexpr int expectedUseCountValueWeakPtrAfterMoveAssignment = 0;
+
     cs::shared_ptr<int> sptr{new int{initialValue}};
     cs::weak_ptr<int> wptr{sptr};
+
+    ASSERT_EQ(wptr.use_count(), expectedUseCountValueWeakPtr);
+
     cs::weak_ptr<int> wptr2{};
     wptr2 = std::move(wptr);
+
+    ASSERT_EQ(wptr.use_count(), expectedUseCountValueWeakPtrAfterMoveAssignment);
+    ASSERT_EQ(wptr2.use_count(), expectedUseCountValueWeakPtr);
+    ASSERT_EQ(sptr.use_count(), expectedUseCountValueSharedPtr);
+
     ASSERT_TRUE(wptr.expired());
     ASSERT_FALSE(wptr2.expired());
 }
