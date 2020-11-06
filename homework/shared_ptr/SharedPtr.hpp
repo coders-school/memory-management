@@ -25,11 +25,11 @@ private:
     T* ptr_;
     CounterBlock* counter_;
 
-    void deleter();
+    void resourcesCleaner();
 };
 
 template <typename T>
-void shared_ptr<T>::deleter() {
+void shared_ptr<T>::resourcesCleaner() {
     if (ptr_) {
         counter_->decrementCounter();
     }
@@ -69,13 +69,13 @@ shared_ptr<T>::~shared_ptr() {
     if (!counter_) {
         return;
     }
-    deleter();
+    resourcesCleaner();
 }
 
 template <typename T>
 shared_ptr<T>& shared_ptr<T>::operator=(const shared_ptr& otherPtr) noexcept {
     if (this != &otherPtr && ptr_ != nullptr) {
-        deleter();
+        resourcesCleaner();
         ptr_ = otherPtr.ptr_;
         counter_ = otherPtr.counter_;
         counter_->incrementCounter();
@@ -87,7 +87,7 @@ shared_ptr<T>& shared_ptr<T>::operator=(const shared_ptr& otherPtr) noexcept {
 template <typename T>
 shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr&& otherPtr) noexcept {
     if (this != &otherPtr && ptr_ != nullptr) {
-        deleter();
+        resourcesCleaner();
         ptr_ = otherPtr.ptr_;
         counter_ = otherPtr.counter_;
         otherPtr.ptr_ = nullptr;
