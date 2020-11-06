@@ -31,7 +31,7 @@ TEST_F(UniquePointerTest, ShouldUseReset) {
 }
 
 TEST_F(UniquePointerTest, ShouldNotDereferenceANullptr) {
-    uniquePtr.reset(nullptr);
+    uniquePtr.reset();
     ASSERT_THROW(*uniquePtr, InvalidDereference);
 }
 
