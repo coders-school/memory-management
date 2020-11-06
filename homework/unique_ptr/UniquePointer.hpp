@@ -4,13 +4,13 @@
 #include <iostream>
 #include <string>
 #include <type_traits>
+#include <memory>
 
 class DereferenceNullPtr : public std::runtime_error {
 public:
     DereferenceNullPtr(std::string error)
         : std::runtime_error(error) {}
 };
-
 
 template <class T>
 class UniquePointer {
@@ -28,8 +28,8 @@ public:
     void reset();
     void reset(T* pointer);
 
-    template<typename MUType, typename... Args>
-    friend UniquePointer<MUType> MakeUnique(Args&&... args); 
+    template <typename MUType, typename... Args>
+    friend UniquePointer<MUType> MakeUnique(Args&&... args);
 
 private:
     T* pointer_{};
@@ -122,8 +122,17 @@ T* UniquePointer<T>::release()
     return temp;
 }
 
-template<typename MUType, typename... Args>
-UniquePointer<MUType> MakeUnique(Args&&... args)
+template <typename MUType>
+using noArray = std::enable_if_t<!std::is_array_v<MUType>>;
+
+template <typename MUType, typename... Args, typename = noArray<MUType>>
+auto MakeUnique(Args&&... args)
 {
-    return UniquePointer<MUType>(new MUType(std::forward<Args>(args)...));
+    return std::unique_ptr<MUType>(new MUType(std::forward<Args>(args)...));
 }
+
+template <typename MUType, typename... Args>
+auto MakeUnique(unsigned arraySize)
+{
+    return std::unique_ptr<MUType>(new typename std::remove_extent<MUType>::type[arraySize]());
+} 
