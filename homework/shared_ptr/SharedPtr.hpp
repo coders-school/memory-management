@@ -50,18 +50,16 @@ shared_ptr<T>::shared_ptr(T* ptr)
 }
 
 template <typename T>
-shared_ptr<T>::shared_ptr(const shared_ptr& otherPtr) noexcept {
-    ptr_ = otherPtr.ptr_;
-    counter_ = otherPtr.counter_;
+shared_ptr<T>::shared_ptr(const shared_ptr& otherPtr) noexcept
+    : ptr_(otherPtr.ptr_), counter_(otherPtr.counter_) {
     if (ptr_) {
         counter_->incrementCounter();
     }
 }
 
 template <typename T>
-shared_ptr<T>::shared_ptr(shared_ptr&& otherPtr) noexcept {
-    ptr_ = otherPtr.ptr_;
-    counter_ = otherPtr.counter_;
+shared_ptr<T>::shared_ptr(shared_ptr&& otherPtr) noexcept
+    : ptr_(otherPtr.ptr_), counter_(otherPtr.counter_) {
     otherPtr.ptr_ = nullptr;
     otherPtr.counter_ = nullptr;
 }
