@@ -26,9 +26,7 @@ protected:
 template <typename T>
 class SharedControlBlockPtr : public SharedControlBlock<T> {
 public:
-    SharedControlBlockPtr(
-        T* ptr = nullptr,
-        std::function<void(T*)> defDeleter = [](T* ptrToDelete) { delete ptrToDelete; })
+    SharedControlBlockPtr(T* ptr, std::function<void(T*)> defDeleter)
         : object_(ptr), deleter(defDeleter) {}
 
     ~SharedControlBlockPtr() { deleter(object_); }

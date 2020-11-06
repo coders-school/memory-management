@@ -14,13 +14,13 @@ template <typename T>
 class shared_ptr {
 public:
     shared_ptr() noexcept = default;
-    explicit shared_ptr(std::nullptr_t) noexcept
-        : controlBlock_(new SharedControlBlockPtr<T>{}) {}
-    explicit shared_ptr(T* ptr)
-        : ptr_(ptr), controlBlock_(new SharedControlBlockPtr<T>{ptr}) {}
-    shared_ptr(T* ptr, std::function<void(T*)> defDeleter)
+    shared_ptr(
+        T* ptr,
+        std::function<void(T*)> defDeleter = [](T* ptrToDelete) { delete ptrToDelete; })
         : ptr_(ptr), controlBlock_(new SharedControlBlockPtr<T>{ptr, defDeleter}) {}
-    shared_ptr(std::nullptr_t, std::function<void(T*)> defDeleter)
+    shared_ptr(
+        std::nullptr_t,
+        std::function<void(T*)> defDeleter = [](T* ptrToDelete) { delete ptrToDelete; })
         : controlBlock_(new SharedControlBlockPtr<T>{nullptr, defDeleter}) {}
     explicit shared_ptr(const weak_ptr<T>& weakPtr);
 
