@@ -261,4 +261,131 @@ SCENARIO("Using unique pointers", "[uniquePtr]")
             }
         }
     }
+
+    GIVEN("Unique pointer to array")
+    {
+        int arraySize = 5;
+        UniquePointer<int[]> ptr1(new int[arraySize]);
+        for (int i = 0; i < arraySize; i++) {
+            ptr1[i] = arraySize + i;
+        }
+
+        WHEN("Using operator[]")
+        {
+            THEN("Should work like dereference")
+            {
+                for (int i = 0; i < arraySize; i++) {
+                    REQUIRE(ptr1[i] == arraySize + i);
+                }
+            }
+        }
+
+        WHEN("Using move constructor")
+        {
+            UniquePointer<int[]> anyPtr = std::move(ptr1);
+
+            THEN("Should create unique pointer using move constructor and free memory")
+            {
+                REQUIRE(ptr1.get() == nullptr);
+                for (int i = 0; i < arraySize; i++) {
+                    REQUIRE(anyPtr[i] == arraySize + i);
+                }
+            }
+        }
+
+        WHEN("Using move assigment operator")
+        {
+            UniquePointer<int[]> anyPtr;
+            anyPtr = std::move(ptr1);
+
+            THEN("Should move data to a new pointer using move assigment operator and free memory")
+            {
+                REQUIRE(ptr1.get() == nullptr);
+                for (int i = 0; i < arraySize; i++) {
+                    REQUIRE(anyPtr[i] == arraySize + i);
+                }
+            }
+        }
+
+        WHEN("Using UniquePointer::get()")
+        {
+            int* rawPtr1 = ptr1.get();
+
+            THEN("Should return raw pointer")
+            {
+                for (int i = 0; i < arraySize; i++) {
+                    REQUIRE(rawPtr1[i] == arraySize + i);
+                }
+            }
+
+            THEN("Shouldnt move memory managment to a raw pointer, just create a raw pointer")
+            {
+                for (int i = 0; i < arraySize; i++) {
+                    REQUIRE(rawPtr1[i] == arraySize + i);
+                }
+                for (int i = 0; i < arraySize; i++) {
+                    REQUIRE_NOTHROW(ptr1[i]);
+                }
+            }
+        }
+
+        WHEN("Using UniquePointer::release()")
+        {
+            int* rawPtr1 = ptr1.release();
+
+            THEN("Should return raw pointer")
+            {
+                for (int i = 0; i < arraySize; i++) {
+                    REQUIRE(rawPtr1[i] == arraySize + i);
+                }
+            }
+
+            THEN("Should throw exception when trying use operator[] because memory managment was move to a raw pointer")
+            {
+                for (int i = 0; i < arraySize; i++) {
+                    REQUIRE_THROWS_AS(ptr1[i], DereferenceNullPtr);
+                }
+            }
+
+            delete[] rawPtr1;
+        }
+
+        WHEN("Using UniquePointer::reset() with argument")
+        {
+            int newArraySize = 14;
+            ptr1.reset(new int[newArraySize]);
+            for (int i = 0; i < newArraySize; i++) {
+                ptr1[i] = newArraySize + i;
+            }
+
+            THEN("Should create a new class object on a heap and free old one memory")
+            {
+                for (int i = 0; i < newArraySize; i++) {
+                    REQUIRE(ptr1[i] == newArraySize + i);
+                }
+            }
+
+            THEN("Shouldnt throw exception because its a new memory alocated instead old which is free")
+            {
+                for (int i = 0; i < newArraySize; i++) {
+                    REQUIRE_NOTHROW(ptr1[i]);
+                }
+            }
+        }
+       
+        WHEN("Using UniquePointer::reset() without argument")
+        {
+            ptr1.reset();
+
+            THEN("Should free memory")
+            {
+                REQUIRE(ptr1.get() == nullptr);
+            }
+
+            THEN("Should throw exception because memory is free and pointer is set as nullptr")
+            {
+                REQUIRE_THROWS_AS(*ptr1, DereferenceNullPtr);
+            }
+        }
+    }
 }

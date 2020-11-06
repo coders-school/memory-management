@@ -65,16 +65,16 @@ SCENARIO("Using make unique to initialize unique pointers", "[makeUniquePtr]")
 
         WHEN("Using MakeUnique<double[]>(10)")
         {
-            unsigned arraySize = 10;
+            int arraySize = 10;
             auto uniqueDoubleArray = MakeUnique<double[]>(arraySize);
 
-            for (unsigned i = 0; i < arraySize; i++) {
+            for (int i = 0; i < arraySize; i++) {
                 uniqueDoubleArray[i] = arraySize;
             }
 
             THEN("Should return an UniquePointer to int, TestingClass, std::pair")
             {
-                for (unsigned i = 0; i < arraySize; i++) {
+                for (int i = 0; i < arraySize; i++) {
                     REQUIRE(uniqueDoubleArray[i] == arraySize);
                 }
             }
