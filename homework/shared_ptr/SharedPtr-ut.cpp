@@ -37,15 +37,24 @@ TEST_F(SharedPtrTest, ArrowOperatorShouldGuaranteeAcessToStructuresAndUnions) {
 }
 
 TEST_F(SharedPtrTest, SharedPtrShouldBeCopyable) {
-    coders_school::shared_ptr<int> copyOfTestPtr = testSharedPtr_;
+    const int useCountBeforeCopy = 1;
+    const int useCountAfterCopy = 2;
+
+    coders_school::shared_ptr<int> copyOfTestPtr(new int{testingValue});
+    EXPECT_EQ(copyOfTestPtr.use_count(), useCountBeforeCopy);
+
+    copyOfTestPtr = testSharedPtr_;
     EXPECT_EQ(*copyOfTestPtr, testingValue);
+    EXPECT_EQ(copyOfTestPtr.use_count(), useCountAfterCopy);
 }
 
 TEST_F(SharedPtrTest, MethodUseCountShouldReturnNumberOfSharedPtrUses) {
+    const int useCountTest = 3;
+
     coders_school::shared_ptr<int> sumOfUses(new int{testingOtherValue});
     coders_school::shared_ptr<int> secondUse = sumOfUses;
     coders_school::shared_ptr<int> thirdUse = sumOfUses;
-    const int useCountTest = 3;
+
     EXPECT_EQ(sumOfUses.use_count(), useCountTest);
 }
 
@@ -56,13 +65,23 @@ TEST_F(SharedPtrTest, MethodResetShouldDeleteOldPtrAndSetPtrWithProvidedValue) {
 }
 
 TEST_F(SharedPtrTest, SharedPtrShouldMovingOwnershipToAnotherSharedPtrThroughConctructor) {
+    const int useCountAfterMove = 1;
+
     coders_school::shared_ptr<int> moveTestingPtr(std::move(testSharedPtr_));
     EXPECT_EQ(testSharedPtr_.get(), nullptr);
     EXPECT_EQ(*moveTestingPtr, testingValue);
+    EXPECT_EQ(moveTestingPtr.use_count(), useCountAfterMove);
 }
 
 TEST_F(SharedPtrTest, SharedPtrShouldMovingOwnershipToAnotherSharedPtr) {
-    coders_school::shared_ptr<int> moveTestingPtr = std::move(testSharedPtr_);
+    const int moveAssignmentTestValue{4};
+    const int useCountBeforeAndAfter{1};
+
+    coders_school::shared_ptr<int> moveTestingPtr(new int{moveAssignmentTestValue});
+    EXPECT_EQ(moveTestingPtr.use_count(), useCountBeforeAndAfter);
+
+    moveTestingPtr = std::move(testSharedPtr_);
+    EXPECT_EQ(moveTestingPtr.use_count(), useCountBeforeAndAfter);
     EXPECT_EQ(testSharedPtr_.get(), nullptr);
     EXPECT_EQ(*moveTestingPtr, testingValue);
 }
