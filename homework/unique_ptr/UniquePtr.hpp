@@ -19,7 +19,7 @@ public:
     T * operator->() const;
     T * get() const;
     T * release();
-    void reset(T * newPtr);
+    void reset(T * newPtr = nullptr);
 
 private:
     T * rawPtr_ = nullptr;
