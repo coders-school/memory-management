@@ -74,16 +74,7 @@ TEST_F(SharedPtrTest, MethodResetShouldDeleteOldPtrAndSetPtrWithProvidedValueWhe
     coders_school::shared_ptr<int> thirdUse = multipleUsesTest;
 
     multipleUsesTest.reset(new int{testingValue});
-    EXPECT_EQ(*testSharedPtr_, testingValue);
-}
-
-TEST_F(SharedPtrTest, MethodResetShouldDeleteOldPtrAndSetItToNullptrWhenMultipleSharedPtrsPointToTheSameResource) {
-    coders_school::shared_ptr<int> multipleUsesTest(new int{testingOtherValue});
-    coders_school::shared_ptr<int> secondUse = multipleUsesTest;
-    coders_school::shared_ptr<int> thirdUse = multipleUsesTest;
-
-    multipleUsesTest.reset();
-    EXPECT_EQ(*testSharedPtr_, testingValue);
+    EXPECT_EQ(*multipleUsesTest, testingValue);
 }
 
 TEST_F(SharedPtrTest, SharedPtrShouldMovingOwnershipToAnotherSharedPtrThroughConctructor) {
