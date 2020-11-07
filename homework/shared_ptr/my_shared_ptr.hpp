@@ -89,7 +89,12 @@ public:
     }  
 
     T* get() { return ptr_; }
-    size_t use_count() { return counter_ptr->count_; }
+    size_t use_count() { 
+        if (ptr_) {
+            return counter_ptr->count_;
+        } else {
+            return 0;
+        }
  
     T& operator*()  const { return *ptr_; };
     T* operator->() const { return ptr_; };
