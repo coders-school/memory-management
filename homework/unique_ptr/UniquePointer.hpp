@@ -50,7 +50,6 @@ UniquePointer<T>::UniquePointer(UniquePointer&& anotherUniquePointerToMove)
 {
     if (pointer_ != nullptr) {
         delete pointer_;
-        pointer_ = nullptr;
     }
     pointer_ = anotherUniquePointerToMove.pointer_;
     anotherUniquePointerToMove.pointer_ = nullptr;
@@ -61,7 +60,6 @@ UniquePointer<T>& UniquePointer<T>::operator=(UniquePointer&& anotherUniquePoint
 {
     if (pointer_ != nullptr) {
         delete pointer_;
-        pointer_ = nullptr;
     }
     pointer_ = anotherUniquePointerToMoveAssign.pointer_;
     anotherUniquePointerToMoveAssign.pointer_ = nullptr;
@@ -165,7 +163,6 @@ UniquePointer<T[]>::UniquePointer(UniquePointer&& anotherUniquePointerToMove)
 {
     if (pointer_ != nullptr) {
         delete[] pointer_;
-        pointer_ = nullptr;
     }
     pointer_ = anotherUniquePointerToMove.pointer_;
     anotherUniquePointerToMove.pointer_ = nullptr;
@@ -176,7 +173,6 @@ UniquePointer<T[]>& UniquePointer<T[]>::operator=(UniquePointer&& anotherUniqueP
 {
     if (pointer_ != nullptr) {
         delete[] pointer_;
-        pointer_ = nullptr;
     }
     pointer_ = anotherUniquePointerToMoveAssign.pointer_;
     anotherUniquePointerToMoveAssign.pointer_ = nullptr;
