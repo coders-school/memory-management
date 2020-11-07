@@ -14,6 +14,11 @@ class my_shared_ptr
 
 public:
 
+    my_shared_ptr() : counter_ptr(new Counter()) 
+    { 
+        ptr_ = nullptr; 
+    };
+
     explicit my_shared_ptr(T* ptr) 
         : ptr_(ptr), 
           counter_ptr(new Counter())
@@ -89,12 +94,17 @@ public:
     }  
 
     T* get() { return ptr_; }
-    size_t use_count() { 
-        if (ptr_) {
+    size_t use_count() 
+    { 
+        if (ptr_) 
+        {
             return counter_ptr->count_;
-        } else {
+        } 
+        else 
+        {
             return 0;
         }
+    }
  
     T& operator*()  const { return *ptr_; };
     T* operator->() const { return ptr_; };
