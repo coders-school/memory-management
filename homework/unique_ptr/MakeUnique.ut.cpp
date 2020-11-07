@@ -3,7 +3,6 @@
 #include "TestingClass.hpp"
 #include "UniquePointer.hpp"
 
-#include <cstddef>
 #include <string>
 #include <utility>
 
