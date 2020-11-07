@@ -51,11 +51,11 @@ TEST_F(SharedPtrTest, SharedPtrShouldBeCopyable) {
 TEST_F(SharedPtrTest, MethodUseCountShouldReturnNumberOfSharedPtrUses) {
     const int useCountTest = 3;
 
-    coders_school::shared_ptr<int> sumOfUses(new int{testingOtherValue});
-    coders_school::shared_ptr<int> secondUse = sumOfUses;
-    coders_school::shared_ptr<int> thirdUse = sumOfUses;
+    coders_school::shared_ptr<int> multipleUsesTest(new int{testingOtherValue});
+    coders_school::shared_ptr<int> secondUse = multipleUsesTest;
+    coders_school::shared_ptr<int> thirdUse = multipleUsesTest;
 
-    EXPECT_EQ(sumOfUses.use_count(), useCountTest);
+    EXPECT_EQ(multipleUsesTest.use_count(), useCountTest);
 }
 
 TEST_F(SharedPtrTest, MethodResetShouldDeleteOldPtrAndSetPtrWithProvidedValue) {
@@ -68,12 +68,21 @@ TEST_F(SharedPtrTest, MethodResetShouldDeleteOldPtrAndSetItToNullptrByDeafult) {
     EXPECT_EQ(testSharedPtr_.get(), nullptr);
 }
 
-TEST_F(SharedPtrTest, MethodResetShouldDeleteOldPtrAndSetItToNullptrWhenMultipleSharedPtrsPointToTheSameResource) {
-    coders_school::shared_ptr<int> sumOfUses(new int{testingOtherValue});
-    coders_school::shared_ptr<int> secondUse = sumOfUses;
-    coders_school::shared_ptr<int> thirdUse = sumOfUses;
+TEST_F(SharedPtrTest, MethodResetShouldDeleteOldPtrAndSetPtrWithProvidedValueWhenMultipleSharedPtrsPointToTheSameResource) {
+    coders_school::shared_ptr<int> multipleUsesTest(new int{testingOtherValue});
+    coders_school::shared_ptr<int> secondUse = multipleUsesTest;
+    coders_school::shared_ptr<int> thirdUse = multipleUsesTest;
 
-    sumOfUses.reset(new int{testingValue});
+    multipleUsesTest.reset(new int{testingValue});
+    EXPECT_EQ(*testSharedPtr_, testingValue);
+}
+
+TEST_F(SharedPtrTest, MethodResetShouldDeleteOldPtrAndSetItToNullptrWhenMultipleSharedPtrsPointToTheSameResource) {
+    coders_school::shared_ptr<int> multipleUsesTest(new int{testingOtherValue});
+    coders_school::shared_ptr<int> secondUse = multipleUsesTest;
+    coders_school::shared_ptr<int> thirdUse = multipleUsesTest;
+
+    multipleUsesTest.reset();
     EXPECT_EQ(*testSharedPtr_, testingValue);
 }
 
