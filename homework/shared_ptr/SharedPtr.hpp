@@ -128,8 +128,11 @@ unsigned int shared_ptr<T>::use_count() noexcept {
 
 template <typename T>
 void shared_ptr<T>::reset(T* otherPtr) {
+    if (!otherPtr) {
+        counter_->decrementCounter();
+    }
+
     delete ptr_;
-    counter_->resetCounter();
     ptr_ = otherPtr;
 }
 

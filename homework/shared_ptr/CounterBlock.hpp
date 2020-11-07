@@ -3,7 +3,6 @@
 #include <atomic>
 
 constexpr unsigned int defaultCounterValue = 0;
-constexpr unsigned int counterValueAfterReset = 1;
 
 class CounterBlock {
 public:
@@ -36,5 +35,5 @@ unsigned int CounterBlock::getCounter() const noexcept {
 }
 
 void CounterBlock::resetCounter() {
-    counter_ = counterValueAfterReset;
+    counter_ = defaultCounterValue;
 }

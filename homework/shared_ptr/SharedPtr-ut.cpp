@@ -59,8 +59,21 @@ TEST_F(SharedPtrTest, MethodUseCountShouldReturnNumberOfSharedPtrUses) {
 }
 
 TEST_F(SharedPtrTest, MethodResetShouldDeleteOldPtrAndSetPtrWithProvidedValue) {
-    coders_school::shared_ptr<int> testSharedPtr_(new int{testingOtherValue});
     testSharedPtr_.reset(new int{testingValue});
+    EXPECT_EQ(*testSharedPtr_, testingValue);
+}
+
+TEST_F(SharedPtrTest, MethodResetShouldDeleteOldPtrAndSetItToNullptrByDeafult) {
+    testSharedPtr_.reset();
+    EXPECT_EQ(testSharedPtr_.get(), nullptr);
+}
+
+TEST_F(SharedPtrTest, MethodResetShouldDeleteOldPtrAndSetItToNullptrWhenMultipleSharedPtrsPointToTheSameResource) {
+    coders_school::shared_ptr<int> sumOfUses(new int{testingOtherValue});
+    coders_school::shared_ptr<int> secondUse = sumOfUses;
+    coders_school::shared_ptr<int> thirdUse = sumOfUses;
+
+    sumOfUses.reset(new int{testingValue});
     EXPECT_EQ(*testSharedPtr_, testingValue);
 }
 
