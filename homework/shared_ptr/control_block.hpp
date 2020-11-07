@@ -11,10 +11,7 @@ public:
         : deleter_(deleter), sharedRefs_(0), weakRefs_(0) {};
     control_block(const control_block&) = delete; 
     control_block& operator=(const control_block&) = delete;
-    virtual ~control_block() {
-        sharedRefs_ = 0;
-        weakRefs_ = 0;
-    }
+    virtual ~control_block() {}
 
     control_block& operator--() {
         --sharedRefs_;

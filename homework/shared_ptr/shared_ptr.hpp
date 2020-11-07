@@ -26,13 +26,13 @@ public:
     const T* get() const;
     void reset(T* newPtr = nullptr, std::function<void(T*)> deleter = [](T* ptr) { delete ptr;});
 
-    const T* operator->();
-    T& operator*();
+    const T* operator->() const;
+    T& operator*() const;
     explicit operator bool() const noexcept;
     shared_ptr<T>& operator=(const shared_ptr<T>& ptr) noexcept;             //copy assignment
     shared_ptr<T>& operator=(shared_ptr<T>&& previousOwner) noexcept;  //move assignment
 
-    size_t use_count() { return counter_->getRefs(); }
+    size_t use_count() const { return counter_->getRefs(); }
 
 private:
     shared_ptr(T* ptr, control_block<T>* counter);
@@ -45,7 +45,7 @@ private:
 template <typename T>
 void shared_ptr<T>::checkAndDeletePointers() {
     if (!counter_->getRefs()) {
-            counter_->deleter_(ptr_);
+        counter_->deleter_(ptr_);
         if (!counter_->getWeakRefs()) {
             delete counter_;
         }
@@ -123,12 +123,12 @@ void shared_ptr<T>::reset(T* newPtr, std::function<void(T*)> deleter) {
 }
 
 template <typename T>
-const T* shared_ptr<T>::operator->() {
+const T* shared_ptr<T>::operator->() const {
     return ptr_;
 }
 
 template <typename T>
-T& shared_ptr<T>::operator*() {
+T& shared_ptr<T>::operator*() const {
     if(!ptr_) {
         throw std::runtime_error("Dereferencing a nullptr");
     }
@@ -159,15 +159,16 @@ shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr<T>&& previousOwner) noexcept{
 
 template <typename T>
 shared_ptr<T>& shared_ptr<T>::operator=(const shared_ptr<T>& ptr) noexcept {
-    if(counter_){
-        --*counter_;
-        checkAndDeletePointers();
+    if (this != &ptr) {
+        if(counter_){
+            --*counter_;
+            checkAndDeletePointers();
+        }
+
+        counter_ = ptr.counter_;
+        ptr_ = ptr.ptr_;
+        ++(*counter_);
     }
-
-    counter_ = ptr.counter_;
-    ptr_ = ptr.ptr_;
-    ++(*counter_);
-
     return *this;
 }
 
