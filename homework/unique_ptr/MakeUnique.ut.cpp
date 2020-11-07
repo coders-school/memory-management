@@ -57,7 +57,7 @@ SCENARIO("Using make unique to initialize unique pointers", "[makeUniquePtr]")
         {
             auto uniqueIntWithNoArgument = MakeUnique<int>();
 
-            THEN("Should return an UniquePointer to int, TestingClass, std::pair")
+            THEN("Should return an UniquePointer to int with null value")
             {
                 REQUIRE(*uniqueIntWithNoArgument == 0);
             }
@@ -72,7 +72,7 @@ SCENARIO("Using make unique to initialize unique pointers", "[makeUniquePtr]")
                 uniqueDoubleArray[i] = arraySize;
             }
 
-            THEN("Should return an UniquePointer to int, TestingClass, std::pair")
+            THEN("Should return an UniquePointer to double[] with 10 elementes)")
             {
                 for (int i = 0; i < arraySize; i++) {
                     REQUIRE(uniqueDoubleArray[i] == arraySize);
