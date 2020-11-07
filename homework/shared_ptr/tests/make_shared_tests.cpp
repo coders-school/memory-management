@@ -9,6 +9,7 @@ struct Custom {
     Custom() = default;
     Custom(int first, double second, bool third) : first_(first), second_(second), third_(third) {}
 };
+
 class makeSharedTests : public ::testing::Test
 {
    public:

@@ -14,7 +14,7 @@ class controlObject :public control_block<ObjectType> {
 template <typename ObjectType, typename... Args>
 controlObject<ObjectType, Args...>::controlObject(Args&&... dataArgs, Deleter<ObjectType> deleter)
 :control_block<ObjectType>{deleter},
- data_{dataArgs...} {
+ data_{std::forward<Args>(dataArgs)...} {
 
 }
 
