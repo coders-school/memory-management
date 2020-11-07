@@ -31,7 +31,7 @@ public:
     void reset(T* pointer);
 
     template <typename MUType, typename... Args>
-    friend UniquePointer<MUType> MakeUnique(Args&&... args);
+    friend UniquePointer<MUType> MakeUnique(Args&&...);
 
 private:
     T* pointer_{};
