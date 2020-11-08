@@ -17,8 +17,7 @@ public:
     template <typename Y>
     friend class weak_ptr;
 
-    shared_ptr(T* ptr = nullptr) noexcept;
-    shared_ptr(T* ptr, Deleter<T> deleter) noexcept;
+    shared_ptr(T* ptr = nullptr, Deleter<T> deleter = defaultDeleter) noexcept;
     shared_ptr(const shared_ptr& ptr) noexcept;
     shared_ptr(shared_ptr&& ptr) noexcept;
     explicit shared_ptr(const weak_ptr<T>& wPtr);
@@ -58,17 +57,9 @@ void shared_ptr<T>::deleteStoredPointers() {
 }
 
 template <typename T>
-shared_ptr<T>::shared_ptr(T* ptr) noexcept
-    : rawPtr_(ptr) {
-    ctrl_ = new control_block<T>();
-    ctrl_->incrementSharedRefs();
-}
-
-template <typename T>
 shared_ptr<T>::shared_ptr(T* ptr, Deleter<T> deleter) noexcept
     : rawPtr_(ptr) {
     ctrl_ = new control_block<T>(deleter);
-    ctrl_->incrementSharedRefs();
 }
 
 template <typename T>
@@ -144,7 +135,6 @@ void shared_ptr<T>::reset(T* ptr, Deleter<T> deleter) {
     deleteStoredPointers();
     rawPtr_ = ptr;
     ctrl_ = new control_block<T>(deleter);
-    ctrl_->incrementSharedRefs();
 }
 
 template <typename T>

@@ -31,7 +31,7 @@ public:
     void decrementWeakRefs() noexcept { weakRefs_--; }
 
 private:
-    std::atomic_size_t sharedRefs_{0};
+    std::atomic_size_t sharedRefs_{1};
     std::atomic_size_t weakRefs_{0};
     std::function<void(T*)> deleter_{defaultDeleter};
 };
