@@ -56,9 +56,7 @@ void shared_ptr<T>::deleteStoredPointers() {
 
 template <typename T>
 shared_ptr<T>::shared_ptr(T* ptr, Deleter<T> deleter) noexcept
-    : rawPtr_(ptr) {
-    ctrl_ = new control_block<T>(deleter);
-}
+    : rawPtr_(ptr), ctrl_(new control_block<T>(deleter)) {}
 
 template <typename T>
 shared_ptr<T>::shared_ptr(const shared_ptr& ptr) noexcept
