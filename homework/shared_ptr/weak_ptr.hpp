@@ -40,7 +40,6 @@ void weak_ptr<T>::deleteStoredPointers() {
     ctrl_->decrementWeakRefs();
     if (!ctrl_->getSharedRefs() && !ctrl_->getWeakRefs()) {
         delete ctrl_;
-        ctrl_ = nullptr;
     }
 }
 

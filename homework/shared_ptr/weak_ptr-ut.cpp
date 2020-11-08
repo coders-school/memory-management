@@ -6,12 +6,11 @@
 #include "weak_ptr.hpp"
 
 constexpr int testValue = 10;
-constexpr int secondTestValue = 666;
+constexpr int anotherTestValue = 666;
 
 struct WeakPointerTest : ::testing::Test {
-    WeakPointerTest()
-        : sharedPtr(new int(testValue)) {}
-    coders::shared_ptr<int> sharedPtr;
+    coders::shared_ptr<int> sharedPtr{new int(testValue)};
+    coders::shared_ptr<int> anotherSharedPtr{new int(anotherTestValue)};
 };
 
 TEST_F(WeakPointerTest, ShouldCreateWeakPointerFromSharedUsingCopyConstructor) {
@@ -31,7 +30,7 @@ TEST_F(WeakPointerTest, ShouldCreateWeakPointerFromSharedUsingCopyAssignmentOper
     size_t ptrCount = 1;
 
     // When
-    coders::weak_ptr<int> weakPtr;
+    coders::weak_ptr<int> weakPtr(anotherSharedPtr);
     weakPtr = sharedPtr;
 
     // Then
@@ -58,7 +57,7 @@ TEST_F(WeakPointerTest, ShouldCreateWeakPointerFromWeakUsingCopyAssignmentOperat
 
     // When
     coders::weak_ptr<int> weakPtr(sharedPtr);
-    coders::weak_ptr<int> anotherWeakPtr;
+    coders::weak_ptr<int> anotherWeakPtr(anotherSharedPtr);
     anotherWeakPtr = weakPtr;
 
     // Then
@@ -85,7 +84,7 @@ TEST_F(WeakPointerTest, ShouldCreateWeakPointerFromWeakUsingMoveAssignmentOperat
 
     // When
     coders::weak_ptr<int> weakPtr(sharedPtr);
-    coders::weak_ptr<int> anotherWeakPtr;
+    coders::weak_ptr<int> anotherWeakPtr(anotherSharedPtr);
     anotherWeakPtr = std::move(weakPtr);
 
     // Then
