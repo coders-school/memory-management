@@ -48,10 +48,8 @@ void shared_ptr<T>::deleteStoredPointers() {
     ctrl_->decrementSharedRefs();
     if (!ctrl_->getSharedRefs()) {
         ctrl_->getDeleter()(rawPtr_);
-        rawPtr_ = nullptr;
         if (!ctrl_->getSharedRefs() && !ctrl_->getWeakRefs()) {
             delete ctrl_;
-            ctrl_ = nullptr;
         }
     }
 }
