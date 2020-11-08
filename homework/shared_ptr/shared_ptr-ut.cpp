@@ -17,7 +17,7 @@ struct SharedPointerTest : ::testing::Test {
 
 TEST_F(SharedPointerTest, ShouldCreateNullptrSharedPointerToIntegerUsingDefaultConstructor) {
     // Given
-    size_t sharedPtrCnt = 1;
+    size_t expectedSharedCount = 1;
 
     // When
     coders::shared_ptr<int> emptySharedPtr{};
@@ -26,57 +26,56 @@ TEST_F(SharedPointerTest, ShouldCreateNullptrSharedPointerToIntegerUsingDefaultC
     ASSERT_FALSE(emptySharedPtr);
     ASSERT_EQ(emptySharedPtr.get(), nullptr);
     ASSERT_EQ(emptySharedPtr.operator->(), nullptr);
-    ASSERT_EQ(emptySharedPtr.use_count(), sharedPtrCnt);
+    ASSERT_EQ(emptySharedPtr.use_count(), expectedSharedCount);
 }
 
 TEST_F(SharedPointerTest, ShouldCreateSharedPointerToIntegerUsingBasicConstructor) {
     // Given
-    size_t sharedPtrCnt = 1;
+    size_t expectedSharedCount = 1;
 
     // When
     // Then
     ASSERT_TRUE(sharedPtr);
-    ASSERT_EQ(sharedPtr.use_count(), sharedPtrCnt);
+    ASSERT_EQ(sharedPtr.use_count(), expectedSharedCount);
     ASSERT_EQ(*sharedPtr.get(), testValue);
 }
 
 TEST_F(SharedPointerTest, ShouldCreateSharedPointerUsingCopyConstructor) {
     // Given
-    size_t sharedPtrCnt = 1;
-    ASSERT_EQ(sharedPtr.use_count(), sharedPtrCnt);
+    size_t expectedSharedCount = 1;
+    ASSERT_EQ(sharedPtr.use_count(), expectedSharedCount);
     ASSERT_EQ(*sharedPtr.get(), testValue);
 
     // When
     auto newShared(sharedPtr);
-    ++sharedPtrCnt;
-
+    
     // Then
     ASSERT_TRUE(newShared);
-    ASSERT_EQ(newShared.use_count(), sharedPtrCnt);
+    ASSERT_EQ(newShared.use_count(), expectedSharedCount + 1);
     ASSERT_EQ(*newShared.get(), testValue);
 }
 
 TEST_F(SharedPointerTest, ShouldCreateSharedPointerUsingCopyAssignmentOperator) {
     // Given
-    size_t sharedPtrCnt = 1;
-    ASSERT_EQ(sharedPtr.use_count(), sharedPtrCnt);
+    size_t expectedSharedCount = 1;
+    ASSERT_EQ(sharedPtr.use_count(), expectedSharedCount);
     ASSERT_EQ(*sharedPtr.get(), testValue);
 
     // When
-    coders::shared_ptr<int> newShared;
+    coders::shared_ptr<int> newShared{new int{0}};
     newShared = sharedPtr;
-    ++sharedPtrCnt;
+    ++expectedSharedCount;
 
     // Then
     ASSERT_TRUE(newShared);
-    ASSERT_EQ(newShared.use_count(), sharedPtrCnt);
+    ASSERT_EQ(newShared.use_count(), expectedSharedCount);
     ASSERT_EQ(*newShared.get(), testValue);
 }
 
 TEST_F(SharedPointerTest, ShouldCreateSharedPointerUsingMoveConstructor) {
     // Given
-    size_t sharedPtrCnt = 1;
-    ASSERT_EQ(sharedPtr.use_count(), sharedPtrCnt);
+    size_t expectedSharedCount = 1;
+    ASSERT_EQ(sharedPtr.use_count(), expectedSharedCount);
     ASSERT_EQ(*sharedPtr.get(), testValue);
 
     // When
@@ -85,32 +84,32 @@ TEST_F(SharedPointerTest, ShouldCreateSharedPointerUsingMoveConstructor) {
     // Then
     ASSERT_FALSE(sharedPtr);
     ASSERT_TRUE(newShared);
-    ASSERT_EQ(newShared.use_count(), sharedPtrCnt);
+    ASSERT_EQ(newShared.use_count(), expectedSharedCount);
     ASSERT_EQ(*newShared.get(), testValue);
 }
 
 TEST_F(SharedPointerTest, ShouldCreateSharedPointerUsingMoveAssignmentOperator) {
     // Given
-    size_t sharedPtrCnt = 1;
-    ASSERT_EQ(sharedPtr.use_count(), sharedPtrCnt);
+    size_t expectedSharedCount = 1;
+    ASSERT_EQ(sharedPtr.use_count(), expectedSharedCount);
     ASSERT_EQ(*sharedPtr.get(), testValue);
 
     // When
-    coders::shared_ptr<int> newShared;
+    coders::shared_ptr<int> newShared{new int{0}};
     newShared = std::move(sharedPtr);
 
     // Then
     ASSERT_FALSE(sharedPtr);
     ASSERT_TRUE(newShared);
-    ASSERT_EQ(newShared.use_count(), sharedPtrCnt);
+    ASSERT_EQ(newShared.use_count(), expectedSharedCount);
     ASSERT_EQ(*newShared.get(), testValue);
 }
 
 TEST_F(SharedPointerTest, ShouldResetSharedPointerToGivenValue) {
     // Given
-    size_t sharedPtrCnt = 1;
+    size_t expectedSharedCount = 1;
     int newValue = 666;
-    ASSERT_EQ(sharedPtr.use_count(), sharedPtrCnt);
+    ASSERT_EQ(sharedPtr.use_count(), expectedSharedCount);
     ASSERT_EQ(*sharedPtr.get(), testValue);
 
     // When
@@ -118,14 +117,14 @@ TEST_F(SharedPointerTest, ShouldResetSharedPointerToGivenValue) {
 
     // Then
     ASSERT_TRUE(sharedPtr);
-    ASSERT_EQ(sharedPtr.use_count(), sharedPtrCnt);
+    ASSERT_EQ(sharedPtr.use_count(), expectedSharedCount);
     ASSERT_EQ(*sharedPtr.get(), newValue);
 }
 
 TEST_F(SharedPointerTest, ShouldResetSharedPointerToNullptr) {
     // Given
-    size_t sharedPtrCnt = 1;
-    ASSERT_EQ(sharedPtr.use_count(), sharedPtrCnt);
+    size_t expectedSharedCount = 1;
+    ASSERT_EQ(sharedPtr.use_count(), expectedSharedCount);
     ASSERT_EQ(*sharedPtr.get(), testValue);
 
     // When
