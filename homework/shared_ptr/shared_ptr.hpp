@@ -45,7 +45,9 @@ void shared_ptr<T>::deleteStoredPointers() {
     if (!ctrl_) {
         return;
     }
-    ctrl_->decrementSharedRefs();
+    if (ctrl_->getSharedRefs()) {
+        ctrl_->decrementSharedRefs();
+    }
     if (!ctrl_->getSharedRefs()) {
         ctrl_->getDeleter()(rawPtr_);
         if (!ctrl_->getSharedRefs() && !ctrl_->getWeakRefs()) {
@@ -56,12 +58,14 @@ void shared_ptr<T>::deleteStoredPointers() {
 
 template <typename T>
 shared_ptr<T>::shared_ptr(T* ptr, Deleter<T> deleter) noexcept
-    : rawPtr_(ptr), ctrl_(new control_block<T>(deleter)) {}
+    : rawPtr_(ptr), ctrl_(rawPtr_ ? new control_block<T>(deleter) : new control_block<T>(0, deleter)) {}
 
 template <typename T>
 shared_ptr<T>::shared_ptr(const shared_ptr& ptr) noexcept
     : rawPtr_(ptr.rawPtr_), ctrl_(ptr.ctrl_) {
-    ctrl_->incrementSharedRefs();
+    if (rawPtr_) {
+        ctrl_->incrementSharedRefs();
+    }
 }
 
 template <typename T>
@@ -78,7 +82,9 @@ shared_ptr<T>::shared_ptr(const weak_ptr<T>& wPtr) {
     }
     rawPtr_ = wPtr.rawPtr_;
     ctrl_ = wPtr.ctrl_;
-    ctrl_->incrementSharedRefs();
+    if (rawPtr_) {
+        ctrl_->incrementSharedRefs();
+    }
 }
 
 template <typename T>
@@ -92,7 +98,7 @@ shared_ptr<T>& shared_ptr<T>::operator=(const shared_ptr<T>& ptr) noexcept {
         deleteStoredPointers();
         rawPtr_ = ptr.rawPtr_;
         ctrl_ = ptr.ctrl_;
-        if (ctrl_) {
+        if (ctrl_ && rawPtr_) {
             ctrl_->incrementSharedRefs();
         }
     }
@@ -130,7 +136,7 @@ template <typename T>
 void shared_ptr<T>::reset(T* ptr, Deleter<T> deleter) {
     deleteStoredPointers();
     rawPtr_ = ptr;
-    ctrl_ = new control_block<T>(deleter);
+    ctrl_ = rawPtr_ ? new control_block<T>(deleter) : new control_block<T>(0, deleter);
 }
 
 template <typename T>

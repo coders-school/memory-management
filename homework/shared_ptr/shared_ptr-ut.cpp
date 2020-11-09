@@ -7,17 +7,15 @@
 #include "weak_ptr.hpp"
 
 constexpr int testValue = 10;
-constexpr int secondTestValue = 666;
+constexpr int anotherTestValue = 666;
 
 struct SharedPointerTest : ::testing::Test {
-    SharedPointerTest()
-        : sharedPtr(new int(testValue)) {}
-    coders::shared_ptr<int> sharedPtr;
+    coders::shared_ptr<int> sharedPtr{new int(testValue)};
 };
 
 TEST_F(SharedPointerTest, ShouldCreateNullptrSharedPointerToIntegerUsingDefaultConstructor) {
     // Given
-    size_t expectedSharedCount = 1;
+    size_t expectedSharedCount = 0;
 
     // When
     coders::shared_ptr<int> emptySharedPtr{};
@@ -133,6 +131,7 @@ TEST_F(SharedPointerTest, ShouldResetSharedPointerToNullptr) {
     // Then
     ASSERT_FALSE(sharedPtr);
     ASSERT_EQ(sharedPtr.get(), nullptr);
+    ASSERT_EQ(sharedPtr.use_count(), 0);
 }
 
 TEST_F(SharedPointerTest, ShouldUseOperators) {

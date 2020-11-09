@@ -16,6 +16,8 @@ class control_block {
 public:
     control_block(Deleter<T> deleter = defaultDeleter)
         : deleter_(deleter) {}
+    control_block(size_t initSharedRefs, Deleter<T> deleter = defaultDeleter)
+        : sharedRefs_(initSharedRefs), deleter_(deleter) {}
     control_block(const control_block&) = delete;
     control_block(control_block&&) = delete;
     control_block& operator=(const control_block&) = delete;
