@@ -50,29 +50,19 @@ weak_ptr<T>::~weak_ptr() {
 }
 
 template <typename T>
-weak_ptr<T>::weak_ptr(const weak_ptr& ptr) noexcept {
-    if (this != &ptr) {
-        ptr_ = ptr.ptr_;
-        cb_ = ptr.cb_;
-        cb_->increaseWeakRef();
-    }
-}
-
-template <typename T>
-weak_ptr<T>::weak_ptr(const cs::shared_ptr<T>& ptr) noexcept {
-    ptr_ = ptr.ptr_;
-    cb_ = ptr.cb_;
+weak_ptr<T>::weak_ptr(const weak_ptr& ptr) noexcept : ptr_(ptr.ptr_), cb_(ptr.cb_) {
     cb_->increaseWeakRef();
 }
 
 template <typename T>
-weak_ptr<T>::weak_ptr(weak_ptr&& ptr) noexcept {
-    if (this != &ptr) {
-        ptr_ = ptr.ptr_;
-        cb_ = ptr.cb_;
-        ptr.ptr_ = nullptr;
-        ptr.cb_ = nullptr;
-    }
+weak_ptr<T>::weak_ptr(const cs::shared_ptr<T>& ptr) noexcept : ptr_(ptr.ptr_), cb_(ptr.cb_) {
+    cb_->increaseWeakRef();
+}
+
+template <typename T>
+weak_ptr<T>::weak_ptr(weak_ptr&& ptr) noexcept : ptr_(ptr.ptr_), cb_(ptr.cb_) {
+    ptr.ptr_ = nullptr;
+    ptr.cb_ = nullptr;
 }
 
 template <typename T>

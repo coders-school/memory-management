@@ -14,8 +14,7 @@ namespace cs {
 template <typename T>
 class shared_ptr {
 public:
-    shared_ptr(T* ptr = nullptr)
-        : ptr_(ptr), cb_(new ControlBlock<T>) {}
+    shared_ptr(T* ptr = nullptr) : ptr_(ptr), cb_(new ControlBlock<T>) {}
     shared_ptr(const shared_ptr& ptr);
     shared_ptr(const cs::weak_ptr<T>& ptr);
     shared_ptr(shared_ptr&& ptr);
@@ -27,7 +26,7 @@ public:
     T* operator->() const { return ptr_; }
     long use_count() const { return static_cast<long>(cb_->getShared()); }
     explicit operator bool() const { return ptr_ != nullptr; }
-    void reset(T* ptr);
+    void reset(T* ptr = nullptr);
 
 private:
     void deletePointers();
@@ -62,23 +61,17 @@ shared_ptr<T>::~shared_ptr() {
 }
 
 template <typename T>
-shared_ptr<T>::shared_ptr(const shared_ptr& ptr) {
-    ptr_ = ptr.ptr_;
-    cb_ = ptr.cb_;
+shared_ptr<T>::shared_ptr(const shared_ptr& ptr) : ptr_(ptr.ptr_), cb_(ptr.cb_) {
     cb_->increaseSharedRef();
 }
 
 template <typename T>
-shared_ptr<T>::shared_ptr(const cs::weak_ptr<T>& ptr) {
-    ptr_ = ptr.ptr_;
-    cb_ = ptr.cb_;
+shared_ptr<T>::shared_ptr(const cs::weak_ptr<T>& ptr) : ptr_(ptr.ptr_), cb_(ptr.cb_) {
     cb_->increaseSharedRef();
 }
 
 template <typename T>
-shared_ptr<T>::shared_ptr(shared_ptr&& ptr) {
-    ptr_ = ptr.ptr_;
-    cb_ = ptr.cb_;
+shared_ptr<T>::shared_ptr(shared_ptr&& ptr) : ptr_(ptr.ptr_), cb_(ptr.cb_) {
     ptr.ptr_ = nullptr;
     ptr.cb_ = nullptr;
 }
