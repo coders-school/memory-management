@@ -68,3 +68,11 @@ TEST(WeakPtrTest, WeakPtrMoveAssignment) {
     ASSERT_FALSE(weakPtr2.expired());
 }
 
+TEST(WeakPtrTest, WeakPtrCopyAssignment) {
+    cs::SharedPtr<int> sharedPtr{new int{WeakPtrTestConst::intValue}};
+    cs::WeakPtr<int> weakPtr{sharedPtr};
+    cs::WeakPtr<int> weakPtr2 = weakPtr;
+    ASSERT_FALSE(weakPtr.expired());
+    ASSERT_FALSE(weakPtr2.expired());
+    ASSERT_EQ(*(weakPtr.lock()), *(weakPtr2.lock()));
+}
