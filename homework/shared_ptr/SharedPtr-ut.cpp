@@ -33,20 +33,26 @@ TEST_F(SharedPtrTest, shouldDereferencePointer) {
     ASSERT_EQ(*doubleValuePtr, SharedPtrTestConst::dobuleValue);
 }
 
-TEST_F(SharedPtrTest, shouldCopySharedPtr) {
+TEST_F(SharedPtrTest, shouldCopySharedPtrAndIncrementCounterAndCopiedSharedPtrShouldStoreTheSameAddress) {
+    ASSERT_EQ(intValuePtr.use_count(), SharedPtrTestConst::oneUseCount);
+    ASSERT_EQ(doubleValuePtr.use_count(), SharedPtrTestConst::oneUseCount);
+
     auto intPtrCopy(intValuePtr);
     auto doublePtrCopy = doubleValuePtr;
 
+    ASSERT_EQ(intValuePtr.use_count(), SharedPtrTestConst::twoUseCount);
+    ASSERT_EQ(doubleValuePtr.use_count(), SharedPtrTestConst::twoUseCount);
+
     ASSERT_EQ(*intValuePtr, *intPtrCopy);
     ASSERT_EQ(*doubleValuePtr, *doublePtrCopy);
+
+    ASSERT_EQ(intValuePtr.get(), intPtrCopy.get());
+    ASSERT_EQ(doubleValuePtr.get(), doublePtrCopy.get());
 }
 
 TEST_F(SharedPtrTest, operationCopySharedPtrShouldStorePointerToTheSameAddress) {
     auto intPtrCopy(intValuePtr);
     auto doublePtrCopy = doubleValuePtr;
-
-    ASSERT_EQ(intValuePtr.get(), intPtrCopy.get());
-    ASSERT_EQ(doubleValuePtr.get(), doublePtrCopy.get());
 }
 
 TEST_F(SharedPtrTest, shouldMoveSharedPtr) {

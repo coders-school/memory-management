@@ -15,7 +15,7 @@ public:
     SharedPtr(
         T* ptr = nullptr,
         std::function<void(T*)> deleter = [](T* ptr = nullptr) { delete ptr; }) noexcept
-        : ptr_(ptr), cb_(new ControlBlockData<T>{ptr, deleter}) {}
+        : ptr_(ptr), cb_(new ControlBlockPtrData<T>{ptr, deleter}) {}
     SharedPtr(const SharedPtr& ptr) noexcept;
     SharedPtr(SharedPtr&& ptr) noexcept;
     SharedPtr(const cs::WeakPtr<T>& ptr) noexcept;
@@ -34,7 +34,7 @@ public:
         std::function<void(T*)> deleter = [](T* ptr = nullptr) { delete ptr; }) noexcept;
 
 private:
-    explicit SharedPtr(ControlBlockData<T>* cb) noexcept
+    explicit SharedPtr(ControlBlockPtrData<T>* cb) noexcept
         : cb_(cb) { ptr_ = cb->getObject(); };
 
     void deleteResources();
@@ -46,7 +46,7 @@ private:
     friend class cs::WeakPtr;
 
     T* ptr_ = nullptr;
-    ControlBlockData<T>* cb_ = nullptr;
+    ControlBlockPtrData<T>* cb_ = nullptr;
 };
 
 template <typename T>
@@ -101,7 +101,7 @@ void SharedPtr<T>::reset(T* ptr /* = nullptr*/,
                          std::function<void(T*)> deleter /* = [](T* ptr = nullptr) { delete ptr; }*/) noexcept {
     deleteResources();
     ptr_ = ptr;
-    cb_ = new ControlBlockData<T>(ptr, deleter);
+    cb_ = new ControlBlockPtrData<T>(ptr, deleter);
 }
 
 template <typename T>
@@ -116,7 +116,7 @@ void SharedPtr<T>::deleteResources() {
 
 template <typename T, typename... Args>
 SharedPtr<T> make_shared(Args&&... args) {
-    return cs::SharedPtr<T>(new ControlBlockData<T>(std::forward<decltype(args)>(args)...));
+    return cs::SharedPtr<T>(new ControlBlockPtrData<T>(std::forward<decltype(args)>(args)...));
 }
 
 }  // namespace cs

@@ -23,20 +23,32 @@ protected:
 };
 
 template <typename T>
-class ControlBlockData : public ControlBlock<T> {
+class ControlBlockPtrData : public ControlBlock<T> {
 public:
-    ControlBlockData(
+    ControlBlockPtrData(
         T* ptr = nullptr,
         std::function<void(T*)> deleter = [](T* ptr) { delete ptr; })
         : object_(ptr) {
         this->setDeleter(deleter);
     }
 
-    ~ControlBlockData() { callDeleter(); }
+    ~ControlBlockPtrData() { callDeleter(); }
     void callDeleter() { this->deleter_(object_); }
 
     T* getObject() override { return object_; }
 
 protected:
     T* object_ = nullptr;
+};
+
+template <typename T>
+class ControlBlockObjData : public ControlBlock<T> {
+public:
+    template <typename... Args>
+    ControlBlockObjData(Args... args)
+        : object_(args...) {}
+    T* getObject() override { return &object_; }
+
+private:
+    T object_;
 };
