@@ -27,7 +27,7 @@ public:
 
 private:
     T* ptr_;
-    ControlBlock* cb_;
+    ControlBlock<T>* cb_;
     void deletePointers();
 
     template <typename>
@@ -70,7 +70,6 @@ weak_ptr<T>::weak_ptr(weak_ptr&& ptr) noexcept {
     if (this != &ptr) {
         ptr_ = ptr.ptr_;
         cb_ = ptr.cb_;
-        cb_->setDeleter([&]() { delete ptr_; });
         ptr.ptr_ = nullptr;
         ptr.cb_ = nullptr;
     }
@@ -93,7 +92,6 @@ weak_ptr<T>& weak_ptr<T>::operator=(weak_ptr&& ptr) noexcept {
         deletePointers();
         ptr_ = ptr.ptr_;
         cb_ = ptr.cb_;
-        cb_->setDeleter([&]() { delete ptr_; });
         ptr.ptr_ = nullptr;
         ptr.cb_ = nullptr;
     }

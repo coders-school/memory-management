@@ -15,7 +15,7 @@ template <typename T>
 class shared_ptr {
 public:
     shared_ptr(T* ptr = nullptr)
-        : ptr_(ptr), cb_(new ControlBlock([&]() { delete ptr_; })) {}
+        : ptr_(ptr), cb_(new ControlBlock<T>) {}
     shared_ptr(const shared_ptr& ptr);
     shared_ptr(const cs::weak_ptr<T>& ptr);
     shared_ptr(shared_ptr&& ptr);
@@ -38,9 +38,9 @@ private:
     template <typename>
     friend class cs::weak_ptr;
 
-    shared_ptr(BlockAndData<T>* cb) : cb_(cb) { ptr_ = cb->getObject(); };
+    shared_ptr(BlockAndData<T>* cb) : cb_(cb) { ptr_ = new T{cb->getObject()}; };
     T* ptr_;
-    ControlBlock* cb_;
+    ControlBlock<T>* cb_;
 };
 
 template <typename T>
@@ -48,7 +48,7 @@ void shared_ptr<T>::deletePointers() {
     if (cb_) {
         cb_->decreaseSharedRef();
         if (cb_->getShared() == 0) {
-            cb_->callDeleter();
+            cb_->getDeleter()(ptr_);
             if (cb_->getWeak() == 0) {
                 delete cb_;
             }
@@ -79,7 +79,6 @@ template <typename T>
 shared_ptr<T>::shared_ptr(shared_ptr&& ptr) {
     ptr_ = ptr.ptr_;
     cb_ = ptr.cb_;
-    cb_->setDeleter([&]() { delete ptr_; });
     ptr.ptr_ = nullptr;
     ptr.cb_ = nullptr;
 }
@@ -101,7 +100,6 @@ shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr&& ptr) {
         deletePointers();
         ptr_ = ptr.ptr_;
         cb_ = ptr.cb_;
-        cb_->setDeleter([&]() { delete ptr_; });
         ptr.ptr_ = nullptr;
         ptr.cb_ = nullptr;
     }
