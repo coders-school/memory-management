@@ -35,7 +35,7 @@ private:
     void deleteResources();
 
     T* ptr_ = nullptr;
-    ControlBlockPtrData<T>* cb_ = nullptr;
+    ControlBlock<T>* cb_ = nullptr;
 };
 
 template <typename T>

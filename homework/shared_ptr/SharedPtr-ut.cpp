@@ -24,6 +24,7 @@ struct SharedPtrTest : ::testing::Test {
 };
 
 struct Point2D {
+    Point2D(double xx, double yy) : x(xx), y(yy) {}
     double x = SharedPtrTestConst::point_x;
     double y = SharedPtrTestConst::point_y;
     double ComputeMultiplication() { return x * y; }
@@ -131,14 +132,13 @@ TEST_F(SharedPtrTest, decrementCounterShouldntDestroyObject) {
 }
 
 TEST(Point2D, shouldUseArrowOperator) {
-    cs::SharedPtr<Point2D> ptr(new Point2D{});
+    cs::SharedPtr<Point2D> ptr(new Point2D{SharedPtrTestConst::point_x, SharedPtrTestConst::point_y});
 
     ASSERT_EQ(ptr->ComputeMultiplication(), SharedPtrTestConst::pointsMultiplication);
 }
 
 TEST(Point2D, shouldCreateSharedPtrWithMakeShared) {
-    auto point = new Point2D{};
-    cs::SharedPtr<Point2D> sharedPtr = cs::make_shared<Point2D>(point);
+    cs::SharedPtr<Point2D> sharedPtr = cs::make_shared<Point2D>(SharedPtrTestConst::point_x, SharedPtrTestConst::point_y);
 
     ASSERT_EQ(sharedPtr->ComputeMultiplication(), SharedPtrTestConst::pointsMultiplication);
 }
