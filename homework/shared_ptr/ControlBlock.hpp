@@ -13,8 +13,7 @@ public:
     void decreaseWeakRefCounter() { weakRefCounter_--; }
     size_t getSharedCounter() { return sharedRefCounter_.load(); }
     size_t getWeakCounter() { return weakRefCounter_.load(); }
-    //void callDeleter() { deleter_(); }
-    void setDeleter(std::function<void()> del) { deleter_ = del; }
+    void setDeleter(std::function<void(T*)> del) { deleter_ = del; }
     virtual T* getObject() = 0;
 
 protected:
@@ -29,14 +28,15 @@ public:
     ControlBlockData(
         T* ptr = nullptr,
         std::function<void(T*)> deleter = [](T* ptr) { delete ptr; })
-        : object_(ptr), deleter_(deleter) {}
+        : object_(ptr) {
+        this->setDeleter(deleter);
+    }
 
-    ~ControlBlockData() { deleter_(object_); }
-    void callDeleter() { deleter_(object_); }
+    ~ControlBlockData() { callDeleter(); }
+    void callDeleter() { this->deleter_(object_); }
 
     T* getObject() override { return object_; }
 
-private:
+protected:
     T* object_ = nullptr;
-    std::function<void(T*)> deleter_ = [](T* ptr) { delete ptr; };
 };
