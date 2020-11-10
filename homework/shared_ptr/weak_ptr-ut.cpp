@@ -44,7 +44,7 @@ TEST(WeakPointerTests, moveAssignmentOperatorShouldMovePointer) {
     ASSERT_EQ(weak_ptr.use_count(), numberOfUseCount);
 }
 
-TEST(WeakPointerTests, copyAssignmentOperatorShouldMovePointer) {
+TEST(WeakPointerTests, copyAssignmentOperatorShouldCopyPointer) {
     constexpr size_t numberOfUseCount = 1;
     struct Something {};
     cs::shared_ptr<Something> shared_something(new Something{});
