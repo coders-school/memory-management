@@ -36,7 +36,7 @@ TEST(sharedPointerTest, MovingContructorShouldMovePointer) {
     cs::shared_ptr<int> ptr(std::move(moved_ptr));
 
     ASSERT_EQ(*ptr, 1);
-    ASSERT_TRUE(!moved_ptr);
+    ASSERT_FALSE(moved_ptr);
 }
 
 TEST(sharedPointerTest, copyAssignmentOperatorShouldCopyPointer) {
