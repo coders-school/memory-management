@@ -50,7 +50,7 @@ TEST(sharedPointerTest, copyAssignmentOperatorShouldCopyPointer) {
 
 TEST(sharedPointerTest, moveAssignmentOperatorShouldMovePointer) {
     cs::shared_ptr<int> copied_ptr(new int{1});
-    cs::shared_ptr<int> ptr;
+    cs::shared_ptr<int> ptr{new int{2}};
     ptr = std::move(copied_ptr);
 
     ASSERT_EQ(*ptr, 1);
