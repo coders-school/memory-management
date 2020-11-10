@@ -8,6 +8,7 @@ constexpr double dobuleValue = 4.2;
 constexpr double point_x = 2.2;
 constexpr double point_y = 4.2;
 constexpr double pointsMultiplication = point_x * point_y;
+constexpr size_t zeroUseCount = 0;
 constexpr size_t oneUseCount = 1;
 constexpr size_t twoUseCount = 2;
 constexpr size_t threeUseCount = 3;
@@ -56,12 +57,18 @@ TEST_F(SharedPtrTest, operationCopySharedPtrShouldStorePointerToTheSameAddress) 
 }
 
 TEST_F(SharedPtrTest, shouldMoveSharedPtr) {
+    ASSERT_EQ(intValuePtr.use_count(), SharedPtrTestConst::oneUseCount);
+
     auto anotherIntPtr(std::move(intValuePtr));
+
+    ASSERT_EQ(intValuePtr.use_count(), SharedPtrTestConst::zeroUseCount);
+    ASSERT_EQ(anotherIntPtr.use_count(), SharedPtrTestConst::oneUseCount);
     ASSERT_EQ(*anotherIntPtr, SharedPtrTestConst::intValue);
 
     auto nextPtr = std::move(anotherIntPtr);
     ASSERT_EQ(*nextPtr, SharedPtrTestConst::intValue);
 
+    ASSERT_EQ(anotherIntPtr.use_count(), SharedPtrTestConst::zeroUseCount);
     ASSERT_EQ(intValuePtr.get(), nullptr);
     ASSERT_EQ(anotherIntPtr.get(), nullptr);
 }
@@ -94,6 +101,7 @@ TEST_F(SharedPtrTest, shouldResetSharedPtr) {
     intValuePtr.reset();
 
     ASSERT_EQ(intValuePtr.get(), nullptr);
+    ASSERT_FALSE(intValuePtr);
 
     constexpr int newValue = 42;
     int* newPtr = new int{newValue};
@@ -107,8 +115,12 @@ TEST_F(SharedPtrTest, shouldResetSharedPtr) {
 TEST_F(SharedPtrTest, shouldDecrementCounterAfterReset) {
     auto newPtr = intValuePtr;
     ASSERT_EQ(intValuePtr.use_count(), SharedPtrTestConst::twoUseCount);
+    ASSERT_EQ(newPtr.use_count(), SharedPtrTestConst::twoUseCount);
     intValuePtr.reset(nullptr);
-    ASSERT_EQ(intValuePtr.use_count(), SharedPtrTestConst::oneUseCount);
+    ASSERT_EQ(newPtr.use_count(), SharedPtrTestConst::oneUseCount);
+    ASSERT_EQ(intValuePtr.use_count(), SharedPtrTestConst::zeroUseCount);
+    newPtr.reset(nullptr);
+    ASSERT_EQ(newPtr.use_count(), SharedPtrTestConst::zeroUseCount);
 }
 
 TEST_F(SharedPtrTest, decrementCounterShouldntDestroyObject) {

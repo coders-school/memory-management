@@ -17,7 +17,7 @@ public:
     virtual T* getObject() = 0;
 
 protected:
-    std::atomic<size_t> sharedRefCounter_ = 1;
+    std::atomic<size_t> sharedRefCounter_ = 0;
     std::atomic<size_t> weakRefCounter_ = 0;
     std::function<void(T*)> deleter_ = [](T* ptr) { delete ptr; };
 };
@@ -30,6 +30,9 @@ public:
         std::function<void(T*)> deleter = [](T* ptr) { delete ptr; })
         : object_(ptr) {
         this->setDeleter(deleter);
+        if (ptr) {
+            this->sharedRefCounter_ = 1;
+        }
     }
 
     ~ControlBlockPtrData() { callDeleter(); }

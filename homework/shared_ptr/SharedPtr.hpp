@@ -28,7 +28,12 @@ public:
     explicit operator bool() const noexcept { return ptr_ != nullptr; }
 
     T* get() const noexcept { return ptr_; }
-    size_t use_count() const noexcept { return cb_->getSharedCounter(); }
+    size_t use_count() const noexcept {
+        if (cb_) {
+            return cb_->getSharedCounter();
+        }
+        return 0;
+    }
     void reset(
         T* ptr = nullptr,
         std::function<void(T*)> deleter = [](T* ptr = nullptr) { delete ptr; }) noexcept;
