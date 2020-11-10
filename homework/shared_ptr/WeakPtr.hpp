@@ -23,7 +23,7 @@ public:
     WeakPtr& operator=(const cs::SharedPtr<T>& ptr) noexcept;
     WeakPtr& operator=(WeakPtr&& ptr) noexcept;
 
-    long use_count() const noexcept; 
+    size_t use_count() const noexcept;
     bool expired() const noexcept { return use_count() == 0; }
     void reset() noexcept;
     cs::SharedPtr<T> lock() const noexcept;
@@ -39,28 +39,21 @@ private:
 };
 
 template <typename T>
-WeakPtr<T>::WeakPtr(const WeakPtr& ptr) noexcept {
-    if (this != &ptr) {
-        ptr_ = ptr.ptr_;
-        cb_ = ptr.cb_;
-        cb_->increaseWeakRefCounter();
-    }
+WeakPtr<T>::WeakPtr(const WeakPtr& ptr) noexcept
+    : ptr_(ptr.ptr_), cb_(ptr.cb_) {
+    cb_->increaseWeakRefCounter();
 }
 
 template <typename T>
-WeakPtr<T>::WeakPtr(WeakPtr&& ptr) noexcept {
-    if (this != &ptr) {
-        ptr_ = ptr.ptr_;
-        cb_ = ptr.cb_;
-        ptr.ptr_ = nullptr;
-        ptr.cb_ = nullptr;
-    }
+WeakPtr<T>::WeakPtr(WeakPtr&& ptr) noexcept
+    : ptr_(ptr.ptr_), cb_(ptr.cb_) {
+    ptr.ptr_ = nullptr;
+    ptr.cb_ = nullptr;
 }
 
 template <typename T>
-WeakPtr<T>::WeakPtr(const cs::SharedPtr<T>& ptr) noexcept {
-    ptr_ = ptr.ptr_;
-    cb_ = ptr.cb_;
+WeakPtr<T>::WeakPtr(const cs::SharedPtr<T>& ptr) noexcept
+    : ptr_(ptr.ptr_), cb_(ptr.cb_) {
     cb_->increaseWeakRefCounter();
 }
 
@@ -124,10 +117,10 @@ void WeakPtr<T>::reset() noexcept {
 }
 
 template <typename T>
-long WeakPtr<T>::use_count() const noexcept {
+size_t WeakPtr<T>::use_count() const noexcept {
     if (cb_) {
         return cb_->getSharedCounter();
     }
-    return 0l;
+    return 0;
 }
 }  // namespace cs

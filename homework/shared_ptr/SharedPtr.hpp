@@ -50,24 +50,21 @@ private:
 };
 
 template <typename T>
-SharedPtr<T>::SharedPtr(const SharedPtr& ptr) noexcept {
-    ptr_ = ptr.ptr_;
-    cb_ = ptr.cb_;
+SharedPtr<T>::SharedPtr(const SharedPtr& ptr) noexcept
+    : ptr_(ptr.ptr_), cb_(ptr.cb_) {
     cb_->incrementSharedRefCounter();
 }
 
 template <typename T>
-SharedPtr<T>::SharedPtr(SharedPtr&& ptr) noexcept {
-    ptr_ = ptr.ptr_;
-    cb_ = ptr.cb_;
+SharedPtr<T>::SharedPtr(SharedPtr&& ptr) noexcept
+    : ptr_(ptr.ptr_), cb_(ptr.cb_) {
     ptr.ptr_ = nullptr;
     ptr.cb_ = nullptr;
 }
 
 template <typename T>
-SharedPtr<T>::SharedPtr(const cs::WeakPtr<T>& ptr) noexcept {
-    ptr_ = ptr.ptr_;
-    cb_ = ptr.cb_;
+SharedPtr<T>::SharedPtr(const cs::WeakPtr<T>& ptr) noexcept
+    : ptr_(ptr.ptr_), cb_(ptr.cb_) {
     cb_->incrementSharedRefCounter();
 }
 
@@ -93,7 +90,6 @@ SharedPtr<T>& SharedPtr<T>::operator=(SharedPtr&& ptr) noexcept {
         deleteResources();
         ptr_ = ptr.ptr_;
         cb_ = ptr.cb_;
-        cb_->setDeleter([&]() { delete ptr_; });
         ptr.ptr_ = nullptr;
         ptr.cb_ = nullptr;
     }
