@@ -18,7 +18,7 @@ public:
     void decreaseShared();
 
     virtual T* getData() = 0;
-    std::function<void(T*)> deleter_ = [](T* ptrToDelete) { delete ptrToDelete; };
+    // std::function<void(T*)> deleter_ = [](T* ptrToDelete) { delete ptrToDelete; };
 
 private:
     std::atomic<size_t> sharedRefs_{1};
@@ -32,6 +32,7 @@ public:
         T* ptr = nullptr,
         std::function<void(T*)> deleter = [](T* ptrToDelete) { delete ptrToDelete; })
         : refs_(ptr), deleter_(deleter) {}
+
     ~ControlBlock() {
         deleter_(refs_);
     }

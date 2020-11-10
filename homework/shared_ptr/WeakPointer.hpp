@@ -23,11 +23,11 @@ public:
     void reset();
     size_t use_count() const noexcept;
     bool expired() const noexcept;
-    SharedPointer<T> lock();
+    SharedPointer<T> lock() noexcept;
 
     T& operator*() const = delete;
     T* operator->() const = delete;
-    WeakPointer<T>& operator=(SharedPointer<T>& anotherPtr);
+    WeakPointer<T>& operator=(const SharedPointer<T>& anotherPtr);
     WeakPointer<T>& operator=(const WeakPointer<T>& anotherPtr);
     WeakPointer<T>& operator=(WeakPointer<T>&& anotherPtr);
 
@@ -89,7 +89,7 @@ bool WeakPointer<T>::expired() const noexcept {
 }
 
 template <typename T>
-SharedPointer<T> WeakPointer<T>::lock() {
+SharedPointer<T> WeakPointer<T>::lock() noexcept {
     if (!expired()) {
         return SharedPointer<T>(*this);
     }
@@ -97,7 +97,7 @@ SharedPointer<T> WeakPointer<T>::lock() {
 }
 
 template <typename T>
-WeakPointer<T>& WeakPointer<T>::operator=(SharedPointer<T>& anotherPtr) {
+WeakPointer<T>& WeakPointer<T>::operator=(const SharedPointer<T>& anotherPtr) {
     checkControlBlock();
     ptr_ = anotherPtr.ptr_;
     refCounter_ = anotherPtr.refCounter_;
