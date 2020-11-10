@@ -41,7 +41,7 @@ TEST(sharedPointerTest, MovingContructorShouldMovePointer) {
 
 TEST(sharedPointerTest, copyAssignmentOperatorShouldCopyPointer) {
     cs::shared_ptr<int> copied_ptr(new int{1});
-    cs::shared_ptr<int> ptr;
+    cs::shared_ptr<int> ptr{new int{2}};
     ptr = copied_ptr;
 
     ASSERT_EQ(*ptr, 1);
