@@ -34,35 +34,41 @@ TEST(WeakPointerTests, WeakPointerLock) {
 }
 
 TEST(WeakPointerTests, moveAssignmentOperatorShouldMovePointer) {
-    constexpr size_t numberOfUseCount = 1;
+    size_t numberOfUseCount = 0;
     struct Something {};
     cs::shared_ptr<Something> shared_something(new Something{});
     cs::weak_ptr<Something> weak_something{shared_something};
     cs::weak_ptr<Something> weak_ptr;
+    ASSERT_EQ(weak_ptr.use_count(), numberOfUseCount);
     weak_ptr = std::move(weak_something);
-
+    ++numberOfUseCount;
     ASSERT_EQ(weak_ptr.use_count(), numberOfUseCount);
 }
 
 TEST(WeakPointerTests, copyAssignmentOperatorShouldCopyPointer) {
-    constexpr size_t numberOfUseCount = 1;
+    size_t numberOfUseCount = 0;
     struct Something {};
     cs::shared_ptr<Something> shared_something(new Something{});
     cs::weak_ptr<Something> weak_something{shared_something};
     cs::weak_ptr<Something> weak_ptr;
+    ASSERT_EQ(weak_ptr.use_count(), numberOfUseCount);
     weak_ptr = weak_something;
+    ++numberOfUseCount;
 
     ASSERT_EQ(weak_ptr.use_count(), numberOfUseCount);
     ASSERT_EQ(weak_something.use_count(), numberOfUseCount);
 }
 
 TEST(WeakPointerTests, WeakPointerResetShouldSetPtrAndControlBlockAsNullPtr) {
-  int expectedValue{100};
-  auto s_ptr = cs::shared_ptr<int>(new int{20});
-  auto next_ptr = cs::shared_ptr<int>(new int{expectedValue});
-  cs::weak_ptr<int> weakSomething{s_ptr};
-  weakSomething.reset();
-  weakSomething = next_ptr;
-  auto locked = weakSomething.lock();
-  ASSERT_EQ(expectedValue, *locked);
+    constexpr size_t numberOfUseCount = 0;
+    int expectedValue{100};
+    auto s_ptr = cs::shared_ptr<int>(new int{20});
+    auto next_ptr = cs::shared_ptr<int>(new int{expectedValue});
+    cs::weak_ptr<int> weakSomething{s_ptr};
+    weakSomething.reset();
+    ASSERT_EQ(weakSomething.use_count(), numberOfUseCount);
+    ASSERT_TRUE(weakSomething.expired());
+    weakSomething = next_ptr;
+    auto locked = weakSomething.lock();
+    ASSERT_EQ(expectedValue, *locked);
 }

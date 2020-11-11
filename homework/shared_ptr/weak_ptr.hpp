@@ -19,7 +19,7 @@ public:
     weak_ptr& operator=(const weak_ptr& ptr) noexcept;
     weak_ptr& operator=(const cs::shared_ptr<T>& ptr) noexcept;
     weak_ptr& operator=(weak_ptr&& ptr) noexcept;
-    long use_count() const { return static_cast<long>(cb_->getShared()); }
+    long use_count() const;
     bool expired() const noexcept { return use_count() == 0; }
     cs::shared_ptr<T> lock() const noexcept;
     void reset() noexcept;
@@ -95,6 +95,15 @@ weak_ptr<T>& weak_ptr<T>::operator=(const cs::shared_ptr<T>& ptr) noexcept {
     cb_->increaseWeakRef();
 
     return *this;
+}
+
+template <typename T>
+long weak_ptr<T>::use_count() const {
+    if(cb_) {
+        return cb_->getShared();
+    } else {
+        return 0;
+    }
 }
 
 template <typename T>

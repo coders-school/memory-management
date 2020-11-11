@@ -24,7 +24,7 @@ public:
     T* get() const { return ptr_; }
     T& operator*() const { return *ptr_; }
     T* operator->() const { return ptr_; }
-    long use_count() const { return static_cast<long>(cb_->getShared()); }
+    long use_count() const { return cb_->getShared(); }
     explicit operator bool() const { return ptr_ != nullptr; }
     void reset(T* ptr = nullptr);
 
