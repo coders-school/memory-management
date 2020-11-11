@@ -24,9 +24,12 @@ TEST(sharedPointerTest, arrowOperatorShouldCallPointedObjectMethods) {
 }
 
 TEST(sharedPointerTest, copyContructorShouldCopyPointer) {
+    size_t numberOfUseCount = 1;
     cs::shared_ptr<int> copied_ptr(new int{1});
+    ASSERT_EQ(copied_ptr.use_count(), numberOfUseCount);
     cs::shared_ptr<int> ptr(copied_ptr);
-
+    ++numberOfUseCount; 
+    ASSERT_EQ(ptr.use_count(), numberOfUseCount);
     ASSERT_EQ(*ptr, 1);
     ASSERT_TRUE(copied_ptr);
 }
@@ -40,10 +43,13 @@ TEST(sharedPointerTest, MovingContructorShouldMovePointer) {
 }
 
 TEST(sharedPointerTest, copyAssignmentOperatorShouldCopyPointer) {
+    size_t numberOfUseCount = 1;
     cs::shared_ptr<int> copied_ptr(new int{1});
     cs::shared_ptr<int> ptr{new int{2}};
+    ASSERT_EQ(copied_ptr.use_count(), numberOfUseCount);
     ptr = copied_ptr;
-
+    ++numberOfUseCount; 
+    ASSERT_EQ(copied_ptr.use_count(), numberOfUseCount);
     ASSERT_EQ(*ptr, 1);
     ASSERT_TRUE(copied_ptr);
 }
@@ -54,29 +60,32 @@ TEST(sharedPointerTest, moveAssignmentOperatorShouldMovePointer) {
     ptr = std::move(copied_ptr);
 
     ASSERT_EQ(*ptr, 1);
-    ASSERT_TRUE(!copied_ptr);
+    ASSERT_FALSE(copied_ptr);
 }
 
 TEST(sharedPointerTest, resetMethodShouldChangePointedObject) {
+    constexpr size_t numberOfUseCount = 1;
     cs::shared_ptr<int> ptr(new int{0});
+    ASSERT_EQ(ptr.use_count(), numberOfUseCount);
     ptr.reset(new int{1});
-
+    ASSERT_EQ(ptr.use_count(), numberOfUseCount);
     ASSERT_EQ(*ptr, 1);
 }
 
-TEST(sharedPointerTest, useCountMethodShouldReturnNumberOfReferences) {
-    cs::shared_ptr<int> copied_ptr(new int{1});
-    size_t numberOfUseCount = 1;
-    ASSERT_EQ(copied_ptr.use_count(), numberOfUseCount);
-
-    cs::shared_ptr<int> ptr(copied_ptr);
-    ++numberOfUseCount;
-    ASSERT_EQ(copied_ptr.use_count(), numberOfUseCount);
+TEST(sharedPointerTest, resetMethodWithoutArgumentsShouldChangePointedObject) {
+    size_t numberOfUseCount = 2;
+    cs::shared_ptr<int> ptr(new int{0});
+    cs::shared_ptr<int> ptr_doing_nothing(ptr);
     ASSERT_EQ(ptr.use_count(), numberOfUseCount);
+    ptr.reset();
+    numberOfUseCount = 1;
+    ASSERT_EQ(ptr.use_count(), numberOfUseCount);
+    ASSERT_EQ(ptr.get(), nullptr);
 }
 
 TEST(makeSharedTest, makeSharedCreatesTheSameValueAsSharedPtr) {
-    cs::shared_ptr<int> someInt(new int{42});
-    auto makeSomeInt = cs::make_shared<int>(42);
+    constexpr int value = 42;
+    cs::shared_ptr<int> someInt(new int{value});
+    auto makeSomeInt = cs::make_shared<int>(value);
     ASSERT_EQ(*makeSomeInt, *someInt);
 }
