@@ -101,8 +101,9 @@ shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr&& ptr) {
 
 template <typename T>
 void shared_ptr<T>::reset(T* ptr) {
-    *ptr_ = *ptr;
-    delete ptr;
+    deletePointers();
+    ptr_ = ptr;
+    cb_ = new ControlBlock<T>;
 }
 
 template <typename Y, typename... Args>
