@@ -14,7 +14,7 @@ template <typename T>
 class shared_ptr {
 public:
     shared_ptr() noexcept = default;
-    shared_ptr(
+    explicit shared_ptr(
         T* ptr,
         std::function<void(T*)> defDeleter = [](T* ptrToDelete) { delete ptrToDelete; })
         : ptr_(ptr), controlBlock_(new SharedControlBlockPtr<T>{ptr, defDeleter}) {}
