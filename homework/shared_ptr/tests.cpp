@@ -39,6 +39,22 @@ protected:
     ControlBlock<int> testControlBlock;
 };
 
+TEST_F(SharedPointerTest, shouldCreateSharedPointerWithArguments)
+{
+    SharedPointer<int> ss_ptr{new int(testValue)};
+
+    ASSERT_EQ(*ss_ptr, testValue);
+    ASSERT_EQ(ss_ptr.use_count(), oneReference);
+}
+
+TEST_F(SharedPointerTest, shouldCreateSharedPointerWithNoArguments)
+{
+    SharedPointer<int> ss_ptr{};
+
+    ASSERT_EQ(ss_ptr.get(), nullptr);
+    ASSERT_EQ(ss_ptr.use_count(), noReferences);
+}
+
 TEST_F(SharedPointerTest, shouldCreateSharedPointerFromWeakPointer)
 {
     WeakPointer<int> w_ptr{s_ptr};
@@ -85,6 +101,7 @@ TEST_F(SharedPointerTest, shouldResetSharedPtrNoArgumentCase)
 {
     s_ptr.reset();
     ASSERT_EQ(s_ptr.get(), nullptr);
+    ASSERT_EQ(s_ptr.use_count(), noReferences);
 }
 
 TEST_F(SharedPointerTest, shouldResetSharedPtrWithArgumentCase)
@@ -213,6 +230,7 @@ TEST(MakeSharedTest, shouldUseMakeSharedOnSingleTestValue)
 {
     auto ms_ptr = MakeShared<int>(testValue);
     ASSERT_EQ(*ms_ptr, testValue);
+    ASSERT_EQ(ms_ptr.use_count(), oneReference);
 }
 
 TEST(MakeSharedTest, shouldUseMakeSharedOnExampleStructure)
