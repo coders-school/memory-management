@@ -24,7 +24,8 @@ struct SharedPtrTest : ::testing::Test {
 };
 
 struct Point2D {
-    Point2D(double xx, double yy) : x(xx), y(yy) {}
+    Point2D(double xx, double yy)
+        : x(xx), y(yy) {}
     double x = SharedPtrTestConst::point_x;
     double y = SharedPtrTestConst::point_y;
     double ComputeMultiplication() { return x * y; }

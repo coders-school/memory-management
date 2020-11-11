@@ -8,16 +8,23 @@ class ControlBlock {
 public:
     virtual ~ControlBlock() = default;
     void incrementSharedRefCounter() { sharedRefCounter_++; }
-    void decrementSharedRefCounter() { sharedRefCounter_--; }
+    void decrementSharedRefCounter() {
+        if (sharedRefCounter_ > 0)
+            sharedRefCounter_--;
+    }
     void increaseWeakRefCounter() { weakRefCounter_++; }
-    void decreaseWeakRefCounter() { weakRefCounter_--; }
+    void decreaseWeakRefCounter() {
+        if (weakRefCounter_ > 0)
+            weakRefCounter_--;
+    }
     size_t getSharedCounter() { return sharedRefCounter_.load(); }
     size_t getWeakCounter() { return weakRefCounter_.load(); }
     void setDeleter(std::function<void(T*)> del) { deleter_ = del; }
+    virtual void callDeleter() {}
     virtual T* getObject() = 0;
 
 protected:
-    std::atomic<size_t> sharedRefCounter_ = 0;
+    std::atomic<size_t> sharedRefCounter_ = 1;
     std::atomic<size_t> weakRefCounter_ = 0;
     std::function<void(T*)> deleter_ = [](T* ptr) { delete ptr; };
 };
@@ -30,13 +37,16 @@ public:
         std::function<void(T*)> deleter = [](T* ptr) { delete ptr; })
         : object_(ptr) {
         this->setDeleter(deleter);
-        if (ptr) {
-            this->sharedRefCounter_ = 1;
+        if (!ptr) {
+            this->sharedRefCounter_ = 0;
         }
     }
 
-    ~ControlBlockPtrData() { callDeleter(); }
-    void callDeleter() { this->deleter_(object_); }
+    void callDeleter() override {
+        this->deleter_(object_);
+    }
+    
+    virtual ~ControlBlockPtrData() { callDeleter(); }
 
     T* getObject() override { return object_; }
 

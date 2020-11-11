@@ -6,6 +6,7 @@
 namespace WeakPtrTestConst {
 constexpr size_t zeroUseCount = 0;
 constexpr size_t oneUseCount = 1;
+constexpr size_t twoUseCount = 2;
 constexpr int intValue = 42;
 }  // namespace WeakPtrTestConst
 
@@ -75,4 +76,21 @@ TEST(WeakPtrTest, WeakPtrCopyAssignment) {
     ASSERT_FALSE(weakPtr.expired());
     ASSERT_FALSE(weakPtr2.expired());
     ASSERT_EQ(*(weakPtr.lock()), *(weakPtr2.lock()));
+}
+
+TEST(WeakPtrTest, weakPtrShouldExpireAndReleaseResourceWhenSharedPtrIsNotExist) {
+    cs::SharedPtr<int> sharedPtr{new int{WeakPtrTestConst::intValue}};
+    cs::WeakPtr<int> weakPtr{sharedPtr};
+    auto sharedPtr2 = weakPtr.lock();
+    ASSERT_EQ(sharedPtr2.use_count(), WeakPtrTestConst::twoUseCount);
+    sharedPtr.reset();
+    ASSERT_EQ(sharedPtr.use_count(), WeakPtrTestConst::zeroUseCount);
+    ASSERT_EQ(weakPtr.use_count(), WeakPtrTestConst::oneUseCount);
+    ASSERT_EQ(sharedPtr2.use_count(), WeakPtrTestConst::oneUseCount);
+    sharedPtr2.reset();
+    ASSERT_EQ(sharedPtr2.use_count(), WeakPtrTestConst::zeroUseCount);
+    ASSERT_EQ(weakPtr.use_count(), WeakPtrTestConst::zeroUseCount);
+    auto sharedPtr3 = weakPtr.lock();
+    ASSERT_FALSE(sharedPtr3);
+    ASSERT_TRUE(weakPtr.expired());
 }
