@@ -23,11 +23,13 @@ TEST_F(SharedPtrTest, shouldDereferenceSharedPtr) {
 TEST_F(SharedPtrTest, shouldCopySharedPtr) {
     constexpr size_t numOfPtrs = 3;
     auto ptr2(ptr);
-    auto ptr3 = ptr;
+    cs::shared_ptr<int> ptr3(new int{initialValue});
 
     ASSERT_EQ(*ptr, *ptr2);
     ASSERT_EQ(*ptr, *ptr3);
 
+    ASSERT_EQ(ptr3.use_count(), 1);
+    ptr3 = ptr;
     ASSERT_EQ(ptr.use_count(), numOfPtrs);
     ASSERT_EQ(ptr2.use_count(), numOfPtrs);
     ASSERT_EQ(ptr3.use_count(), numOfPtrs);
@@ -38,7 +40,9 @@ TEST_F(SharedPtrTest, shouldMoveSharedPtr) {
     ASSERT_EQ(*ptr2, initialValue);
     ASSERT_EQ(ptr2.use_count(), 1);
 
-    auto ptr3 = std::move(ptr2);
+    cs::shared_ptr<int> ptr3(new int{initialValue});
+    ASSERT_EQ(ptr3.use_count(), 1);
+    ptr3 = std::move(ptr2);
     ASSERT_EQ(*ptr3, initialValue);
     ASSERT_EQ(ptr3.use_count(), 1);
 }
