@@ -52,6 +52,22 @@ TEST_F(SharedPointerTest, shouldCreateSharedPointerFromWeakPointer) {
     ASSERT_EQ(rss_ptr.get(), rs_ptr.get());
 }
 
+TEST_F(SharedPointerTest, shouldNotCreateSharedPointerFromExpiredWeakPointer) {
+    WeakPointer<int> w_ptr{s_ptr};
+    WeakPointer<int> w_ptrNew{std::move(w_ptr)};
+
+    ASSERT_TRUE(w_ptr.expired());
+
+    ASSERT_THROW(SharedPointer<int> ss_ptr{w_ptr}, BadWeakPointer);
+
+    std::weak_ptr<int> rw_ptr{rs_ptr};
+    std::weak_ptr<int> rw_ptrNew{std::move(rw_ptr)};
+
+    ASSERT_TRUE(rw_ptr.expired());
+
+    ASSERT_THROW(std::shared_ptr<int> rss_ptr{rw_ptr}, std::bad_weak_ptr);
+}
+
 TEST_F(SharedPointerTest, shouldCopySharedPointer) {
     auto newPtr(s_ptr);
     auto newPtr1 = s_ptr;
@@ -79,25 +95,25 @@ TEST_F(SharedPointerTest, shouldMoveSharedPointer) {
 }
 
 TEST_F(SharedPointerTest, shouldUseCopyAssingnmentOperatorSharedPointer) {
-    SharedPointer<int> newPtr;
+    SharedPointer<int> newPtr{new int{}};
     newPtr = s_ptr;
     ASSERT_EQ(*s_ptr, testValue);
     ASSERT_EQ(s_ptr.use_count(), twoReferences);
 
-    std::shared_ptr<int> newRPtr;
+    std::shared_ptr<int> newRPtr{new int{}};
     newRPtr = rs_ptr;
     ASSERT_EQ(*rs_ptr, testValue);
     ASSERT_EQ(rs_ptr.use_count(), twoReferences);
 }
 
 TEST_F(SharedPointerTest, shouldUseMoveAssingnmentOperatorSharedPointer) {
-    SharedPointer<int> newPtr;
+    SharedPointer<int> newPtr{new int{}};
     newPtr = std::move(s_ptr);
     ASSERT_EQ(*newPtr, testValue);
     ASSERT_EQ(newPtr.use_count(), oneReference);
     ASSERT_EQ(s_ptr.get(), nullptr);
 
-    std::shared_ptr<int> newRPtr;
+    std::shared_ptr<int> newRPtr{new int{}};
     newRPtr = std::move(rs_ptr);
     ASSERT_EQ(*newRPtr, testValue);
     ASSERT_EQ(newRPtr.use_count(), oneReference);
