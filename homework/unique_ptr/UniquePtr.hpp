@@ -40,11 +40,11 @@ UniquePtr<T>::~UniquePtr() {
 }
 
 template <typename T>
-UniquePtr<T> & UniquePtr<T>::operator=(UniquePtr<T> && otherUniquePtr) {
-    if (this != & otherUniquePtr) {
+UniquePtr<T> & UniquePtr<T>::operator=(UniquePtr<T> && uniquePtrToMove) {
+    if (this != & uniquePtrToMove) {
         delete rawPtr_;
-        rawPtr_ = otherUniquePtr.rawPtr_;
-        otherUniquePtr = nullptr;
+        rawPtr_ = uniquePtrToMove.rawPtr_;
+        uniquePtrToMove.rawPtr_ = nullptr;
     }
     return * this;
 }

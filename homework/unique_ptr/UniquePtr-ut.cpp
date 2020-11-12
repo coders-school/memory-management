@@ -4,6 +4,7 @@
 
 constexpr int testDistance = 50;
 constexpr int newTestDistance = 100;
+constexpr int newTestTime = 4;
 constexpr int otherDistance = 30;
 constexpr int otherTime = 2;
 
@@ -69,4 +70,12 @@ TEST_F(UniquePointerTest, SecondUniquePtrShouldGetValuesFromMovedOne) {
     UniquePtr<Velocity> VelocityPtrFirst = new Velocity(otherDistance, otherTime);
     UniquePtr<Velocity> VelocityPtrSecond = std::move(VelocityPtrFirst);
     ASSERT_EQ(VelocityPtrSecond.get()->countVelocity(), otherDistance / otherTime);
+}
+
+TEST_F(UniquePointerTest, SecondUniquePtrShouldGetValuesFromMovedOneByMovingOperatorAndFirstUniquePtrShouldBeANullptr) {
+    UniquePtr<Velocity> VelocityPtrFirst = new Velocity(newTestDistance, newTestTime);
+    UniquePtr<Velocity> VelocityPtrSecond = new Velocity(otherDistance, otherTime);
+    VelocityPtrSecond = std::move(VelocityPtrFirst);
+    ASSERT_EQ(VelocityPtrFirst.get(), nullptr);
+    ASSERT_EQ(VelocityPtrSecond.get()->countVelocity(), newTestDistance / newTestTime);
 }
