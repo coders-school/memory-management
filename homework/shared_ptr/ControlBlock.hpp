@@ -49,13 +49,21 @@ template <typename T>
 class ControlBlockData : public ControlBlockBase<T> {
 public:
     template <typename... Args>
-    ControlBlockData(Args&&... args) : data_(std::forward<Args>(args)...) {}
+    ControlBlockData(Args&&... args) : data_(std::forward<Args>(args)...) {
+        if(sizeof...(args) > 0){
+            isInitialized_ = true;
+        }
+    }
     T* getData() override {
         return &data_;
+    }
+    bool isInitialized() {
+        return isInitialized_;
     }
 
 private:
     T data_{};
+    bool isInitialized_{};
 };
 
 template <typename T>

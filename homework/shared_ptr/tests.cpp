@@ -302,3 +302,10 @@ TEST(MakeSharedTest, shouldUseMakeSharedOnExampleStructure) {
     ASSERT_EQ(rms_ptr->y_, testValue);
     ASSERT_EQ(rms_ptr->z_, testValue);
 }
+
+TEST(MakeSharedTest, shouldUseMakeSharedWithNoArguments)
+{
+    auto ms_ptr = MakeShared<int>();
+    ASSERT_EQ(ms_ptr.get(), nullptr);
+    ASSERT_EQ(ms_ptr.use_count(), noReferences);
+}
