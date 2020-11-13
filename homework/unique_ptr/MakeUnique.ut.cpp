@@ -78,5 +78,51 @@ SCENARIO("Using make unique to initialize unique pointers", "[makeUniquePtr]")
                 }
             }
         }
+
+        WHEN("Using MakeUnique<TestingClass>()")
+        {
+            TestingClass testClassCreatedWithLValue;
+            auto ptr = MakeUnique<TestingClass>(testClassCreatedWithLValue);
+
+            THEN("Should return an UniquePointer to TestingClass initialzied with lValue constructor")
+            {
+                REQUIRE(ptr->testingGetter() == TestingClass::lValueChecker);
+            }
+        }
+
+        WHEN("Using MakeUnique<TestingClass>(std::move())")
+        {
+            TestingClass testClassCreatedWithRValue;
+            auto ptr = MakeUnique<TestingClass>(std::move(testClassCreatedWithRValue));
+
+            THEN("Should return an UniquePointer to TestingClass initialzied with lValue constructor")
+            {
+                REQUIRE(ptr->testingGetter() == TestingClass::rValueChecker);
+            }
+        }
+
+        WHEN("Using MakeUnique<TestingClass> operator = to lValue")
+        {
+            TestingClass testClassCreatedWithLValue;
+            UniquePointer<TestingClass> ptr;
+            ptr = MakeUnique<TestingClass>(testClassCreatedWithLValue);
+
+            THEN("Should return an UniquePointer to TestingClass created with operator = to lValue")
+            {
+                REQUIRE(ptr->testingGetter() == TestingClass::lValueChecker);
+            }
+        }
+
+        WHEN("Using MakeUnique<TestingClass> operator = to rValue")
+        {
+            TestingClass testClassCreatedWithRValue;
+            UniquePointer<TestingClass> ptr;
+            ptr = MakeUnique<TestingClass>(std::move(testClassCreatedWithRValue));
+
+            THEN("Should return an UniquePointer to TestingClass created with operator = to rValue")
+            {
+                REQUIRE(ptr->testingGetter() == TestingClass::rValueChecker);
+            }
+        }
     }
 }
