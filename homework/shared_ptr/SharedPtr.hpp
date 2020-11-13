@@ -6,6 +6,12 @@ namespace cs {
 template <typename T>
 class WeakPtr;
 
+class ExpiredWeakPtr : public std::exception {
+public:
+    explicit ExpiredWeakPtr(std::string&){};
+    explicit ExpiredWeakPtr(const char*){};
+};
+
 template <typename T>
 class SharedPtr {
 public:
@@ -40,7 +46,7 @@ private:
 
     void handleSharedPtrAndControlBlockDelete();
     explicit SharedPtr(SharedControlBlockData<T>* newBlock)
-        : shControlBlock_(newBlock) { ptr_ = newBlock->getObj(); }
+        : ptr_(newBlock->getObj()), shControlBlock_(newBlock) {}
 
     template <typename>
     friend class cs::WeakPtr;
@@ -73,6 +79,9 @@ SharedPtr<T>::SharedPtr(T* ptr, std::function<void(T*)> deleter)
 template <typename T>
 SharedPtr<T>::SharedPtr(const WeakPtr<T>& weakPtr)
     : ptr_(weakPtr.ptr_), shControlBlock_(weakPtr.controlBlock_) {
+    if (weakPtr.expired()) {
+        throw cs::ExpiredWeakPtr("Expired weak pointer");
+    }
     if (shControlBlock_ != nullptr) {
         shControlBlock_->incrementSharedRefsCount();
     }

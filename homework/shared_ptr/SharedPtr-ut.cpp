@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "SharedPtr.hpp"
+#include "WeakPtr.hpp"
 
 constexpr int initValue = 5;
 constexpr int newValue = 10;
@@ -93,4 +94,10 @@ TEST_F(SharedPtrTest, ShouldCalculateUseCountWhenMoveingSharedPtr) {
     auto tempPtrSharedCountsAfterMove = tempPtr.use_count();
 
     ASSERT_EQ(initTestSharedCounts, tempPtrSharedCountsAfterMove);
+}
+
+TEST_F(SharedPtrTest, ShouldThrowWhenConstructedFromEmptyWeakPtr) {
+    cs::WeakPtr<int> weakPtr{};
+
+    ASSERT_THROW(cs::SharedPtr<int> sharedPtr{weakPtr}, cs::ExpiredWeakPtr);
 }
