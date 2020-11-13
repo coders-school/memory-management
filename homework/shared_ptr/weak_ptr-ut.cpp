@@ -60,14 +60,18 @@ TEST(WeakPointerTests, copyAssignmentOperatorShouldCopyPointer) {
 }
 
 TEST(WeakPointerTests, WeakPointerResetShouldSetPtrAndControlBlockAsNullPtr) {
-    constexpr size_t numberOfUseCount = 0;
+    constexpr size_t useCountBeforeReset = 1;
+    constexpr size_t useCountAfterReset = 0;
+    constexpr int value = 20;
     int expectedValue{100};
-    auto s_ptr = cs::shared_ptr<int>(new int{20});
+    auto s_ptr = cs::shared_ptr<int>(new int{value});
     auto next_ptr = cs::shared_ptr<int>(new int{expectedValue});
     cs::weak_ptr<int> weakSomething{s_ptr};
+    ASSERT_EQ(weakSomething.use_count(), useCountBeforeReset);
     weakSomething.reset();
-    ASSERT_EQ(weakSomething.use_count(), numberOfUseCount);
+    ASSERT_EQ(weakSomething.use_count(), useCountAfterReset);
     ASSERT_TRUE(weakSomething.expired());
+    ASSERT_EQ(*s_ptr, value);
     weakSomething = next_ptr;
     auto locked = weakSomething.lock();
     ASSERT_EQ(expectedValue, *locked);
