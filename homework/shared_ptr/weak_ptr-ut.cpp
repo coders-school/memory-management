@@ -34,26 +34,26 @@ TEST(WeakPointerTests, WeakPointerLock) {
 }
 
 TEST(WeakPointerTests, moveAssignmentOperatorShouldMovePointer) {
-    size_t numberOfUseCount = 0;
+    constexpr size_t numberOfUseCount = 1;
     struct Something {};
     cs::shared_ptr<Something> shared_something(new Something{});
+    cs::shared_ptr<Something> doing_nothing(new Something{});
     cs::weak_ptr<Something> weak_something{shared_something};
-    cs::weak_ptr<Something> weak_ptr;
+    cs::weak_ptr<Something> weak_ptr{doing_nothing};
     ASSERT_EQ(weak_ptr.use_count(), numberOfUseCount);
     weak_ptr = std::move(weak_something);
-    ++numberOfUseCount;
     ASSERT_EQ(weak_ptr.use_count(), numberOfUseCount);
 }
 
 TEST(WeakPointerTests, copyAssignmentOperatorShouldCopyPointer) {
-    size_t numberOfUseCount = 0;
+    constexpr size_t numberOfUseCount = 1;
     struct Something {};
     cs::shared_ptr<Something> shared_something(new Something{});
+    cs::shared_ptr<Something> doing_nothing(new Something{});
     cs::weak_ptr<Something> weak_something{shared_something};
-    cs::weak_ptr<Something> weak_ptr;
+    cs::weak_ptr<Something> weak_ptr{doing_nothing};
     ASSERT_EQ(weak_ptr.use_count(), numberOfUseCount);
     weak_ptr = weak_something;
-    ++numberOfUseCount;
 
     ASSERT_EQ(weak_ptr.use_count(), numberOfUseCount);
     ASSERT_EQ(weak_something.use_count(), numberOfUseCount);
