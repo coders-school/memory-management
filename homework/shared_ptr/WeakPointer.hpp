@@ -112,6 +112,7 @@ WeakPointer<T>& WeakPointer<T>::operator=(const WeakPointer<T>& anotherPtr) {
         ptr_ = anotherPtr.ptr_;
         refCounter_ = anotherPtr.refCounter_;
         refCounter_->increaseWeak();
+        checkControlBlock();
     }
     return *this;
 }
@@ -123,6 +124,7 @@ WeakPointer<T>& WeakPointer<T>::operator=(WeakPointer<T>&& anotherPtr) {
         refCounter_ = anotherPtr.refCounter_;
         anotherPtr.ptr_ = nullptr;
         anotherPtr.refCounter_ = nullptr;
+        checkControlBlock();
     }
     return *this;
 }

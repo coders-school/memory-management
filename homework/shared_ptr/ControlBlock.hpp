@@ -50,7 +50,7 @@ class ControlBlockData : public ControlBlockBase<T> {
 public:
     template <typename... Args>
     ControlBlockData(Args&&... args) : data_(std::forward<Args>(args)...) {
-        if(sizeof...(args) > 0){
+        if (sizeof...(args) > 0) {
             isInitialized_ = true;
         }
     }
@@ -88,7 +88,9 @@ void ControlBlockBase<T>::increaseShared() {
 
 template <typename T>
 void ControlBlockBase<T>::decreaseWeak() {
-    --weakRefs_;
+    if (weakRefs_ > 0) {
+        --weakRefs_;
+    }
 }
 
 template <typename T>
