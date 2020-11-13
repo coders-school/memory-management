@@ -112,6 +112,7 @@ WeakPointer<T>& WeakPointer<T>::operator=(const WeakPointer<T>& anotherPtr) {
         ptr_ = anotherPtr.ptr_;
         refCounter_ = anotherPtr.refCounter_;
         refCounter_->increaseWeak();
+        checkControlBlock();
     }
     return *this;
 }
@@ -123,13 +124,16 @@ WeakPointer<T>& WeakPointer<T>::operator=(WeakPointer<T>&& anotherPtr) {
         refCounter_ = anotherPtr.refCounter_;
         anotherPtr.ptr_ = nullptr;
         anotherPtr.refCounter_ = nullptr;
+        checkControlBlock();
     }
     return *this;
 }
 
 template <typename T>
 void WeakPointer<T>::checkControlBlock() {
-    refCounter_->decreaseWeak();
+    if (refCounter_->getWeak() > 0) {
+        refCounter_->decreaseWeak();
+    }
     if (refCounter_->getShared() == 0 && refCounter_->getWeak() == 0) {
         delete refCounter_;
     }
