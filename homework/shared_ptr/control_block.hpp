@@ -13,8 +13,8 @@ public:
     void decreaseSharedRef() { shared_refs -= 1; }
     void increaseWeakRef() { weak_refs += 1; }
     void decreaseWeakRef() { weak_refs -= 1; }
-    std::atomic<size_t>& getShared() { return shared_refs; }
-    std::atomic<size_t>& getWeak() { return weak_refs; }
+    size_t getShared() { return shared_refs; }
+    size_t getWeak() { return weak_refs; }
     std::function<void(T*)>& getDeleter() { return deleter; }
     virtual ~ControlBlock() = default;
 
