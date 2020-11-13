@@ -91,3 +91,21 @@ TEST(makeSharedTest, makeSharedCreatesTheSameValueAsSharedPtr) {
     auto makeSomeInt = cs::make_shared<int>(value);
     ASSERT_EQ(*makeSomeInt, *someInt);
 }
+
+TEST(makeSharedTest, makeSharedShouldNotAfectCopying) {
+    constexpr size_t useCountBeforeCopy = 1;
+    constexpr size_t useCountAfterCopy = 2;
+    const std::string str = "string";
+    auto copied_ptr = cs::make_shared<std::string>(str);
+    ASSERT_EQ(copied_ptr.use_count(), useCountBeforeCopy);
+    auto ptr(copied_ptr);
+    ASSERT_EQ(*ptr, str);
+    ASSERT_EQ(ptr.use_count(), useCountAfterCopy);
+}
+
+TEST(makeSharedTest, makeSharedShouldNotAfectMoving) {
+    const std::string str = "string";
+    auto moved_ptr = cs::make_shared<std::string>(str);
+    auto ptr(std::move(moved_ptr));
+    ASSERT_EQ(*ptr, str);
+}
