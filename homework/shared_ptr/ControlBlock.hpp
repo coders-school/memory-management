@@ -19,8 +19,6 @@ public:
     }
     size_t getSharedCounter() { return sharedRefCounter_.load(); }
     size_t getWeakCounter() { return weakRefCounter_.load(); }
-    void setDeleter(std::function<void(T*)> del) { deleter_ = del; }
-    virtual void callDeleter() {}
     virtual T* getObject() = 0;
 
 protected:
@@ -36,16 +34,16 @@ public:
         T* ptr = nullptr,
         std::function<void(T*)> deleter = [](T* ptr) { delete ptr; })
         : object_(ptr) {
-        this->setDeleter(deleter);
+        this->deleter_ = deleter;
         if (!ptr) {
             this->sharedRefCounter_ = 0;
         }
     }
 
-    void callDeleter() override {
+    void callDeleter() {
         this->deleter_(object_);
     }
-    
+
     virtual ~ControlBlockPtrData() { callDeleter(); }
 
     T* getObject() override { return object_; }
