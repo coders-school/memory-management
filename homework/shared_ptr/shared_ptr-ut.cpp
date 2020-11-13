@@ -24,12 +24,13 @@ TEST(sharedPointerTest, arrowOperatorShouldCallPointedObjectMethods) {
 }
 
 TEST(sharedPointerTest, copyContructorShouldCopyPointer) {
-    size_t numberOfUseCount = 1;
+    constexpr size_t useCountBeforeCopy = 1;
+    constexpr size_t useCountAfterCopy = 2;
     cs::shared_ptr<int> copied_ptr(new int{1});
-    ASSERT_EQ(copied_ptr.use_count(), numberOfUseCount);
+    ASSERT_EQ(copied_ptr.use_count(), useCountBeforeCopy);
     cs::shared_ptr<int> ptr(copied_ptr);
-    ++numberOfUseCount; 
-    ASSERT_EQ(ptr.use_count(), numberOfUseCount);
+
+    ASSERT_EQ(ptr.use_count(), useCountAfterCopy);
     ASSERT_EQ(*ptr, 1);
     ASSERT_TRUE(copied_ptr);
 }
@@ -43,13 +44,14 @@ TEST(sharedPointerTest, MovingContructorShouldMovePointer) {
 }
 
 TEST(sharedPointerTest, copyAssignmentOperatorShouldCopyPointer) {
-    size_t numberOfUseCount = 1;
+    constexpr size_t useCountBeforeCopy = 1;
+    constexpr size_t useCountAfterCopy = 2;
     cs::shared_ptr<int> copied_ptr(new int{1});
     cs::shared_ptr<int> ptr{new int{2}};
-    ASSERT_EQ(copied_ptr.use_count(), numberOfUseCount);
+    ASSERT_EQ(copied_ptr.use_count(), useCountBeforeCopy);
     ptr = copied_ptr;
-    ++numberOfUseCount; 
-    ASSERT_EQ(copied_ptr.use_count(), numberOfUseCount);
+
+    ASSERT_EQ(copied_ptr.use_count(), useCountAfterCopy);
     ASSERT_EQ(*ptr, 1);
     ASSERT_TRUE(copied_ptr);
 }
@@ -73,13 +75,13 @@ TEST(sharedPointerTest, resetMethodShouldChangePointedObject) {
 }
 
 TEST(sharedPointerTest, resetMethodWithoutArgumentsShouldChangePointedObject) {
-    constexpr size_t UseCount_before_reset = 2;
-    constexpr size_t UseCount_after_reset = 0;
+    constexpr size_t useCountBeforeReset = 2;
+    constexpr size_t useCountAfterReset = 0;
     cs::shared_ptr<int> ptr(new int{0});
     cs::shared_ptr<int> ptr_doing_nothing(ptr);
-    ASSERT_EQ(ptr.use_count(), UseCount_before_reset);
+    ASSERT_EQ(ptr.use_count(), useCountBeforeReset);
     ptr.reset();
-    ASSERT_EQ(ptr.use_count(), UseCount_after_reset);
+    ASSERT_EQ(ptr.use_count(), useCountAfterReset);
     ASSERT_EQ(ptr.get(), nullptr);
 }
 
