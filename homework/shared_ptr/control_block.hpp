@@ -3,10 +3,12 @@
 #include <atomic>
 #include <functional>
 
+auto delete_function = [](auto* ptr) { delete ptr; };;
+
 template <typename T>
 class ControlBlock {
 public:
-    ControlBlock() = default;
+    ControlBlock(std::function<void(T*)> del = delete_function) : deleter(del) {}
     void increaseSharedRef() { shared_refs += 1; }
     void decreaseSharedRef() { shared_refs -= 1; }
     void increaseWeakRef() { weak_refs += 1; }
@@ -19,7 +21,7 @@ public:
 private:
     std::atomic<size_t> shared_refs = 1;
     std::atomic<size_t> weak_refs = 0;
-    std::function<void(T*)> deleter = [](T* ptr) { delete ptr; };
+    std::function<void(T*)> deleter;
 };
 
 template <typename T>
