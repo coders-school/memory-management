@@ -24,7 +24,7 @@ public:
     T* get() const { return ptr_; }
     T& operator*() const { return *ptr_; }
     T* operator->() const { return ptr_; }
-    long use_count() const { return cb_->getShared(); }
+    long use_count() const;
     explicit operator bool() const { return ptr_ != nullptr; }
     void reset(T* ptr = nullptr);
 
@@ -97,6 +97,15 @@ shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr&& ptr) {
         ptr.cb_ = nullptr;
     }
     return *this;
+}
+
+template<typename T>
+long shared_ptr<T>::use_count() const {
+    if(ptr_) {
+        return cb_->getShared();
+    } else {
+        return 0;
+    }
 }
 
 template <typename T>

@@ -73,13 +73,13 @@ TEST(sharedPointerTest, resetMethodShouldChangePointedObject) {
 }
 
 TEST(sharedPointerTest, resetMethodWithoutArgumentsShouldChangePointedObject) {
-    size_t numberOfUseCount = 2;
+    constexpr size_t UseCount_before_reset = 2;
+    constexpr size_t UseCount_after_reset = 0;
     cs::shared_ptr<int> ptr(new int{0});
     cs::shared_ptr<int> ptr_doing_nothing(ptr);
-    ASSERT_EQ(ptr.use_count(), numberOfUseCount);
+    ASSERT_EQ(ptr.use_count(), UseCount_before_reset);
     ptr.reset();
-    numberOfUseCount = 1;
-    ASSERT_EQ(ptr.use_count(), numberOfUseCount);
+    ASSERT_EQ(ptr.use_count(), UseCount_after_reset);
     ASSERT_EQ(ptr.get(), nullptr);
 }
 
