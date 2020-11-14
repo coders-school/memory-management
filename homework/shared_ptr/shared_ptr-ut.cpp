@@ -1,4 +1,5 @@
 #include <string>
+#include <tuple>
 #include "gtest/gtest.h"
 #include "shared_ptr.hpp"
 #include "weak_ptr.hpp"
@@ -108,4 +109,20 @@ TEST(makeSharedTest, makeSharedShouldNotAfectMoving) {
     auto moved_ptr = cs::make_shared<std::string>(str);
     auto ptr(std::move(moved_ptr));
     ASSERT_EQ(*ptr, str);
+}
+
+TEST(makeSharedTest, makeSharedWorksForMultipleParameters) {
+    constexpr size_t expectedUseCount{1};
+    const std::tuple<int, int, int> expectedPair{2, 3, 4};
+    auto ptr = cs::make_shared<std::tuple<int, int, int>>(2, 3, 4);
+    ASSERT_EQ(*ptr, expectedPair);
+    ASSERT_EQ(ptr.use_count(), expectedUseCount);
+}
+
+TEST(makeSharedTest, makeSharedWorksForZeroParameters) {
+    const std::string str;
+    constexpr size_t expectedUseCount{1};
+    auto ptr = cs::make_shared<std::string>();
+    ASSERT_EQ(*ptr, str);
+    ASSERT_EQ(ptr.use_count(), expectedUseCount);
 }
