@@ -57,7 +57,7 @@ public:
     T* getData() override {
         return &data_;
     }
-    bool isInitialized() {
+    bool isAnyArgumentPassInConstructor() {
         return isWithArgs_;
     }
 

@@ -56,7 +56,7 @@ private:
     SharedPointer(ControlBlockData<T>* refCounter)
     {
         refCounter_ = refCounter;
-        if (refCounter->isInitialized()) {
+        if (refCounter->isAnyArgumentPassInConstructor()) {
             ptr_ = refCounter_->getData();
             refCounter_ = refCounter;
         }
