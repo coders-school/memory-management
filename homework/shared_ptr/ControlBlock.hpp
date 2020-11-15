@@ -51,19 +51,19 @@ public:
     template <typename... Args>
     ControlBlockData(Args&&... args) : data_(std::forward<Args>(args)...) {
         if (sizeof...(args) > 0) {
-            isInitialized_ = true;
+            isNotNullPtr_ = true;
         }
     }
     T* getData() override {
         return &data_;
     }
     bool isInitialized() {
-        return isInitialized_;
+        return isNotNullPtr_;
     }
 
 private:
     T data_{};
-    bool isInitialized_{};
+    bool isNotNullPtr_{};
 };
 
 template <typename T>
