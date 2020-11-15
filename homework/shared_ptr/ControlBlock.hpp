@@ -30,13 +30,17 @@ public:
     ControlBlock(
         T* ptr = nullptr,
         std::function<void(T*)> deleter = [](T* ptrToDelete) { delete ptrToDelete; })
-        : refs_(ptr), deleter_(deleter) {}
+        : refs_(ptr), deleter_(deleter)
+    {
+    }
 
-    ~ControlBlock() {
+    ~ControlBlock()
+    {
         deleter_(refs_);
     }
 
-    T* getData() override {
+    T* getData() override
+    {
         return refs_;
     }
 
@@ -49,57 +53,61 @@ template <typename T>
 class ControlBlockData : public ControlBlockBase<T> {
 public:
     template <typename... Args>
-    ControlBlockData(Args&&... args) : data_(std::forward<Args>(args)...) {
-        if (sizeof...(args) > 0) {
-            isWithArgs_ = true;
-        }
+    ControlBlockData(Args&&... args)
+        : data_{std::forward<Args>(args)...}
+    {
     }
-    T* getData() override {
+    T* getData() override
+    {
         return &data_;
-    }
-    bool isAnyArgumentPassInConstructor() {
-        return isWithArgs_;
     }
 
 private:
     T data_{};
-    bool isWithArgs_{};
 };
 
 template <typename T>
-size_t ControlBlockBase<T>::getShared() {
+size_t ControlBlockBase<T>::getShared()
+{
     return sharedRefs_.load();
 }
 
 template <typename T>
-size_t ControlBlockBase<T>::getWeak() {
+size_t ControlBlockBase<T>::getWeak()
+{
     return weakRefs_.load();
 }
 
 template <typename T>
-void ControlBlockBase<T>::increaseWeak() {
+void ControlBlockBase<T>::increaseWeak()
+{
     ++weakRefs_;
 }
 
 template <typename T>
-void ControlBlockBase<T>::increaseShared() {
+void ControlBlockBase<T>::increaseShared()
+{
     ++sharedRefs_;
 }
 
 template <typename T>
-void ControlBlockBase<T>::decreaseWeak() {
+void ControlBlockBase<T>::decreaseWeak()
+{
     if (weakRefs_ > 0) {
         --weakRefs_;
-    } else {
+    }
+    else {
         weakRefs_ = 0;
     }
 }
 
 template <typename T>
-void ControlBlockBase<T>::decreaseShared() {
+void ControlBlockBase<T>::decreaseShared()
+{
     if (sharedRefs_ > 0) {
         --sharedRefs_;
-    } else {
+    }
+    else {
         sharedRefs_ = 0;
     }
 }
