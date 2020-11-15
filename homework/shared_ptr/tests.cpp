@@ -321,6 +321,11 @@ TEST_F(WeakPointerTest, shouldSharedPointerAndWeakPointersCooperateWhenUsingThei
 
     WeakPointer<int> w2_ptr(w_ptr);
     ASSERT_EQ(w_ptr.use_count(), noReferences);
+    ASSERT_EQ(w2_ptr.use_count(), noReferences);
+
+    w2_ptr = s2_ptrNew;
+
+    ASSERT_EQ(w2_ptr.use_count(), twoReferences);
 }
 
 TEST_F(ControlBlockTest, shouldGetSharedRefs)
