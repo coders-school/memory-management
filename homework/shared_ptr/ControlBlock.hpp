@@ -88,10 +88,18 @@ void ControlBlockBase<T>::increaseShared() {
 
 template <typename T>
 void ControlBlockBase<T>::decreaseWeak() {
-    --weakRefs_;
+    if (weakRefs_ > 0) {
+        --weakRefs_;
+    } else {
+        weakRefs_ = 0;
+    }
 }
 
 template <typename T>
 void ControlBlockBase<T>::decreaseShared() {
-    --sharedRefs_;
+    if (sharedRefs_ > 0) {
+        --sharedRefs_;
+    } else {
+        sharedRefs_ = 0;
+    }
 }
