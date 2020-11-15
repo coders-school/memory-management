@@ -56,10 +56,11 @@ private:
     SharedPointer(ControlBlockData<T>* refCounter)
     {
         refCounter_ = refCounter;
-        if(refCounter->isInitialized()){
-        ptr_ = refCounter_->getData();
-        refCounter_ = refCounter;
-        } else {
+        if (refCounter->isInitialized()) {
+            ptr_ = refCounter_->getData();
+            refCounter_ = refCounter;
+        }
+        else {
             ptr_ = nullptr;
             refCounter_->decreaseShared();
         }

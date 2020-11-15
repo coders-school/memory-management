@@ -14,21 +14,24 @@ constexpr int threeReferences = 3;
 
 class TestClass {
 public:
-    int testFunction() {
+    int testFunction()
+    {
         return testValue;
     }
 };
 
 class SharedPointerTest : public ::testing::Test {
 protected:
-    SharedPointerTest() : s_ptr(new int{testValue}), rs_ptr(new int{testValue}) {}
+    SharedPointerTest()
+        : s_ptr(new int{testValue}), rs_ptr(new int{testValue}) {}
     SharedPointer<int> s_ptr;
     std::shared_ptr<int> rs_ptr;
 };
 
 class WeakPointerTest : public ::testing::Test {
 protected:
-    WeakPointerTest() : ss_ptr(new int{testValue}), rss_ptr(new int{testValue}) {}
+    WeakPointerTest()
+        : ss_ptr(new int{testValue}), rss_ptr(new int{testValue}) {}
     SharedPointer<int> ss_ptr;
     WeakPointer<int> w_ptr{ss_ptr};
     std::shared_ptr<int> rss_ptr;
@@ -40,7 +43,8 @@ protected:
     ControlBlock<int> testControlBlock;
 };
 
-TEST_F(SharedPointerTest, shouldCreateSharedPointerFromWeakPointer) {
+TEST_F(SharedPointerTest, shouldCreateSharedPointerFromWeakPointer)
+{
     WeakPointer<int> w_ptr{s_ptr};
     SharedPointer<int> ss_ptr{w_ptr};
 
@@ -52,7 +56,8 @@ TEST_F(SharedPointerTest, shouldCreateSharedPointerFromWeakPointer) {
     ASSERT_EQ(rss_ptr.get(), rs_ptr.get());
 }
 
-TEST_F(SharedPointerTest, shouldNotCreateSharedPointerFromExpiredWeakPointer) {
+TEST_F(SharedPointerTest, shouldNotCreateSharedPointerFromExpiredWeakPointer)
+{
     WeakPointer<int> w_ptr{s_ptr};
     WeakPointer<int> w_ptrNew{std::move(w_ptr)};
 
@@ -68,7 +73,8 @@ TEST_F(SharedPointerTest, shouldNotCreateSharedPointerFromExpiredWeakPointer) {
     ASSERT_THROW(std::shared_ptr<int> rss_ptr{rw_ptr}, std::bad_weak_ptr);
 }
 
-TEST_F(SharedPointerTest, shouldCopySharedPointer) {
+TEST_F(SharedPointerTest, shouldCopySharedPointer)
+{
     auto newPtr(s_ptr);
     auto newPtr1 = s_ptr;
 
@@ -84,7 +90,8 @@ TEST_F(SharedPointerTest, shouldCopySharedPointer) {
     ASSERT_EQ(rs_ptr.use_count(), threeReferences);
 }
 
-TEST_F(SharedPointerTest, shouldMoveSharedPointer) {
+TEST_F(SharedPointerTest, shouldMoveSharedPointer)
+{
     auto newPtr(std::move(s_ptr));
     ASSERT_EQ(*newPtr, testValue);
     ASSERT_EQ(newPtr.use_count(), oneReference);
@@ -94,7 +101,8 @@ TEST_F(SharedPointerTest, shouldMoveSharedPointer) {
     ASSERT_EQ(newRPtr.use_count(), oneReference);
 }
 
-TEST_F(SharedPointerTest, shouldUseCopyAssingnmentOperatorSharedPointer) {
+TEST_F(SharedPointerTest, shouldUseCopyAssingnmentOperatorSharedPointer)
+{
     SharedPointer<int> newPtr{new int{}};
     newPtr = s_ptr;
     ASSERT_EQ(*s_ptr, testValue);
@@ -106,7 +114,8 @@ TEST_F(SharedPointerTest, shouldUseCopyAssingnmentOperatorSharedPointer) {
     ASSERT_EQ(rs_ptr.use_count(), twoReferences);
 }
 
-TEST_F(SharedPointerTest, shouldUseMoveAssingnmentOperatorSharedPointer) {
+TEST_F(SharedPointerTest, shouldUseMoveAssingnmentOperatorSharedPointer)
+{
     SharedPointer<int> newPtr{new int{}};
     newPtr = std::move(s_ptr);
     ASSERT_EQ(*newPtr, testValue);
@@ -119,7 +128,8 @@ TEST_F(SharedPointerTest, shouldUseMoveAssingnmentOperatorSharedPointer) {
     ASSERT_EQ(newRPtr.use_count(), oneReference);
     ASSERT_EQ(rs_ptr.get(), nullptr);
 }
-TEST_F(SharedPointerTest, shouldResetSharedPtrNoArgumentCase) {
+TEST_F(SharedPointerTest, shouldResetSharedPtrNoArgumentCase)
+{
     s_ptr.reset();
     ASSERT_EQ(s_ptr.get(), nullptr);
 
@@ -127,7 +137,8 @@ TEST_F(SharedPointerTest, shouldResetSharedPtrNoArgumentCase) {
     ASSERT_EQ(rs_ptr.get(), nullptr);
 }
 
-TEST_F(SharedPointerTest, shouldResetSharedPtrWithArgumentCase) {
+TEST_F(SharedPointerTest, shouldResetSharedPtrWithArgumentCase)
+{
     auto newPtr(s_ptr);
     auto newPtr1 = s_ptr;
     ASSERT_EQ(s_ptr.use_count(), threeReferences);
@@ -145,7 +156,8 @@ TEST_F(SharedPointerTest, shouldResetSharedPtrWithArgumentCase) {
     ASSERT_EQ(*rs_ptr, testValue2);
 }
 
-TEST_F(SharedPointerTest, shouldReturnUseCountOfSharedPointer) {
+TEST_F(SharedPointerTest, shouldReturnUseCountOfSharedPointer)
+{
     auto newPtr = s_ptr;
 
     ASSERT_EQ(s_ptr.use_count(), twoReferences);
@@ -155,12 +167,14 @@ TEST_F(SharedPointerTest, shouldReturnUseCountOfSharedPointer) {
     ASSERT_EQ(rs_ptr.use_count(), twoReferences);
 }
 
-TEST_F(SharedPointerTest, shouldUseDereferenceOperatorOfSharedPointer) {
+TEST_F(SharedPointerTest, shouldUseDereferenceOperatorOfSharedPointer)
+{
     ASSERT_EQ(*s_ptr, testValue);
     ASSERT_EQ(*rs_ptr, testValue);
 }
 
-TEST_F(SharedPointerTest, shouldUseArrowOperatorOfSharedPointer) {
+TEST_F(SharedPointerTest, shouldUseArrowOperatorOfSharedPointer)
+{
     SharedPointer<TestClass> s_ptr(new TestClass{});
 
     ASSERT_EQ(s_ptr->testFunction(), testValue);
@@ -170,7 +184,8 @@ TEST_F(SharedPointerTest, shouldUseArrowOperatorOfSharedPointer) {
     ASSERT_EQ(rs_ptr->testFunction(), testValue);
 }
 
-TEST_F(SharedPointerTest, shouldReturnBoolWhenUsingBoolOperator) {
+TEST_F(SharedPointerTest, shouldReturnBoolWhenUsingBoolOperator)
+{
     SharedPointer<int> s_ptrNew;
 
     ASSERT_TRUE(s_ptr);
@@ -182,7 +197,8 @@ TEST_F(SharedPointerTest, shouldReturnBoolWhenUsingBoolOperator) {
     ASSERT_FALSE(rs_ptrRNew);
 }
 
-TEST_F(WeakPointerTest, shouldReturnUseCountEqualTo0WhenCreatedByDefault) {
+TEST_F(WeakPointerTest, shouldReturnUseCountEqualTo0WhenCreatedByDefault)
+{
     WeakPointer<int> test_w_ptr;
     ASSERT_EQ(test_w_ptr.use_count(), noReferences);
 
@@ -190,12 +206,14 @@ TEST_F(WeakPointerTest, shouldReturnUseCountEqualTo0WhenCreatedByDefault) {
     ASSERT_EQ(test_rw_ptr.use_count(), noReferences);
 }
 
-TEST_F(WeakPointerTest, shouldReturnUseCountEqualTo1WhenCreatedBySharedPointer) {
+TEST_F(WeakPointerTest, shouldReturnUseCountEqualTo1WhenCreatedBySharedPointer)
+{
     ASSERT_EQ(w_ptr.use_count(), oneReference);
     ASSERT_EQ(rw_ptr.use_count(), oneReference);
 }
 
-TEST_F(WeakPointerTest, shouldReturnSharedPointerWhenLockWeakPointer) {
+TEST_F(WeakPointerTest, shouldReturnSharedPointerWhenLockWeakPointer)
+{
     auto s_ptrNew = w_ptr.lock();
     ASSERT_EQ(*s_ptrNew, testValue);
 
@@ -203,7 +221,8 @@ TEST_F(WeakPointerTest, shouldReturnSharedPointerWhenLockWeakPointer) {
     ASSERT_EQ(*rs_ptrNew, testValue);
 }
 
-TEST_F(WeakPointerTest, shouldReturnNullptrSharedPointerWhenLockWeakPointerWithNoSharedPointer) {
+TEST_F(WeakPointerTest, shouldReturnNullptrSharedPointerWhenLockWeakPointerWithNoSharedPointer)
+{
     WeakPointer<int> test_w_ptr;
     auto s_ptrNew = test_w_ptr.lock();
     ASSERT_EQ(s_ptrNew.get(), nullptr);
@@ -213,7 +232,8 @@ TEST_F(WeakPointerTest, shouldReturnNullptrSharedPointerWhenLockWeakPointerWithN
     ASSERT_EQ(rs_ptrNew.get(), nullptr);
 }
 
-TEST_F(WeakPointerTest, shouldUseMoveConstructor) {
+TEST_F(WeakPointerTest, shouldUseMoveConstructor)
+{
     WeakPointer<int> w_ptrNew{std::move(w_ptr)};
     ASSERT_TRUE(w_ptr.expired());
     ASSERT_FALSE(w_ptrNew.expired());
@@ -225,7 +245,8 @@ TEST_F(WeakPointerTest, shouldUseMoveConstructor) {
     ASSERT_EQ(rw_ptrNew.use_count(), oneReference);
 }
 
-TEST_F(WeakPointerTest, shouldUseMoveAssignment) {
+TEST_F(WeakPointerTest, shouldUseMoveAssignment)
+{
     WeakPointer<int> w_ptrNew;
     w_ptrNew = std::move(w_ptr);
     ASSERT_TRUE(w_ptr.expired());
@@ -237,7 +258,8 @@ TEST_F(WeakPointerTest, shouldUseMoveAssignment) {
     ASSERT_EQ(rw_ptrNew.use_count(), oneReference);
 }
 
-TEST_F(WeakPointerTest, shouldUseCopyAssignment) {
+TEST_F(WeakPointerTest, shouldUseCopyAssignment)
+{
     WeakPointer<int> w_ptrNew;
     w_ptrNew = w_ptr;
     ASSERT_EQ(w_ptr.use_count(), oneReference);
@@ -247,37 +269,98 @@ TEST_F(WeakPointerTest, shouldUseCopyAssignment) {
     ASSERT_EQ(rw_ptr.use_count(), oneReference);
 }
 
-TEST_F(ControlBlockTest, shouldGetSharedRefs) {
+/* TO DO
+it's almost ok. Please fix my findings and add one more test with weak_ptrs - 
+call reset on shared_ptr (shared_ref == 0) and then copy and move weak_ptr 
+and try to get shared_ptrs from them.
+*/
+
+TEST_F(WeakPointerTest, shouldDo)
+{
+    SharedPointer<int> s_ptrNew(new int(testValue));
+    WeakPointer<int> w_ptr(s_ptrNew);
+
+    ASSERT_EQ(w_ptr.use_count(), oneReference);
+    s_ptrNew.reset();
+
+    ASSERT_EQ(w_ptr.use_count(), noReferences);
+
+    WeakPointer<int> w2_ptr(w_ptr);
+
+    ASSERT_EQ(w_ptr.use_count(), noReferences);
+    ASSERT_EQ(w2_ptr.use_count(), noReferences);
+
+    WeakPointer<int> w3_ptr(std::move(w_ptr));
+
+    ASSERT_EQ(w_ptr.use_count(), noReferences);
+    ASSERT_EQ(w2_ptr.use_count(), noReferences);
+    ASSERT_EQ(w3_ptr.use_count(), noReferences);
+}
+
+TEST_F(WeakPointerTest, shouldSharedPointerAndWeakPointersCooperateWhenUsingTheirMethods)
+{
+    SharedPointer<int> s_ptrNew(new int(testValue));
+    SharedPointer<int> s2_ptrNew(s_ptrNew);
+    SharedPointer<int> s3_ptrNew(s_ptrNew);
+    WeakPointer<int> w_ptr(s_ptrNew);
+
+    ASSERT_EQ(w_ptr.use_count(), threeReferences);
+    ASSERT_EQ(s_ptrNew.use_count(), threeReferences);
+    ASSERT_EQ(s2_ptrNew.use_count(), threeReferences);
+    ASSERT_EQ(s3_ptrNew.use_count(), threeReferences);
+
+    s_ptrNew.reset();
+
+    ASSERT_EQ(w_ptr.use_count(), twoReferences);
+    ASSERT_EQ(s_ptrNew.use_count(), noReferences);
+    ASSERT_EQ(s2_ptrNew.use_count(), twoReferences);
+    ASSERT_EQ(s3_ptrNew.use_count(), twoReferences);
+
+    w_ptr.reset();
+    ASSERT_EQ(w_ptr.use_count(), noReferences);
+
+    WeakPointer<int> w2_ptr(w_ptr);
+    ASSERT_EQ(w_ptr.use_count(), noReferences);
+}
+
+TEST_F(ControlBlockTest, shouldGetSharedRefs)
+{
     ASSERT_EQ(testControlBlock.getShared(), oneReference);
 }
 
-TEST_F(ControlBlockTest, shouldGetWeakRefs) {
+TEST_F(ControlBlockTest, shouldGetWeakRefs)
+{
     ASSERT_EQ(testControlBlock.getWeak(), noReferences);
 }
 
-TEST_F(ControlBlockTest, shouldIncreaseSharedRefs) {
+TEST_F(ControlBlockTest, shouldIncreaseSharedRefs)
+{
     testControlBlock.increaseShared();
     ASSERT_EQ(testControlBlock.getShared(), twoReferences);
 }
 
-TEST_F(ControlBlockTest, shouldIncreaseWeakRefs) {
+TEST_F(ControlBlockTest, shouldIncreaseWeakRefs)
+{
     testControlBlock.increaseWeak();
     ASSERT_EQ(testControlBlock.getWeak(), oneReference);
 }
 
-TEST_F(ControlBlockTest, shouldDecreaseSharedRefs) {
+TEST_F(ControlBlockTest, shouldDecreaseSharedRefs)
+{
     testControlBlock.increaseShared();
     testControlBlock.decreaseShared();
     ASSERT_EQ(testControlBlock.getShared(), oneReference);
 }
 
-TEST_F(ControlBlockTest, shouldDecreaseWeakRefs) {
+TEST_F(ControlBlockTest, shouldDecreaseWeakRefs)
+{
     testControlBlock.increaseWeak();
     testControlBlock.decreaseWeak();
     ASSERT_EQ(testControlBlock.getWeak(), noReferences);
 }
 
-TEST(MakeSharedTest, shouldUseMakeSharedOnSingleTestValue) {
+TEST(MakeSharedTest, shouldUseMakeSharedOnSingleTestValue)
+{
     auto ms_ptr = MakeShared<int>(testValue);
     ASSERT_EQ(*ms_ptr, testValue);
 
@@ -285,9 +368,11 @@ TEST(MakeSharedTest, shouldUseMakeSharedOnSingleTestValue) {
     ASSERT_EQ(*rms_ptr, testValue);
 }
 
-TEST(MakeSharedTest, shouldUseMakeSharedOnExampleStructure) {
+TEST(MakeSharedTest, shouldUseMakeSharedOnExampleStructure)
+{
     struct TestStructure {
-        TestStructure(int x, int y, int z) : x_(x), y_(y), z_(z){};
+        TestStructure(int x, int y, int z)
+            : x_(x), y_(y), z_(z){};
         int x_;
         int y_;
         int z_;
