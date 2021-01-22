@@ -1,15 +1,24 @@
-﻿<!-- .slide: data-background="#111111" -->
+﻿<!-- .slide: data-auto-animate data-background="#111111" -->
 
 ## Cyclic dependencies
 
-<img data-src="img/cyclicinverted.png" alt="cyclic dependencies" class="plain fragment fade-in">
+<img data-id="cyclic" data-src="img/cyclicinverted.png" alt="cyclic dependencies" class="plain fragment fade-in">
 
 * <!-- .element: class="fragment fade-in" --> Cyclic dependency is where you have class A with self-referencing member.
 * <!-- .element: class="fragment fade-in" --> Cyclic dependency is where you have two classes A and B where A has a reference to B which has a reference to A.
+
+___
+<!-- .slide: data-auto-animate data-background="#111111" -->
+
+## Cyclic dependencies
+
+<img data-id="cyclic" data-src="img/cyclic_dependencies.gif" alt="a kid stroking a dog, stroking a kid, stroking a dog..." class="plain fragment fade-in">
+
+* Cyclic dependency is where you have class A with self-referencing member.
+* Cyclic dependency is where you have two classes A and B where A has a reference to B which has a reference to A.
 * <!-- .element: class="fragment fade-in" --> How to fix it?
 
 ___
-
 ### `std::weak_ptr<>` to the rescue
 
 #### Traits
