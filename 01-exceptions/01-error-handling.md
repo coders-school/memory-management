@@ -1,6 +1,6 @@
 ﻿<!-- .slide: data-background="#111111" -->
 
-# Error handling methods
+# Metody obsługi błędów
 
 ___
 
@@ -25,7 +25,25 @@ error:
 
 ___
 
-## Error codes
+## `errno`
+
+W programowaniu w C/C++ jest też koncepcja `errno`, czyli statycznej współdzielonej zmiennej, którą ustawia się na odpowiednią wartość w przypadku wystąpienia błędu. Zobacz [`errno` na cppreference](https://en.cppreference.com/w/cpp/error/errno).
+
+```cpp
+int main() {
+    double not_a_number = std::log(-1.0);
+    std::cout << not_a_number << '\n';
+    if (errno == EDOM) {
+        std::cout << "log(-1) failed: " << std::strerror(errno) << '\n';
+        std::setlocale(LC_MESSAGES, "de_DE.utf8");
+        std::cout << "Or, in German, " << std::strerror(errno) << '\n';
+    }
+}
+```
+
+___
+
+## Kody powrotu / kody błędów
 
 ```cpp
 #include <iostream>
@@ -53,9 +71,9 @@ int main() {
 ___
 <!-- .slide: style="font-size: 0.9em" -->
 
-### Error handling in constructors and operators
+### Obsługa błędów w konstruktorach i operatorach
 
-Constructors and operators have strictly defined return types (or no return type). It is impossible to return a custom error code from them.
+Konstruktory i operatory mają ściśle zdefiniowane typy zwracane (lub ich brak). Niemożliwe jest zwrócenie w nich własnego kodu powrotu.
 
 ```cpp
 struct FileWrapper {
@@ -84,7 +102,7 @@ ___
 
 ## `throw`
 
-Instead of returning a special value from a function or setting an error code we just `throw` an exception. It indicates that something went wrong and we can handle this case in another place.
+Zamiast zwracać specjalną wartość z funkcji lub ustawiać globalną zmienną po prostu rzucamy wyjątkiem. To wskazuje, że coś poszło nie tak, a błąd możemy obsłużyć w zupełnie innym miejscu.
 
 ```cpp
 struct FileWrapper {
@@ -115,7 +133,7 @@ ___
 
 ## `try/catch`
 
-`try` block is a place where we can expect an exception. `catch` blocks tries to match the exception type.
+Za pomocą `try` oznaczamy blok kodu, w którym możliwe jest rzucenie wyjątku. Bloki `catch` służą do łapania wyjątków określonych typów.
 
 <div class="multicolumn" style="position: relative">
 <div class="col" style="width: 75%; flex: none">
@@ -151,9 +169,9 @@ int main() {
 
 ___
 
-## What is an exception?
+## Co to jest wyjątek?
 
-Every object can work as an exception.
+W ogólności - dowolny obiekt. Każdy obiekt może być wyjątkiem.
 <!-- .element: class="fragment fade-in" -->
 
 ```cpp
@@ -161,7 +179,7 @@ throw 42;
 ```
 <!-- .element: class="fragment fade-in" -->
 
-However, it's not recommended to use build-in types or any user created classes as an exception.
+Nie jest rekomendowane używanie wbudowanych typów lub tworzonych klas jako wyjątki.
 <!-- .element: class="fragment fade-in" -->
 
 ```cpp
@@ -169,5 +187,5 @@ throw std::runtime_error{"Huston, we have a problem"};
 ```
 <!-- .element: class="fragment fade-in" -->
 
-It is recommended to use exceptions from the standard library (like `std::runtime_error`) of create own exception classes that inherits from `std::exception`.
+Poleca się, aby wyjątki były specjalnymi klasami, które dziedziczą po innych klasach wyjątków z biblioteki standardowej. Przykładem może być `std::runtime_error`, który dziedziczy po `std::exception`.
 <!-- .element: class="fragment fade-in" -->
