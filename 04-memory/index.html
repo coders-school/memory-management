@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-        <title>Memory management problems</title>
+        <title>Memory management</title>
 
         <link rel="stylesheet" href="../../dist/reset.css">
         <link rel="stylesheet" href="../../dist/reveal.css">
@@ -20,15 +20,14 @@
             <div class="slides">
 
                 <section data-background="#111111">
-                    <h1>Na problemy z pamięcią</h1>
-                    <h1>weź valgrind</h1>
+                    <h1>Pamięć procesu</h1>
                     <br/>
                     <h2>CODERS SCHOOL</h2>
                     <a href="https://coders.school">https://coders.school</a>
 
                     <div class="multicolumn">
                         <div class="col">
-                                <img data-src="../logo.png" alt="Coders School" class="plain" height="150px">
+                                <img data-src="../img/logo.png" alt="Coders School" class="plain" height="150px">
                         </div>
 
                         <div class="col"></div>
@@ -36,7 +35,6 @@
                         <div class="col">
                                 Łukasz Ziobroń
                                 <a href="mailto:lukasz@coders.school">lukasz@coders.school</a>
-                                Marcin Pitek
                         </div>
                         </div>
                 </section>
@@ -46,28 +44,38 @@
 
                     ## Agenda
 
-                    * <!-- .element: class="fragment fade-in" --> Problemy z pamięcią
-                    * <!-- .element: class="fragment fade-in" --> Wykrywanie problemów
+                    * <!-- .element: class="fragment fade-in" --> Mapa pamięci procesu
+                    * <!-- .element: class="fragment fade-in" --> Stos vs sterta
+                    * <!-- .element: class="fragment fade-in" --> Alokacja na stosie
+                    * <!-- .element: class="fragment fade-in" --> Alokacja na stercie
+                    * <!-- .element: class="fragment fade-in" --> Wyrażenie new i operator <code>new</code>
+                    * <!-- .element: class="fragment fade-in" --> Dynamiczna alokacja pamięci
 
                     </textarea>
                 </section>
 
-                <section data-markdown>
-                    <textarea data-template>
-
-                    ## Rozgrzewka
-
-                    * <!-- .element: class="fragment fade-in" --> RAII - co to?
-                    * <!-- .element: class="fragment fade-in" --> Co to jest wyciek pamięci?
-
-                    </textarea>
-                </section>
-
-                <section data-markdown="01-allocation-problems.md" data-separator-vertical="^___"
+                <section data-markdown="01-memory-map.md" data-separator-vertical="^___"
                     data-separator-notes="^Note:">
                 </section>
-
-                <section data-markdown="02-memory-corruption.md" data-separator-vertical="^___"
+                <section data-markdown="02-stack-vs-heap.md" data-separator-vertical="^___"
+                    data-separator-notes="^Note:">
+                </section>
+                <section data-markdown="03-stack-allocation.md" data-separator-vertical="^___"
+                    data-separator-notes="^Note:">
+                </section>
+                <section data-markdown="04-stack-overflow.md" data-separator-vertical="^___"
+                    data-separator-notes="^Note:">
+                </section>
+                <section data-markdown="05-heap-allocation.md" data-separator-vertical="^___"
+                    data-separator-notes="^Note:">
+                </section>
+                <section data-markdown="06-new-expression.md" data-separator-vertical="^___"
+                    data-separator-notes="^Note:">
+                </section>
+                <section data-markdown="07-array-allocation.md" data-separator-vertical="^___"
+                    data-separator-notes="^Note:">
+                </section>
+                <section data-markdown="08-homework.md" data-separator-vertical="^___"
                     data-separator-notes="^Note:">
                 </section>
 
@@ -80,7 +88,7 @@
                     <div class="multicolumn">
                     <div class="col">
                         <div>
-                            <img data-src="../logo.png" alt="Coders School" class="plain" height="150px">
+                            <img data-src="../img/logo.png" alt="Coders School" class="plain" height="150px">
                         </div>
                     </div>
 
