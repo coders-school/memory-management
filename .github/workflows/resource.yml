@@ -11,3 +11,20 @@ jobs:
     - name: Run check.sh
       working-directory: .github/scripts
       run: ./check.sh ../../homework/resourceD/valgrind-output.txt
+  valgrind:
+    runs-on: ubuntu-latest
+    env:
+      path: homework/resourceD/build
+    steps:
+    - name: Check out code
+      uses: actions/checkout@master
+    - name: Create build directory
+      run: mkdir ${{ env.path }}
+    - name: Compile
+      working-directory: ${{ env.path }}
+      run: |
+        cmake ..
+        make -j
+    - name: Run valgrind
+      working-directory: ${{ env.path }}
+      run: valgrind ./resourceD d
