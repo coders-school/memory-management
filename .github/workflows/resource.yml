@@ -1,0 +1,13 @@
+name: resource
+
+on: [pull_request, push, workflow_dispatch]
+
+jobs:
+  resource:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out code
+      uses: actions/checkout@master
+    - name: Run check.sh
+      working-directory: .github/scripts
+      run: ./check.sh ../../valgrind-output.txt
