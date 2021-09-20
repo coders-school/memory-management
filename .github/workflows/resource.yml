@@ -18,6 +18,8 @@ jobs:
     steps:
     - name: Check out code
       uses: actions/checkout@master
+    - name: Install valgrind
+      run: apt install -y valgrind
     - name: Create build directory
       run: mkdir ${{ env.path }}
     - name: Compile
