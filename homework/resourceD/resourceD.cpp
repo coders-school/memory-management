@@ -6,6 +6,8 @@ using namespace std;
 class Resource
 { 
 public:
+    Resource(){}
+    ~Resource(){throw logic_error("leaked memory.");}
     void use(const char* N)
     {
         cout << "Using resource. Passed " << *N << endl;
@@ -21,13 +23,13 @@ int main(int argc, char* argv[])
     if(argc != 2)
     {
         cerr << "You need to pass 1 argument" << endl;
-        exit(-1);
+        // exit(-1);
     }
     const char* N = argv[1];
-    Resource* rsc = nullptr;
+    // Resource* rsc = nullptr;
     try
-    {
-        rsc = new Resource();
+    {   Resource* rsc = new Resource();
+        // rsc = new Resource();
         rsc->use(N);
         delete rsc;
     }
@@ -37,4 +39,3 @@ int main(int argc, char* argv[])
     }
     return 0;
 }
-
