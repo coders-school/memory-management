@@ -26,7 +26,7 @@ ___
 
 * <!-- .element: class="fragment fade-in" --> nie jest właścicielem obiektu
 * <!-- .element: class="fragment fade-in" --> jedynie obserwuje obiekt
-* <!-- .element: class="fragment fade-in" --> przed dostępem do obiektu musi zostać przekonwertowany na <code>std::shared_ptr<></code>
+* <!-- .element: class="fragment fade-in" --> przed dostępem do obiektu musi zostać skonwertowany na <code>std::shared_ptr<></code>
 * <!-- .element: class="fragment fade-in" --> może zostać utworzony tylko z użyciem <code>std::shared_ptr<></code>
 
 <div>

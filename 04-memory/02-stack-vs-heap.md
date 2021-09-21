@@ -10,4 +10,4 @@
   * <!-- .element: class="fragment fade-in" --> wolniejszy dostęp
   * <!-- .element: class="fragment fade-in" --> bez limitów pamięci (zarządzane przez system operacyjny)
   * <!-- .element: class="fragment fade-in" --> pamięć może być pofragmentowana
-  * <!-- .element: class="fragment fade-in" --> ręczne zarządzanie pamięcią - alokowanie i dealokowanie
+  * <!-- .element: class="fragment fade-in" --> ręczne zarządzanie pamięcią - alokowanie i zwalnianie

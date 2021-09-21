@@ -9,7 +9,7 @@ ___
 ### Cechy
 
 * <!-- .element: class="fragment fade-in" --> jeden obiekt ma dokładnie jednego właściciela
-* <!-- .element: class="fragment fade-in" --> destruktor niszczy wskazywany obiekt i dealokuje pamięć
+* <!-- .element: class="fragment fade-in" --> destruktor niszczy wskazywany obiekt i zwalnia pamięć
 * <!-- .element: class="fragment fade-in" --> kopiowanie jest niedozwolone
 * <!-- .element: class="fragment fade-in" --> możliwe jest tylko przenoszenie
 * <!-- .element: class="fragment fade-in" --> można przekazać własny <code>deleter</code> (funkcję do zawołania w destruktorze)
