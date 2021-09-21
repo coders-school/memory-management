@@ -51,10 +51,10 @@ Dopisz implementację klasy `FileWrapper` zgodną z RAII. Pamiętaj o:
 
 Przetestuj:
 
-* otwieranie istniejących plików
-* otwieranie nieistniejących plików
-* otwieranie katalogów
-* otwieranie plików do których nie masz uprawnień
-* odczyt z pliku
-* zapis do pliku
-* wycieki pamięci
+* otwieranie istniejących plików `OpenExistingFile`
+* otwieranie nieistniejących plików `OpenNotExistingFile`
+* otwieranie katalogów `OpenDirectory`
+* otwieranie plików do których nie masz uprawnień `OpenFileWithoutPermissions`
+* odczyt z pliku `ReadFromFile`
+* zapis do pliku `SaveToFile`
+* wycieki pamięci - uruchom testy pod valgrindem
