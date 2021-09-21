@@ -1,16 +1,16 @@
 ﻿<!-- .slide: data-background="#111111" -->
 
-# Best practices
+# Najlepsze praktyki
 
 ___
 
-## Best practices
+## Najlepsze praktyki
 
-* <!-- .element: class="fragment fade-in" --> Rule of 0, Rule of 5
-* <!-- .element: class="fragment fade-in" --> Avoid explicit <code>new</code>
-* <!-- .element: class="fragment fade-in" --> Use <code>std::make_shared()</code> / <code>std::make_unique()</code>
-* <!-- .element: class="fragment fade-in" --> Copying <code>std::shared_ptr<></code>
-* <!-- .element: class="fragment fade-in" --> Use references instead of pointers
+* <!-- .element: class="fragment fade-in" --> Zasada 0, Zasada 5
+* <!-- .element: class="fragment fade-in" --> Unikaj jawnego <code>new</code>
+* <!-- .element: class="fragment fade-in" --> Używaj <code>std::make_shared()</code> / <code>std::make_unique()</code>
+* <!-- .element: class="fragment fade-in" --> Przekazuj <code>std::shared_ptr<></code> przez <code>const&</code>
+* <!-- .element: class="fragment fade-in" --> Używaj referencji zamiast wskaźników
 
 ___
 
@@ -18,27 +18,28 @@ ___
 
 ### Rule of 5 <!-- .element: class="fragment fade-in" -->
 
-* <!-- .element: class="fragment fade-in" --> If you need to implement one of those functions:
+* <!-- .element: class="fragment fade-in" --> Jeśli musisz zaimplementować jedną z poniższych funkcji:
   * <!-- .element: class="fragment fade-in" --> destructor
   * <!-- .element: class="fragment fade-in" --> copy constructor
   * <!-- .element: class="fragment fade-in" --> copy assignment operator
   * <!-- .element: class="fragment fade-in" --> move constructor
   * <!-- .element: class="fragment fade-in" --> move assignment operator
-* <!-- .element: class="fragment fade-in" --> It probably means that you should implement them all, because you have manual resources management.
+* <!-- .element: class="fragment fade-in" --> To najprawdopodobniej potrzebujesz ich wszystkich, bo ręcznie zarządzasz zasobami.
 
 ### Rule of 0 <!-- .element: class="fragment fade-in" -->
 
-* <!-- .element: class="fragment fade-in" --> If you use RAII wrappers on resources, you don’t need to implement any of Rule of 5 functions.
+* <!-- .element: class="fragment fade-in" --> Używaj wrapperów RAII, aby nie implementować żadnej z powyższych funkcji
 
 ___
 
-## Avoid explicit `new`
+## Unikaj jawnego `new`
 
-* <!-- .element: class="fragment fade-in" --> Smart pointers eliminate the need to use <code>delete</code> explicitly
-* <!-- .element: class="fragment fade-in" --> To be symmetrical, do not use <code>new</code> as well
-* <!-- .element: class="fragment fade-in" --> Allocate using:
+* <!-- .element: class="fragment fade-in" --> Inteligentne wskaźniki eliminują potrzebę używania jawnie <code>delete</code>
+* <!-- .element: class="fragment fade-in" --> Aby zachować symetrię, nie używajmy też <code>new</code>
+* <!-- .element: class="fragment fade-in" --> Alokuj zasoby używając:
   * <!-- .element: class="fragment fade-in" --> <code>std::make_unique()</code>
   * <!-- .element: class="fragment fade-in" --> <code>std::make_shared()</code>
+* <!-- .element: class="fragment fade-in" --> Jedną z metryk jakości kodu może być liczba jawnych <code>new</code> i <code>delete</code>
 
 ___
 
@@ -46,7 +47,7 @@ ___
 
 ### Use `std::make_shared()` / `std::make_unique()`
 
-* <!-- .element: class="fragment fade-in" --> What is a problem here?
+* <!-- .element: class="fragment fade-in" --> Jaki problem mógł tu wystąpić (przed C++17)?
 
 ```cpp
 struct MyData { int value; };
@@ -59,7 +60,7 @@ void use(void) {
 ```
 <!-- .element: class="fragment fade-in" -->
 
-* <!-- .element: class="fragment fade-in" --> Hint: this version is not problematic
+* <!-- .element: class="fragment fade-in" --> Wskazówka: ta wersja jest poprawna
 
 ```cpp
 struct MyData { int value; };
@@ -76,13 +77,13 @@ void use(void) {
 
 ___
 
-### Allocation deconstructed
+### Rozkładamy alokację
 
-`auto p = new MyData(10);` means:
+`auto p = new MyData(10);` oznacza:
 
-* <!-- .element: class="fragment fade-in" --> allocate <code>sizeof(MyData)</code> bytes
-* <!-- .element: class="fragment fade-in" --> run <code>MyData</code> constructor
-* <!-- .element: class="fragment fade-in" --> assign address of allocated memory to <code>p</code>
+* <!-- .element: class="fragment fade-in" --> zaalokowanie <code>sizeof(MyData)</code> bajtów na stercie
+* <!-- .element: class="fragment fade-in" --> wywołanie konstruktora <code>MyData</code>
+* <!-- .element: class="fragment fade-in" --> przypisanie adresu zaalokowanej pamięci do wskaźnika <code>p</code>
 
 The order of evaluation of operands of almost all C++ operators (including the order of
 evaluation of function arguments in a function-call expression and the order of evaluation of
@@ -92,9 +93,9 @@ the subexpressions within any expression) is **unspecified**.
 ___
 <!-- .slide: style="font-size: 0.77em" -->
 
-### Unspecified order of evaluation
+### Nieokreślona kolejność ewaluacji
 
-* How about two such operations?
+* Co gdy mamy dwie takie operacje?
 
 | first operation (A)                           | second operation (B)                          |
 | :-------------------------------------------- | :-------------------------------------------- |
@@ -102,15 +103,15 @@ ___
 | (2) run `MyData` constructor                  | (2) run `MyData` constructor                  |
 | (3) assign address of allocated memory to `p` | (3) assign address of allocated memory to `p` |
 
-* <!-- .element: class="fragment fade-in" --> Unspecified order of evaluation means that order can be for example:
+* <!-- .element: class="fragment fade-in" --> Nieokreślona kolejność ewaluacji oznaczała, że te operacje mogły być wykonane np. w takiej kolejności:
   * A1, A2, B1, B2, A3, B3
-* <!-- .element: class="fragment fade-in" --> What if B2 throws an exception?
+* <!-- .element: class="fragment fade-in" --> A co, gdy B2 rzuci wyjątkiem?
 
 ___
 
-### Use `std::make_shared()` / `std::make_unique()`
+### `std::make_shared()` / `std::make_unique()`
 
-* <!-- .element: class="fragment fade-in" --> <code>std::make_shared()</code> / <code>std::make_unique()</code> resolves this problem
+* <!-- .element: class="fragment fade-in" --> <code>std::make_shared()</code> / <code>std::make_unique()</code> rozwiązuje ten problem
 
 ```cpp
 struct MyData{ int value; };
@@ -123,14 +124,14 @@ void use() {
 ```
 <!-- .element: class="fragment fade-in" -->
 
-* <!-- .element: class="fragment fade-in" --> Fixes previous bug
-* <!-- .element: class="fragment fade-in" --> Does not repeat a constructed type
-* <!-- .element: class="fragment fade-in" --> Does not use explicit <code>new</code>
-* <!-- .element: class="fragment fade-in" --> Optimizes memory usage (only for <code>std::make_shared()</code>)
+* <!-- .element: class="fragment fade-in" --> Naprawia problem
+* <!-- .element: class="fragment fade-in" --> Nie powtarzamy konstruowanego typu w kodzie
+* <!-- .element: class="fragment fade-in" --> Nie używamy jawnie <code>new</code>
+* <!-- .element: class="fragment fade-in" --> Optymalizujemy zużycie pamięci i ułożenie danych (tylko w przypadku <code>std::make_shared()</code>)
 
 ___
 
-## Copying `std::shared_ptr<>`
+## Przekazywanie `std::shared_ptr<>`
 
 ```cpp
 void foo(std::shared_ptr<MyData> p);
@@ -140,16 +141,16 @@ void bar(std::shared_ptr<MyData> p) {
 }
 ```
 
-* <!-- .element: class="fragment fade-in" --> requires counters incrementing / decrementing
-* <!-- .element: class="fragment fade-in" --> atomics / locks are not free
-* <!-- .element: class="fragment fade-in" --> will call destructors
+* <!-- .element: class="fragment fade-in" --> kopiowanie wymaga inkrementacji / dekrementacji liczników
+* <!-- .element: class="fragment fade-in" --> musi być bezpieczne wielowątkowo - <code>std::atomic</code> / <code>std::lock</code> nie są darmowe
+* <!-- .element: class="fragment fade-in" --> zawoła destruktory
 
-##### Can be better?
+##### Czy można lepiej?
 <!-- .element: class="fragment fade-in" -->
 
 ___
 
-## Copying `std::shared_ptr<>`
+## Przekazywanie `std::shared_ptr<>`
 
 ```cpp
 void foo(const std::shared_ptr<MyData> & p);
@@ -159,18 +160,18 @@ void bar(const std::shared_ptr<MyData> & p) {
 }
 ```
 
-* <!-- .element: class="fragment fade-in" --> as fast as pointer passing
-* <!-- .element: class="fragment fade-in" --> no extra operations
-* <!-- .element: class="fragment fade-in" --> not safe in multithreaded applications
+* <!-- .element: class="fragment fade-in" --> tak szybkie jak przekazywanie zwykłego wskaźnika
+* <!-- .element: class="fragment fade-in" --> bez dodatkowych operacji
+* <!-- .element: class="fragment fade-in" --> może być niebezpieczne w aplikacjach wielowątkowych (jak każde przekazywanie przez <code>&</code>)
 
 ___
 
-### Use references instead of pointers
+### Używaj referencji zamiast wskaźników
 
-* <!-- .element: class="fragment fade-in" --> What is the difference between a pointer and a reference?
-  * <!-- .element: class="fragment fade-in" --> reference cannot be empty
-  * <!-- .element: class="fragment fade-in" --> reference, once assigned cannot point to anything else
-* <!-- .element: class="fragment fade-in" --> Priorities of usage (if possible):
+* <!-- .element: class="fragment fade-in" --> Jaka jest różnica pomiędzy wskaźnikiem i referencją?
+  * <!-- .element: class="fragment fade-in" --> referencja nie może być pusta
+  * <!-- .element: class="fragment fade-in" --> nie można zmienić przypisania referencji, aby wskazywała na inny obiekt
+* <!-- .element: class="fragment fade-in" --> Priorytety użycia (jeśli możliwe):
   * <!-- .element: class="fragment fade-in" --> <code>(const) T&</code>
   * <!-- .element: class="fragment fade-in" --> <code>std::unique_ptr&ltT&gt</code>
   * <!-- .element: class="fragment fade-in" --> <code>std::shared_ptr&ltT&gt</code>
@@ -178,15 +179,15 @@ ___
 
 ___
 
-## Exercise: List
+## Zadanie: List
 
-Take a look at `List.cpp` file, where simple (and buggy) single-linked list is implemented.
+Zajrzyj do pliku `List.cpp`, w którym jest zaimplementowana prosta (i niepoprawna) lista (single-linked list).
 
-* `void add(Node* node)` method adds a new `Node` at the end of the list.
-* `Node* get(const int value)` method iterates over the list and returns the first Node with matching `value` or `nullptr`
+* `void add(Node* node)` dodaje nowy element `Node` na końcu listy
+* `Node* get(const int value)` iteruje po liście i zwraca pierwszy element, którego wartość wynosi `value` lub `nullptr`
 
-1. <!-- .element: class="fragment fade-in" --> Compile and run List application
-2. <!-- .element: class="fragment fade-in" --> Fix memory leaks without introducing smart pointers
-3. <!-- .element: class="fragment fade-in" --> Fix memory leaks with smart pointers. What kind of pointers needs to be applied and why?
-4. <!-- .element: class="fragment fade-in" --> (Optional) What happens when the same Node is added twice? Fix this problem.
-5. <!-- .element: class="fragment fade-in" --> (Optional) Create <code>EmptyListError</code> exception (deriving from <code>std::runtime_error</code>). Add throwing and catching it in a proper places.
+1. <!-- .element: class="fragment fade-in" --> Skompiluj i uruchom aplikację List
+2. <!-- .element: class="fragment fade-in" --> Napraw wycieki pamięci bez stosowania smart pointerów
+3. <!-- .element: class="fragment fade-in" --> Napraw wycieki pamięci stosując smart pointery. Jaki ich rodzaj zastosujesz i dlaczego?
+4. <!-- .element: class="fragment fade-in" --> (Opcjonalnie) Co się stanie jeśli na listę dodamy ten sam element 2 razy? Napraw problem.
+5. <!-- .element: class="fragment fade-in" --> (Opcjonalnie) Utwórz wyjątek <code>EmptyListError</code> (dziedziczący po <code>std::runtime_error</code>). Dodaj jego rzucanie i łapanie we właściwych miejscach.
