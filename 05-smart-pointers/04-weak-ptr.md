@@ -2,7 +2,7 @@
 
 ## Cyclic dependencies
 
-<img data-id="cyclic" data-src="img/cyclicinverted.png" alt="cyclic dependencies" class="plain fragment fade-in">
+<img data-id="cyclic" data-src="../img/cyclicinverted.png" alt="cyclic dependencies" class="plain fragment fade-in">
 
 * <!-- .element: class="fragment fade-in" --> Cyclic dependency is where you have class A with self-referencing member.
 * <!-- .element: class="fragment fade-in" --> Cyclic dependency is where you have two classes A and B where A has a reference to B which has a reference to A.
@@ -12,7 +12,7 @@ ___
 
 ## Cyclic dependencies
 
-<img data-id="cyclic" data-src="img/cyclic_dependencies.gif" alt="a kid stroking a dog, stroking a kid, stroking a dog..." class="plain fragment fade-in">
+<img data-id="cyclic" data-src="../img/cyclic_dependencies.gif" alt="a kid stroking a dog, stroking a kid, stroking a dog..." class="plain fragment fade-in">
 
 * Cyclic dependency is where you have class A with self-referencing member.
 * Cyclic dependency is where you have two classes A and B where A has a reference to B which has a reference to A.
@@ -29,7 +29,7 @@ ___
 * <!-- .element: class="fragment fade-in" --> can be created only from a <code>std::shared_ptr<></code>
 
 <div>
-    <img data-src="img/weakptrinverted.png" alt="weak pointers" class="plain fragment fade-in">
+    <img data-src="../img/weakptrinverted.png" alt="weak pointers" class="plain fragment fade-in">
 </div>
 
 ___

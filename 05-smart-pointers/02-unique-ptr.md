@@ -6,21 +6,21 @@ ___
 
 ## `std::unique_ptr<>`
 
-### Traits
+### Cechy
 
-* <!-- .element: class="fragment fade-in" --> one object == one owner
-* <!-- .element: class="fragment fade-in" --> destructor destroys the object
-* <!-- .element: class="fragment fade-in" --> copying not allowed
-* <!-- .element: class="fragment fade-in" --> moving allowed
-* <!-- .element: class="fragment fade-in" --> can use custom deleter
+* <!-- .element: class="fragment fade-in" --> jeden obiekt ma dokładnie jednego właściciela
+* <!-- .element: class="fragment fade-in" --> destruktor niszczy wskazywany obiekt i dealokuje pamięć
+* <!-- .element: class="fragment fade-in" --> kopiowanie jest niedozwolone
+* <!-- .element: class="fragment fade-in" --> możliwe jest tylko przenoszenie
+* <!-- .element: class="fragment fade-in" --> można przekazać własny <code>deleter</code> (funkcję do zawołania w destruktorze)
 
-<img data-src="img/uniqueptrinverted.png" alt="unique pointers" class="plain fragment fade-in">
+<img data-src="../img/uniqueptrinverted.png" alt="unique pointers" class="plain fragment fade-in">
 
 ___
 
-### `std::unique_ptr<>` usage
+### `std::unique_ptr<>` użycie
 
-* Old style approach vs modern approach
+* stare podejście vs nowe podejście
 
 <div class="multicolumn">
 <div class="col">
@@ -76,10 +76,10 @@ int main() {
 
 ___
 
-### `std::unique_ptr<>` usage
+### `std::unique_ptr<>` użycie
 
-* <!-- .element: class="fragment fade-in" --> Copying is not allowed
-* <!-- .element: class="fragment fade-in" --> Moving is allowed
+* <!-- .element: class="fragment fade-in" --> Kopiowanie niedozwolone
+* <!-- .element: class="fragment fade-in" --> Przenoszenie dozwolone
 
 <div class="multicolumn">
 <div class="col">
@@ -130,7 +130,7 @@ void collections() {
 
 ___
 
-#### `std::unique_ptr<>` cooperation with raw pointers
+#### `std::unique_ptr<>` kooperacja ze zwykłymi wskaźnikami
 
 ```cpp
 #include <memory>
@@ -150,10 +150,10 @@ int main() {
 }
 ```
 
-* <!-- .element: class="fragment fade-in" --> <code>get()</code> – returns a raw pointer without releasing the ownership
-* <!-- .element: class="fragment fade-in" --> <code>release()</code> – returns a raw pointer and release the ownership
-* <!-- .element: class="fragment fade-in" --> <code>reset()</code> – replaces the manager object
-* <!-- .element: class="fragment fade-in" --> <code>operator*()</code> – dereferences pointer to the managed object
+* <!-- .element: class="fragment fade-in" --> <code>T* get()</code> – zwraca zwykły wskaźnik bez zwalniania własności
+* <!-- .element: class="fragment fade-in" --> <code>T* release()</code> – zwraca zwykły wskaźnik i zwalnia własność
+* <!-- .element: class="fragment fade-in" --> <code>void reset(T*)</code> – podmienia wskazywany obiekt
+* <!-- .element: class="fragment fade-in" --> <code>T& operator*()</code> – wyłuskuje wskazywany obiekt
 
 ___
 
@@ -174,11 +174,11 @@ int main() {
 }
 ```
 
-`std::make_unique()` is a factory function that produce `unique_ptrs`
+`std::make_unique()` to funkcja, która tworzy `unique_ptr`
 <!-- .element: class="fragment fade-in" -->
 
-* <!-- .element: class="fragment fade-in" --> added in C++14 for symmetrical operations on unique and shared pointers
-* <!-- .element: class="fragment fade-in" --> avoids bare <code>new</code> expression
+* <!-- .element: class="fragment fade-in" --> dodana w C++14 dla symetrii (w C++11 było <code>make_shared</code>)
+* <!-- .element: class="fragment fade-in" --> dzięki niej nie trzeba stosować gołego <code>new</code>
 
 ___
 
@@ -200,18 +200,18 @@ void use(void)
 }
 ```
 
-* <!-- .element: class="fragment fade-in" --> During destruction
-  * <!-- .element: class="fragment fade-in" --> <code>std::unique_ptr&ltT&gt</code> calls <code>delete</code>
-  * <!-- .element: class="fragment fade-in" --> <code>std::unique_ptr&ltT[]&gt</code> calls <code>delete[]</code>
-* <!-- .element: class="fragment fade-in" --> <code>std::unique_ptr&ltT[]&gt</code> has additional <code>operator[]</code> for accessing array element
-* <!-- .element: class="fragment fade-in" --> Usually <code>std::vector&ltT&gt</code> is a better choice
+* <!-- .element: class="fragment fade-in" --> Podczas niszczenia:
+  * <!-- .element: class="fragment fade-in" --> <code>std::unique_ptr&ltT&gt</code> woła <code>delete</code>
+  * <!-- .element: class="fragment fade-in" --> <code>std::unique_ptr&ltT[]&gt</code> woła <code>delete[]</code>
+* <!-- .element: class="fragment fade-in" --> <code>std::unique_ptr&ltT[]&gt</code> ma dodatkowy <code>operator[]</code> do dostępu do konkretnego elementu tablicy
+* <!-- .element: class="fragment fade-in" --> Zazwyczaj <code>std::vector&ltT&gt</code> jest lepszym wyborem
 
 ___
 
-## Exercise: ResourceD
+## Zadanie: ResourceD
 
-1. <!-- .element: class="fragment fade-in" --> Compile and run ResourceD application
-2. <!-- .element: class="fragment fade-in" --> Check memory leaks under valgrind
-3. <!-- .element: class="fragment fade-in" --> Fix memory leaks with a proper usage of <code>delete</code> operator
-4. <!-- .element: class="fragment fade-in" --> Refactor the solution to use <code>std::unique_ptr<></code>
-5. <!-- .element: class="fragment fade-in" --> Use <code>std::make_unique()</code>
+1. <!-- .element: class="fragment fade-in" --> Skompiluj i odpal program
+2. <!-- .element: class="fragment fade-in" --> Sprawdź wycieki pamięci pod valgrindem
+3. <!-- .element: class="fragment fade-in" --> Napraw wycieki używając <code>delete</code>
+4. <!-- .element: class="fragment fade-in" --> Zamień zwykłe wskaźniki na <code>std::unique_ptr</code>
+5. <!-- .element: class="fragment fade-in" --> Użyj <code>std::make_unique()</code>
