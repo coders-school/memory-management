@@ -1,18 +1,18 @@
 ﻿<!-- .slide: data-background="#111111" -->
 
-# Smart pointers - summary
+# Inteligentne wskaźniki - podsumowanie
 
 * <!-- .element: class="fragment fade-in" --> <code>#include &lt;memory&gt;</code>
-* <!-- .element: class="fragment fade-in" --> <code>std::unique_ptr<></code> for exclusive ownership
-* <!-- .element: class="fragment fade-in" --> <code>std::shared_ptr<></code> for shared ownership
-* <!-- .element: class="fragment fade-in" --> <code>std::weak_ptr<></code> for observation and breaking cycles
+* <!-- .element: class="fragment fade-in" --> <code>std::unique_ptr<></code> dla wyłącznej własności
+* <!-- .element: class="fragment fade-in" --> <code>std::shared_ptr<></code> dla współdzielonej własności
+* <!-- .element: class="fragment fade-in" --> <code>std::weak_ptr<></code> do obserwowania i przerywania cykli
 
 ___
 
-## Exercise: ResourceFactory
+## Zadanie: ResourceFactory
 
-1. <!-- .element: class="fragment fade-in" --> Compile and run ResourceFactory application
-2. <!-- .element: class="fragment fade-in" --> Put comments in places where you can spot some problems
-3. <!-- .element: class="fragment fade-in" --> How to remove elements from the collection (<code>vector&lt;Resource*&gt;</code> resources)?
-4. <!-- .element: class="fragment fade-in" --> Check memory leaks
-5. <!-- .element: class="fragment fade-in" --> Fix problems
+1. <!-- .element: class="fragment fade-in" --> Skompiluj i uruchom program ResourceFactory
+2. <!-- .element: class="fragment fade-in" --> Czy zauważasz problematyczne miejsca? Oznacz je komentarzami w kodzie.
+3. <!-- .element: class="fragment fade-in" --> Jak usuwać elementy z kolekcji (<code>vector&lt;Resource*&gt;</code> resources)?
+4. <!-- .element: class="fragment fade-in" --> Uruchom program pod valgrindem
+5. <!-- .element: class="fragment fade-in" --> Napraw problemy
