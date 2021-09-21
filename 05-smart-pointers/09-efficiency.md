@@ -1,6 +1,6 @@
 ﻿<!-- .slide: data-background="#111111" -->
 
-# Efficiency
+# Wydajność
 
 ___
 
@@ -125,18 +125,18 @@ int main(void) {
 
 ___
 
-## Measurements
+## Pomiary
 
 * <!-- .element: class="fragment fade-in" --> gcc-4.8.2
-* <!-- .element: class="fragment fade-in" --> compilation with <code>–std=c++11 –O3 –DNDEBUG</code>
-* <!-- .element: class="fragment fade-in" --> measuring with:
+* <!-- .element: class="fragment fade-in" --> kompilacja z <code>–std=c++11 –O3 –DNDEBUG</code>
+* <!-- .element: class="fragment fade-in" --> pomiary z wykorzystaniem:
   * <!-- .element: class="fragment fade-in" --> time (real)
   * <!-- .element: class="fragment fade-in" --> htop (mem)
-  * <!-- .element: class="fragment fade-in" --> valgrind (allocations count)
+  * <!-- .element: class="fragment fade-in" --> valgrind (liczba alokacji)
 
 ___
 
-## Results
+## Wyniki
 
 | test name      | time [s] | allocations | memory [MB] |
 |:--------------:|:--------:|:-----------:|:-----------:|
@@ -148,16 +148,16 @@ ___
 
 ___
 
-## Conclusions
+## Podsumowanie
 
 * <!-- .element: class="fragment fade-in" --> RAII
-  * <!-- .element: class="fragment fade-in" --> acquire resource in constructor
-  * <!-- .element: class="fragment fade-in" --> release resource in destructor
+  * <!-- .element: class="fragment fade-in" --> pozyskujemy zasób w konstruktorze
+  * <!-- .element: class="fragment fade-in" --> zwalniamy zasów w destruktorze
 * <!-- .element: class="fragment fade-in" --> Rule of 5, Rule of 0
-* <!-- .element: class="fragment fade-in" --> Smart pointers:
-  * <!-- .element: class="fragment fade-in" --> <code>std::unique_ptr</code> – primary choice, no overhead, can convert to <code>std::shared_ptr</code>
-  * <!-- .element: class="fragment fade-in" --> <code>std::shared_ptr</code> – introduces memory and runtime overhead
-  * <!-- .element: class="fragment fade-in" --> <code>std::weak_ptr</code> – breaking cycles, can convert to/from <code>std::shared_ptr</code>
-* <!-- .element: class="fragment fade-in" --> Create smart pointers with <code>std::make_shared()</code> and <code>std::make_unique()</code>
-* <!-- .element: class="fragment fade-in" --> Raw pointer should mean „access only” (no ownership)
-* <!-- .element: class="fragment fade-in" --> Use reference instead of pointers if possible
+* <!-- .element: class="fragment fade-in" --> Smart pointery:
+  * <!-- .element: class="fragment fade-in" --> <code>std::unique_ptr</code> – główny wybór, brak dodatkowych kosztów, można go skonwertować na <code>std::shared_ptr</code>
+  * <!-- .element: class="fragment fade-in" --> <code>std::shared_ptr</code> – wprowadza dodatkowy narzut pamięciowy i czasu wykonania
+  * <!-- .element: class="fragment fade-in" --> <code>std::weak_ptr</code> – do łamania cykli, konwertuje się z/na <code>std::shared_ptr</code>
+* <!-- .element: class="fragment fade-in" --> Twórz smart pointery używając <code>std::make_shared()</code> i <code>std::make_unique()</code>
+* <!-- .element: class="fragment fade-in" --> Zwykłe wskaźniki powinny zawsze oznaczać tylko dostęp do zasobu (bez własności)
+* <!-- .element: class="fragment fade-in" --> Kiedy to możliwe używaj referencji zamiast jakichkolwiek wskaźników
