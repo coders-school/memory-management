@@ -6,23 +6,23 @@ ___
 
 ### `std::shared_ptr<>`
 
-### Traits
+### Cechy
 
-* <!-- .element: class="fragment fade-in" --> one object == multiple owners
-* <!-- .element: class="fragment fade-in" --> last referrer destroys the object
-* <!-- .element: class="fragment fade-in" --> copying allowed
-* <!-- .element: class="fragment fade-in" --> moving allowed
-* <!-- .element: class="fragment fade-in" --> can use custom deleter
-* <!-- .element: class="fragment fade-in" --> can use custom allocator
+* <!-- .element: class="fragment fade-in" --> jeden obiekt ma wielu właścicieli
+* <!-- .element: class="fragment fade-in" --> ostatni sprząta
+* <!-- .element: class="fragment fade-in" --> możliwe kopiowanie
+* <!-- .element: class="fragment fade-in" --> możliwe przenoszenie
+* <!-- .element: class="fragment fade-in" --> można dostarczyć własny deleter
+* <!-- .element: class="fragment fade-in" --> można dostarczyć własny alokator
 
 <img data-src="../img/sharedptr1inverted.png" alt="shared pointers" class="plain fragment fade-in">
 
 ___
 <!-- .slide: style="font-size: 0.85em" -->
 
-### `std::shared_ptr<>` usage
+### `std::shared_ptr<>` użycie
 
-* Copying and moving is allowed
+* Kopiowanie i przenoszenie jest dozwolone
 
 <div class="multicolumn">
 <div class="col">
@@ -73,7 +73,7 @@ void collections() {
 ___
 <!-- .slide: style="font-size: 0.85em" -->
 
-### `std::shared_ptr<>` usage cont.
+### `std::shared_ptr<>` użycie
 
 ```cpp
 #include <memory>
@@ -101,9 +101,9 @@ int main() {
 
 ___
 
-### `std::shared_ptr<>` cyclic dependencies
+### `std::shared_ptr<>` - cykliczne zależności
 
-* What happens here?
+* Co my tu mamy?
 
 <div class="multicolumn" style="position: relative">
 <div class="col" style="width: 65%; flex: none">
@@ -130,7 +130,7 @@ int main () {
 </div>
 
 <div class="col fragment fade-in">
-    Memory leak!
+    Wyciek pamięci!
     <img data-src="../img/kot.jpg" alt="kot" class="plain" style="height: 50%">
 
 </div>

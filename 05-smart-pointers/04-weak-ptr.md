@@ -1,32 +1,33 @@
 ﻿<!-- .slide: data-auto-animate data-background="#111111" -->
 
-## Cyclic dependencies
+## Cykliczne zależności
 
 <img data-id="cyclic" data-src="../img/cyclicinverted.png" alt="cyclic dependencies" class="plain fragment fade-in">
 
-* <!-- .element: class="fragment fade-in" --> Cyclic dependency is where you have class A with self-referencing member.
-* <!-- .element: class="fragment fade-in" --> Cyclic dependency is where you have two classes A and B where A has a reference to B which has a reference to A.
+* <!-- .element: class="fragment fade-in" --> Obiekt klasy A posiada wskaźnik/referencję ustawione na siebie
+* <!-- .element: class="fragment fade-in" --> Obiekt klasy A posiada wskaźnik/referencję na obiekt klasy B, który z kolei wskazuje na obiekt klasy A
 
 ___
 <!-- .slide: data-auto-animate data-background="#111111" -->
 
-## Cyclic dependencies
+## Cykliczne zależności
 
 <img data-id="cyclic" data-src="../img/cyclic_dependencies.gif" alt="a kid stroking a dog, stroking a kid, stroking a dog..." class="plain fragment fade-in">
 
-* Cyclic dependency is where you have class A with self-referencing member.
-* Cyclic dependency is where you have two classes A and B where A has a reference to B which has a reference to A.
-* <!-- .element: class="fragment fade-in" --> How to fix it?
+* <!-- .element: class="fragment fade-in" --> Obiekt klasy A posiada wskaźnik/referencję ustawione na siebie
+* <!-- .element: class="fragment fade-in" --> Obiekt klasy A posiada wskaźnik/referencję na obiekt klasy B, który z kolei wskazuje na obiekt klasy A
+* <!-- .element: class="fragment fade-in" --> Jak to naprawić?
 
 ___
-### `std::weak_ptr<>` to the rescue
 
-#### Traits
+### `std::weak_ptr<>` spieszy z pomocą!
 
-* <!-- .element: class="fragment fade-in" --> does not own an object
-* <!-- .element: class="fragment fade-in" --> observes only
-* <!-- .element: class="fragment fade-in" --> must be converted to <code>std::shared_ptr<></code> to access the object
-* <!-- .element: class="fragment fade-in" --> can be created only from a <code>std::shared_ptr<></code>
+#### Cechy
+
+* <!-- .element: class="fragment fade-in" --> nie jest właścicielem obiektu
+* <!-- .element: class="fragment fade-in" --> jedynie obserwuje obiekt
+* <!-- .element: class="fragment fade-in" --> przed dostępem do obiektu musi zostać przekonwertowany na <code>std::shared_ptr<></code>
+* <!-- .element: class="fragment fade-in" --> może zostać utworzony tylko z użyciem <code>std::shared_ptr<></code>
 
 <div>
     <img data-src="../img/weakptrinverted.png" alt="weak pointers" class="plain fragment fade-in">
@@ -34,7 +35,7 @@ ___
 
 ___
 
-### `std::weak_ptr<>` usage
+### `std::weak_ptr<>` użycie
 
 <div class="multicolumn" style="position: relative">
 <div class="col" style="width: 65%; flex: none">
@@ -77,9 +78,9 @@ Expired
 
 ___
 
-### `std::shared_ptr<>` cyclic dependencies
+### `std::shared_ptr<>` - cykliczne zależności
 
-* How to solve this problem?
+* Jak rozwiązać ten problem?
 
 ```cpp
 #include <memory>
@@ -99,9 +100,9 @@ int main () {
 
 ___
 
-### Breaking cycle - solution
+### Przerywanie cykli - rozwiązanie
 
-* Use `std::weak_ptr<Node>` in one direction
+* Użyć `std::weak_ptr<Node>` w jednym kierunku
 
 ```cpp
 #include <memory>
