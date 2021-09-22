@@ -1,10 +1,9 @@
+# Pre-test 🤯
 
-## Pre-test 🤯
-
-### Answers
+## Answers
 
 ___
-
+<!-- .slide: style="font-size: 0.9em" -->
 ## 1. What is a problem with the below code?
 
 ```cpp

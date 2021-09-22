@@ -1,7 +1,7 @@
-
-## Pre-test 🤯
+# Pre-test 🤯
 
 ___
+<!-- .slide: style="font-size: 0.9em" -->
 
 ## 1. What is a problem with the below code?
 
