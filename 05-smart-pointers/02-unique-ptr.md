@@ -44,7 +44,7 @@ int main() {
     delete msg;
 }
 ```
-<!-- .element: class="fragment fade-in" -->
+<!-- .element: class="fragment fade-in" style="font-size: 0.53em" -->
 
 </div>
 
@@ -70,7 +70,7 @@ int main() {
 }
 
 ```
-<!-- .element: class="fragment fade-in" -->
+<!-- .element: class="fragment fade-in" style="font-size: 0.53em" -->
 
 </div>
 
@@ -101,7 +101,7 @@ void simpleUsage() {
     p1 = std::move(p2);
 }
 ```
-<!-- .element: class="fragment fade-in" -->
+<!-- .element: class="fragment fade-in" style="font-size: 0.5em" -->
 
 </div>
 
@@ -124,7 +124,7 @@ void collections() {
 
 }
 ```
-<!-- .element: class="fragment fade-in" -->
+<!-- .element: class="fragment fade-in" style="font-size: 0.5em" -->
 
 </div>
 
@@ -208,7 +208,7 @@ void use(void)
 
 ___
 
-## Zadanie: ResourceD
+## Zadanie: `ResourceD`
 
 1. <!-- .element: class="fragment fade-in" --> Skompiluj i odpal program
 2. <!-- .element: class="fragment fade-in" --> Sprawdź wycieki pamięci pod valgrindem

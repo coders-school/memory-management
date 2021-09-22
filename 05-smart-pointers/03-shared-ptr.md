@@ -71,7 +71,7 @@ void collections() {
 </div>
 
 ___
-<!-- .slide: style="font-size: 0.85em" -->
+<!-- .slide: style="font-size: 0.83em" -->
 
 ### `std::shared_ptr<>` użycie
 

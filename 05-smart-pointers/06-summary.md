@@ -9,7 +9,7 @@
 
 ___
 
-## Zadanie: ResourceFactory
+## Zadanie: `ResourceFactory`
 
 1. <!-- .element: class="fragment fade-in" --> Skompiluj i uruchom program ResourceFactory
 2. <!-- .element: class="fragment fade-in" --> Czy zauważasz problematyczne miejsca? Oznacz je komentarzami w kodzie.

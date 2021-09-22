@@ -178,8 +178,8 @@ ___
   * <!-- .element: class="fragment fade-in" --> <code>T*</code>
 
 ___
-
-## Zadanie: List
+<!-- .slide: style="font-size: 0.9em" -->
+## Zadanie: `List`
 
 Zajrzyj do pliku `List.cpp`, w którym jest zaimplementowana prosta (i niepoprawna) lista (single-linked list).
 

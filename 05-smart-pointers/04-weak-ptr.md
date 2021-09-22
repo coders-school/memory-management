@@ -14,8 +14,8 @@ ___
 
 <img data-id="cyclic" data-src="../img/cyclic_dependencies.gif" alt="a kid stroking a dog, stroking a kid, stroking a dog..." class="plain fragment fade-in">
 
-* <!-- .element: class="fragment fade-in" --> Obiekt klasy A posiada wskaźnik/referencję ustawione na siebie
-* <!-- .element: class="fragment fade-in" --> Obiekt klasy A posiada wskaźnik/referencję na obiekt klasy B, który z kolei wskazuje na obiekt klasy A
+* Obiekt klasy A posiada wskaźnik/referencję ustawione na siebie
+* Obiekt klasy A posiada wskaźnik/referencję na obiekt klasy B, który z kolei wskazuje na obiekt klasy A
 * <!-- .element: class="fragment fade-in" --> Jak to naprawić?
 
 ___
@@ -62,6 +62,7 @@ int main() {
     checkMe(wp);
 }
 ```
+<!-- .element: class="fragment fade-in" style="font-size: 0.57em" -->
 
 </div>
 
