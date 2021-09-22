@@ -10,7 +10,7 @@
 * Team leader & Trainer @ Nokia
 * Scrum Master @ Nokia & Credit Suisse
 * Code Reviewer @ Nokia
-* Web developer (HTML, PHP, CSS) @ StarCraft Area
+* Webdev (HTML, PHP, CSS) @ StarCraft Area
 
 </div>
 
