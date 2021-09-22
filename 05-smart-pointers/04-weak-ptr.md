@@ -92,9 +92,10 @@ struct Node {
 
 int main () {
     auto root = std::shared_ptr<Node>(new Node);
-    auto child = std::shared_ptr<Node>(new Node);
-    root->child = child;
-    child->parent = root;
+    auto leaf = std::shared_ptr<Node>(new Node);
+
+    root->child = leaf;
+    leaf->parent = root;
 }
 ```
 
@@ -113,9 +114,10 @@ struct Node {
 
 int main () {
     auto root = std::shared_ptr<Node>(new Node);
-    auto child = std::shared_ptr<Node>(new Node);
-    root->child = child;
-    child->parent = root;
+    auto leaf = std::shared_ptr<Node>(new Node);
+
+    root->child = leaf;
+    leaf->parent = root;
 }
 ```
 
