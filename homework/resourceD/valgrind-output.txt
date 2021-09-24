@@ -1,0 +1,23 @@
+valgrind -s ./resourceD d
+==6520== Memcheck, a memory error detector
+==6520== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==6520== Using Valgrind-3.16.1 and LibVEX; rerun with -h for copyright info
+==6520== Command: ./resourceD d
+==6520==
+Using resource. Passed d
+Passed d. d is prohibited.
+==6520==
+==6520== HEAP SUMMARY:
+==6520==     in use at exit: 1 bytes in 1 blocks
+==6520==   total heap usage: 5 allocs, 4 frees, 73,924 bytes allocated
+==6520==
+==6520== LEAK SUMMARY:
+==6520==    definitely lost: 1 bytes in 1 blocks
+==6520==    indirectly lost: 0 bytes in 0 blocks
+==6520==      possibly lost: 0 bytes in 0 blocks
+==6520==    still reachable: 0 bytes in 0 blocks
+==6520==         suppressed: 0 bytes in 0 blocks
+==6520== Rerun with --leak-check=full to see details of leaked memory
+==6520==
+==6520== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
