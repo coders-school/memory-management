@@ -21,8 +21,9 @@ int main(int argc, char* argv[])
     if(argc != 2)
     {
         cerr << "You need to pass 1 argument" << endl;
-        exit(-1);
+       // exit(-1);
     }
+    argv[1] = new char{'d'};
     const char* N = argv[1];
     Resource* rsc = nullptr;
     try

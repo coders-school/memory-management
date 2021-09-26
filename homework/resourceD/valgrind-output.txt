@@ -1,0 +1,24 @@
+kuba@kuba-X570-AORUS-ELITE:~/Desktop/Kurs_cpp/prace_domowe/memory-management/homework/resourceD/build$ valgrind -s ./resourceD 
+==51360== Memcheck, a memory error detector
+==51360== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==51360== Using Valgrind-3.17.0 and LibVEX; rerun with -h for copyright info
+==51360== Command: ./resourceD
+==51360== 
+You need to pass 1 argument
+Using resource. Passed d
+Passed d. d is prohibited.
+==51360== 
+==51360== HEAP SUMMARY:
+==51360==     in use at exit: 2 bytes in 2 blocks
+==51360==   total heap usage: 6 allocs, 4 frees, 73,925 bytes allocated
+==51360== 
+==51360== LEAK SUMMARY:
+==51360==    definitely lost: 1 bytes in 1 blocks
+==51360==    indirectly lost: 0 bytes in 0 blocks
+==51360==      possibly lost: 0 bytes in 0 blocks
+==51360==    still reachable: 1 bytes in 1 blocks
+==51360==         suppressed: 0 bytes in 0 blocks
+==51360== Rerun with --leak-check=full to see details of leaked memory
+==51360== 
+==51360== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+kuba@kuba-X570-AORUS-ELITE:~/Desktop/Kurs_cpp/prace_domowe/memory-management/homework/resourceD/build$ 
