@@ -1,4 +1,4 @@
-valgrind --leak-check=full ./resourceD "d"
+nanautzin@nanautzin-ubuntu ~/coders_school/memory-management/homework/resourceD/build [resource]: valgrind --leak-check=full ./resourceD dd
 ==22419== Memcheck, a memory error detector
 ==22419== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
 ==22419== Using Valgrind-3.17.0 and LibVEX; rerun with -h for copyright info
