@@ -29,12 +29,13 @@ int main(int argc, char* argv[])
     {
         rsc = new Resource();
         rsc->use(N);
-        delete rsc;
+        
     }
     catch (logic_error & e)
     {
         cout << e.what() << endl;
     }
+    delete rsc;
     return 0;
 }
 
