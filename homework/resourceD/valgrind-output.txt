@@ -20,3 +20,29 @@ Passed d. d is prohibited.
 ==15194== 
 ==15194== For lists of detected and suppressed errors, rerun with: -s
 ==15194== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+kasia@kasilap:~/Dokumenty/DyskD/CPP_workspace/repozytorium/memory-management/homework/resourceD/build$ valgrind --leak-check=full ./resourceD d
+==16057== Memcheck, a memory error detector
+==16057== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==16057== Using Valgrind-3.16.1 and LibVEX; rerun with -h for copyright info
+==16057== Command: ./resourceD d
+==16057== 
+Using resource. Passed d
+Passed d. d is prohibited.
+==16057== 
+==16057== HEAP SUMMARY:
+==16057==     in use at exit: 1 bytes in 1 blocks
+==16057==   total heap usage: 5 allocs, 4 frees, 73,924 bytes allocated
+==16057== 
+==16057== 1 bytes in 1 blocks are definitely lost in loss record 1 of 1
+==16057==    at 0x4838DEF: operator new(unsigned long) (vg_replace_malloc.c:342)
+==16057==    by 0x10927A: main (in /home/kasia/Dokumenty/DyskD/CPP_workspace/repozytorium/memory-management/homework/resourceD/build/resourceD)
+==16057== 
+==16057== LEAK SUMMARY:
+==16057==    definitely lost: 1 bytes in 1 blocks
+==16057==    indirectly lost: 0 bytes in 0 blocks
+==16057==      possibly lost: 0 bytes in 0 blocks
+==16057==    still reachable: 0 bytes in 0 blocks
+==16057==         suppressed: 0 bytes in 0 blocks
+==16057== 
+==16057== For lists of detected and suppressed errors, rerun with: -s
+==16057== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
