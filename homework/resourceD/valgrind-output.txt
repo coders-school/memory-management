@@ -23,4 +23,4 @@ Passed d. d is prohibited.
 ==22018==         suppressed: 0 bytes in 0 blocks
 ==22018== 
 ==22018== For lists of detected and suppressed errors, rerun with: -s
-==22018== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+==22018== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0) 
