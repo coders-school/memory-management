@@ -18,12 +18,16 @@ public:
 
 int main(int argc, char* argv[])
 {
-    if(argc != 2)
+    const char* N = nullptr;
+    if(argc >= 2)
     {
-        cerr << "You need to pass 1 argument" << endl;
-        exit(-1);
+       N  = argv[1];
     }
-    const char* N = argv[1];
+    else
+    {
+        N = "example_text";
+    }
+
     Resource* rsc = nullptr;
     try
     {
