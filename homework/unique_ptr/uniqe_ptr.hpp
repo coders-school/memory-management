@@ -21,13 +21,19 @@ public:
     uniqe_ptr<T> operator*() const noexcept { return *ptr; };
     T *operator->() const noexcept { return ptr; };
 
-    T *get();
-    T *release() {
+    T* get() const noexcept {
+        return ptr_;
+    }
+
+    T* release() {
         T* tempPtr = ptr_;
         ptr_ = nullptr;
         return temp;
     };
-    T *reset();
+    T* reset(T* newPtr) noexcept {
+        delete ptr_;
+        ptr_ = newPtr;
+    }
 
 private:
     T* ptr_;
