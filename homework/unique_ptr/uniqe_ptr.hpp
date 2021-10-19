@@ -18,8 +18,8 @@ public:
     uniqe_ptr &operator=(const uniqe_ptr &);          // copy assigment
     uniqe_ptr &operator=(uniqe_ptr &&other) noexcept; // move assigment
 
-    uniqe_ptr<T> operator*() const noexcept;
-    T *operator->() const noexcept;
+    uniqe_ptr<T> operator*() const noexcept { return *ptr; };
+    T *operator->() const noexcept { return ptr; };
 
     T *get();
     T *release() {
