@@ -7,16 +7,34 @@ class uniqe_ptr
 {
 public:
     uniqe_ptr() : ptr_(nullptr);
+
     explicit uniqe_ptr(T* ptr) : ptr_(ptr);
 
-    uniqe_ptr(const uniqe_ptr& other) = delete;     // copy constructor
-    uniqe_ptr(uniqe_ptr&& other) noexcept : uniqe_ptr(other.ptr_) {} // move constructor
-    ~uniqe_ptr() {
-        delete ptr;
-    };
+    // copy constructor
+    uniqe_ptr(const uniqe_ptr& other) = delete;  
 
-    uniqe_ptr &operator=(const uniqe_ptr &);          // copy assigment
-    uniqe_ptr &operator=(uniqe_ptr &&other) noexcept; // move assigment
+    // move constructor
+    uniqe_ptr(uniqe_ptr&& other) noexcept  {
+        ptr_ = other.release();
+    } 
+
+    ~uniqe_ptr() {
+        if(ptr_) {
+            delete ptr;
+        }
+    };
+    // copy assigment
+    uniqe_ptr& operator=(const uniqe_ptr &) = delete; 
+
+    // move assigment
+    uniqe_ptr& operator=(uniqe_ptr &&other) noexcept {
+        if(this != &other) {
+            delete ptr_;
+            ptr_ = other.ptr_;
+            other.ptr_ = nullptr;
+        }
+        return *this;
+    }
 
     uniqe_ptr<T> operator*() const noexcept { return *ptr; };
     T *operator->() const noexcept { return ptr; };
