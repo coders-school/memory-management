@@ -6,9 +6,9 @@ template <typename T>
 class uniqe_ptr
 {
 public:
-    uniqe_ptr() : ptr_(nullptr);
+    uniqe_ptr() : ptr_(nullptr) {};
 
-    explicit uniqe_ptr(T* ptr) : ptr_(ptr);
+    explicit uniqe_ptr(T* ptr) : ptr_(ptr) {};
 
     // copy constructor
     uniqe_ptr(const uniqe_ptr& other) = delete;  
@@ -20,9 +20,10 @@ public:
 
     ~uniqe_ptr() {
         if(ptr_) {
-            delete ptr;
+            delete ptr_;
         }
     };
+
     // copy assigment
     uniqe_ptr& operator=(const uniqe_ptr &) = delete; 
 
@@ -36,8 +37,8 @@ public:
         return *this;
     }
 
-    uniqe_ptr<T> operator*() const noexcept { return *ptr; };
-    T *operator->() const noexcept { return ptr; };
+    T& operator*() const noexcept { return *ptr_; };
+    T* operator->() const noexcept { return ptr_; };
 
     T* get() const noexcept {
         return ptr_;
@@ -46,11 +47,13 @@ public:
     T* release() {
         T* tempPtr = ptr_;
         ptr_ = nullptr;
-        return temp;
+        return tempPtr;
     };
-    T* reset(T* newPtr) noexcept {
+
+    void reset(T* newPtr = nullptr) noexcept {
         delete ptr_;
         ptr_ = newPtr;
+        newPtr = nullptr;
     }
 
 private:

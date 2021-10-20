@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSIN 3.14)
+cmake_minimum_required(VERSION 3.14)
 project(unique_pointer)
 
 set (CMAKE_CXX_STANDARD 17)
@@ -14,7 +14,13 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-# Now simply link against gtest or gtest_main as needed. Eg
-add_executable(example example.cpp)
-target_link_libraries(example gtest_main)
-add_test(NAME example_test COMMAND example)
+
+add_executable(${PROJECT_NAME}_gt unique_ptr_gt.cpp)
+target_link_libraries(${PROJECT_NAME}_gt gtest_main)
+
+enable_testing()
+add_test(NAME ${PROJECT_NAME}-test COMMAND ${PROJECT_NAME})
+include(GoogleTest)
+# target_compile_options(${PROJECT_NAME} PUBLIC  -Wall  -Werror -Wpedantic)
+
+
