@@ -15,10 +15,16 @@ public:
 
     T& operator*() const noexcept { return *ptr_; };
     T* operator->() const noexcept { return ptr_; };
+    T* get() const noexcept;
 private:
 
     T* rawPtr_{nullptr};
     
     void deleteStoredPointers();
 };
+
+template<typename T>
+T* shared_ptr<T>::get() const noexcept {
+    return rawPtr_;
+}
 
