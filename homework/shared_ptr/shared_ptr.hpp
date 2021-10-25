@@ -16,6 +16,9 @@ public:
     T& operator*() const noexcept { return *ptr_; };
     T* operator->() const noexcept { return ptr_; };
     T* get() const noexcept;
+    T* reset() noexcept;
+    long use_count() const noexcept
+
 private:
 
     T* rawPtr_{nullptr};
@@ -26,5 +29,10 @@ private:
 template<typename T>
 T* shared_ptr<T>::get() const noexcept {
     return rawPtr_;
+}
+
+template<typename T>
+T* shared_ptr<T>::reset() noexcept {
+
 }
 
