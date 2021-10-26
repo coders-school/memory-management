@@ -3,6 +3,7 @@
 #include <atomic>
 #include <cstddef>
 #include <functional>
+
 template<typename T>
 class ControlBlock {
 public:
@@ -11,10 +12,25 @@ public:
     ControlBlock& operator=(const ControlBlock& ) = delete;
     ~ControlBlock() = default
 
-    void increasSharedRef();
-    void increasWeakRef();
-    void decreaseSharedRef();
-    void DecreaseWeakRed();
+    void increasSharedRef() { sharedRef_ ++; };
+    void increasWeakRef() {weakRef_++; };
+    void decreaseSharedRef() {
+        if(sharedRef_ > 0) {
+            sharedRef_--;
+        }
+    };
+    void DecreaseWeakRed() {
+        if(weakRef_ > 0) {
+            weakRef_--;
+        }
+    };
+
+    size_t getSharedRefNumber() const [
+        return sharedRef_.load();
+    ];
+    size_t getWeakRegNumber() const {
+        return weakRef_.load();
+    };
 
     
 
