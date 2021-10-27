@@ -1,65 +1,76 @@
-#pragma once 
+#pragma once
 
 #include <atomic>
 #include <cstddef>
 #include <functional>
 
-template<typename T>
-using Deleter =  std::function<void(T* ptr)>;
+template <typename T>
+using Deleter = std::function<void(T *ptr)>;
 
-using defaultDeleter = [](T* ptr) { delete ptr; };
+using defaultDeleter = [](T *ptr)
+{ delete ptr; };
 
-template<typename T>
-class ControlBlock {
+template <typename T>
+class ControlBlock
+{
 public:
     ControlBlock() = default;
     ControlBlock(Deleter<T> defaultDeleter);
     // ControlBlock& operator=(const ControlBlock& ) = delete;
-    ~ControlBlock() = default
+    ~ControlBlock() = default;
 
-    void increasSharedRef() { sharedRef_ ++; };
-    void increasWeakRef() {weakRef_++; };
+    void increasSharedRef();
+    void increasWeakRef();
 
     void decreaseSharedRef();
-    void DecreaseWeakRed();
+    void decreaseWeakRef();
 
     size_t getSharedRef() const noexcept;
-    size_t getWeakReg() const noexcept;
+    size_t getWeakRef() const noexcept;
 
     Deleter<T> getDeleter() noexcept;
 
 private:
     std::atomic<size_t> sharedRef_{1};
     std::atomic<size_t> weakRef_{0};
-    Deleter deleter_ {defaultDeleter};
+    Deleter deleter_{defaultDeleter};
 };
 
 template <typename T>
-size_t ControlBlock<T>::getSharedRef() const noexcept {
+size_t ControlBlock<T>::getSharedRef() const noexcept
+{
     return sharedRef_.load();
 }
 template <typename T>
-size_t ControlBlock<T>::getWeakReg() const noexcept {
+size_t ControlBlock<T>::getWeakRef() const noexcept
+{
     return weakRef_.load();
 }
 template <typename T>
- void ControlBlock<T>::DecreaseWeakRed() {
-        if(weakRef_ > 0) {
-            weakRef_--;
-        }
-    };
+void ControlBlock<T>::decreaseWeakRef()
+{
+    if (weakRef_ > 0)
+    {
+        weakRef_--;
+    }
+};
 template <typename T>
-void ControlBlock::decreaseSharedRef() {
-        if(sharedRef_ > 0) {
-            sharedRef_--;
-        }
-    };
+void ControlBlock<T>::decreaseSharedRef()
+{
+    if (sharedRef_ > 0)
+    {
+        sharedRef_--;
+    }
+};
+
 template <typename T>
-void ControlBlock::increasSharedRef() { 
+void ControlBlock<T>::increasSharedRef()
+{
     sharedRef_++;
 };
 
 template <typename T>
-void ControlBlock::increasWeakRef() { 
-     weakRef_++; 
+void ControlBlock<T>::increasWeakRef()
+{
+    weakRef_++;
 };
