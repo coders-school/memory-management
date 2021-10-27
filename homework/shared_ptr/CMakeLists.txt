@@ -17,5 +17,5 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 add_executable(${PROJECT_NAME}_gt shared_ptr_gt.cpp)
-target_link_libraries(${PROJECT_NAME}_gt gtest_main)
-enable_testing()s
+# target_link_libraries(${PROJECT_NAME}_gt gtest_main)
+# enable_testing()s
