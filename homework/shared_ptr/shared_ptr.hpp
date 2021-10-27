@@ -37,7 +37,7 @@ T *shared_ptr<T>::get() const noexcept
     return rawPtr_;
 }
 
-template <typename T>
+template <typename T> // TODO
 T *shared_ptr<T>::reset() noexcept
 {
 }
@@ -57,7 +57,7 @@ T *shared_ptr<T>::operator->() const noexcept
 template <typename T> // TODO
 void shared_ptr<T>::deleteStoredPointers()
 {
-    if (cb)
+    if (cb_)
     {
         cb_->decreaseSharedRef();
         if (cb_->getSharedRef() == 0 && cb_->getWeakRef() == 0)
