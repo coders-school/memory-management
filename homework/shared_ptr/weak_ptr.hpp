@@ -27,19 +27,6 @@ public:
 };
 
 template <typename T>
-void Weak_Ptr<T>::releaseMemory() {
-    if (cb_) {
-        cb_->decreaseWeakRef();
-        if (cb_->getSharedRef() == 0 && cb_->getWeakRef() == 0)
-        {
-            delete cb_;
-            cb_ = nullptr;
-        }
-    }
-}
-
-
-template <typename T>
 Weak_Ptr<T>::Weak_Ptr(const Weak_Ptr &ptr) noexcept : rawPtr_(ptr.rawPtr_), cb_(ptr.cb_)
 {
     cb_->increasWeakRef();
@@ -56,6 +43,18 @@ template <typename T>
 Weak_Ptr<T>::~Weak_Ptr()
 {
     releaseMemory();
+}
+
+template <typename T>
+void Weak_Ptr<T>::releaseMemory() {
+    if (cb_) {
+        cb_->decreaseWeakRef();
+        if (cb_->getSharedRef() == 0 && cb_->getWeakRef() == 0)
+        {
+            delete cb_;
+            cb_ = nullptr;
+        }
+    }
 }
 
 template <typename T>
@@ -81,4 +80,17 @@ Weak_Ptr<T> &Weak_Ptr<T>::operator=(Weak_Ptr &&ptr) noexcept
         
 
     }
+}
+
+template <typename T>
+bool Weak_Ptr<T>::expired() const noexcept {
+    return use_count == 0;
+}
+
+template <typename T>
+long Weak_Ptr<T>::use_count() const noexcept {
+    if (cb_) {
+        return cb_->getSharedRef();
+    }
+    return 0;
 }
