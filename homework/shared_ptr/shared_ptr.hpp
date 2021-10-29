@@ -23,14 +23,14 @@ public:
     T &operator*() const noexcept { return *ptr_; };
     T *operator->() const noexcept { return ptr_; };
     const T *get() const noexcept;
-    T *reset() noexcept;
+    T *reset(T* ptr) noexcept;
     long use_count() const noexcept;
     explicit operator bool() const noexcept;
 
 private:
     T *rawPtr_{nullptr};
     ControlBlock<T> *cb_{nullptr};
-    git void deleteStoredPointers();
+    void releaseMemory();
 };
 
 template <typename T>
@@ -60,7 +60,7 @@ shared_ptr<T> &shared_ptr<T>::operator=(const shared_ptr &ptr) noexcept
 {
     if (ptr != this)
     {
-        deleteStoredPointers();
+        releaseMemory();
         rawPtr_ = ptr.rawPtr_;
         cb_ = ptr.cb_;
         cb_->increasSharedRef();
@@ -73,7 +73,7 @@ shared_ptr<T> &shared_ptr<T>::operator=(shared_ptr &&ptr) noexpect
 {
     if (ptr != this)
     {
-        deleteStoredPointers();
+        releaseMemory();
         rawPtr_ = ptr.rawPtr_;
         cb_ = ptr.cb_;
         rawPtr_ = nullptr;
@@ -89,8 +89,11 @@ const T *shared_ptr<T>::get() const noexcept
 }
 
 template <typename T>
-T *shared_ptr<T>::reset() noexcept
+T *shared_ptr<T>::reset(T* ptr) noexcept
 {
+    releaseMemory();
+    ptr_ = ptr;
+    cb_ = new ControlBlock<T>;
 }
 
 template <typname T>
