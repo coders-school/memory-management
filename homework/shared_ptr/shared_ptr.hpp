@@ -102,3 +102,8 @@ long shared_ptr<T>::use_count() const noexcept
     }
     return 0;
 }
+
+template <typename T>
+explicit shared_ptr<T>::operator bool() const noexcept {
+    return ptr_ != nullptr;
+}
