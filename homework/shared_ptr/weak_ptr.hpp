@@ -94,3 +94,15 @@ long Weak_Ptr<T>::use_count() const noexcept {
     }
     return 0;
 }
+
+template <typename T>
+shared_ptr<T> Weak_Ptr<T>::lock() const noexcept {
+    return expired() ? shared_ptr<T>() : shared_ptr<T>(*this);
+}
+
+template <typename T>
+void Weak_Ptr<T>::reset() noexcept {
+    releaseMemory();
+    rawPtr_ = nullptr;
+    cb_ = nullptr;
+} 
