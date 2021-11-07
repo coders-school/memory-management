@@ -20,6 +20,8 @@ build/
 linuxBuild/
 .vscode/
 googletest/
+compile_flags.txt
+.cache
 
 # Compiled Object files
 *.slo
