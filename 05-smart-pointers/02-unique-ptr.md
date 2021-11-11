@@ -14,7 +14,7 @@ ___
 * <!-- .element: class="fragment fade-in" --> możliwe jest tylko przenoszenie
 * <!-- .element: class="fragment fade-in" --> można przekazać własny <code>deleter</code> (funkcję do zawołania w destruktorze)
 
-<img data-src="../img/uniqueptrinverted.png" alt="unique pointers" class="plain fragment fade-in">
+<img src="../img/uniqueptrinverted.png" alt="unique pointers" class="plain fragment fade-in">
 
 ___
 

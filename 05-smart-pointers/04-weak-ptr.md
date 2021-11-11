@@ -2,7 +2,7 @@
 
 ## Cykliczne zależności
 
-<img data-id="cyclic" data-src="../img/cyclicinverted.png" alt="cyclic dependencies" class="plain fragment fade-in">
+<img data-id="cyclic" src="../img/cyclicinverted.png" alt="cyclic dependencies" class="plain fragment fade-in">
 
 * <!-- .element: class="fragment fade-in" --> Obiekt klasy A posiada wskaźnik/referencję ustawione na siebie
 * <!-- .element: class="fragment fade-in" --> Obiekt klasy A posiada wskaźnik/referencję na obiekt klasy B, który z kolei wskazuje na obiekt klasy A
@@ -12,7 +12,7 @@ ___
 
 ## Cykliczne zależności
 
-<img data-id="cyclic" data-src="../img/cyclic_dependencies.gif" alt="a kid stroking a dog, stroking a kid, stroking a dog..." class="plain fragment fade-in">
+<img data-id="cyclic" src="../img/cyclic_dependencies.gif" alt="a kid stroking a dog, stroking a kid, stroking a dog..." class="plain fragment fade-in">
 
 * Obiekt klasy A posiada wskaźnik/referencję ustawione na siebie
 * Obiekt klasy A posiada wskaźnik/referencję na obiekt klasy B, który z kolei wskazuje na obiekt klasy A
@@ -30,7 +30,7 @@ ___
 * <!-- .element: class="fragment fade-in" --> może zostać utworzony tylko z użyciem <code>std::shared_ptr<></code>
 
 <div>
-    <img data-src="../img/weakptrinverted.png" alt="weak pointers" class="plain fragment fade-in">
+    <img src="../img/weakptrinverted.png" alt="weak pointers" class="plain fragment fade-in">
 </div>
 
 ___

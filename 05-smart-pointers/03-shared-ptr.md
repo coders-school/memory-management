@@ -15,7 +15,7 @@ ___
 * <!-- .element: class="fragment fade-in" --> można dostarczyć własny deleter
 * <!-- .element: class="fragment fade-in" --> można dostarczyć własny alokator
 
-<img data-src="../img/sharedptr1inverted.png" alt="shared pointers" class="plain fragment fade-in">
+<img src="../img/sharedptr1inverted.png" alt="shared pointers" class="plain fragment fade-in">
 
 ___
 <!-- .slide: style="font-size: 0.85em" -->
@@ -131,6 +131,6 @@ int main () {
 
 <div class="col fragment fade-in">
     Wyciek pamięci!
-    <img data-src="../img/kot.jpg" alt="kot" class="plain" style="height: 50%">
+    <img src="../img/kot.jpg" alt="kot" class="plain" style="height: 50%">
 
 </div>
