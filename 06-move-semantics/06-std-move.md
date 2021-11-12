@@ -1,6 +1,5 @@
 ## Implementacja `std::move()`
 
-### "Uniwersalna referencja"
 
 ```cpp
 template <typename T>
@@ -9,6 +8,14 @@ typename std::remove_reference<T>::type&& move(T&& obj) noexcept {
     return static_cast<ReturnType>(obj);
 }
 ```
+<!-- .element: class="fragment fade-in" -->
+
+___
+
+## Forwarding reference
+
+### "Uniwersalna referencja"
+<!-- .element: class="fragment fade-in" -->
 
 * <!-- .element: class="fragment fade-in" --> <code>T&&</code> jako parametr szablonowy nie oznacza tylko referencji do r-value
 * <!-- .element: class="fragment fade-in" --> <code>T&&</code> to "forwarding reference" lub "universal reference" (nazwa zaproponowana przez Scotta Meyersa)
