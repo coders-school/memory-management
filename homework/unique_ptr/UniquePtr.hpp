@@ -61,7 +61,7 @@ public:
         return temp;
     }
 
-    void reset(T* data) {
+    void reset(T* data = nullptr) {
         if (data != ptr_) {
             delete ptr_;
             ptr_ = data;
