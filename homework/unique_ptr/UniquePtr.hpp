@@ -1,13 +1,3 @@
-// Jest klasą szablonową
-// Trzyma wskaźnik do zarządzanego obiektu
-// Konstruktor kopiuje wskaźnik
-// Destruktor zwalnia pamięć
-// Kopiowanie jest niedozwolone
-// Przenoszenie jest dozwolone i oznacza:
-//     Skopiowanie wskaźnika z obiektu źródłowego
-//     Ustawienie wskaźnika w obiekcie źródłowym na nullptr
-// Wymagane metody: operator*(), operator->(), get(), release(), reset()
-
 template<typename T>
 class UniquePtr {
 public:
