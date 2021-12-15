@@ -14,6 +14,10 @@ public:
     {
     }
 
+    unique_ptr(const unique_ptr&) = delete;
+    
+    unique_ptr& operator=(const unique_ptr&) = delete;
+
     ~unique_ptr() noexcept
     {
         if (ptr_) {
