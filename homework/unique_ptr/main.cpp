@@ -32,5 +32,21 @@ int main()
         std::cout << "ptr2 own an object\n";
     }
 
+    std::cout << "\tpointer function reset()\n";
+    std::cout << "Before:\n";
+    std::cout << "\tptr==nullptr\n";
+    std::cout << "\tptr2==5\n";
+    ptr.reset(new int{ptrValue});
+    ptr2.reset();
+    std::cout << "\tptr.reset(new int{5});\n";
+    std::cout << "\tptr2.reset();\n";
+    std::cout << "After:\n";
+    if (ptr) {
+        std::cout << "ptr own an object, value==" << *ptr << "\n";
+    }
+    if (!ptr2) {
+        std::cout << "ptr2 not own an object\n";
+    }
+
     return 0;
 }

@@ -36,6 +36,14 @@ public:
         return ptr_ != nullptr;
     }
 
+    void reset(T* ptr = nullptr) noexcept
+    {
+        if (ptr_) {
+            delete ptr_;
+        }
+        ptr_ = ptr;
+    }
+
 private:
     T* ptr_;
 };
