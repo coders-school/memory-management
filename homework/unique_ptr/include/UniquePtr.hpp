@@ -31,6 +31,11 @@ public:
         return *ptr_;
     }
 
+    explicit operator bool() const noexcept
+    {
+        return ptr_ != nullptr;
+    }
+
 private:
     T* ptr_;
 };

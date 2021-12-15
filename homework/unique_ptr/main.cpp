@@ -24,5 +24,13 @@ int main()
         std::cout << "Value getting using dereference operator* value: *ptr==" << *ptr2 << "\n";
     }
 
+    std::cout << "\tpointer operator bool()\n";
+    if (!ptr) {
+        std::cout << "ptr not own an object\n";
+    }
+    if (ptr2) {
+        std::cout << "ptr2 own an object\n";
+    }
+
     return 0;
 }
