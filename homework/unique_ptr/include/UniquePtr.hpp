@@ -14,6 +14,13 @@ public:
     {
     }
 
+    ~unique_ptr() noexcept
+    {
+        if (ptr_) {
+            delete ptr_;
+        }
+    }
+
     T* get() const noexcept
     {
         return ptr_;
