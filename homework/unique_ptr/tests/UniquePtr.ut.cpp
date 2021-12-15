@@ -48,3 +48,15 @@ TEST(UniquePtr, ResetFunctionWithoutProvidedPointerShouldChangePointerValueToNul
     EXPECT_FALSE(ptr);
     EXPECT_EQ(ptr.get(), nullptr);
 }
+
+TEST(UniquePtr, ReleaseFunctionShouldReleaseTheOwnershipOfManagedObject)
+{
+    my_pointer::unique_ptr<int> ptr { new int { pointerValue } };
+    int* releasedPtr = ptr.release();
+    EXPECT_FALSE(ptr);
+    EXPECT_EQ(ptr.get(), nullptr);
+
+    EXPECT_TRUE(releasedPtr);
+    EXPECT_EQ(*releasedPtr, pointerValue);
+    delete releasedPtr;
+}

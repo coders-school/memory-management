@@ -15,7 +15,7 @@ int main()
     }
 
     my_pointer::unique_ptr<int> ptr2 { new int { ptrValue } };
-    std::cout << "\tmy_pointer::unique_ptr<int> ptr2{new int{ptrValue}};\n";
+    std::cout << "\n\tmy_pointer::unique_ptr<int> ptr2{new int{ptrValue}};\n";
     if (*ptr2.get() == ptrValue) {
         std::cout << "Constructor initialized with pointer owning value 5\n";
     }
@@ -24,7 +24,7 @@ int main()
         std::cout << "Value getting using dereference operator* value: *ptr==" << *ptr2 << "\n";
     }
 
-    std::cout << "\tpointer operator bool()\n";
+    std::cout << "\n\tpointer operator bool()\n";
     if (!ptr) {
         std::cout << "ptr not own an object\n";
     }
@@ -32,7 +32,7 @@ int main()
         std::cout << "ptr2 own an object\n";
     }
 
-    std::cout << "\tpointer function reset()\n";
+    std::cout << "\n\tpointer function reset()\n";
     std::cout << "Before:\n";
     std::cout << "\tptr==nullptr\n";
     std::cout << "\tptr2==5\n";
@@ -47,6 +47,16 @@ int main()
     if (!ptr2) {
         std::cout << "ptr2 not own an object\n";
     }
+
+    std::cout << "\n\tpointer function release()\n";
+    int* releasedPointer = ptr.release();
+    if (!ptr) {
+        std::cout << "Pointer ptr released, it own nothing\n";
+    }
+    if (releasedPointer) {
+        std::cout << "raw pointer releasedPointer own value released from ptr, value==" << *releasedPointer << '\n';
+    }
+    delete releasedPointer;
 
     return 0;
 }

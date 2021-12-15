@@ -44,6 +44,13 @@ public:
         ptr_ = ptr;
     }
 
+    T* release() noexcept
+    {
+        T* current_pointer = ptr_;
+        ptr_ = nullptr;
+        return current_pointer;
+    }
+
 private:
     T* ptr_;
 };
