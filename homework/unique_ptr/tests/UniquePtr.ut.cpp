@@ -15,3 +15,9 @@ TEST(UniquePtr, ConstructorShouldTakePointerAndThenOwnsIt)
     my_pointer::unique_ptr<int> ptr { new int { pointerValue } };
     EXPECT_EQ(*ptr.get(), pointerValue);
 }
+
+TEST(UniquePtr, DereferenceOperatorShouldProvideAccessToObject)
+{
+    my_pointer::unique_ptr<int> ptr { new int { pointerValue } };
+    EXPECT_EQ(*ptr, pointerValue);
+}

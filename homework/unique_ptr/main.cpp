@@ -16,8 +16,12 @@ int main()
 
     my_pointer::unique_ptr<int> ptr2 { new int { ptrValue } };
     std::cout << "\tmy_pointer::unique_ptr<int> ptr2{new int{ptrValue}};\n";
-    if (*ptr2.get() == 5) {
+    if (*ptr2.get() == ptrValue) {
         std::cout << "Constructor initialized with pointer owning value 5\n";
+    }
+
+    if (*ptr2 == ptrValue) {
+        std::cout << "Value getting using dereference operator* value: *ptr==" << *ptr2 << "\n";
     }
 
     return 0;
