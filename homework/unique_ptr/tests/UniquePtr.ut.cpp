@@ -1,6 +1,9 @@
 #include "gtest/gtest.h"
 
-TEST(EmptyTest, EmptyTestShouldBeTrue)
+#include "UniquePtr.hpp"
+
+TEST(UniquePtr, DefaultConstructorShouldInitializePointerWithNullPtrValue)
 {
-    EXPECT_TRUE(true);
+    my_pointer::unique_ptr<int> ptr;
+    EXPECT_EQ(ptr.get(), nullptr);
 }
