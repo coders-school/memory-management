@@ -58,5 +58,16 @@ int main()
     }
     delete releasedPointer;
 
+    std::cout << "\n\tmove constructor\n";
+    my_pointer::unique_ptr<int> ptr3 { new int { ptrValue } };
+    auto ptrMoved { std::move(ptr3) };
+    std::cout << "\tauto ptrMoved { std::move { ptr3 } };\n";
+    if (!ptr3) {
+        std::cout << "Pointer ptr3 transfered ownership to ptrMoved\n";
+    }
+    if (ptrMoved) {
+        std::cout << "Pointer ptrMoved, value==" << *ptrMoved << '\n';
+    }
+
     return 0;
 }

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <utility>
+
 namespace my_pointer {
 template <typename T>
 class unique_ptr {
@@ -15,9 +17,14 @@ public:
     }
 
     unique_ptr(const unique_ptr&) = delete;
-    
-    unique_ptr& operator=(const unique_ptr&) = delete;
 
+    unique_ptr(unique_ptr&& other) noexcept
+        : ptr_ { std::exchange(other.ptr_, nullptr) }
+    {
+    }
+
+    unique_ptr& operator=(const unique_ptr&) = delete;
+    
     ~unique_ptr() noexcept
     {
         if (ptr_) {

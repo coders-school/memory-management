@@ -60,3 +60,15 @@ TEST(UniquePtr, ReleaseFunctionShouldReleaseTheOwnershipOfManagedObject)
     EXPECT_EQ(*releasedPtr, pointerValue);
     delete releasedPtr;
 }
+
+TEST(UniquePtr, MoveConstructorShouldConstructNewPointerByTransferingOwnershipFromPassedPointer)
+{
+    my_pointer::unique_ptr<int> ptr { new int { pointerValue } };
+    EXPECT_EQ(*ptr, pointerValue);
+
+    auto movedPtr { std::move(ptr) };
+    EXPECT_FALSE(ptr);
+    EXPECT_EQ(ptr.get(), nullptr);
+    EXPECT_TRUE(movedPtr);
+    EXPECT_EQ(*movedPtr, pointerValue);
+}
