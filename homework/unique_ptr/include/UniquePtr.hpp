@@ -9,6 +9,11 @@ public:
     {
     }
 
+    explicit unique_ptr(T* ptr) noexcept
+        : ptr_ { ptr }
+    {
+    }
+
     T* get() const noexcept
     {
         return ptr_;
