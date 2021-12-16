@@ -52,7 +52,12 @@ public:
     {
         return *ptr_;
     }
-    
+
+    T* operator->() const noexcept
+    {
+        return ptr_;
+    }
+
     explicit operator bool() const noexcept
     {
         return ptr_ != nullptr;

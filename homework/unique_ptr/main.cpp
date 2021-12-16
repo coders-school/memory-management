@@ -4,6 +4,22 @@
 
 constexpr int ptrValue = 5;
 
+class ArrowOperator {
+public:
+    ArrowOperator(int value)
+        : testValue_ { value }
+    {
+    }
+
+    int getTestValue() const
+    {
+        return testValue_;
+    }
+
+private:
+    const int testValue_;
+};
+
 int main()
 {
     std::cout << "Hello Pointer!\n";
@@ -77,6 +93,12 @@ int main()
     }
     if (ptr3) {
         std::cout << "Pointer ptr3, value==" << *ptr3 << '\n';
+    }
+
+    std::cout << "\narrow operator ->\n";
+    my_pointer::unique_ptr<ArrowOperator> ptr4 { new ArrowOperator { ptrValue } };
+    if (ptr4) {
+        std::cout << "Arrow operator calling on class getter, value==" << ptr4->getTestValue() << '\n';
     }
 
     return 0;

@@ -3,6 +3,18 @@
 #include "UniquePtr.hpp"
 
 constexpr int pointerValue = 5;
+constexpr int classValue = 42;
+
+class ArrowOperatorTest {
+public:
+    int getTestValue() const
+    {
+        return testValue_;
+    }
+
+private:
+    const int testValue_ { classValue };
+};
 
 TEST(UniquePtr, DefaultConstructorShouldInitializePointerWithNullPtrValue)
 {
@@ -87,4 +99,10 @@ TEST(UniquePtr, MoveAssingmentSouldTransferOwnershipFromPassedPointer)
     EXPECT_EQ(ptr.get(), nullptr);
     EXPECT_TRUE(movedPtr);
     EXPECT_EQ(*movedPtr, pointerValue);
+}
+
+TEST(UniquePtr, ArrowOperatorShouldProvideAccesToOwnedObject)
+{
+    my_pointer::unique_ptr<ArrowOperatorTest> ptr { new ArrowOperatorTest {} };
+    EXPECT_EQ(ptr->getTestValue(), classValue);
 }
