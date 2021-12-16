@@ -1,0 +1,40 @@
+name: unique_ptr
+
+on: [push, pull_request]
+
+jobs:
+  Tests:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out code
+      uses: actions/checkout@master
+    - name: Create build directory
+      run: mkdir homework/unique_ptr/build
+    - name: Compile
+      working-directory: homework/unique_ptr/build
+      run: |
+        cmake ..
+        make
+    - name: Run UTs
+      working-directory: homework/unique_ptr/build
+      run: |
+        ctest -V
+  Memory:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out code
+      uses: actions/checkout@master
+    - name: Create build directory
+      run: mkdir homework/unique_ptr/build
+    - name: Compile code and install valgrind
+      working-directory: homework/unique_ptr/build
+      run: |
+        sudo apt install valgrind
+        cmake ..
+        make
+    - name: Run Valgrind
+      working-directory: homework/unique_ptr/build
+      run: |
+        valgrind --leak-check=full ./UniquePtr-ut
+        valgrind --leak-check=full ./UniquePtr
+
