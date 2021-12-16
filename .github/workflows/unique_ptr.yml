@@ -35,6 +35,6 @@ jobs:
     - name: Run Valgrind
       working-directory: homework/unique_ptr/build
       run: |
-        valgrind --leak-check=full ./UniquePtr-ut
-        valgrind --leak-check=full ./UniquePtr
+        valgrind --leak-check=full ./unique_ptr-ut
+        valgrind --leak-check=full ./unique_ptr
 
