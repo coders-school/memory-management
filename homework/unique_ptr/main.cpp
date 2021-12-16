@@ -69,5 +69,15 @@ int main()
         std::cout << "Pointer ptrMoved, value==" << *ptrMoved << '\n';
     }
 
+    std::cout << "\n\tmove assigment\n";
+    ptr3 = std::move(ptrMoved);
+    std::cout << "\tgetting ptrMove back to ptr3\n";
+    if (!ptrMoved) {
+        std::cout << "Pointer ptrMoved transfered ownership to ptr3 using assingment operator=\n";
+    }
+    if (ptr3) {
+        std::cout << "Pointer ptr3, value==" << *ptr3 << '\n';
+    }
+
     return 0;
 }

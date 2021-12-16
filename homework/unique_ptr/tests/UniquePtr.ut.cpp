@@ -72,3 +72,19 @@ TEST(UniquePtr, MoveConstructorShouldConstructNewPointerByTransferingOwnershipFr
     EXPECT_TRUE(movedPtr);
     EXPECT_EQ(*movedPtr, pointerValue);
 }
+
+TEST(UniquePtr, MoveAssingmentSouldTransferOwnershipFromPassedPointer)
+{
+    my_pointer::unique_ptr<int> ptr { new int { pointerValue } };
+    EXPECT_EQ(*ptr, pointerValue);
+
+    my_pointer::unique_ptr<int> movedPtr;
+    EXPECT_FALSE(movedPtr);
+
+    movedPtr = std::move(ptr);
+
+    EXPECT_FALSE(ptr);
+    EXPECT_EQ(ptr.get(), nullptr);
+    EXPECT_TRUE(movedPtr);
+    EXPECT_EQ(*movedPtr, pointerValue);
+}

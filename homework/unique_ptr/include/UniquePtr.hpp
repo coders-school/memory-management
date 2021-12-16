@@ -24,7 +24,18 @@ public:
     }
 
     unique_ptr& operator=(const unique_ptr&) = delete;
-    
+
+    unique_ptr& operator=(unique_ptr&& other) noexcept
+    {
+        if (this != &other) {
+            std::swap(ptr_, other.ptr_);
+            delete other.ptr_;
+            other.ptr_ = nullptr;
+        }
+
+        return *this;
+    }
+
     ~unique_ptr() noexcept
     {
         if (ptr_) {
@@ -41,7 +52,7 @@ public:
     {
         return *ptr_;
     }
-
+    
     explicit operator bool() const noexcept
     {
         return ptr_ != nullptr;
