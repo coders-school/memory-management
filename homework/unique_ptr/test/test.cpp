@@ -3,11 +3,10 @@
 #include "../uniquePTR.hpp"
 #include <type_traits>
 
-SCENARIO("Testing unique pointer")
+SCENARIO("Testing unique pointer - copy")
 {
-    GIVEN("Made pointer")
+    GIVEN("Two scenarios")
     {
-        auto unique2 = unique_ptr<int>(new int(5));
         WHEN("Checking if it is possible to copy by copy constructor")
         {
             auto copy = std::is_copy_constructible<unique_ptr<int>>::value;
@@ -16,22 +15,36 @@ SCENARIO("Testing unique pointer")
                 REQUIRE_FALSE(copy);
             }
         }
-        WHEN("Checking if it is possible to copy by copy assignment operator"){
+        WHEN("Checking if it is possible to copy by copy assignment operator")
+        {
             auto copy2 = std::is_copy_assignable<unique_ptr<int>>::value;
-            THEN("Result should be false"){
+            THEN("Result should be false")
+            {
                 REQUIRE_FALSE(copy2);
             }
         }
+    }
+}
 
-        // WHEN("Find student with surname Nowak")
-        // {
-        //     db->GetStudentsWithSurname("Nowak");
-        //     THEN("vector contains Nowak")
-        //     {
-        //         REQUIRE(db->person.size());
-        //         auto Surname0 = db->person[0]->GetSurname();
-        //         CHECK(Surname0 == "Nowak");
-        //     }
-        // }
+SCENARIO("Testing unique pointer - move")
+{
+    GIVEN("Two scenarios")
+    {
+        WHEN("Checking if it is possible to move by move constructor")
+        {
+            auto move = std::is_move_constructible<unique_ptr<int>>::value;
+            THEN("Result should be true")
+            {
+                REQUIRE(move);
+            }
+        }
+        WHEN("Checking if it is possible to move by move assignment operator")
+        {
+            auto move2 = std::is_move_assignable<unique_ptr<int>>::value;
+            THEN("Result should be true")
+            {
+                REQUIRE(move2);
+            }
+        }
     }
 }
