@@ -2,14 +2,14 @@
 #include <iostream>
 
 template <typename T>
-class unique_ptr {
+class unique_ptr 
+{
   T* ptr_{nullptr};
 public:
   unique_ptr() = default;
   explicit unique_ptr(T* ptr) : ptr_(ptr){}
   unique_ptr(const unique_ptr &) = delete;
   unique_ptr(unique_ptr&& rhs) {
-    std::cout << "move constructor\n";
     ptr_ = rhs.ptr_;
     rhs.ptr_ = nullptr;
   }
@@ -21,6 +21,25 @@ public:
       rhs.ptr_ = nullptr;
     }
     return *this;
+  }
+  T& operator*(){
+      return *ptr_;
+  }
+
+  T* operator->(){
+      return ptr_;
+  }
+  T* get(){
+      return ptr_;
+  }
+  T* release(){
+      T* newPtr = ptr_;
+      ptr_ = nullptr;
+      return newPtr;
+  }
+  void reset(T* newPtr = nullptr){
+      delete ptr_;
+      ptr_ = newPtr;
   }
   ~unique_ptr(){
     delete ptr_;
