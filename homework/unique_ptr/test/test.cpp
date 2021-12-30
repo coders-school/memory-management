@@ -48,3 +48,27 @@ SCENARIO("Testing unique pointer - move")
         }
     }
 }
+
+SCENARIO("Testing unique pointer - operators")
+{
+    GIVEN("Two scenarios")
+    {
+        WHEN("Checking overloading operator*()")
+        {
+            auto unique1 = unique_ptr<int>(new int (5));
+            auto operator1 = *unique1;
+            THEN("Value of operator1 should be equal to 5")
+            {
+                CHECK(operator1 == 5);
+            }
+        }
+        // WHEN("Checking overloading operator->()")
+        // {
+        //     auto operator2 = std::is_move_assignable<unique_ptr<int>>::value;
+        //     THEN("Result should be true")
+        //     {
+        //         REQUIRE(move2);
+        //     }
+        // }
+    }
+}
