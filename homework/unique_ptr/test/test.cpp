@@ -56,19 +56,58 @@ SCENARIO("Testing unique pointer - operators")
         WHEN("Checking overloading operator*()")
         {
             auto unique1 = unique_ptr<int>(new int (5));
-            auto operator1 = *unique1;
+            auto operator1 = unique1.operator*();
             THEN("Value of operator1 should be equal to 5")
             {
                 CHECK(operator1 == 5);
             }
         }
-        // WHEN("Checking overloading operator->()")
-        // {
-        //     auto operator2 = std::is_move_assignable<unique_ptr<int>>::value;
-        //     THEN("Result should be true")
-        //     {
-        //         REQUIRE(move2);
-        //     }
-        // }
+        WHEN("Checking overloading operator->()")
+        {
+            auto unique2 = unique_ptr<int>(new int (17));
+            auto operator2 = unique2.operator->();
+            THEN("Result should be true")
+            {
+                CHECK(*operator2 == *unique2);
+            }
+        }
+    }
+}
+
+SCENARIO("Testing unique pointer - functions")
+{
+    GIVEN("3 scenarios")
+    {
+        WHEN("Checking function get()")
+        {
+            auto unique1 = unique_ptr<int>(new int (5));
+            auto operator1 = unique1.get();
+            THEN("Value of operator1 should be equal to 5")
+            {
+                CHECK(*operator1 == 5);
+            }
+        }
+        WHEN("Checking function release()")
+        {
+            auto unique2 = unique_ptr<int>(new int (17));
+            auto operator2 = unique2.release();
+            THEN("Value should be equal to 17")
+            {
+                CHECK(*operator2 == 17);
+            }
+            THEN("Result should be true - unique2 should be nullptr")
+            {
+                REQUIRE(unique2.get() == nullptr);
+            }
+        }
+        WHEN("Checking function reset()")
+        {
+            auto unique3 = unique_ptr<int>(new int (13));
+            unique3.reset();
+            THEN("Unique3 should be nullptr")
+            {
+                REQUIRE(unique3.get() == nullptr);
+            }
+        }
     }
 }
