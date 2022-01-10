@@ -1,0 +1,26 @@
+miczel@ubuntu:~/dev/15_memory_management/memory-management/homework/resourceD/build$ valgrind --leak-check=full ./resourceD d
+==147684== Memcheck, a memory error detector
+==147684== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==147684== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==147684== Command: ./resourceD d
+==147684== 
+Using resource. Passed d
+Passed d. d is prohibited.
+==147684== 
+==147684== HEAP SUMMARY:
+==147684==     in use at exit: 1 bytes in 1 blocks
+==147684==   total heap usage: 5 allocs, 4 frees, 73,924 bytes allocated
+==147684== 
+==147684== 1 bytes in 1 blocks are definitely lost in loss record 1 of 1
+==147684==    at 0x483BE63: operator new(unsigned long) (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==147684==    by 0x109372: main (resourceD.cpp:24)
+==147684== 
+==147684== LEAK SUMMARY:
+==147684==    definitely lost: 1 bytes in 1 blocks
+==147684==    indirectly lost: 0 bytes in 0 blocks
+==147684==      possibly lost: 0 bytes in 0 blocks
+==147684==    still reachable: 0 bytes in 0 blocks
+==147684==         suppressed: 0 bytes in 0 blocks
+==147684== 
+==147684== For lists of detected and suppressed errors, rerun with: -s
+==147684== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
