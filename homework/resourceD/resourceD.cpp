@@ -20,12 +20,12 @@ int main(int argc, char* argv[]) {
     }
     const char* N = argv[1];
     Resource* rsc = nullptr;
+    rsc = new Resource();
     try {
-        rsc = new Resource();
         rsc->use(N);
-        delete rsc;
     } catch (logic_error& e) {
         cout << e.what() << endl;
     }
+    delete rsc;
     return 0;
 }
