@@ -26,15 +26,15 @@ public:
     return *this;
   }
 
-  T& operator*(){
+  T& operator*() const{
       return *ptr_;
   }
 
-  T* operator->(){
+  T* operator->() const{
       return ptr_;
   }
 
-  T* get(){
+  T* get() const{
       return ptr_;
   }
 
