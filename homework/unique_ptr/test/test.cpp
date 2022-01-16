@@ -99,6 +99,7 @@ SCENARIO("Testing unique pointer - functions")
             {
                 REQUIRE(unique2.get() == nullptr);
             }
+            delete operator2;
         }
         WHEN("Checking function reset()")
         {
