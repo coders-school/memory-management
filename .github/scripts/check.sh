@@ -9,7 +9,7 @@ echo "🔎 Performing checks"
 echo
 pattern ${FILE} "Looking for LEAK SUMMARY" "LEAK SUMMARY:"
 pattern ${FILE} "Looking for definitely lost section" "definitely lost: 1 bytes in 1 blocks"
-pattern ${FILE} "Looking for the allocation place" "main \(resourceD.cpp:30\)"
+pattern ${FILE} "Looking for the allocation place" "main \(resourceD.cpp:"
 pattern ${FILE} "Looking for the proper command" "valgrind\s+.*\s*./resourceD\s+d"
 echo
 
