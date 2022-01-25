@@ -1,6 +1,6 @@
 # `unique_ptr`
 
-(36 XP) Implement your own unique_ptr (simplified).
+(30 XP) Implement your own unique_ptr (simplified).
 
 unique_ptr is a RAII class:
 
@@ -13,4 +13,4 @@ unique_ptr is a RAII class:
   * Setting source pointer to nullptr
 * Member functions: operator*(), operator->(), get(), release(), reset()
 
-+3 XP for delivery before 20.09.2020 23:59
++3 XP for delivery before 13.10.2021 23:59
