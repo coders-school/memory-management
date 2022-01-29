@@ -1,16 +1,16 @@
 # `unique_ptr`
 
-(36 XP) Implement your own unique_ptr (simplified).
+(30 XP) Zaimplementuj swój własny unique_ptr (trochę uproszczony).
 
-unique_ptr is a RAII class:
+unique_ptr to klasa RAII, która:
 
-* Holds a pointer to managed object (template class)
-* Constructor copies a pointer
-* Destructor release memory
-* Copying is not allowed
-* Moving is allowed and it means:
-  * Copying original pointer to a new object
-  * Setting source pointer to nullptr
-* Member functions: operator*(), operator->(), get(), release(), reset()
-
-+3 XP for delivery before 20.09.2020 23:59
+- Jest klasą szablonową
+- Trzyma wskaźnik do zarządzanego obiektu
+- Konstruktor kopiuje wskaźnik
+- Destruktor zwalnia pamięć
+- Kopiowanie jest niedozwolone
+- Przenoszenie jest dozwolone i oznacza:
+  - Skopiowanie wskaźnika z obiektu źródłowego
+  - Ustawienie wskaźnika w obiekcie źródłowym na nullptr
+- Wymagane metody: operator*(), operator->(), get(), release(), reset()
+- Nie zapomnij o testach (pokrycie >90%)
