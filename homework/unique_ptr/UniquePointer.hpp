@@ -9,4 +9,9 @@ public:
     UniquePointer() = default;
     UniquePointer(Type* pointer)
         : pointer_(pointer){};
+
+    ~UniquePointer() noexcept {
+        delete pointer_;
+        pointer_ = nullptr;
+    }
 };
