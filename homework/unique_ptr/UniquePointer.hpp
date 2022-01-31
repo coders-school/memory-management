@@ -23,9 +23,8 @@ public:
     }
     
     void reset(pointer ptr = pointer()) noexcept {
-        pointer old_ptr{ pointer_ };
+        delete pointer_;
         pointer_ = ptr;
-        if(old_ptr) delete old_ptr;
     }   
 
     // UniquePointer& operator*() const noexcept {
