@@ -1,14 +1,17 @@
 #pragma once
 
-template <typename Type>
+template <typename T>
 class UniquePointer {
+public:
+    using pointer = T*;
+    using element_type = T;
 private:
-    Type* pointer_{nullptr};
+    pointer pointer_{ nullptr };
 
 public:
     UniquePointer() = default;
-    explicit UniquePointer(Type* pointer)
-        : pointer_(pointer){};
+    explicit UniquePointer(pointer ptr)
+        : pointer_(ptr){};
 
     ~UniquePointer() noexcept {
         delete pointer_;
