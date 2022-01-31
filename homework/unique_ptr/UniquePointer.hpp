@@ -7,7 +7,7 @@ private:
 
 public:
     UniquePointer() = default;
-    UniquePointer(Type* pointer)
+    explicit UniquePointer(Type* pointer)
         : pointer_(pointer){};
 
     ~UniquePointer() noexcept {
