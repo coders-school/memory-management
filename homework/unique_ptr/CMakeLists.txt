@@ -13,7 +13,7 @@ FetchContent_MakeAvailable(googletest)
 add_executable(${PROJECT_NAME} main.cpp)
 
 add_executable(${PROJECT_NAME}-ut Tests/testsMain.cpp Tests/tests.cpp)
-target_link_libraries(${PROJECT_NAME}-ut PRIVATE gtest_main gmock_main)
+target_link_libraries(${PROJECT_NAME}-ut PRIVATE gtest_main gmock_main pthread)
 
 # target_compile_options(${PROJECT_NAME}-ut PRIVATE -g)
 
