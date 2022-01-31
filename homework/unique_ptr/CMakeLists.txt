@@ -15,7 +15,7 @@ add_executable(${PROJECT_NAME} main.cpp)
 add_executable(${PROJECT_NAME}-ut Tests/testsMain.cpp Tests/tests.cpp)
 target_link_libraries(${PROJECT_NAME}-ut PRIVATE gtest_main gmock_main pthread)
 
-# target_compile_options(${PROJECT_NAME}-ut PRIVATE -g)
+target_compile_options(${PROJECT_NAME}-ut PRIVATE -Wall -Wextra -pedantic)
 
 enable_testing()
 add_test(NAME UniquePtrTest COMMAND ${PROJECT_NAME}-ut --gtest_color=yes)
