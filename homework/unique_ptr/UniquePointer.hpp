@@ -14,4 +14,8 @@ public:
         delete pointer_;
         pointer_ = nullptr;
     }
+
+    // UniquePointer& operator*() const noexcept {
+    //     return *get();
+    // }
 };
