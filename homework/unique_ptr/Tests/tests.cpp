@@ -1,11 +1,11 @@
-#include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 #include "../UniquePointer.hpp"
 
-class TestObject{
+class TestObject {
 public:
     TestObject() = default;
-    ~TestObject() {Destructor();}
+    ~TestObject() { Destructor(); }
 
     MOCK_METHOD(void, Destructor, (), (noexcept));
 };

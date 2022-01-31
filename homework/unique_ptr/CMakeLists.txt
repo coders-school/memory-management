@@ -1,10 +1,19 @@
 cmake_minimum_required(VERSION 3.16)
 project(unique_ptr)
 
+include(FetchContent)
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/609281088cfefc76f9d0ce82e1ff6c30cc3591e5.zip
+)
+# For Windows: Prevent overriding the parent project's compiler/linker settings
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+
 add_executable(${PROJECT_NAME} main.cpp)
 
 add_executable(${PROJECT_NAME}-ut Tests/testsMain.cpp Tests/tests.cpp)
-target_link_libraries(${PROJECT_NAME}-ut PRIVATE -lgtest -lgmock -lpthread)
+target_link_libraries(${PROJECT_NAME}-ut PRIVATE gtest_main gmock_main pthread)
 
 # target_compile_options(${PROJECT_NAME}-ut PRIVATE -g)
 
