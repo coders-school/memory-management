@@ -19,8 +19,8 @@ public:
         pointer_ = nullptr;
     }
 
-    UniquePointer(const UniquePointer&) noexcept = delete;
-    UniquePointer& operator=(const UniquePointer&) noexcept = delete;
+    UniquePointer(const UniquePointer&) = delete;
+    UniquePointer& operator=(const UniquePointer&) = delete;
 
     UniquePointer(UniquePointer&& other) noexcept {
         std::swap(pointer_, other.pointer_);
