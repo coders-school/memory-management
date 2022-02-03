@@ -1,4 +1,5 @@
 #pragma once
+#include <utility>
 
 template <typename T>
 class UniquePointer {
@@ -16,6 +17,19 @@ public:
     ~UniquePointer() noexcept {
         delete pointer_;
         pointer_ = nullptr;
+    }
+
+    UniquePointer(const UniquePointer&) = delete;
+    UniquePointer& operator=(const UniquePointer&) = delete;
+
+    UniquePointer(UniquePointer&& other) noexcept {
+        std::swap(pointer_, other.pointer_);
+    }
+
+    UniquePointer& operator=(UniquePointer&& other) noexcept {
+        reset();
+        std::swap(pointer_, other.pointer_);
+        return *this;
     }
 
     pointer get() const noexcept {

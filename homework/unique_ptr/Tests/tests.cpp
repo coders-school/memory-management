@@ -36,3 +36,74 @@ TEST(unique_ptr, reset_test) {
     EXPECT_EQ(otherPtr, smartPtr.get());
 }
 
+TEST(unique_ptr, move_assigment_from_nullptr_to_nullptr) {
+    auto testedSmartPtr = UniquePointer<TestObject>();
+    auto otherSmartPtr = UniquePointer<TestObject>();
+
+    testedSmartPtr = std::move(otherSmartPtr);
+
+    EXPECT_EQ(testedSmartPtr.get(), nullptr);
+    EXPECT_EQ(otherSmartPtr.get(), nullptr);
+}
+
+TEST(unique_ptr, move_assigment_from_nullptr_to_ptr) {
+    auto ptr = new TestObject();
+    auto testedSmartPtr = UniquePointer<TestObject>();
+    auto otherSmartPtr = UniquePointer<TestObject>(ptr);
+
+    EXPECT_CALL(*ptr, Destructor).Times(1);
+
+    testedSmartPtr = std::move(otherSmartPtr);
+
+    EXPECT_EQ(testedSmartPtr.get(), ptr);
+    EXPECT_EQ(otherSmartPtr.get(), nullptr);
+}
+
+TEST(unique_ptr, move_assigment_from_ptr_to_nullptr) {
+    auto ptr = new TestObject();
+    auto testedSmartPtr = UniquePointer<TestObject>(ptr);
+    auto otherSmartPtr = UniquePointer<TestObject>();
+
+    EXPECT_CALL(*ptr, Destructor).Times(1);
+
+    testedSmartPtr = std::move(otherSmartPtr);
+
+    EXPECT_EQ(testedSmartPtr.get(), nullptr);
+    EXPECT_EQ(otherSmartPtr.get(), nullptr);
+}
+
+TEST(unique_ptr, move_assigment_from_ptr_to_ptr) {
+    auto ptr = new TestObject();
+    auto ptr2 = new TestObject();
+    auto testedSmartPtr = UniquePointer<TestObject>(ptr);
+    auto otherSmartPtr = UniquePointer<TestObject>(ptr2);
+
+    EXPECT_CALL(*ptr, Destructor).Times(1);
+    EXPECT_CALL(*ptr2, Destructor).Times(1);
+
+    testedSmartPtr = std::move(otherSmartPtr);
+
+    EXPECT_EQ(testedSmartPtr.get(), ptr2);
+    EXPECT_EQ(otherSmartPtr.get(), nullptr);
+}
+
+TEST(unique_ptr, move_ctor_with_nullptr) {
+    auto otherSmartPtr = UniquePointer<TestObject>();
+
+    UniquePointer<TestObject> testedSmartPtr(std::move(otherSmartPtr));
+
+    EXPECT_EQ(testedSmartPtr.get(), nullptr);
+    EXPECT_EQ(otherSmartPtr.get(), nullptr);
+}
+
+TEST(unique_ptr, move_ctor_with_ptr) {
+    auto ptr = new TestObject();
+    auto otherSmartPtr = UniquePointer<TestObject>(ptr);
+
+    EXPECT_CALL(*ptr, Destructor).Times(1);
+
+    UniquePointer<TestObject> testedSmartPtr(std::move(otherSmartPtr));
+
+    EXPECT_EQ(testedSmartPtr.get(), ptr);
+    EXPECT_EQ(otherSmartPtr.get(), nullptr);
+}
