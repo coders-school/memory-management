@@ -10,6 +10,13 @@ public:
     MOCK_METHOD(void, Destructor, (), (noexcept));
 };
 
+TEST(unique_ptr, destructor) {
+    auto ptr = new TestObject();
+    auto smartPtr = UniquePointer<TestObject>(ptr);
+
+    EXPECT_CALL(*ptr, Destructor).Times(1);
+}
+
 TEST(unique_ptr, default_constructor) {
     auto smartPtr = UniquePointer<TestObject>();
 
@@ -21,13 +28,6 @@ TEST(unique_ptr, parametric_constructor) {
     auto smartPtr = UniquePointer<int>(ptr);
 
     EXPECT_EQ(ptr, smartPtr.get());
-}
-
-TEST(unique_ptr, destructor) {
-    auto ptr = new TestObject();
-    auto smartPtr = UniquePointer<TestObject>(ptr);
-
-    EXPECT_CALL(*ptr, Destructor).Times(1);
 }
 
 TEST(unique_ptr, get) {
