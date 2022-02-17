@@ -1,25 +1,25 @@
-==701887== Memcheck, a memory error detector
-==701887== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==701887== Using Valgrind-3.17.0 and LibVEX; rerun with -h for copyright info
-==701887== Command: ./resourceD
-==701887== 
-Using resource. Passed G
-You need to pass 1 argument
-==701887== 
-==701887== HEAP SUMMARY:
-==701887==     in use at exit: 1 bytes in 1 blocks
-==701887==   total heap usage: 4 allocs, 3 frees, 73,730 bytes allocated
-==701887== 
-==701887== 1 bytes in 1 blocks are definitely lost in loss record 1 of 1
-==701887==    at 0x4843FB3: operator new(unsigned long) (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==701887==    by 0x10933A: main (resourceD.cpp:26)
-==701887== 
-==701887== LEAK SUMMARY:
-==701887==    definitely lost: 1 bytes in 1 blocks
-==701887==    indirectly lost: 0 bytes in 0 blocks
-==701887==      possibly lost: 0 bytes in 0 blocks
-==701887==    still reachable: 0 bytes in 0 blocks
-==701887==         suppressed: 0 bytes in 0 blocks
-==701887== 
-==701887== For lists of detected and suppressed errors, rerun with: -s
-==701887== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+==717368== Memcheck, a memory error detector
+==717368== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==717368== Using Valgrind-3.17.0 and LibVEX; rerun with -h for copyright info
+==717368== Command: ./resourceD d
+==717368== 
+Using resource. Passed d
+Passed d. d is prohibited.
+==717368== 
+==717368== HEAP SUMMARY:
+==717368==     in use at exit: 1 bytes in 1 blocks
+==717368==   total heap usage: 5 allocs, 4 frees, 73,924 bytes allocated
+==717368== 
+==717368== 1 bytes in 1 blocks are definitely lost in loss record 1 of 1
+==717368==    at 0x4843FB3: operator new(unsigned long) (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==717368==    by 0x10933A: main (resourceD.cpp:26)
+==717368== 
+==717368== LEAK SUMMARY:
+==717368==    definitely lost: 1 bytes in 1 blocks
+==717368==    indirectly lost: 0 bytes in 0 blocks
+==717368==      possibly lost: 0 bytes in 0 blocks
+==717368==    still reachable: 0 bytes in 0 blocks
+==717368==         suppressed: 0 bytes in 0 blocks
+==717368== 
+==717368== For lists of detected and suppressed errors, rerun with: -s
+==717368== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
