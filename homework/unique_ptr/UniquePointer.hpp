@@ -6,10 +6,6 @@ class UniquePointer {
 public:
     using Pointer = T*;
 
-private:
-    Pointer pointer_{nullptr};
-
-public:
     UniquePointer() = default;
 
     explicit UniquePointer(Pointer ptr)
@@ -54,4 +50,7 @@ public:
     UniquePointer& operator*() noexcept {
         return *get();
     }
+
+private:
+    Pointer pointer_{nullptr};
 };
