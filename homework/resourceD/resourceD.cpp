@@ -18,27 +18,23 @@ public:
 
 int main(int argc, char* argv[])
 {
-
+    if(argc != 2)
+    {
+        cerr << "You need to pass 1 argument" << endl;
+        exit(-1);
+    }
     const char* N = argv[1];
     Resource* rsc = nullptr;
     try
     {
         rsc = new Resource();
         rsc->use(N);
-        rsc = new Resource();
         delete rsc;
     }
     catch (logic_error & e)
     {
         cout << e.what() << endl;
     }
-
-    if(argc != 2)
-    {
-        cerr << "You need to pass 1 argument" << endl;
-        exit(-1);
-    }
-
     return 0;
 }
 
