@@ -44,11 +44,11 @@ public:
     }
 
     const UniquePointer& operator*() const noexcept {
-        return *get();
+        return *this;
     }
 
     UniquePointer& operator*() noexcept {
-        return *get();
+        return *this;
     }
 
 private:
