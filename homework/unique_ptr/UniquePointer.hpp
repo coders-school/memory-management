@@ -45,11 +45,11 @@ public:
     }
 
     const UniquePointer& operator*() const noexcept {
-        return *this;
+        return *pointer_;
     }
 
     UniquePointer& operator*() noexcept {
-        return *this;
+        return *pointer_;
     }
 
 private:
