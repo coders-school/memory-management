@@ -5,6 +5,7 @@ template <typename T>
 class UniquePointer {
 public:
     using Pointer = T*;
+    using PointerToConst = const T*;
 
     UniquePointer() = default;
 
@@ -30,7 +31,7 @@ public:
         return *this;
     }
 
-    const Pointer get() const noexcept {
+    PointerToConst get() const noexcept {
         return pointer_;
     }
 
