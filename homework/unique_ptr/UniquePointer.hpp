@@ -24,6 +24,12 @@ public:
         std::swap(pointer_, other.pointer_);
     }
 
+    UniquePointer& operator=(UniquePointer&& other) noexcept {
+        reset();
+        std::swap(pointer_, other.pointer_);
+        return *this;
+    }
+
     const Pointer get() const noexcept {
         return pointer_;
     }
@@ -35,12 +41,6 @@ public:
     void reset(Pointer ptr = Pointer()) noexcept {
         delete pointer_;
         pointer_ = ptr;
-    }
-
-    UniquePointer& operator=(UniquePointer&& other) noexcept {
-        reset();
-        std::swap(pointer_, other.pointer_);
-        return *this;
     }
 
     const UniquePointer& operator*() const noexcept {
