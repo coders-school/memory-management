@@ -30,13 +30,6 @@ TEST(unique_ptr, parametric_constructor) {
     EXPECT_EQ(ptr, smartPtr.get());
 }
 
-TEST(unique_ptr, get) {
-    auto ptr = new int{5};
-    auto smartPtr = UniquePointer<int>(ptr);
-
-    EXPECT_EQ(ptr, smartPtr.get());
-}
-
 TEST(unique_ptr, reset) {
     auto ptr = new int{5};
     auto smartPtr = UniquePointer<int>(ptr);
