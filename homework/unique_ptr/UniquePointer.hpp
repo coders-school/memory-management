@@ -50,6 +50,10 @@ public:
         return *get();
     }
 
+    pointer operator->() const noexcept{
+	   return get();
+	} 
+
 private:
     pointer pointer_{nullptr};
 };
