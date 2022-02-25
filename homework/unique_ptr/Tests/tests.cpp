@@ -118,5 +118,5 @@ TEST(unique_ptr, star_operator) {
     auto ptr = new int{5};
     auto smartPtr = UniquePointer<int>(ptr);
 
-    EXPECT_EQ(*ptr, *smartPtr.get());
+    EXPECT_EQ(*ptr, *smartPtr);
 }
