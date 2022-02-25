@@ -10,8 +10,6 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-add_executable(${PROJECT_NAME} main.cpp)
-
 add_executable(${PROJECT_NAME}-ut Tests/testsMain.cpp Tests/tests.cpp)
 target_link_libraries(${PROJECT_NAME}-ut PRIVATE gtest_main gmock_main pthread)
 

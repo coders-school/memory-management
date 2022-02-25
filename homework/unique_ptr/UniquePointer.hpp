@@ -4,11 +4,13 @@
 template <typename T>
 class UniquePointer {
 public:
-    using pointer = T*;
-    using element_type = T;
+    using ElementType = T;
+    using Pointer = T*;
+    using PointerToConst = const T*;
 
     UniquePointer() = default;
-    explicit UniquePointer(pointer ptr)
+
+    explicit UniquePointer(Pointer ptr)
         : pointer_(ptr){};
 
     ~UniquePointer() noexcept {
@@ -17,6 +19,7 @@ public:
     }
 
     UniquePointer(const UniquePointer&) = delete;
+
     UniquePointer& operator=(const UniquePointer&) = delete;
 
     UniquePointer(UniquePointer&& other) noexcept {
@@ -29,31 +32,35 @@ public:
         return *this;
     }
 
-    const pointer get() const noexcept {
+    PointerToConst get() const noexcept {
         return pointer_;
     }
 
-    pointer get() noexcept {
+    Pointer get() noexcept {
         return pointer_;
     }
 
-    void reset(pointer ptr = pointer()) noexcept {
+    void reset(Pointer ptr = Pointer()) noexcept {
         delete pointer_;
         pointer_ = ptr;
     }
 
-    const UniquePointer& operator*() const noexcept {
+    const ElementType& operator*() const noexcept {
         return *get();
     }
 
-    UniquePointer& operator*() noexcept {
+    ElementType& operator*() noexcept {
         return *get();
     }
 
-    pointer operator->() const noexcept{
-	   return get();
-	} 
+    PointerToConst operator->() const noexcept {
+        return get();
+    }
+
+    Pointer operator->() noexcept {
+        return get();
+    }
 
 private:
-    pointer pointer_{nullptr};
+    Pointer pointer_{nullptr};
 };

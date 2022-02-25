@@ -10,33 +10,39 @@ public:
     MOCK_METHOD(void, Destructor, (), (noexcept));
 };
 
-TEST(unique_ptr, destructor_test) {
+TEST(unique_ptr, destructor) {
     auto ptr = new TestObject();
     auto smartPtr = UniquePointer<TestObject>(ptr);
 
     EXPECT_CALL(*ptr, Destructor).Times(1);
 }
 
-TEST(unique_ptr, get_test) {
-    auto ptr = new int{ 5 };
+TEST(unique_ptr, default_constructor) {
+    auto smartPtr = UniquePointer<TestObject>();
+
+    EXPECT_EQ(nullptr, smartPtr.get());
+}
+
+TEST(unique_ptr, parametric_constructor) {
+    auto ptr = new int{5};
     auto smartPtr = UniquePointer<int>(ptr);
 
     EXPECT_EQ(ptr, smartPtr.get());
 }
 
-TEST(unique_ptr, reset_test) {
-    auto ptr = new int{ 5 };
+TEST(unique_ptr, reset) {
+    auto ptr = new int{5};
     auto smartPtr = UniquePointer<int>(ptr);
 
     smartPtr.reset(nullptr);
     EXPECT_EQ(nullptr, smartPtr.get());
 
-    auto otherPtr = new int{ 6 };
+    auto otherPtr = new int{6};
     smartPtr.reset(otherPtr);
     EXPECT_EQ(otherPtr, smartPtr.get());
 }
 
-TEST(unique_ptr, move_assigment_from_nullptr_to_nullptr) {
+TEST(unique_ptr, move_assignment_from_nullptr_to_nullptr) {
     auto testedSmartPtr = UniquePointer<TestObject>();
     auto otherSmartPtr = UniquePointer<TestObject>();
 
@@ -46,7 +52,7 @@ TEST(unique_ptr, move_assigment_from_nullptr_to_nullptr) {
     EXPECT_EQ(otherSmartPtr.get(), nullptr);
 }
 
-TEST(unique_ptr, move_assigment_from_nullptr_to_ptr) {
+TEST(unique_ptr, move_assignment_from_nullptr_to_ptr) {
     auto ptr = new TestObject();
     auto testedSmartPtr = UniquePointer<TestObject>();
     auto otherSmartPtr = UniquePointer<TestObject>(ptr);
@@ -59,7 +65,7 @@ TEST(unique_ptr, move_assigment_from_nullptr_to_ptr) {
     EXPECT_EQ(otherSmartPtr.get(), nullptr);
 }
 
-TEST(unique_ptr, move_assigment_from_ptr_to_nullptr) {
+TEST(unique_ptr, move_assignment_from_ptr_to_nullptr) {
     auto ptr = new TestObject();
     auto testedSmartPtr = UniquePointer<TestObject>(ptr);
     auto otherSmartPtr = UniquePointer<TestObject>();
@@ -72,7 +78,7 @@ TEST(unique_ptr, move_assigment_from_ptr_to_nullptr) {
     EXPECT_EQ(otherSmartPtr.get(), nullptr);
 }
 
-TEST(unique_ptr, move_assigment_from_ptr_to_ptr) {
+TEST(unique_ptr, move_assignment_from_ptr_to_ptr) {
     auto ptr = new TestObject();
     auto ptr2 = new TestObject();
     auto testedSmartPtr = UniquePointer<TestObject>(ptr);
@@ -108,6 +114,13 @@ TEST(unique_ptr, move_ctor_with_ptr) {
     EXPECT_EQ(otherSmartPtr.get(), nullptr);
 }
 
+TEST(unique_ptr, star_operator) {
+    auto ptr = new int{5};
+    auto smartPtr = UniquePointer<int>(ptr);
+
+    EXPECT_EQ(*ptr, *smartPtr);
+}
+
 TEST(unique_ptr, arrow_operator){
 	struct Foo {
 		int foo() { return 5; }
@@ -117,4 +130,3 @@ TEST(unique_ptr, arrow_operator){
 
 	EXPECT_EQ(fooPtr->foo(), 5);
 }
-
