@@ -4,6 +4,7 @@
 template <typename T>
 class UniquePointer {
 public:
+    using ElementType = T;
     using Pointer = T*;
     using PointerToConst = const T*;
 
@@ -44,12 +45,12 @@ public:
         pointer_ = ptr;
     }
 
-    const UniquePointer& operator*() const noexcept {
-        return *pointer_;
+    const ElementType& operator*() const noexcept {
+        return *get();
     }
 
-    UniquePointer& operator*() noexcept {
-        return *pointer_;
+    ElementType& operator*() noexcept {
+        return *get();
     }
 
 private:
