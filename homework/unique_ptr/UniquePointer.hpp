@@ -53,9 +53,13 @@ public:
         return *get();
     }
 
-    pointer operator->() const noexcept{
-	   return get();
-	} 
+    PointerToConst operator->() const noexcept {
+        return get();
+    }
+
+    Pointer operator->() noexcept {
+        return get();
+    }
 
 private:
     Pointer pointer_{nullptr};
