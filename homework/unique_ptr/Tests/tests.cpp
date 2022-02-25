@@ -120,3 +120,13 @@ TEST(unique_ptr, star_operator) {
 
     EXPECT_EQ(*ptr, *smartPtr);
 }
+
+TEST(unique_ptr, arrow_operator){
+	struct Foo {
+		int foo() { return 5; }
+	};
+	auto ptr = new Foo{};
+	UniquePointer<Foo> fooPtr{ ptr };
+
+	EXPECT_EQ(fooPtr->foo(), 5);
+}
