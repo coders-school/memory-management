@@ -40,6 +40,12 @@ public:
         return pointer_;
     }
 
+    Pointer release() noexcept {
+        auto temp = get();
+        pointer_ = nullptr;
+        return temp;   
+    }
+
     void reset(Pointer ptr = Pointer()) noexcept {
         delete pointer_;
         pointer_ = ptr;
