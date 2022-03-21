@@ -1,0 +1,27 @@
+rafal@rafal-ThinkPad-T430:~/Desktop/homework/memory-management/homework/resourceD/build$ valgrind --leak-check=full ./resourceD d
+==54949== Memcheck, a memory error detector
+==54949== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==54949== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==54949== Command: ./resourceD d
+==54949== 
+Using resource. Passed d
+Passed d. d is prohibited.
+==54949== 
+==54949== HEAP SUMMARY:
+==54949==     in use at exit: 1 bytes in 1 blocks
+==54949==   total heap usage: 5 allocs, 4 frees, 73,924 bytes allocated
+==54949== 
+==54949== 1 bytes in 1 blocks are definitely lost in loss record 1 of 1
+==54949==    at 0x483BE63: operator new(unsigned long) (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==54949==    by 0x109372: main (resourceD.cpp:30)
+==54949== 
+==54949== LEAK SUMMARY:
+==54949==    definitely lost: 1 bytes in 1 blocks
+==54949==    indirectly lost: 0 bytes in 0 blocks
+==54949==      possibly lost: 0 bytes in 0 blocks
+==54949==    still reachable: 0 bytes in 0 blocks
+==54949==         suppressed: 0 bytes in 0 blocks
+==54949== 
+==54949== For lists of detected and suppressed errors, rerun with: -s
+==54949== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+rafal@rafal-ThinkPad-T430:~/Desktop/homework/memory-management/homework/res
