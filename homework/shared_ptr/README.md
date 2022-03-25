@@ -47,6 +47,7 @@ ___
   * Copying original pointers to a new object
   * Setting source pointer to nullptr
 * Member functions: `operator*()`, `operator->()`, `get()`, `reset()`, `use_count()`, `operator bool()`
+* Should be implemented in `shared_ptr.hpp` file inside `my` namespace
 
 Do not forget about CI - UT + Valgrind / ASAN. Work in pairs.
 
@@ -60,6 +61,7 @@ ___
 
 * Proper cooperation with above `shared_ptr`
 * Member functions: `use_count()`, `expired()`, `lock()`, `reset()`
+* Should be implemented in `weak_ptr.hpp` file inside `my` namespace
 
 Think about proper constructors / assignment operators or visit cppreference.com :)
 
@@ -75,5 +77,6 @@ It should:
 * use variadic templates to take any number of parameters
 * first template parameter type is the underlying object type
 * other template parameters are passed via perfect forwarding to the constructor of a given type
+* should be implemented in `make_shared.hpp` file inside `my` namespace
 
 Think about optimized memory layout of `shared_ptr` created by `make_shared`. How to achieve it?

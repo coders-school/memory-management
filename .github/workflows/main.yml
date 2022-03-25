@@ -1,0 +1,101 @@
+name: shared_ptr_homework
+on: [push, pull_request]
+
+jobs:
+  files_check:
+    runs-on: ubuntu-latest
+
+    outputs:
+      shared_ptr_exists: ${{ steps.shared_ptr.outputs.files_exists }}
+      weak_ptr_exists: ${{ steps.weak_ptr.outputs.files_exists }}
+      make_shared_exists: ${{ steps.make_shared.outputs.files_exists }}
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Check shared_ptr.hpp file existence
+      id: shared_ptr
+      uses: andstor/file-existence-action@v1
+      with:
+        files: "homework/shared_ptr/shared_ptr.hpp"
+
+    - name: Check weak_ptr.hpp file existence
+      id: weak_ptr
+      uses: andstor/file-existence-action@v1
+      with:
+        files: "homework/shared_ptr/weak_ptr.hpp"
+
+    - name: Check make_shared.hpp file existence
+      id: make_shared
+      uses: andstor/file-existence-action@v1
+      with:
+        files: "homework/shared_ptr/make_shared.hpp"
+
+
+  shared_ptr:
+    needs: files_check
+    if: needs.files_check.outputs.shared_ptr_exists == 'true'
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Create build folder
+      working-directory: tests/shared_ptr/
+      run: mkdir build
+
+    - name: Compile
+      working-directory: tests/shared_ptr/build
+      run: |
+        cmake ..
+        make
+
+    - name: Run tests and sanitizer
+      working-directory: tests/shared_ptr/build
+      run: ctest -V
+
+
+  weak_ptr:
+    needs: files_check
+    if: needs.files_check.outputs.weak_ptr_exists == 'true'
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Create build folder
+      working-directory: tests/weak_ptr/
+      run: mkdir build
+
+    - name: Compile
+      working-directory: tests/weak_ptr/build
+      run: |
+        cmake ..
+        make
+
+    - name: Run tests and sanitizer
+      working-directory: tests/weak_ptr/build
+      run: ctest -V
+
+
+  make_shared:
+    needs: files_check
+    if: needs.files_check.outputs.make_shared_exists == 'true'
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Create build folder
+      working-directory: tests/make_shared/
+      run: mkdir build
+
+    - name: Compile
+      working-directory: tests/make_shared/build
+      run: |
+        cmake ..
+        make
+
+    - name: Run tests and sanitizer
+      working-directory: tests/make_shared/build
+      run: ctest -V
