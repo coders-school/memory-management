@@ -6,7 +6,9 @@
 
 struct A {
     A(int a, double b, int c)
-        : a_(a), b_(b), c_(c) {}
+        : a_(a),
+          b_(b),
+          c_(c) {}
 
     int a_;
     double b_;

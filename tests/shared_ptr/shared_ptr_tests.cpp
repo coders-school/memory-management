@@ -13,7 +13,7 @@ struct A {
 
 struct SharedPtrTest : ::testing::Test {
     SharedPtrTest()
-        : ptr(new int{initialValue}) {}
+        : ptr{new int{initialValue}} {}
 
     my::shared_ptr<int> ptr;
 };
@@ -25,7 +25,7 @@ TEST_F(SharedPtrTest, shouldDereferenceSharedPtr) {
 TEST_F(SharedPtrTest, shouldCopySharedPtr) {
     constexpr size_t numOfPtrs = 3;
     auto ptr2(ptr);
-    my::shared_ptr<int> ptr3(new int{initialValue});
+    my::shared_ptr<int> ptr3{new int{initialValue}};
 
     ASSERT_EQ(*ptr2, *ptr);
     ASSERT_EQ(*ptr3, initialValue);
@@ -38,7 +38,7 @@ TEST_F(SharedPtrTest, shouldCopySharedPtr) {
 }
 
 TEST_F(SharedPtrTest, shouldMoveSharedPtr) {
-    auto ptr2(std::move(ptr));
+    auto ptr2{std::move(ptr)};
 
     EXPECT_THAT(ptr.get(), IsNull());
     ASSERT_EQ(*ptr2, initialValue);

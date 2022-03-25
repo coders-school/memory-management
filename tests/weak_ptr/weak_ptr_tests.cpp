@@ -1,14 +1,17 @@
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include "shared_ptr.hpp"
 #include "weak_ptr.hpp"
+
 
 constexpr size_t zeroUseCount = 0;
 constexpr int initialValue = 5;
 
 struct WeakPtrTest : ::testing::Test {
     WeakPtrTest()
-        : sptr(new int{initialValue}), wptr{sptr} {}
+        : sptr{new int{initialValue}},
+          wptr{sptr} {}
 
     my::shared_ptr<int> sptr;
     my::weak_ptr<int> wptr;
@@ -28,6 +31,11 @@ TEST_F(WeakPtrTest, lockMethodShouldReturnSharedPtrThatStoresManagedObject) {
     auto sptr2 = wptr.lock();
 
     ASSERT_EQ(sptr.get(), sptr2.get());
+
+    my::weak_ptr<int> wptr2{};
+
+    ASSERT_TRUE(wptr2.expired());
+    ASSERT_THAT(wptr2.lock().get(), ::testing::IsNull());
 }
 
 TEST_F(WeakPtrTest, expireMethodInformsIfManagedObjectWasDeleted) {
@@ -69,5 +77,38 @@ TEST_F(WeakPtrTest, weakPtrMoveAssignmentMakesOriginalPtrExpired) {
     ASSERT_EQ(sptr.use_count(), useCountValueSharedPtr);
 
     ASSERT_TRUE(wptr.expired());
+    ASSERT_FALSE(wptr2.expired());
+}
+
+TEST_F(WeakPtrTest, weakPtrCopyContructorLeavesOriginalPtrNotExpired) {
+    constexpr int useCountValueSharedPtr = 1;
+    constexpr int useCountValueWeakPtr = 1;
+
+    ASSERT_EQ(wptr.use_count(), useCountValueWeakPtr);
+
+    my::weak_ptr<int> wptr2{wptr};
+
+    ASSERT_EQ(wptr.use_count(), useCountValueWeakPtr);
+    ASSERT_EQ(wptr2.use_count(), useCountValueWeakPtr);
+    ASSERT_EQ(sptr.use_count(), useCountValueSharedPtr);
+
+    ASSERT_FALSE(wptr.expired());
+    ASSERT_FALSE(wptr2.expired());
+}
+
+TEST_F(WeakPtrTest, weakPtrCopyAssignmentLeavesOriginalPtrNotExpired) {
+    constexpr int useCountValueSharedPtr = 1;
+    constexpr int useCountValueWeakPtr = 1;
+
+    ASSERT_EQ(wptr.use_count(), useCountValueWeakPtr);
+
+    my::weak_ptr<int> wptr2{};
+    wptr2 = wptr;
+
+    ASSERT_EQ(wptr.use_count(), useCountValueWeakPtr);
+    ASSERT_EQ(wptr2.use_count(), useCountValueWeakPtr);
+    ASSERT_EQ(sptr.use_count(), useCountValueSharedPtr);
+
+    ASSERT_FALSE(wptr.expired());
     ASSERT_FALSE(wptr2.expired());
 }

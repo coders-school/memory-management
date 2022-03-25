@@ -20,9 +20,9 @@ include(GoogleTest)
 
 set(INCLUDE_DIR ../../homework/shared_ptr)
 
-add_executable(${PROJECT_NAME} make_sharedTests.cpp)
+add_executable(${PROJECT_NAME} make_shared_tests.cpp)
 target_compile_options(${PROJECT_NAME} PRIVATE ${COMPILER_FLAGS})
 target_include_directories(${PROJECT_NAME} PRIVATE ${INCLUDE_DIR})
 target_link_options(${PROJECT_NAME} PRIVATE ${LINKER_FLAGS})
-target_link_libraries(${PROJECT_NAME} PUBLIC gtest_main gmock)
+target_link_libraries(${PROJECT_NAME} PUBLIC gtest_main)
 gtest_discover_tests(${PROJECT_NAME})
