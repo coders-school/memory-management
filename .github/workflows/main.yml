@@ -99,3 +99,16 @@ jobs:
     - name: Run tests and sanitizer
       working-directory: tests/make_shared/build
       run: ctest -V
+
+
+  check_shared_ptr_interface:
+    needs: files_check
+    if: needs.files_check.outputs.shared_ptr_exists == 'true'
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Check shared_ptr has whole interface implemented
+      working-directory: tests/
+      run: bash ./shared_ptr_interface_check.sh
