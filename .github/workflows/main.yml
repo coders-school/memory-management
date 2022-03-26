@@ -99,3 +99,72 @@ jobs:
     - name: Run tests and sanitizer
       working-directory: tests/make_shared/build
       run: ctest -V
+
+
+  shared_ptr_students_tests:
+    needs: files_check
+    if: needs.files_check.outputs.shared_ptr_exists == 'true'
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Create build folder
+      working-directory: tests/shared_ptr_student
+      run: mkdir build
+
+    - name: Compile
+      working-directory: tests/shared_ptr_student/build
+      run: |
+        bash ../cmake_config.sh
+        make
+
+    - name: Run tests and sanitizer
+      working-directory: tests/shared_ptr_student/build
+      run: ctest -V
+
+
+  weak_ptr_students_tests:
+    needs: files_check
+    if: needs.files_check.outputs.weak_ptr_exists == 'true'
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Create build folder
+      working-directory: tests/weak_ptr_student
+      run: mkdir build
+
+    - name: Compile
+      working-directory: tests/weak_ptr_student/build
+      run: |
+        bash ../cmake_config.sh
+        make
+
+    - name: Run tests and sanitizer
+      working-directory: tests/weak_ptr_student/build
+      run: ctest -V
+
+
+  make_shared_students_tests:
+    needs: files_check
+    if: needs.files_check.outputs.make_shared_exists == 'true'
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Create build folder
+      working-directory: tests/make_shared_student
+      run: mkdir build
+
+    - name: Compile
+      working-directory: tests/make_shared_student/build
+      run: |
+        bash ../cmake_config.sh
+        make
+
+    - name: Run tests and sanitizer
+      working-directory: tests/make_shared_student/build
+      run: ctest -V
