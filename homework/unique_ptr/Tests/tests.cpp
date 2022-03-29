@@ -130,3 +130,12 @@ TEST(unique_ptr, arrow_operator){
 
 	EXPECT_EQ(fooPtr->foo(), 5);
 }
+
+TEST(unique_ptr, release) {
+    auto ptr = new int{ 5 };
+    auto smartPtr = UniquePointer<int>(ptr);
+
+    auto released = smartPtr.release();
+    EXPECT_EQ(*released, *ptr);
+    EXPECT_EQ(smartPtr.get(), nullptr);
+}
