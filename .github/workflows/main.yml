@@ -101,7 +101,7 @@ jobs:
       run: ctest -V
 
 
-  shared_ptr_students_tests:
+  shared_ptr_formatting_check:
     needs: files_check
     if: needs.files_check.outputs.shared_ptr_exists == 'true'
     runs-on: ubuntu-latest
@@ -109,6 +109,19 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Run clang-format style check
+      uses: jidicula/clang-format-action@v4.5.0
+      with:
+        check-path: 'homework/shared_ptr'
+
+
+  shared_ptr_students_tests:
+    needs: files_check
+    if: needs.files_check.outputs.shared_ptr_exists == 'true'
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
     - name: Create build folder
       working-directory: tests/shared_ptr_student
       run: mkdir build
