@@ -116,8 +116,7 @@ jobs:
 
 
   check_shared_ptr_interface:
-    needs: files_check
-    if: needs.files_check.outputs.shared_ptr_exists == 'true'
+    needs: shared_ptr_formatting_check
     runs-on: ubuntu-latest
 
     steps:
