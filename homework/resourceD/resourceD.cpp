@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
     {
         rsc = new Resource();
         rsc->use(N);
-        delete rsc;
+        // delete rsc;
     }
     catch (logic_error & e)
     {

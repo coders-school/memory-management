@@ -1,0 +1,828 @@
+valgrind --leak-check=full ./resourceD > ../valgrind-output.txt
+==4235== Memcheck, a memory error detector
+==4235== Copyright (C) 2002-2011, and GNU GPL'd, by Julian Seward et al.
+==4235== Using Valgrind-3.7.0 and LibVEX; rerun with -h for copyright info
+==4235== Command: ./resourceD
+==4235== 
+--4235-- WARNING: Serious error when reading debug info
+--4235-- When reading debug info from /usr/lib/arm-linux-gnueabihf/ld-2.28.so:
+--4235-- Ignoring non-Dwarf2/3/4 block in .debug_info
+--4235-- WARNING: Serious error when reading debug info
+--4235-- When reading debug info from /usr/lib/arm-linux-gnueabihf/ld-2.28.so:
+--4235-- Last block truncated in .debug_info; ignoring
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x401A5B0: index (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x401A5B4: index (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x4007F0C: _dl_dst_count (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x4008154: expand_dynamic_string_token (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x401AA60: strlen (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x401AA64: strlen (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x4017F90: malloc (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x4017F9C: malloc (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x401B5C8: memcpy (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x401B5E8: memcpy (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x401B5F8: memcpy (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x401B614: memcpy (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x401B61C: memcpy (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x401B644: memcpy (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x401B644: memcpy (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x401B66C: memcpy (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x401B680: memcpy (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x401B684: memcpy (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x401B690: memcpy (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x40180CC: calloc (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x4017FD0: malloc (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x401A148: mmap (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Syscall param mmap2(start) contains uninitialised byte(s)
+==4235==    at 0x401A15C: mmap (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Syscall param mmap2(length) contains uninitialised byte(s)
+==4235==    at 0x401A15C: mmap (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Syscall param mmap2(offset) contains uninitialised byte(s)
+==4235==    at 0x401A15C: mmap (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x4017F6C: malloc (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x400BC9C: _dl_new_object (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x401B5D4: memcpy (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x401B610: memcpy (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x400BC48: _dl_new_object (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x400BC64: _dl_new_object (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x401A9F4: strdup (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x401B640: memcpy (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x401B640: memcpy (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x401B668: memcpy (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x4008CEC: _dl_map_object (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Syscall param openat(filename) contains uninitialised byte(s)
+==4235==    at 0x4019F34: __open64_nocancel (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x401810C: free (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x400BA50: _dl_new_object (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x400BA68: _dl_new_object (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x400BA88: _dl_new_object (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x400BA8C: _dl_new_object (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x400BAAC: _dl_new_object (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x400BB1C: _dl_new_object (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x400BB30: _dl_new_object (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x400BB74: _dl_new_object (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x400BB8C: _dl_new_object (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x401AA10: strlen (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x401AA28: strlen (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x401B608: memcpy (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x400BC68: _dl_new_object (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x4005FD0: _dl_map_object_from_fd (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4005FFC: _dl_map_object_from_fd (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4006008: _dl_map_object_from_fd (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4006088: _dl_map_object_from_fd (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x40060D4: _dl_map_object_from_fd (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x40060D8: _dl_map_object_from_fd (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4006264: _dl_map_object_from_fd (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x40062F8: _dl_map_object_from_fd (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4006314: _dl_map_object_from_fd (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x400634C: _dl_map_object_from_fd (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4006C90: _dl_map_object_from_fd (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x400640C: _dl_map_object_from_fd (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x4011020: _dl_name_match_p (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4011034: _dl_name_match_p (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x401A600: strcmp (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4011028: _dl_name_match_p (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x4013688: _dl_get_origin (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x401369C: _dl_get_origin (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x40081F8: expand_dynamic_string_token (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x40081B0: expand_dynamic_string_token (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4007FE0: _dl_dst_substitute (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x401A65C: strcpy (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4008064: _dl_dst_substitute (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x4009138: _dl_map_object (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x401B780: memcpy (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x401B68C: memcpy (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x401B690: memcpy (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x401B694: memcpy (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4006218: _dl_map_object_from_fd (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4006258: _dl_map_object_from_fd (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x401B628: memcpy (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x401B8E0: memcpy (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+--4235-- WARNING: Serious error when reading debug info
+--4235-- When reading debug info from /usr/lib/arm-linux-gnueabihf/libm-2.28.so:
+--4235-- Ignoring non-Dwarf2/3/4 block in .debug_info
+--4235-- WARNING: Serious error when reading debug info
+--4235-- When reading debug info from /usr/lib/arm-linux-gnueabihf/libm-2.28.so:
+--4235-- Last block truncated in .debug_info; ignoring
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x401B64C: memcpy (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x401B64C: memcpy (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x401B674: memcpy (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4006204: _dl_map_object_from_fd (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+--4235-- WARNING: Serious error when reading debug info
+--4235-- When reading debug info from /usr/lib/arm-linux-gnueabihf/libc-2.28.so:
+--4235-- Ignoring non-Dwarf2/3/4 block in .debug_info
+--4235-- WARNING: Serious error when reading debug info
+--4235-- When reading debug info from /usr/lib/arm-linux-gnueabihf/libc-2.28.so:
+--4235-- Last block truncated in .debug_info; ignoring
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x400E428: _dl_map_object_deps (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x400E43C: _dl_map_object_deps (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x401B670: memcpy (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x401B664: memcpy (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x400E808: _dl_map_object_deps (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x400E838: _dl_map_object_deps (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x400E870: _dl_map_object_deps (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x401600C: _dl_sort_maps (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x401602C: _dl_sort_maps (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x400EC04: _dl_map_object_deps (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4003834: dl_main (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x4003848: dl_main (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4003884: dl_main (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== 
+==4235== More than 100 errors detected.  Subsequent errors
+==4235== will still be recorded, but in less detail than before.
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x40038B4: dl_main (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4003910: dl_main (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4011418: _dl_check_map_versions (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4011434: _dl_check_map_versions (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x401144C: _dl_check_map_versions (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x401185C: _dl_check_map_versions (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x40118D0: _dl_check_map_versions (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x401194C: _dl_check_map_versions (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x40010B0: init_tls (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x40010DC: init_tls (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x4012B40: _dl_determine_tlsoffset (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4012B44: _dl_determine_tlsoffset (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4012B50: _dl_determine_tlsoffset (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4012B5C: _dl_determine_tlsoffset (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4012C50: _dl_determine_tlsoffset (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x4018018: malloc (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x4012D68: _dl_allocate_tls_storage (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x401BAB4: __udivsi3 (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x401B540: memset (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x401B548: memset (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x401B560: memset (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x401B560: memset (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x401B568: memset (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x401B570: memset (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x401B578: memset (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x401B57C: memset (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x401B588: memset (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x401B590: memset (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x401B598: memset (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x401B5A0: memset (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x401B5A4: memset (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4012D94: _dl_allocate_tls_storage (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x4012700: allocate_dtv (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4012700: allocate_dtv (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4012704: allocate_dtv (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x4012DA4: _dl_allocate_tls_storage (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x4001104: init_tls (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x400110C: init_tls (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Syscall param set_tls(addr) contains uninitialised byte(s)
+==4235==    at 0x4001120: init_tls (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4003CB0: dl_main (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4003CB8: dl_main (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x400CA48: _dl_relocate_object (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x400A6DC: _dl_lookup_symbol_x (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x400A6F4: _dl_lookup_symbol_x (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4009C50: do_lookup_x (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x4009C24: do_lookup_x (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4009C28: do_lookup_x (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x4009C5C: do_lookup_x (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4009C78: do_lookup_x (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4009BA0: do_lookup_x (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4009BAC: do_lookup_x (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4009BE0: do_lookup_x (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4009E1C: do_lookup_x (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4009E2C: do_lookup_x (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4009E84: do_lookup_x (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x40099F4: check_match (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x40099F8: check_match (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4009A0C: check_match (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4009A14: check_match (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4009A24: check_match (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4009AC8: check_match (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4009ACC: check_match (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x400A7B8: _dl_lookup_symbol_x (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x400A7C8: _dl_lookup_symbol_x (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x400CBC0: _dl_relocate_object (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x400CC74: _dl_relocate_object (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x400A738: _dl_lookup_symbol_x (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4011004: _dl_name_match_p (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4011018: _dl_name_match_p (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4013448: _dl_add_to_slotinfo (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4013468: _dl_add_to_slotinfo (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4009FE8: do_lookup_x (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x400A11C: do_lookup_x (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x400A244: do_lookup_x (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x400A250: do_lookup_x (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x400A258: do_lookup_x (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x400A038: do_lookup_x (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x400A09C: do_lookup_x (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x400A0C8: do_lookup_x (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x400A38C: do_lookup_x (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x400A3C4: do_lookup_x (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x400A3C0: do_lookup_x (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x400A3D0: do_lookup_x (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x400A3F0: do_lookup_x (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x400A418: do_lookup_x (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x400A424: do_lookup_x (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x400CB4C: _dl_relocate_object (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x400D8F0: _dl_relocate_object (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4009C6C: do_lookup_x (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x4012DE4: _dl_allocate_tls_init (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4012DEC: _dl_allocate_tls_init (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4012DF4: _dl_allocate_tls_init (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4012E3C: _dl_allocate_tls_init (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4012E68: _dl_allocate_tls_init (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4012E74: _dl_allocate_tls_init (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4012EA8: _dl_allocate_tls_init (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4012ED4: _dl_allocate_tls_init (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4012EF8: _dl_allocate_tls_init (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4012F54: _dl_allocate_tls_init (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4010400: _dl_init (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x400FA2C: _dl_fixup (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x400FAB8: _dl_fixup (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x400FAB8: _dl_fixup (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4015B74: _dl_runtime_resolve (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x48FC000: std::error_category::error_category() (in /usr/lib/arm-linux-gnueabihf/libstdc++.so.6.0.25)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x48FC6B4: __aeabi_atexit (in /usr/lib/arm-linux-gnueabihf/libstdc++.so.6.0.25)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4AB0B1C: __cxa_atexit (in /usr/lib/arm-linux-gnueabihf/libc-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4009A30: check_match (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x485E0F8: ??? (in /usr/lib/arm-linux-gnueabihf/libarmmem-v7l.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4910610: std::locale::facet::_S_get_c_locale() (in /usr/lib/arm-linux-gnueabihf/libstdc++.so.6.0.25)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4910C50: std::locale::_Impl::_M_install_facet(std::locale::id const*, std::locale::facet const*) (in /usr/lib/arm-linux-gnueabihf/libstdc++.so.6.0.25)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4910BDC: std::locale::id::_M_id() const (in /usr/lib/arm-linux-gnueabihf/libstdc++.so.6.0.25)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4910684: std::locale::facet::_S_get_c_name() (in /usr/lib/arm-linux-gnueabihf/libstdc++.so.6.0.25)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4B02D7C: wctob (in /usr/lib/arm-linux-gnueabihf/libc-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4B02BB0: btowc (in /usr/lib/arm-linux-gnueabihf/libc-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x493722C: std::ctype<wchar_t>::_M_convert_to_wmask(unsigned short) const (in /usr/lib/arm-linux-gnueabihf/libstdc++.so.6.0.25)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4B5DDC0: wctype_l (in /usr/lib/arm-linux-gnueabihf/libc-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4AA6814: uselocale (in /usr/lib/arm-linux-gnueabihf/libc-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4912424: std::locale::locale() (in /usr/lib/arm-linux-gnueabihf/libstdc++.so.6.0.25)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x48FF6FC: std::type_info::operator==(std::type_info const&) const (in /usr/lib/arm-linux-gnueabihf/libstdc++.so.6.0.25)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x48FCAB4: __dynamic_cast (in /usr/lib/arm-linux-gnueabihf/libstdc++.so.6.0.25)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4AF8FFC: strcmp (in /usr/lib/arm-linux-gnueabihf/libc-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x49283F0: std::ios_base::ios_base() (in /usr/lib/arm-linux-gnueabihf/libstdc++.so.6.0.25)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x49657D0: std::basic_ios<char, std::char_traits<char> >::init(std::basic_streambuf<char, std::char_traits<char> >*) (in /usr/lib/arm-linux-gnueabihf/libstdc++.so.6.0.25)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x490FB6C: std::ios_base::_M_init() (in /usr/lib/arm-linux-gnueabihf/libstdc++.so.6.0.25)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4910880: std::locale::operator=(std::locale const&) (in /usr/lib/arm-linux-gnueabihf/libstdc++.so.6.0.25)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x491094C: std::locale::~locale() (in /usr/lib/arm-linux-gnueabihf/libstdc++.so.6.0.25)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x49653F8: std::basic_ios<char, std::char_traits<char> >::_M_cache_locale(std::locale const&) (in /usr/lib/arm-linux-gnueabihf/libstdc++.so.6.0.25)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4972880: bool std::has_facet<std::ctype<char> >(std::locale const&) (in /usr/lib/arm-linux-gnueabihf/libstdc++.so.6.0.25)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4970CD0: std::ctype<char> const& std::use_facet<std::ctype<char> >(std::locale const&) (in /usr/lib/arm-linux-gnueabihf/libstdc++.so.6.0.25)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4972A60: bool std::has_facet<std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > > >(std::locale const&) (in /usr/lib/arm-linux-gnueabihf/libstdc++.so.6.0.25)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x49717E8: std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > > const& std::use_facet<std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > > >(std::locale const&) (in /usr/lib/arm-linux-gnueabihf/libstdc++.so.6.0.25)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4972AD8: bool std::has_facet<std::num_get<char, std::istreambuf_iterator<char, std::char_traits<char> > > >(std::locale const&) (in /usr/lib/arm-linux-gnueabihf/libstdc++.so.6.0.25)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x497185C: std::num_get<char, std::istreambuf_iterator<char, std::char_traits<char> > > const& std::use_facet<std::num_get<char, std::istreambuf_iterator<char, std::char_traits<char> > > >(std::locale const&) (in /usr/lib/arm-linux-gnueabihf/libstdc++.so.6.0.25)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4965F30: std::basic_ios<wchar_t, std::char_traits<wchar_t> >::init(std::basic_streambuf<wchar_t, std::char_traits<wchar_t> >*) (in /usr/lib/arm-linux-gnueabihf/libstdc++.so.6.0.25)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4965BBC: std::basic_ios<wchar_t, std::char_traits<wchar_t> >::_M_cache_locale(std::locale const&) (in /usr/lib/arm-linux-gnueabihf/libstdc++.so.6.0.25)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4997E4C: bool std::has_facet<std::ctype<wchar_t> >(std::locale const&) (in /usr/lib/arm-linux-gnueabihf/libstdc++.so.6.0.25)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4996308: std::ctype<wchar_t> const& std::use_facet<std::ctype<wchar_t> >(std::locale const&) (in /usr/lib/arm-linux-gnueabihf/libstdc++.so.6.0.25)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x499802C: bool std::has_facet<std::num_put<wchar_t, std::ostreambuf_iterator<wchar_t, std::char_traits<wchar_t> > > >(std::locale const&) (in /usr/lib/arm-linux-gnueabihf/libstdc++.so.6.0.25)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4996D4C: std::num_put<wchar_t, std::ostreambuf_iterator<wchar_t, std::char_traits<wchar_t> > > const& std::use_facet<std::num_put<wchar_t, std::ostreambuf_iterator<wchar_t, std::char_traits<wchar_t> > > >(std::locale const&) (in /usr/lib/arm-linux-gnueabihf/libstdc++.so.6.0.25)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x49980A4: bool std::has_facet<std::num_get<wchar_t, std::istreambuf_iterator<wchar_t, std::char_traits<wchar_t> > > >(std::locale const&) (in /usr/lib/arm-linux-gnueabihf/libstdc++.so.6.0.25)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4996DC0: std::num_get<wchar_t, std::istreambuf_iterator<wchar_t, std::char_traits<wchar_t> > > const& std::use_facet<std::num_get<wchar_t, std::istreambuf_iterator<wchar_t, std::char_traits<wchar_t> > > >(std::locale const&) (in /usr/lib/arm-linux-gnueabihf/libstdc++.so.6.0.25)
+==4235== 
+You need to pass 1 argument==4235== Use of uninitialised value of size 4
+==4235==    at 0x4013330: __tls_get_addr (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4013344: __tls_get_addr (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x401334C: __tls_get_addr (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x48FD72C: std::uncaught_exception() (in /usr/lib/arm-linux-gnueabihf/libstdc++.so.6.0.25)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4ADE144: fflush (in /usr/lib/arm-linux-gnueabihf/libc-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x497EE5C: std::ostream::sentry::sentry(std::ostream&) (in /usr/lib/arm-linux-gnueabihf/libstdc++.so.6.0.25)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x497E6FC: std::ostream::flush() (in /usr/lib/arm-linux-gnueabihf/libstdc++.so.6.0.25)
+==4235== 
+
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x497EED8: std::ostream::sentry::~sentry() (in /usr/lib/arm-linux-gnueabihf/libstdc++.so.6.0.25)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x48FD724: std::uncaught_exception() (in /usr/lib/arm-linux-gnueabihf/libstdc++.so.6.0.25)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x48FD818: __cxa_get_globals (in /usr/lib/arm-linux-gnueabihf/libstdc++.so.6.0.25)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4980A50: std::basic_ostream<wchar_t, std::char_traits<wchar_t> >::flush() (in /usr/lib/arm-linux-gnueabihf/libstdc++.so.6.0.25)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x40105FC: _dl_fini (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x40161A0: _dl_sort_maps (in /usr/lib/arm-linux-gnueabihf/ld-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4929570: std::_V2::error_category::~error_category() (in /usr/lib/arm-linux-gnueabihf/libstdc++.so.6.0.25)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x48FC024: std::error_category::~error_category() (in /usr/lib/arm-linux-gnueabihf/libstdc++.so.6.0.25)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4AF5814: free (in /usr/lib/arm-linux-gnueabihf/libc-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4B9C040: free_mem (in /usr/lib/arm-linux-gnueabihf/libc-2.28.so)
+==4235== 
+==4235== Conditional jump or move depends on uninitialised value(s)
+==4235==    at 0x4B9C0C0: free_mem (in /usr/lib/arm-linux-gnueabihf/libc-2.28.so)
+==4235== 
+==4235== Use of uninitialised value of size 4
+==4235==    at 0x4B9BF54: free_slotinfo (in /usr/lib/arm-linux-gnueabihf/libc-2.28.so)
+==4235== 
+==4235== 
+==4235== HEAP SUMMARY:
+==4235==     in use at exit: 20,224 bytes in 1 blocks
+==4235==   total heap usage: 1 allocs, 0 frees, 20,224 bytes allocated
+==4235== 
+==4235== LEAK SUMMARY:
+==4235==    definitely lost: 0 bytes in 0 blocks
+==4235==    indirectly lost: 0 bytes in 0 blocks
+==4235==      possibly lost: 0 bytes in 0 blocks
+==4235==    still reachable: 20,224 bytes in 1 blocks
+==4235==         suppressed: 0 bytes in 0 blocks
+==4235== Reachable blocks (those to which a pointer was found) are not shown.
+==4235== To see them, rerun with: --leak-check=full --show-reachable=yes
+==4235== 
+==4235== For counts of detected and suppressed errors, rerun with: -v
+==4235== Use --track-origins=yes to see where uninitialised values come from
+==4235== ERROR SUMMARY: 94234 errors from 261 contexts (suppressed: 2015 from 2)
