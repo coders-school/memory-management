@@ -1,0 +1,121 @@
+#!/bin/bash
+
+failed=0
+total=0
+
+# 1: file, 2: regex, 3: method_to_find
+function check_regex () {
+    (( total++ ))
+
+    grep -zoP "$2" $1 > /dev/null
+
+    if [ ! $? -eq 0 ]; then
+        (( failed++ ))
+        echo "❌ $3 is not implemented"
+        return 1
+    fi
+
+    echo "✅ $3 is implemented"
+    return 0
+}
+
+# 1: file
+function check_shared_ptr_copy_constructor() {
+    NAME='Copy constructor'
+    PATTERN='shared_ptr\s*\(\n?\s*?((const shared_ptr)|(shared_ptr const))&[^&]*?\)'
+
+    check_regex $1 "$PATTERN" "$NAME"
+    return $?
+}
+
+# 1: file
+function check_shared_ptr_move_constructor() {
+    NAME='Move constructor'
+    PATTERN='shared_ptr\s*\(\n?\s*?shared_ptr&{2}[^&]*?\)'
+
+    check_regex $1 "$PATTERN" "$NAME"
+    return $?
+}
+
+# 1: file
+function check_shared_ptr_copy_assignment_operator() {
+    NAME='Copy assignment operator'
+    PATTERN='shared_ptr& operator=\s*\(\n?\s*?((const shared_ptr)|(shared_ptr const))&[^&]*?\)'
+
+    check_regex $1 "$PATTERN" "$NAME"
+    return $?
+}
+
+# 1: file
+function check_shared_ptr_move_assignment_operator() {
+    NAME='Move assignment operator'
+    PATTERN='shared_ptr& operator=\s*\(\n?\s*?shared_ptr&{2}[^&]*?\)'
+
+    check_regex $1 "$PATTERN" "$NAME"
+    return $?
+}
+
+# 1: file
+function check_shared_ptr_dereference_operator() {
+    NAME='operator*()'
+    PATTERN='\w+&\s*operator\*\s*\(\s*\)'
+
+    check_regex $1 "$PATTERN" "$NAME"
+    return $?
+}
+
+# 1: file
+function check_shared_ptr_arrow_operator() {
+    NAME='operator->()'
+    PATTERN='\w+\*\s*operator-\>\s*\(\s*\)'
+
+    check_regex $1 "$PATTERN" "$NAME"
+    return $?
+}
+
+# 1: file
+function check_shared_ptr_get() {
+    NAME='get()'
+    PATTERN='\w+\*\s*get\s*\(\s*\)'
+
+    check_regex $1 "$PATTERN" "$NAME"
+    return $?
+}
+
+# 1: file
+function check_shared_ptr_reset() {
+    NAME='reset()'
+    PATTERN='void\s*reset\s*\('
+
+    check_regex $1 "$PATTERN" "$NAME"
+    return $?
+}
+
+# 1: file
+function check_shared_ptr_use_count() {
+    NAME='use_count()'
+    PATTERN='\w+\s*use_count\s*\(\s*\)'
+
+    check_regex $1 "$PATTERN" "$NAME"
+    return $?
+}
+
+# 1: file
+function check_shared_ptr_operator_bool() {
+    NAME='operator bool()'
+    PATTERN='operator\s*bool\s*\(\s*\)'
+
+    check_regex $1 "$PATTERN" "$NAME"
+    return $?
+}
+
+function summary() {
+    if [[ $failed -eq 0 ]]; then
+        echo "🍾 All checks have passed"
+    else
+        echo "❌ ${failed}/${total} failed"
+        echo
+        echo "If you think this is a bug in the checking script please raise an Issue in this repo and describe the problem. Don't forget to attach a link to this PR via #PR_Number"
+    fi
+    return ${failed}
+}

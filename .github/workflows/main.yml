@@ -123,5 +123,5 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Check shared_ptr has whole interface implemented
-      working-directory: tests/
-      run: bash ./shared_ptr_interface_check.sh
+      working-directory: .github/scripts
+      run: ./shared_ptr_interface_check.sh
