@@ -2,263 +2,269 @@
 
 source functions.sh
 
-function test_shared_ptr_copy_constructor() {
-    declare -a right_copy_ctors=("shared_ptr(const shared_ptr& other)"
-                                 "shared_ptr(shared_ptr const& ptr)"
-                                 "shared_ptr(const shared_ptr&)"
-                                 "shared_ptr(shared_ptr const&)"
-                                 "shared_ptr(
-                                     const shared_ptr& other)")
+function check_right_cases() {
+    declare -a right_cases=("${!2}")
+    local ret=0
 
-    for el in "${right_copy_ctors[@]}"; do
-        echo $el | check_shared_ptr_copy_constructor /dev/stdin > /dev/null
+    for el in "${right_cases[@]}"; do
+        echo $el | $1 /dev/stdin > /dev/null
         if [[ $? != 0 ]]; then
-            echo "❌ Right copy ctors check not passed: $el"
-            return 1
+            echo "❌ Right cases check not passed: $el"
+            ret=1
         fi
     done
 
-    declare -a wrong_copy_ctors=("shared_ptr(const shared_ptr&& other)"
-                                 "shared_ptr(shared_ptr&&)"
-                                 "shared(const shared_ptr& other)"
-                                 "shared_ptr(shared_ptr& ptr)")
+    return $ret
+}
 
-    for el in "${wrong_copy_ctors[@]}"; do
-        echo $el | check_shared_ptr_copy_constructor /dev/stdin > /dev/null
+function check_wrong_cases() {
+    declare -a wrong_cases=("${!2}")
+    local ret=0
+
+    for el in "${wrong_cases[@]}"; do
+        echo $el | $1 /dev/stdin > /dev/null
         if [[ $? -eq 0 ]]; then
-            echo "❌ Wrong copy ctors check not passed: $el"
-            return 1
+            echo "❌ Wrong cases check not passed: $el"
+            ret=1
         fi
     done
+
+    return $ret
+}
+
+function run_test() {
+    local right_cases=("${!2}")
+    local wrong_cases=("${!3}")
+    local ret=0
+
+    check_right_cases $1 right_cases[@]
+    if [[ $? != 0 ]]; then
+        ret=1
+    fi
+
+    check_wrong_cases $1 wrong_cases[@]
+    if [[ $? != 0 ]]; then
+        ret=1
+    fi
+
+    return $ret
+}
+
+function test_shared_ptr_copy_constructor() {
+    echo "Testing copy ctor 🔎"
+
+    local right_copy_ctors=("shared_ptr(const shared_ptr& other)"
+                            "shared_ptr(shared_ptr const& ptr)"
+                            "shared_ptr(const shared_ptr&)"
+                            "shared_ptr(shared_ptr const&)"
+                            "shared_ptr(
+                                const shared_ptr& other)"
+                            "shared_ptr(shared_ptr const &sth)"
+                            "shared_ptr(shared_ptr const & sth)"
+                            "shared_ptr(const shared_ptr &sth)"
+                            "shared_ptr(const shared_ptr & sth)")
+
+    local wrong_copy_ctors=("shared_ptr(const shared_ptr&& other)"
+                            "shared_ptr(shared_ptr&&)"
+                            "shared(const shared_ptr& other)"
+                            "shared_ptr(shared_ptr& ptr)")
+
+    run_test check_shared_ptr_copy_constructor right_copy_ctors[@] wrong_copy_ctors[@]
+    if [[ $? != 0 ]]; then
+        echo "❌ Copy ctor check not passed"
+        echo
+        return 1
+    fi
 
     echo "✅ Copy ctor check passed"
+    echo
     return 0
 }
 
 function test_shared_ptr_move_constructor() {
-    declare -a right_move_ctors=("shared_ptr(shared_ptr&& other)"
-                                 "shared_ptr(shared_ptr&&)"
-                                 "shared_ptr(
-                                     shared_ptr&& other)")
+    echo "Testing move ctor 🔎"
 
-    for el in "${right_move_ctors[@]}"; do
-        echo $el | check_shared_ptr_move_constructor /dev/stdin > /dev/null
-        if [[ $? != 0 ]]; then
-            echo "❌ Right move ctors check not passed: $el"
-            return 1
-        fi
-    done
+    local right_move_ctors=("shared_ptr(shared_ptr&& other)"
+                            "shared_ptr(shared_ptr&&)"
+                            "shared_ptr(
+                                shared_ptr&& other)"
+                            "shared_ptr(shared_ptr &&sth)"
+                            "shared_ptr(shared_ptr && sth)")
 
-    declare -a wrong_move_ctors=("shared_ptr(const shared_ptr&&& other)"
-                                 "shared_ptr(shared_ptr&)"
-                                 "shared(const shared_ptr& other)"
-                                 "shared_ptr(shared_ptr& ptr)")
+    local wrong_move_ctors=("shared_ptr(const shared_ptr&&& other)"
+                            "shared_ptr(shared_ptr&)"
+                            "shared(const shared_ptr& other)"
+                            "shared_ptr(shared_ptr& ptr)")
 
-    for el in "${wrong_move_ctors[@]}"; do
-        echo $el | check_shared_ptr_move_constructor /dev/stdin > /dev/null
-        if [[ $? -eq 0 ]]; then
-            echo "❌ Wrong move ctors check not passed: $el"
-            return 1
-        fi
-    done
+    run_test check_shared_ptr_move_constructor right_move_ctors[@] wrong_move_ctors[@]
+    if [[ $? != 0 ]]; then
+        echo "❌ Move ctor check not passed"
+        echo
+        return 1
+    fi
 
     echo "✅ Move ctor check passed"
+    echo
     return 0
 }
 
 function test_shared_ptr_copy_assignment() {
-    declare -a right_copy_assignment=("shared_ptr& operator=(const shared_ptr& other)"
-                                      "shared_ptr& operator=(shared_ptr const& ptr)"
-                                      "shared_ptr& operator=(const shared_ptr&)"
-                                      "shared_ptr& operator=(shared_ptr const&)"
-                                      "shared_ptr& operator=(
-                                          const shared_ptr& other)")
+    echo "Testing copy assignment operator 🔎"
 
-    for el in "${right_copy_assignment[@]}"; do
-        echo $el | check_shared_ptr_copy_assignment_operator /dev/stdin > /dev/null
-        if [[ $? != 0 ]]; then
-            echo "❌ Right copy assignment operator check not passed: $el"
-            return 1
-        fi
-    done
+    local right_copy_assignment=("shared_ptr& operator=(const shared_ptr& other)"
+                                 "shared_ptr& operator=(shared_ptr const& ptr)"
+                                 "shared_ptr& operator=(const shared_ptr&)"
+                                 "shared_ptr& operator=(shared_ptr const&)"
+                                 "shared_ptr& operator=(
+                                     const shared_ptr& other)"
+                                 "shared_ptr& operator=(const shared_ptr & other)"
+                                 "shared_ptr& operator=(const shared_ptr &other)"
+                                 "shared_ptr& operator=(shared_ptr const & other)"
+                                 "shared_ptr& operator=(shared_ptr const &other)")
 
-    declare -a wrong_copy_assignment=("shared_ptr& operator=(const shared_ptr&& other)"
-                                      "shared_ptr& operator=(shared_ptr& ptr)"
-                                      "shared_ptr operator=(const shared_ptr& ptr)")
+    local wrong_copy_assignment=("shared_ptr& operator=(const shared_ptr&& other)"
+                                 "shared_ptr& operator=(shared_ptr& ptr)"
+                                 "shared_ptr operator=(const shared_ptr& ptr)")
 
-    for el in "${wrong_copy_assignment[@]}"; do
-        echo $el | check_shared_ptr_copy_assignment_operator /dev/stdin > /dev/null
-        if [[ $? -eq 0 ]]; then
-            echo "❌ Wrong copy assignment operator check not passed: $el"
-            return 1
-        fi
-    done
+    run_test check_shared_ptr_copy_assignment_operator right_copy_assignment[@] wrong_copy_assignment[@]
+    if [[ $? != 0 ]]; then
+        echo "❌ Copy assignment operator check not passed"
+        echo
+        return 1
+    fi
 
     echo "✅ Copy assignment operator check passed"
+    echo
     return 0
 }
 
 function test_shared_ptr_move_assignment() {
-    declare -a right_move_assignment=("shared_ptr& operator=(shared_ptr&& other)"
-                                      "shared_ptr& operator=(shared_ptr&&)"
-                                      "shared_ptr& operator=(
-                                          shared_ptr&& other)")
+    echo "Testing move assignment operator 🔎"
 
-    for el in "${right_move_assignment[@]}"; do
-        echo $el | check_shared_ptr_move_assignment_operator /dev/stdin > /dev/null
-        if [[ $? != 0 ]]; then
-            echo "❌ Right move assignment operator check not passed: $el"
-            return 1
-        fi
-    done
+    local right_move_assignment=("shared_ptr& operator=(shared_ptr&& other)"
+                                 "shared_ptr& operator=(shared_ptr&&)"
+                                 "shared_ptr& operator=(
+                                     shared_ptr&& other)"
+                                 "shared_ptr& operator=(shared_ptr &&sth)"
+                                 "shared_ptr& operator=(shared_ptr && sth)")
 
-    declare -a wrong_move_assignment=("shared_ptr& operator=(const shared_ptr&& other)"
-                                      "shared_ptr& operator=(const shared_ptr& ptr)"
-                                      "shared_ptr operator=(const shared_ptr& ptr)"
-                                      "shared_ptr& operator=(shared_ptr&&& other)")
+    local wrong_move_assignment=("shared_ptr& operator=(const shared_ptr&& other)"
+                                 "shared_ptr& operator=(const shared_ptr& ptr)"
+                                 "shared_ptr operator=(const shared_ptr& ptr)"
+                                 "shared_ptr& operator=(shared_ptr&&& other)")
 
-    for el in "${wrong_move_assignment[@]}"; do
-        echo $el | check_shared_ptr_move_assignment_operator /dev/stdin > /dev/null
-        if [[ $? -eq 0 ]]; then
-            echo "❌ Wrong move assignment operator check not passed: $el"
-            return 1
-        fi
-    done
+    run_test check_shared_ptr_move_assignment_operator right_move_assignment[@] wrong_move_assignment[@]
+    if [[ $? != 0 ]]; then
+        echo "❌ Move assignment operator check not passed"
+        echo
+        return 1
+    fi
 
     echo "✅ Move assignment operator check passed"
+    echo
     return 0
 }
 
 function test_shared_ptr_dereference_operator() {
-    declare -a right_dereference_operator=("T& operator*()"
-                                           "Type& operator*()")
+    echo "Testing dereference operator 🔎"
 
-    for el in "${right_dereference_operator[@]}"; do
-        echo $el | check_shared_ptr_dereference_operator /dev/stdin > /dev/null
-        if [[ $? != 0 ]]; then
-            echo "❌ Right dereference operator check not passed: $el"
-            return 1
-        fi
-    done
+    local right_dereference_operator=("T& operator*()"
+                                      "Type& operator*()")
 
-    declare -a wrong_dereference_operator=("T&& operator*()"
-                                           "T operator*()")
+    local wrong_dereference_operator=("T&& operator*()"
+                                      "T operator*()")
 
-    for el in "${wrong_dereference_operator[@]}"; do
-        echo $el | check_shared_ptr_dereference_operator /dev/stdin > /dev/null
-        if [[ $? -eq 0 ]]; then
-            echo "❌ Wrong dereference operator check not passed: $el"
-            return 1
-        fi
-    done
+    run_test check_shared_ptr_dereference_operator right_dereference_operator[@] wrong_dereference_operator[@]
+    if [[ $? != 0 ]]; then
+        echo "❌ Dereference operator check not passed"
+        echo
+        return 1
+    fi
 
     echo "✅ Dereference operator check passed"
+    echo
     return 0
 }
 
 function test_shared_ptr_arrow_operator() {
-    declare -a right_arrow_operator=("T* operator->()"
-                                     "Type* operator->()")
+    echo "Testing arrow operator 🔎"
 
-    for el in "${right_arrow_operator[@]}"; do
-        echo $el | check_shared_ptr_arrow_operator /dev/stdin > /dev/null
-        if [[ $? != 0 ]]; then
-            echo "❌ Right arrow operator check not passed: $el"
-            return 1
-        fi
-    done
+    local right_arrow_operator=("T* operator->()"
+                                "Type* operator->()")
 
-    declare -a wrong_arrow_operator=("T& operator->()"
-                                     "T operator->()")
+    local wrong_arrow_operator=("T& operator->()"
+                                "T operator->()")
 
-    for el in "${wrong_arrow_operator[@]}"; do
-        echo $el | check_shared_ptr_arrow_operator /dev/stdin > /dev/null
-        if [[ $? -eq 0 ]]; then
-            echo "❌ Wrong arrow operator check not passed: $el"
-            return 1
-        fi
-    done
+    run_test check_shared_ptr_arrow_operator right_arrow_operator[@] wrong_arrow_operator[@]
+    if [[ $? != 0 ]]; then
+        echo "❌ Arrow operator check not passed"
+        echo
+        return 1
+    fi
 
     echo "✅ Arrow operator check passed"
+    echo
     return 0
 }
 
 function test_shared_ptr_get() {
-    declare -a right_get=("T* get()"
-                          "Type* get()")
+    echo "Testing get method 🔎"
 
-    for el in "${right_get[@]}"; do
-        echo $el | check_shared_ptr_get /dev/stdin > /dev/null
-        if [[ $? != 0 ]]; then
-            echo "❌ Right get method check not passed: $el"
-            return 1
-        fi
-    done
+    local right_get=("T* get()"
+                     "Type* get()")
 
-    declare -a wrong_get=("T& get()"
-                          "T get()"
-                          "T* get(int arg)")
+    local wrong_get=("T& get()"
+                     "T get()"
+                     "T* get(int arg)")
 
-    for el in "${wrong_get[@]}"; do
-        echo $el | check_shared_ptr_get /dev/stdin > /dev/null
-        if [[ $? -eq 0 ]]; then
-            echo "❌ Wrong get method check not passed: $el"
-            return 1
-        fi
-    done
+    run_test check_shared_ptr_get right_get[@] wrong_get[@]
+    if [[ $? != 0 ]]; then
+        echo "❌ Get method check not passed"
+        echo
+        return 1
+    fi
 
     echo "✅ Get method check passed"
+    echo
     return 0
 }
 
 function test_shared_ptr_use_count() {
-    declare -a right_use_count=("size_t use_count()"
-                                "long use_count()")
+    echo "Testing use_count method 🔎"
 
-    for el in "${right_use_count[@]}"; do
-        echo $el | check_shared_ptr_use_count /dev/stdin > /dev/null
-        if [[ $? != 0 ]]; then
-            echo "❌ Right use_count method check not passed: $el"
-            return 1
-        fi
-    done
+    local right_use_count=("size_t use_count()"
+                           "long use_count()")
 
-    declare -a wrong_use_count=("size_t use_count(shared_ptr ptr)")
+    local wrong_use_count=("size_t use_count(shared_ptr ptr)")
 
-    for el in "${wrong_use_count[@]}"; do
-        echo $el | check_shared_ptr_use_count /dev/stdin > /dev/null
-        if [[ $? -eq 0 ]]; then
-            echo "❌ Wrong use_count method check not passed: $el"
-            return 1
-        fi
-    done
+    run_test check_shared_ptr_use_count right_use_count[@] wrong_use_count[@]
+    if [[ $? != 0 ]]; then
+        echo "❌ Use_count method check not passed"
+        echo
+        return 1
+    fi
 
-    echo "✅ Get method check passed"
+    echo "✅ Use_count method check passed"
+    echo
     return 0
 }
 
 function test_shared_ptr_operator_bool() {
-    declare -a right_operator_bool=("operator bool()")
+    echo "Testing operator bool() 🔎"
 
-    for el in "${right_operator_bool[@]}"; do
-        echo $el | check_shared_ptr_operator_bool /dev/stdin > /dev/null
-        if [[ $? != 0 ]]; then
-            echo "❌ Right operator bool() check not passed: $el"
-            return 1
-        fi
-    done
+    local right_operator_bool=("operator bool()")
 
-    declare -a wrong_operator_bool=("operator bool(int arg)")
+    local wrong_operator_bool=("operator bool(int arg)")
 
-    for el in "${wrong_operator_bool[@]}"; do
-        echo $el | check_shared_ptr_operator_bool /dev/stdin > /dev/null
-        if [[ $? -eq 0 ]]; then
-            echo "❌ Wrong operator bool() check not passed: $el"
-            return 1
-        fi
-    done
+    run_test check_shared_ptr_operator_bool right_operator_bool[@] wrong_operator_bool[@]
+    if [[ $? != 0 ]]; then
+        echo "❌ Operator bool() check not passed"
+        echo
+        return 1
+    fi
 
     echo "✅ Operator bool() check passed"
+    echo
     return 0
 }
 
