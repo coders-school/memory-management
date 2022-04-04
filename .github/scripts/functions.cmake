@@ -31,7 +31,7 @@ function(link_test_framework TARGET)
         FetchContent_MakeAvailable(googletest)
         include(GoogleTest)
 
-        target_link_libraries(${TARGET} PUBLIC gtest_main gmock)
+        target_link_libraries(${TARGET} PUBLIC gtest_main gmock gcov)
 
     elseif(TEST_FRAMEWORK STREQUAL catch2)
         include(FetchContent)
@@ -42,7 +42,7 @@ function(link_test_framework TARGET)
         )
 
         FetchContent_MakeAvailable(catch2)
-        target_link_libraries(${TARGET} PRIVATE Catch2::Catch2WithMain)
+        target_link_libraries(${TARGET} PRIVATE Catch2::Catch2WithMain gcov)
 
     else()
         message(FATAL_ERROR "Unknown or not set test framework")

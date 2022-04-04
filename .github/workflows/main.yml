@@ -144,3 +144,25 @@ jobs:
     - name: Run tests and sanitizer
       working-directory: .github/scripts/build
       run: ./make_shared_student
+
+  shared_ptr_coverage:
+    needs: shared_ptr_students_tests
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install lcov
+      run: sudo apt install lcov
+    - name: Create build folder
+      working-directory: .github/scripts
+      run: mkdir build
+    - name: Compile
+      working-directory: .github/scripts/build
+      run: |
+        ../cmake_config.sh "../../../homework/shared_ptr/shared_ptr_tests.cpp"
+        make shared_ptr_student
+    - name: Run tests
+      working-directory: .github/scripts/build
+      run: ./shared_ptr_student
+    - name: Check coverage report
+      working-directory: .github/scripts/build
+      run: ../coverage.sh shared_ptr
