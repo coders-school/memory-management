@@ -148,10 +148,8 @@ jobs:
   check_shared_ptr_interface:
     needs: shared_ptr_formatting_check
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
-
     - name: Check shared_ptr has whole interface implemented
       working-directory: .github/scripts
       run: ./shared_ptr_interface_check.sh
