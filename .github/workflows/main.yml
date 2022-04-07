@@ -4,116 +4,146 @@ on: [push, pull_request]
 jobs:
   files_check:
     runs-on: ubuntu-latest
-
     outputs:
       shared_ptr_exists: ${{ steps.shared_ptr.outputs.files_exists }}
       weak_ptr_exists: ${{ steps.weak_ptr.outputs.files_exists }}
       make_shared_exists: ${{ steps.make_shared.outputs.files_exists }}
-
     steps:
     - uses: actions/checkout@v2
-
     - name: Check shared_ptr.hpp file existence
       id: shared_ptr
       uses: andstor/file-existence-action@v1
       with:
         files: "homework/shared_ptr/shared_ptr.hpp"
-
     - name: Check weak_ptr.hpp file existence
       id: weak_ptr
       uses: andstor/file-existence-action@v1
       with:
         files: "homework/shared_ptr/weak_ptr.hpp"
-
     - name: Check make_shared.hpp file existence
       id: make_shared
       uses: andstor/file-existence-action@v1
       with:
         files: "homework/shared_ptr/make_shared.hpp"
 
-
   shared_ptr:
     needs: files_check
     if: needs.files_check.outputs.shared_ptr_exists == 'true'
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
-
     - name: Create build folder
-      working-directory: tests/shared_ptr/
+      working-directory: .github/scripts
       run: mkdir build
-
     - name: Compile
-      working-directory: tests/shared_ptr/build
+      working-directory: .github/scripts/build
       run: |
-        cmake ..
-        make
-
+        ../cmake_config.sh "../shared_ptr_tests/shared_ptr_tests.cpp"
+        make shared_ptr
     - name: Run tests and sanitizer
-      working-directory: tests/shared_ptr/build
-      run: ctest -V
-
+      working-directory: .github/scripts/build
+      run: ./shared_ptr
 
   weak_ptr:
     needs: files_check
     if: needs.files_check.outputs.weak_ptr_exists == 'true'
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
-
     - name: Create build folder
-      working-directory: tests/weak_ptr/
+      working-directory: .github/scripts
       run: mkdir build
-
     - name: Compile
-      working-directory: tests/weak_ptr/build
+      working-directory: .github/scripts/build
       run: |
-        cmake ..
-        make
-
+        ../cmake_config.sh "../shared_ptr_tests/weak_ptr_tests.cpp"
+        make weak_ptr
     - name: Run tests and sanitizer
-      working-directory: tests/weak_ptr/build
-      run: ctest -V
-
+      working-directory: .github/scripts/build
+      run: ./weak_ptr
 
   make_shared:
     needs: files_check
     if: needs.files_check.outputs.make_shared_exists == 'true'
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
-
     - name: Create build folder
-      working-directory: tests/make_shared/
+      working-directory: .github/scripts
       run: mkdir build
-
     - name: Compile
-      working-directory: tests/make_shared/build
+      working-directory: .github/scripts/build
       run: |
-        cmake ..
-        make
-
+        ../cmake_config.sh "../shared_ptr_tests/make_shared_tests.cpp"
+        make make_shared
     - name: Run tests and sanitizer
-      working-directory: tests/make_shared/build
-      run: ctest -V
-
+      working-directory: .github/scripts/build
+      run: ./make_shared
 
   shared_ptr_formatting_check:
     needs: files_check
     if: needs.files_check.outputs.shared_ptr_exists == 'true'
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
-
     - name: Run clang-format style check
       uses: jidicula/clang-format-action@v4.5.0
       with:
         check-path: 'homework/shared_ptr'
 
+  shared_ptr_students_tests:
+    needs: files_check
+    if: needs.files_check.outputs.shared_ptr_exists == 'true'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Create build folder
+      working-directory: .github/scripts
+      run: mkdir build
+    - name: Compile
+      working-directory: .github/scripts/build
+      run: |
+        ../cmake_config.sh "../../../homework/shared_ptr/shared_ptr_tests.cpp"
+        make shared_ptr_student
+    - name: Run tests and sanitizer
+      working-directory: .github/scripts/build
+      run: ./shared_ptr_student
+
+  weak_ptr_students_tests:
+    needs: files_check
+    if: needs.files_check.outputs.weak_ptr_exists == 'true'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Create build folder
+      working-directory: .github/scripts
+      run: mkdir build
+    - name: Compile
+      working-directory: .github/scripts/build
+      run: |
+        ../cmake_config.sh "../../../homework/shared_ptr/weak_ptr_tests.cpp"
+        make weak_ptr_student
+    - name: Run tests and sanitizer
+      working-directory: .github/scripts/build
+      run: ./weak_ptr_student
+
+  make_shared_students_tests:
+    needs: files_check
+    if: needs.files_check.outputs.make_shared_exists == 'true'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Create build folder
+      working-directory: .github/scripts
+      run: mkdir build
+    - name: Compile
+      working-directory: .github/scripts/build
+      run: |
+        ../cmake_config.sh "../../../homework/shared_ptr/make_shared_tests.cpp"
+        make make_shared_student
+    - name: Run tests and sanitizer
+      working-directory: .github/scripts/build
+      run: ./make_shared_student
 
   check_shared_ptr_interface:
     needs: shared_ptr_formatting_check
