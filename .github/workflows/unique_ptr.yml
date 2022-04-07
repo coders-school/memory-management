@@ -1,0 +1,62 @@
+name: unique_ptr_homework
+on: [push, pull_request]
+
+jobs:
+  files_check:
+    runs-on: ubuntu-latest
+    outputs:
+      unique_ptr_exists: ${{ steps.unique_ptr.outputs.files_exists }}
+    steps:
+    - uses: actions/checkout@v2
+    - name: Check unique_ptr.hpp file existence
+      id: unique_ptr
+      uses: andstor/file-existence-action@v1
+      with:
+        files: "homework/unique_ptr/unique_ptr.hpp"
+
+  unique_ptr:
+    needs: files_check
+    if: needs.files_check.outputs.unique_ptr_exists == 'true'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Create build folder
+      working-directory: .github/scripts
+      run: mkdir build
+    - name: Compile
+      working-directory: .github/scripts/build
+      run: |
+        ../cmake_config.sh unique_ptr "../tests/unique_ptr_tests.cpp"
+        make unique_ptr
+    - name: Run tests and sanitizer
+      working-directory: .github/scripts/build
+      run: ./unique_ptr
+
+  unique_ptr_students_tests:
+    needs: files_check
+    if: needs.files_check.outputs.unique_ptr_exists == 'true'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Create build folder
+      working-directory: .github/scripts
+      run: mkdir build
+    - name: Compile
+      working-directory: .github/scripts/build
+      run: |
+        ../cmake_config.sh unique_ptr "../../../homework/unique_ptr/unique_ptr_tests.cpp"
+        make unique_ptr_student
+    - name: Run tests and sanitizer
+      working-directory: .github/scripts/build
+      run: ./unique_ptr_student
+
+  unique_ptr_formatting_check:
+    needs: files_check
+    if: needs.files_check.outputs.unique_ptr_exists == 'true'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run clang-format style check
+      uses: jidicula/clang-format-action@v4.5.0
+      with:
+        check-path: 'homework/unique_ptr'

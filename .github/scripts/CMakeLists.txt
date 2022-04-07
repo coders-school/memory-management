@@ -18,12 +18,24 @@ set(LINKER_FLAGS
 
 include(functions.cmake)
 
-set(SHARED_PTR_HOMEWORK_DIR ../../homework/shared_ptr)
+if(HOMEWORK STREQUAL shared_ptr)
+    set(SHARED_PTR_HOMEWORK_DIR ../../homework/shared_ptr)
 
-build_test(shared_ptr ${SHARED_PTR_HOMEWORK_DIR})
-build_test(weak_ptr ${SHARED_PTR_HOMEWORK_DIR})
-build_test(make_shared ${SHARED_PTR_HOMEWORK_DIR})
+    build_test(shared_ptr ${SHARED_PTR_HOMEWORK_DIR})
+    build_test(weak_ptr ${SHARED_PTR_HOMEWORK_DIR})
+    build_test(make_shared ${SHARED_PTR_HOMEWORK_DIR})
 
-build_student_test(shared_ptr ${SHARED_PTR_HOMEWORK_DIR})
-build_student_test(weak_ptr ${SHARED_PTR_HOMEWORK_DIR})
-build_student_test(make_shared ${SHARED_PTR_HOMEWORK_DIR})
+    build_student_test(shared_ptr ${SHARED_PTR_HOMEWORK_DIR})
+    build_student_test(weak_ptr ${SHARED_PTR_HOMEWORK_DIR})
+    build_student_test(make_shared ${SHARED_PTR_HOMEWORK_DIR})
+
+elseif(HOMEWORK STREQUAL unique_ptr)
+    set(UNIQUE_PTR_HOMEWORK_DIR ../../homework/unique_ptr)
+
+    build_test(unique_ptr ${UNIQUE_PTR_HOMEWORK_DIR})
+
+    build_student_test(unique_ptr ${UNIQUE_PTR_HOMEWORK_DIR})
+
+else()
+    message(FATAL_ERROR "Unknown homework")
+endif()
