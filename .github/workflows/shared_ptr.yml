@@ -56,7 +56,7 @@ jobs:
     - name: Compile
       working-directory: .github/scripts/build
       run: |
-        ../cmake_config.sh shared_ptr "../tests/weak_ptr_tests.cpp"
+        ../cmake_config.sh weak_ptr "../tests/weak_ptr_tests.cpp"
         make weak_ptr
     - name: Run tests and sanitizer
       working-directory: .github/scripts/build
@@ -74,7 +74,7 @@ jobs:
     - name: Compile
       working-directory: .github/scripts/build
       run: |
-        ../cmake_config.sh shared_ptr "../tests/make_shared_tests.cpp"
+        ../cmake_config.sh make_shared "../tests/make_shared_tests.cpp"
         make make_shared
     - name: Run tests and sanitizer
       working-directory: .github/scripts/build
@@ -121,7 +121,7 @@ jobs:
     - name: Compile
       working-directory: .github/scripts/build
       run: |
-        ../cmake_config.sh shared_ptr "../../../homework/shared_ptr/weak_ptr_tests.cpp"
+        ../cmake_config.sh weak_ptr "../../../homework/shared_ptr/weak_ptr_tests.cpp"
         make weak_ptr_student
     - name: Run tests and sanitizer
       working-directory: .github/scripts/build
@@ -139,7 +139,7 @@ jobs:
     - name: Compile
       working-directory: .github/scripts/build
       run: |
-        ../cmake_config.sh shared_ptr "../../../homework/shared_ptr/make_shared_tests.cpp"
+        ../cmake_config.sh make_shared "../../../homework/shared_ptr/make_shared_tests.cpp"
         make make_shared_student
     - name: Run tests and sanitizer
       working-directory: .github/scripts/build
