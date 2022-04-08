@@ -1,3 +1,8 @@
+function(add_test_targets NAME HOMEWORK_DIR)
+    build_test(${NAME} ${HOMEWORK_DIR})
+    build_student_test(${NAME} ${HOMEWORK_DIR})
+endfunction()
+
 function(build_test NAME HOMEWORK_DIR)
     add_executable(${NAME} tests/${NAME}_tests.cpp)
     target_compile_options(${NAME} PRIVATE ${COMPILER_FLAGS})

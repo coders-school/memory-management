@@ -18,24 +18,13 @@ set(LINKER_FLAGS
 
 include(functions.cmake)
 
-set(SHARED_PTR_HOMEWORK_DIR ../../homework/shared_ptr)
-set(UNIQUE_PTR_HOMEWORK_DIR ../../homework/unique_ptr)
-
-if(TASK STREQUAL shared_ptr)
-    build_test(shared_ptr ${SHARED_PTR_HOMEWORK_DIR})
-    build_student_test(shared_ptr ${SHARED_PTR_HOMEWORK_DIR})
-
-elseif(TASK STREQUAL weak_ptr)
-    build_test(weak_ptr ${SHARED_PTR_HOMEWORK_DIR})
-    build_student_test(weak_ptr ${SHARED_PTR_HOMEWORK_DIR})
-
-elseif(TASK STREQUAL make_shared)
-    build_test(make_shared ${SHARED_PTR_HOMEWORK_DIR})
-    build_student_test(make_shared ${SHARED_PTR_HOMEWORK_DIR})
+if((TASK STREQUAL shared_ptr) OR (TASK STREQUAL weak_ptr) OR (TASK STREQUAL make_shared))
+    set(HOMEWORK_DIR ../../homework/shared_ptr)
+    add_test_targets(shared_ptr ${HOMEWORK_DIR})
 
 elseif(TASK STREQUAL unique_ptr)
-    build_test(unique_ptr ${UNIQUE_PTR_HOMEWORK_DIR})
-    build_student_test(unique_ptr ${UNIQUE_PTR_HOMEWORK_DIR})
+    set(HOMEWORK_DIR ../../homework/unique_ptr)
+    add_test_targets(unique_ptr ${HOMEWORK_DIR})
 
 else()
     message(FATAL_ERROR "Unknown task")
