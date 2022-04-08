@@ -6,7 +6,7 @@ regex="#include [<|\"]((catch2)|(gtest))"
 
 if [[ $file =~ $regex ]]; then
     framework=${BASH_REMATCH[1]}
-    cmake -DTEST_FRAMEWORK=$framework -DHTASK=$1 ..
+    cmake -DTEST_FRAMEWORK=$framework -DTASK=$1 ..
 else
     echo "Couldn't recognize test framework"
     exit 1
