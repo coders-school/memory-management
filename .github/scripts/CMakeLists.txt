@@ -33,11 +33,10 @@ elseif(TASK STREQUAL make_shared)
     build_test(make_shared ${SHARED_PTR_HOMEWORK_DIR})
     build_student_test(make_shared ${SHARED_PTR_HOMEWORK_DIR})
 
-
 elseif(TASK STREQUAL unique_ptr)
     build_test(unique_ptr ${UNIQUE_PTR_HOMEWORK_DIR})
     build_student_test(unique_ptr ${UNIQUE_PTR_HOMEWORK_DIR})
 
 else()
-    message(FATAL_ERROR "Unknown homework")
+    message(FATAL_ERROR "Unknown task")
 endif()
