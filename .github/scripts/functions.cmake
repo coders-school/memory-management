@@ -1,5 +1,5 @@
 function(build_test NAME HOMEWORK_DIR)
-    add_executable(${NAME} shared_ptr_tests/${NAME}_tests.cpp)
+    add_executable(${NAME} tests/${NAME}_tests.cpp)
     target_compile_options(${NAME} PRIVATE ${COMPILER_FLAGS})
     target_link_options(${NAME} PRIVATE ${LINKER_FLAGS})
     target_include_directories(${NAME} PRIVATE ${HOMEWORK_DIR})
