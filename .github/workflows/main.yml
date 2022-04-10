@@ -13,3 +13,21 @@ jobs:
       uses: andstor/file-existence-action@v1
       with:
         files: "homework/unique_ptr/unique_ptr.hpp"
+
+  unique_ptr:
+    needs: files_check
+    if: needs.files_check.outputs.unique_ptr_exists == 'true'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Create build folder
+      working-directory: .github/scripts
+      run: mkdir build
+    - name: Compile
+      working-directory: .github/scripts/build
+      run: |
+        ../cmake_config.sh "../tests/unique_ptr_tests.cpp"
+        make unique_ptr
+    - name: Run tests and sanitizer
+      working-directory: .github/scripts/build
+      run: ./unique_ptr
