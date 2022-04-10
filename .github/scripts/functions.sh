@@ -40,7 +40,7 @@ function check_shared_ptr_move_constructor() {
 # 1: file
 function check_shared_ptr_copy_assignment_operator() {
     NAME='Copy assignment operator'
-    PATTERN='shared_ptr&\s*operator=\s*\(\s*((const\s*shared_ptr)|(shared_ptr\s*const))\s*&[^&]*\)'
+    PATTERN='shared_ptr\s*&\s*operator=\s*\(\s*((const\s*shared_ptr)|(shared_ptr\s*const))\s*&[^&]*\)'
 
     check_regex "$1" "$PATTERN" "$NAME"
     return $?
@@ -49,7 +49,7 @@ function check_shared_ptr_copy_assignment_operator() {
 # 1: file
 function check_shared_ptr_move_assignment_operator() {
     NAME='Move assignment operator'
-    PATTERN='shared_ptr&\s*operator=\s*\(\s*shared_ptr\s*&&[^&]*\)'
+    PATTERN='shared_ptr\s*&\s*operator=\s*\(\s*shared_ptr\s*&&[^&]*\)'
 
     check_regex "$1" "$PATTERN" "$NAME"
     return $?
@@ -58,7 +58,7 @@ function check_shared_ptr_move_assignment_operator() {
 # 1: file
 function check_shared_ptr_dereference_operator() {
     NAME='operator*()'
-    PATTERN='\w+&\s*operator\*\s*\(\s*\)'
+    PATTERN='\w+\s*&\s*operator\s*\*\s*\(\s*\)'
 
     check_regex "$1" "$PATTERN" "$NAME"
     return $?
@@ -67,7 +67,7 @@ function check_shared_ptr_dereference_operator() {
 # 1: file
 function check_shared_ptr_arrow_operator() {
     NAME='operator->()'
-    PATTERN='\w+\*\s*operator->\s*\(\s*\)'
+    PATTERN='\w+\s*\*\s*operator\s*->\s*\(\s*\)'
 
     check_regex "$1" "$PATTERN" "$NAME"
     return $?
@@ -76,7 +76,7 @@ function check_shared_ptr_arrow_operator() {
 # 1: file
 function check_shared_ptr_get() {
     NAME='get()'
-    PATTERN='\w+\*\s*get\s*\(\s*\)'
+    PATTERN='\w+\s*\*\s*get\s*\(\s*\)'
 
     check_regex "$1" "$PATTERN" "$NAME"
     return $?

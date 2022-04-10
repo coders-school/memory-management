@@ -105,9 +105,9 @@ function test_shared_ptr_copy_assignment() {
                                  "shared_ptr& operator=(
                                      const shared_ptr& other)"
                                  "shared_ptr& operator=(const shared_ptr & other)"
-                                 "shared_ptr& operator=(const shared_ptr &other)"
+                                 "shared_ptr & operator=(const shared_ptr &other)"
                                  "shared_ptr& operator=(shared_ptr const & other)"
-                                 "shared_ptr& operator=(shared_ptr const &other)")
+                                 "shared_ptr &operator=(shared_ptr const &other)")
 
     local wrong_copy_assignment=("shared_ptr& operator=(const shared_ptr&& other)"
                                  "shared_ptr& operator=(shared_ptr& ptr)"
@@ -119,11 +119,11 @@ function test_shared_ptr_copy_assignment() {
 
 function test_shared_ptr_move_assignment() {
     local right_move_assignment=("shared_ptr& operator=(shared_ptr&& other)"
-                                 "shared_ptr& operator=(shared_ptr&&)"
+                                 "shared_ptr & operator=(shared_ptr&&)"
                                  "shared_ptr& operator=(
                                      shared_ptr&& other)"
                                  "shared_ptr& operator=(shared_ptr &&sth)"
-                                 "shared_ptr& operator=(shared_ptr && sth)")
+                                 "shared_ptr &operator=(shared_ptr && sth)")
 
     local wrong_move_assignment=("shared_ptr& operator=(const shared_ptr&& other)"
                                  "shared_ptr& operator=(const shared_ptr& ptr)"
@@ -136,10 +136,14 @@ function test_shared_ptr_move_assignment() {
 
 function test_shared_ptr_dereference_operator() {
     local right_dereference_operator=("T& operator*()"
-                                      "Type& operator*()")
+                                      "Type& operator*()"
+                                      "MyType & operator *()"
+                                      "N &operator* ()")
 
     local wrong_dereference_operator=("T&& operator*()"
-                                      "T operator*()")
+                                      "T operator*()"
+                                      "MyType & operator **()"
+                                      "N &&operator* ()")
 
     run_test "dereference operator" check_shared_ptr_dereference_operator right_dereference_operator[@] wrong_dereference_operator[@]
     return $?
@@ -147,10 +151,15 @@ function test_shared_ptr_dereference_operator() {
 
 function test_shared_ptr_arrow_operator() {
     local right_arrow_operator=("T* operator->()"
-                                "Type* operator->()")
+                                "Type* operator->()"
+                                "MyType* operator -> ()"
+                                "N *operator-> ()")
 
     local wrong_arrow_operator=("T& operator->()"
-                                "T operator->()")
+                                "T operator->()"
+                                "MyType ** operator ->()"
+                                "T& operator -> ()"
+                                "N **operator-> ()")
 
     run_test "arrow operator" check_shared_ptr_arrow_operator right_arrow_operator[@] wrong_arrow_operator[@]
     return $?
@@ -158,11 +167,15 @@ function test_shared_ptr_arrow_operator() {
 
 function test_shared_ptr_get() {
     local right_get=("T* get()"
-                     "Type* get()")
+                     "Type* get()"
+                     "MyType *get()"
+                     "N *get ()")
 
     local wrong_get=("T& get()"
                      "T get()"
-                     "T* get(int arg)")
+                     "T* get(int arg)"
+                     "Type & get()"
+                     "N get ()")
 
     run_test "get method" check_shared_ptr_get right_get[@] wrong_get[@]
     return $?
@@ -170,9 +183,11 @@ function test_shared_ptr_get() {
 
 function test_shared_ptr_use_count() {
     local right_use_count=("size_t use_count()"
-                           "long use_count()")
+                           "long use_count()"
+                           "int use_count ()")
 
-    local wrong_use_count=("size_t use_count(shared_ptr ptr)")
+    local wrong_use_count=("size_t use_count(shared_ptr ptr)"
+                           "int use_count(double sth)")
 
     run_test "use_count method" check_shared_ptr_use_count right_use_count[@] wrong_use_count[@]
     return $?
