@@ -1,0 +1,15 @@
+name: unique_ptr_homework
+on: [push, pull_request]
+
+jobs:
+  files_check:
+    runs-on: ubuntu-latest
+    outputs:
+      unique_ptr_exists: ${{ steps.unique_ptr.outputs.files_exists }}
+    steps:
+    - uses: actions/checkout@v2
+    - name: Check unique_ptr.hpp file existence
+      id: unique_ptr
+      uses: andstor/file-existence-action@v1
+      with:
+        files: "homework/unique_ptr/unique_ptr.hpp"
