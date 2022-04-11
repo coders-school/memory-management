@@ -1,6 +1,6 @@
 #!/bin/bash
 
-file=$(cat "../../../homework/shared_ptr/shared_tests.cpp")
+file=$(cat "../../../homework/shared_ptr/shared_ptr_tests.cpp")
 pattern_template="template\s*class\s*my::shared_ptr<\s*\w+\s*>"
 
 if [[ ! ${file//$'\n'/' '} =~ $pattern_template ]]; then
