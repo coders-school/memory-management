@@ -166,3 +166,8 @@ jobs:
     - name: Check coverage report
       working-directory: .github/scripts/build
       run: ../coverage.sh
+    - uses: actions/upload-artifact@v3
+      if: failure()
+      with:
+        name: Coverage-report
+        path: .github/scripts/build/report/

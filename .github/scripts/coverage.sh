@@ -9,7 +9,7 @@ if [[ ! ${file//$'\n'/' '} =~ $pattern_template ]]; then
 fi
 
 lcov --directory . --capture --output-file coverage.info > /dev/null
-lcov --remove coverage.info '/usr/*' '*/_deps/*' --output-file coverage.info > /dev/null
+lcov --extract coverage.info '*/shared_ptr.hpp' --output-file coverage.info > /dev/null
 
 report=$(lcov --list coverage.info)
 pattern_lcov="shared_ptr\.hpp\s*\|\s*([0-9]{2,3}(\.[0-9])?)%"
@@ -19,15 +19,7 @@ if [[ ${report//$'\n'/' '} =~ $pattern_lcov ]]; then
         echo "✅ Test coverage rate is higher than 90%"
     else
         echo "❌ Test coverage rate is lower than 90%"
-        echo "Lines from shared_ptr.hpp that are not covered:"
-
         genhtml coverage.info -o report > /dev/null
-        no_cov_line_pattern="([0-9]+).*?lineNoCov"
-        while IFS= read -r line; do
-            if [[ $line =~ $no_cov_line_pattern ]]; then
-                echo ${BASH_REMATCH[1]}
-            fi
-        done < "./report/shared_ptr/shared_ptr.hpp.gcov.html"
         exit 1
     fi
 else
