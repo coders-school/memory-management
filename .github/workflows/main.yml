@@ -165,4 +165,4 @@ jobs:
       run: ./shared_ptr_student
     - name: Check coverage report
       working-directory: .github/scripts/build
-      run: ../coverage.sh shared_ptr
+      run: ../coverage.sh
