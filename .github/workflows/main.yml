@@ -151,7 +151,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install lcov
-      run: sudo apt install lcov
+      run: sudo apt install gcov lcov
     - name: Create build folder
       working-directory: .github/scripts
       run: mkdir build
