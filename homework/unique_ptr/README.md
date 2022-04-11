@@ -12,5 +12,7 @@ unique_ptr is a RAII class:
   * Copying original pointer to a new object
   * Setting source pointer to nullptr
 * Member functions: operator*(), operator->(), get(), release(), reset()
+* Should be implemented in `unique_ptr.hpp` file inside `my` namespace
+* Tests should be written inside `unique_ptr_tests.cpp` using GoogleTest or Catch2
 
 +3 XP for delivery before 20.09.2020 23:59
