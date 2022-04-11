@@ -151,14 +151,14 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install lcov
-      run: sudo apt install gcov lcov
+      run: sudo apt install lcov
     - name: Create build folder
       working-directory: .github/scripts
       run: mkdir build
     - name: Compile
       working-directory: .github/scripts/build
       run: |
-        ../cmake_config.sh "../../../homework/shared_ptr/shared_ptr_tests.cpp"
+        ../cmake_config.sh "shared_ptr" "../../../homework/shared_ptr/shared_ptr_tests.cpp"
         make shared_ptr_student
     - name: Run tests
       working-directory: .github/scripts/build
