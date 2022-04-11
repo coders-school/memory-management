@@ -18,12 +18,7 @@ set(LINKER_FLAGS
 
 include(functions.cmake)
 
-set(SHARED_PTR_HOMEWORK_DIR ../../homework/shared_ptr)
+set(HOMEWORK_DIR ../../homework/unique_ptr)
 
-build_test(shared_ptr ${SHARED_PTR_HOMEWORK_DIR})
-build_test(weak_ptr ${SHARED_PTR_HOMEWORK_DIR})
-build_test(make_shared ${SHARED_PTR_HOMEWORK_DIR})
-
-build_student_test(shared_ptr ${SHARED_PTR_HOMEWORK_DIR})
-build_student_test(weak_ptr ${SHARED_PTR_HOMEWORK_DIR})
-build_student_test(make_shared ${SHARED_PTR_HOMEWORK_DIR})
+build_test(unique_ptr ${HOMEWORK_DIR})
+build_student_test(unique_ptr ${HOMEWORK_DIR})
