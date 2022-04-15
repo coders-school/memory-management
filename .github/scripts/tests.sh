@@ -197,6 +197,64 @@ function test_unique_ptr_get() {
     return $?
 }
 
+function test_dereference_operator_usage() {
+    local right_dereference_operator_usage=("*ptr",
+                                            "(*ptr).foo()",
+                                            "auto sth = *ptr"
+                                            "int sth = *ptr")
+
+    local wrong_dereference_operator_usage=("int *ptr",
+                                            "int* ptr",
+                                            "double* sth")
+
+    run_test "dereference operator usage" check_dereference_operator_usage right_dereference_operator_usage[@] wrong_dereference_operator_usage[@]
+    return 0
+}
+
+function test_arrow_operator_usage() {
+    local right_arrow_operator_usage=("ptr->sth"
+                                      "sth->foo ()"
+                                      "ptr -> sth"
+                                      "ptr->foo()")
+
+    local wrong_arrow_operator_usage=()
+
+    run_test "arrow operator usage" check_arrow_operator_usage right_arrow_operator_usage[@] wrong_arrow_operator_usage[@]
+    return 0
+}
+
+function test_get_usage() {
+    local right_get_usage=("ptr.get()"
+                           "sth.get()"
+                           "ptr.get ()")
+
+    local wrong_get_usage=("ptr.get(sth)")
+
+    run_test "get method usage" check_get_usage right_get_usage[@] wrong_get_usage[@]
+    return 0
+}
+
+function test_reset_usage() {
+    local right_reset_usage=("ptr.reset()"
+                             "sth.reset()"
+                             "ptr.reset(sth)")
+
+    local wrong_reset_usage=()
+
+    run_test "reset method usage" check_reset_usage right_reset_usage[@] wrong_reset_usage[@]
+    return 0
+}
+
+function test_release_usage() {
+    local right_release_usage=("ptr.release()"
+                               "sth.release()")
+
+    local wrong_release_usage=("ptr.release(sth)")
+
+    run_test "release method usage" check_release_usage right_release_usage[@] wrong_release_usage[@]
+    return 0
+}
+
 test_unique_ptr_copy_constructor
 test_unique_ptr_copy_assignment
 test_unique_ptr_move_constructor
@@ -205,3 +263,8 @@ test_unique_ptr_release
 test_unique_ptr_dereference_operator
 test_unique_ptr_arrow_operator
 test_unique_ptr_get
+test_dereference_operator_usage
+test_arrow_operator_usage
+test_get_usage
+test_reset_usage
+test_release_usage

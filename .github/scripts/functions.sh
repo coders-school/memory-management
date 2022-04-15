@@ -100,6 +100,51 @@ function check_unique_ptr_reset() {
     return $?
 }
 
+# 1: file
+function check_dereference_operator_usage() {
+    NAME='operator*() usage'
+    PATTERN='(?<!\w\s)\*\w+'
+
+    check_regex "$1" "$PATTERN" "$NAME"
+    return $?
+}
+
+# 1: file
+function check_arrow_operator_usage() {
+    NAME='operator->() usage'
+    PATTERN='\w+\s*->\s*\w+'
+
+    check_regex "$1" "$PATTERN" "$NAME"
+    return $?
+}
+
+# 1: file
+function check_get_usage() {
+    NAME='get() usage'
+    PATTERN='\w+\.get\s*\(\s*\)'
+
+    check_regex "$1" "$PATTERN" "$NAME"
+    return $?
+}
+
+# 1: file
+function check_reset_usage() {
+    NAME='reset() usage'
+    PATTERN='\w+\.reset\s*\(.*\)'
+
+    check_regex "$1" "$PATTERN" "$NAME"
+    return $?
+}
+
+# 1: file
+function check_release_usage() {
+    NAME='release() usage'
+    PATTERN='\w+\.release\s*\(\s*\)'
+
+    check_regex "$1" "$PATTERN" "$NAME"
+    return $?
+}
+
 function summary() {
     if [[ $failed -eq 0 ]]; then
         echo "🍾 All checks have passed"
