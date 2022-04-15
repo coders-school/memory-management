@@ -204,6 +204,65 @@ function test_shared_ptr_operator_bool() {
     return $?
 }
 
+function test_dereference_operator_usage() {
+    local right_dereference_operator_usage=("*ptr",
+                                            "(*ptr).foo()",
+                                            "auto sth = *ptr"
+                                            "int sth = *ptr")
+
+    local wrong_dereference_operator_usage=("int *ptr",
+                                            "int* ptr",
+                                            "double* sth")
+
+    run_test "dereference operator usage" check_dereference_operator_usage right_dereference_operator_usage[@] wrong_dereference_operator_usage[@]
+    return 0
+}
+
+function test_arrow_operator_usage() {
+    local right_arrow_operator_usage=("ptr->sth"
+                                      "sth->foo ()"
+                                      "ptr -> sth"
+                                      "ptr->foo()")
+
+    local wrong_arrow_operator_usage=()
+
+    run_test "Arrow operator usage" check_arrow_operator_usage right_arrow_operator_usage[@] wrong_arrow_operator_usage[@]
+    return 0
+}
+
+function test_get_usage() {
+    local right_get_usage=("ptr.get()"
+                           "sth.get()"
+                           "ptr.get ()")
+
+    local wrong_get_usage=("ptr.get(sth)")
+
+    run_test "Get method usage" check_get_usage right_get_usage[@] wrong_get_usage[@]
+    return 0
+}
+
+function test_reset_usage() {
+    local right_reset_usage=("ptr.reset()"
+                             "sth.reset()"
+                             "ptr.reset(sth)")
+
+    local wrong_reset_usage=()
+
+    run_test "Reset method usage" check_reset_usage right_reset_usage[@] wrong_reset_usage[@]
+    return 0
+}
+
+function test_use_count_usage() {
+    local right_use_count_usage=("ptr.use_count()"
+                                 "sth.use_count()"
+                                 "ptr.use_count ()")
+
+    local wrong_use_count_usage=("ptr.use_count(sth)")
+
+    run_test "Use_count method usage" check_use_count_usage right_use_count_usage[@] wrong_use_count_usage[@]
+    return 0
+}
+
 test_shared_ptr_copy_constructor
 test_shared_ptr_move_constructor
 test_shared_ptr_copy_assignment
@@ -213,3 +272,9 @@ test_shared_ptr_dereference_operator
 # test_shared_ptr_get
 test_shared_ptr_use_count
 test_shared_ptr_operator_bool
+
+test_dereference_operator_usage
+test_arrow_operator_usage
+test_get_usage
+test_reset_usage
+test_use_count_usage

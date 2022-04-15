@@ -7,7 +7,7 @@ total=0
 function check_regex () {
     (( total++ ))
 
-    egrep "$2" "$1" > /dev/null
+    grep -P "$2" "$1" > /dev/null
 
     if [ ! $? -eq 0 ]; then
         (( failed++ ))
@@ -104,6 +104,51 @@ function check_shared_ptr_use_count() {
 function check_shared_ptr_operator_bool() {
     NAME='operator bool()'
     PATTERN='operator\s*bool\s*\(\s*\)'
+
+    check_regex "$1" "$PATTERN" "$NAME"
+    return $?
+}
+
+# 1: file
+function check_dereference_operator_usage() {
+    NAME='operator*() usage'
+    PATTERN='(?<!\w\s)\*\w+'
+
+    check_regex "$1" "$PATTERN" "$NAME"
+    return $?
+}
+
+# 1: file
+function check_arrow_operator_usage() {
+    NAME='operator->() usage'
+    PATTERN='\w+\s*->\s*\w+'
+
+    check_regex "$1" "$PATTERN" "$NAME"
+    return $?
+}
+
+# 1: file
+function check_get_usage() {
+    NAME='get() usage'
+    PATTERN='\w+\.get\s*\(\s*\)'
+
+    check_regex "$1" "$PATTERN" "$NAME"
+    return $?
+}
+
+# 1: file
+function check_reset_usage() {
+    NAME='reset() usage'
+    PATTERN='\w+\.reset\(.*\)'
+
+    check_regex "$1" "$PATTERN" "$NAME"
+    return $?
+}
+
+# 1: file
+function check_use_count_usage() {
+    NAME='use_count() usage'
+    PATTERN='\w+\.use_count\s*\(\s*\)'
 
     check_regex "$1" "$PATTERN" "$NAME"
     return $?
