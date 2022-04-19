@@ -5,7 +5,7 @@
 class TestObject {
 public:
     TestObject() = default;
-    ~TestObject() { Destructor(); }
+    ~TestObject() noexcept { Destructor(); }
 
     MOCK_METHOD(void, Destructor, (), (noexcept));
 };
