@@ -14,7 +14,7 @@ TEST(unique_ptr, destructor) {
     auto ptr = new TestObject();
     auto smartPtr = UniquePointer<TestObject>(ptr);
 
-    EXPECT_CALL(*ptr, Destructor).Times(1);
+    EXPECT_CALL(*ptr, Destructor);
 }
 
 TEST(unique_ptr, default_constructor) {
@@ -57,7 +57,7 @@ TEST(unique_ptr, move_assignment_from_nullptr_to_ptr) {
     auto testedSmartPtr = UniquePointer<TestObject>();
     auto otherSmartPtr = UniquePointer<TestObject>(ptr);
 
-    EXPECT_CALL(*ptr, Destructor).Times(1);
+    EXPECT_CALL(*ptr, Destructor);
 
     testedSmartPtr = std::move(otherSmartPtr);
 
@@ -70,7 +70,7 @@ TEST(unique_ptr, move_assignment_from_ptr_to_nullptr) {
     auto testedSmartPtr = UniquePointer<TestObject>(ptr);
     auto otherSmartPtr = UniquePointer<TestObject>();
 
-    EXPECT_CALL(*ptr, Destructor).Times(1);
+    EXPECT_CALL(*ptr, Destructor);
 
     testedSmartPtr = std::move(otherSmartPtr);
 
@@ -84,8 +84,8 @@ TEST(unique_ptr, move_assignment_from_ptr_to_ptr) {
     auto testedSmartPtr = UniquePointer<TestObject>(ptr);
     auto otherSmartPtr = UniquePointer<TestObject>(ptr2);
 
-    EXPECT_CALL(*ptr, Destructor).Times(1);
-    EXPECT_CALL(*ptr2, Destructor).Times(1);
+    EXPECT_CALL(*ptr, Destructor);
+    EXPECT_CALL(*ptr2, Destructor);
 
     testedSmartPtr = std::move(otherSmartPtr);
 
@@ -106,7 +106,7 @@ TEST(unique_ptr, move_ctor_with_ptr) {
     auto ptr = new TestObject();
     auto otherSmartPtr = UniquePointer<TestObject>(ptr);
 
-    EXPECT_CALL(*ptr, Destructor).Times(1);
+    EXPECT_CALL(*ptr, Destructor);
 
     UniquePointer<TestObject> testedSmartPtr(std::move(otherSmartPtr));
 
