@@ -38,7 +38,7 @@ jobs:
     - name: Compile
       working-directory: .github/scripts/build
       run: |
-        ../cmake_config.sh "../shared_ptr_tests/shared_ptr_tests.cpp"
+        ../cmake_config.sh "shared_ptr" "../shared_ptr_tests/shared_ptr_tests.cpp"
         make shared_ptr
     - name: Run tests and sanitizer
       working-directory: .github/scripts/build
@@ -56,7 +56,7 @@ jobs:
     - name: Compile
       working-directory: .github/scripts/build
       run: |
-        ../cmake_config.sh "../shared_ptr_tests/weak_ptr_tests.cpp"
+        ../cmake_config.sh "weak_ptr" "../shared_ptr_tests/weak_ptr_tests.cpp"
         make weak_ptr
     - name: Run tests and sanitizer
       working-directory: .github/scripts/build
@@ -74,7 +74,7 @@ jobs:
     - name: Compile
       working-directory: .github/scripts/build
       run: |
-        ../cmake_config.sh "../shared_ptr_tests/make_shared_tests.cpp"
+        ../cmake_config.sh "make_shared" "../shared_ptr_tests/make_shared_tests.cpp"
         make make_shared
     - name: Run tests and sanitizer
       working-directory: .github/scripts/build
@@ -103,7 +103,7 @@ jobs:
     - name: Compile
       working-directory: .github/scripts/build
       run: |
-        ../cmake_config.sh "../../../homework/shared_ptr/shared_ptr_tests.cpp"
+        ../cmake_config.sh "shared_ptr" "../../../homework/shared_ptr/shared_ptr_tests.cpp"
         make shared_ptr_student
     - name: Run tests and sanitizer
       working-directory: .github/scripts/build
@@ -121,7 +121,7 @@ jobs:
     - name: Compile
       working-directory: .github/scripts/build
       run: |
-        ../cmake_config.sh "../../../homework/shared_ptr/weak_ptr_tests.cpp"
+        ../cmake_config.sh "weak_ptr" "../../../homework/shared_ptr/weak_ptr_tests.cpp"
         make weak_ptr_student
     - name: Run tests and sanitizer
       working-directory: .github/scripts/build
@@ -139,7 +139,7 @@ jobs:
     - name: Compile
       working-directory: .github/scripts/build
       run: |
-        ../cmake_config.sh "../../../homework/shared_ptr/make_shared_tests.cpp"
+        ../cmake_config.sh "make_shared" "../../../homework/shared_ptr/make_shared_tests.cpp"
         make make_shared_student
     - name: Run tests and sanitizer
       working-directory: .github/scripts/build
@@ -153,3 +153,35 @@ jobs:
     - name: Check shared_ptr has whole interface implemented
       working-directory: .github/scripts
       run: ./shared_ptr_interface_check.sh
+
+  shared_ptr_coverage:
+    needs: shared_ptr_students_tests
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install lcov
+      run: sudo apt install lcov
+    - name: Create build folder
+      working-directory: .github/scripts
+      run: mkdir build
+    - name: Compile
+      working-directory: .github/scripts/build
+      run: |
+        ../cmake_config.sh "shared_ptr" "../../../homework/shared_ptr/shared_ptr_tests.cpp"
+        make shared_ptr_student
+    - name: Run tests
+      working-directory: .github/scripts/build
+      run: ./shared_ptr_student
+    - name: Check coverage report
+      working-directory: .github/scripts/build
+      run: ../coverage.sh
+    - uses: actions/upload-artifact@v3
+      if: failure()
+      with:
+        name: Coverage-report
+        path: .github/scripts/build/report/
+    - uses: JoseThen/comment-pr@v1.1.1
+      if: ${{ failure() && github.event_name == 'pull_request' }}
+      with:
+        comment: "Coverage rate is less than 90%. You can download detailed coverage report in action's summary"
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

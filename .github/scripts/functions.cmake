@@ -1,5 +1,10 @@
+function(add_test_targets NAME HOMEWORK_DIR)
+    build_test(${NAME} ${HOMEWORK_DIR})
+    build_student_test(${NAME} ${HOMEWORK_DIR})
+endfunction()
+
 function(build_test NAME HOMEWORK_DIR)
-    add_executable(${NAME} shared_ptr_tests/${NAME}_tests.cpp)
+    add_executable(${NAME} tests/${NAME}_tests.cpp)
     target_compile_options(${NAME} PRIVATE ${COMPILER_FLAGS})
     target_link_options(${NAME} PRIVATE ${LINKER_FLAGS})
     target_include_directories(${NAME} PRIVATE ${HOMEWORK_DIR})
@@ -31,7 +36,7 @@ function(link_test_framework TARGET)
         FetchContent_MakeAvailable(googletest)
         include(GoogleTest)
 
-        target_link_libraries(${TARGET} PUBLIC gtest_main gmock)
+        target_link_libraries(${TARGET} PUBLIC gtest_main gmock gcov)
 
     elseif(TEST_FRAMEWORK STREQUAL catch2)
         include(FetchContent)
@@ -42,7 +47,7 @@ function(link_test_framework TARGET)
         )
 
         FetchContent_MakeAvailable(catch2)
-        target_link_libraries(${TARGET} PRIVATE Catch2::Catch2WithMain)
+        target_link_libraries(${TARGET} PRIVATE Catch2::Catch2WithMain gcov)
 
     else()
         message(FATAL_ERROR "Unknown or not set test framework")
