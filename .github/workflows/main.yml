@@ -144,3 +144,35 @@ jobs:
     - name: Run tests and sanitizer
       working-directory: .github/scripts/build
       run: ./make_shared_student
+
+  shared_ptr_coverage:
+    needs: shared_ptr_students_tests
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install lcov
+      run: sudo apt install lcov
+    - name: Create build folder
+      working-directory: .github/scripts
+      run: mkdir build
+    - name: Compile
+      working-directory: .github/scripts/build
+      run: |
+        ../cmake_config.sh "shared_ptr" "../../../homework/shared_ptr/shared_ptr_tests.cpp"
+        make shared_ptr_student
+    - name: Run tests
+      working-directory: .github/scripts/build
+      run: ./shared_ptr_student
+    - name: Check coverage report
+      working-directory: .github/scripts/build
+      run: ../coverage.sh
+    - uses: actions/upload-artifact@v3
+      if: failure()
+      with:
+        name: Coverage-report
+        path: .github/scripts/build/report/
+    - uses: JoseThen/comment-pr@v1.1.1
+      if: ${{ failure() && github.event_name == 'pull_request' }}
+      with:
+        comment: "Coverage rate is less than 90%. You can download detailed coverage report in action's summary"
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

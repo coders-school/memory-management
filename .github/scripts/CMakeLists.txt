@@ -11,7 +11,8 @@ set(COMPILER_FLAGS
     -Wextra
     -Wconversion
     -Wshadow
-    -pedantic)
+    -pedantic
+    --coverage)
 set(LINKER_FLAGS
     -fsanitize=address
     -fsanitize=undefined)

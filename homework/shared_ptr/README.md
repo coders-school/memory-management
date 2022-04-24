@@ -49,6 +49,7 @@ ___
 * Member functions: `operator*()`, `operator->()`, `get()`, `reset()`, `use_count()`, `operator bool()`
 * Should be implemented in `shared_ptr.hpp` file inside `my` namespace
 * Tests should be written inside `shared_ptr_tests.cpp` using GoogleTest or Catch2
+* You should instantiate `shared_ptr` template class in `shared_ptr_tests.cpp` above your test cases, e.g. `template class my::shared_ptr<int>;` It's needed for code coverage check to work properly.
 
 Do not forget about CI - UT + Valgrind / ASAN. Work in pairs.
 
