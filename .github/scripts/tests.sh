@@ -262,18 +262,48 @@ function test_use_count_usage() {
     return $?
 }
 
+local ret=0
+
 test_shared_ptr_copy_constructor
+ret=$(( $ret + $? ))
+
 test_shared_ptr_move_constructor
+ret=$(( $ret + $? ))
+
 test_shared_ptr_copy_assignment
+ret=$(( $ret + $? ))
+
 test_shared_ptr_move_assignment
+ret=$(( $ret + $? ))
+
 test_shared_ptr_dereference_operator
+ret=$(( $ret + $? ))
+
 test_shared_ptr_arrow_operator
+ret=$(( $ret + $? ))
+
 test_shared_ptr_get
+ret=$(( $ret + $? ))
+
 test_shared_ptr_use_count
+ret=$(( $ret + $? ))
+
 test_shared_ptr_operator_bool
+ret=$(( $ret + $? ))
 
 test_dereference_operator_usage
+ret=$(( $ret + $? ))
+
 test_arrow_operator_usage
+ret=$(( $ret + $? ))
+
 test_get_usage
+ret=$(( $ret + $? ))
+
 test_reset_usage
+ret=$(( $ret + $? ))
+
 test_use_count_usage
+ret=$(( $ret + $? ))
+
+exit $ret
