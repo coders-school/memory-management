@@ -23,7 +23,7 @@ function check_wrong_cases() {
 
     for el in "${wrong_cases[@]}"; do
         echo $el | $1 /dev/stdin > /dev/null
-        if [[ $? -eq 0 ]]; then
+        if [[ $? == 0 ]]; then
             echo "❌ Wrong cases check not passed: $el"
             ret=1
         fi
