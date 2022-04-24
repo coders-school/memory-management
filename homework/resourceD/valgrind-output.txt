@@ -1,0 +1,27 @@
+valgrind ./resourceD d_jak...
+
+==53580== Memcheck, a memory error detector
+==53580== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==53580== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==53580== Command: ./resourceD d_jak...
+==53580==
+Using resource. Passed d
+Passed d. d is prohibited.
+==53580==
+==53580== HEAP SUMMARY:
+==53580==     in use at exit: 1 bytes in 1 blocks
+==53580==   total heap usage: 5 allocs, 4 frees, 73,924 bytes allocated
+==53580==
+==53580== 1 bytes in 1 blocks are definitely lost in loss record 1 of 1
+==53580==    at 0x4A3A8DF: operator new(unsigned long) (in /home/linuxbrew/.linuxbrew/Cellar/valgrind/3.19.0/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==53580==    by 0x40129F: main (resourceD.cpp:30)
+==53580==
+==53580== LEAK SUMMARY:
+==53580==    definitely lost: 1 bytes in 1 blocks
+==53580==    indirectly lost: 0 bytes in 0 blocks
+==53580==      possibly lost: 0 bytes in 0 blocks
+==53580==    still reachable: 0 bytes in 0 blocks
+==53580==         suppressed: 0 bytes in 0 blocks
+==53580==
+==53580== For lists of detected and suppressed errors, rerun with: -s
+==53580== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
