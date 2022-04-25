@@ -2,6 +2,7 @@
 
 source functions.sh
 
+# 1: check function, 2: right cases
 function check_right_cases() {
     declare -a right_cases=("${!2}")
     local ret=0
@@ -17,6 +18,7 @@ function check_right_cases() {
     return $ret
 }
 
+# 1: check function, 2: wrong cases
 function check_wrong_cases() {
     declare -a wrong_cases=("${!2}")
     local ret=0
@@ -32,6 +34,7 @@ function check_wrong_cases() {
     return $ret
 }
 
+# 1: test case, 2: check function, 3: right cases, 4: wrong cases
 function run_test() {
     local right_cases=("${!3}")
     local wrong_cases=("${!4}")
