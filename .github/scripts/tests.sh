@@ -254,16 +254,43 @@ function test_release_usage() {
     return 0
 }
 
+ret=0
+
 test_unique_ptr_copy_constructor
+ret=$(( $ret + $? ))
+
 test_unique_ptr_copy_assignment
+ret=$(( $ret + $? ))
+
 test_unique_ptr_move_constructor
+ret=$(( $ret + $? ))
+
 test_unique_ptr_move_assignment
+ret=$(( $ret + $? ))
+
 test_unique_ptr_release
+ret=$(( $ret + $? ))
+
 test_unique_ptr_dereference_operator
+ret=$(( $ret + $? ))
+
 test_unique_ptr_arrow_operator
+ret=$(( $ret + $? ))
+
 test_unique_ptr_get
+ret=$(( $ret + $? ))
+
 test_dereference_operator_usage
+ret=$(( $ret + $? ))
+
 test_arrow_operator_usage
+ret=$(( $ret + $? ))
+
 test_get_usage
+ret=$(( $ret + $? ))
+
 test_reset_usage
+ret=$(( $ret + $? ))
+
 test_release_usage
+ret=$(( $ret + $? ))
