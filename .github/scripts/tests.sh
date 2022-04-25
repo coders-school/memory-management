@@ -43,14 +43,10 @@ function run_test() {
     echo "Testing $1 🔎"
 
     check_right_cases $2 right_cases[@]
-    if [[ $? != 0 ]]; then
-        ret=1
-    fi
+    ret=$(( $ret + $? ))
 
     check_wrong_cases $2 wrong_cases[@]
-    if [[ $? != 0 ]]; then
-        ret=1
-    fi
+    ret=$(( $ret + $? ))
 
     if [[ $ret != 0 ]]; then
         echo "❌ $1 check not passed"
