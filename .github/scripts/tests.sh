@@ -262,7 +262,7 @@ function test_use_count_usage() {
     return $?
 }
 
-local ret=0
+ret=0
 
 test_shared_ptr_copy_constructor
 ret=$(( $ret + $? ))
