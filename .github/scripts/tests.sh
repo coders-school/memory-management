@@ -49,14 +49,6 @@ function run_test() {
 
     check_wrong_cases $2 wrong_cases[@]
     error_count=$(( $error_count + $? ))
-
-    if [[ $error_count != 0 ]]; then
-        echo "❌ $1 check not passed"
-    else
-        echo "✅ $1 check passed"
-    fi
-
-    echo
 }
 
 function test_unique_ptr_copy_constructor() {
