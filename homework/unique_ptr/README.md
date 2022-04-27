@@ -14,3 +14,4 @@ unique_ptr is a RAII class:
 * Member functions: operator*(), operator->(), get(), release(), reset()
 * Should be implemented in `unique_ptr.hpp` file inside `my` namespace
 * Tests should be written inside `unique_ptr_tests.cpp` using GoogleTest or Catch2
+* You should instantiate `unique_ptr` template class in `unique_ptr_tests.cpp` above your test cases, e.g. `template class my::unique_ptr<int>;` It's needed for code coverage check to work properly.
