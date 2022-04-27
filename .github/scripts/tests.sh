@@ -2,6 +2,8 @@
 
 source functions.sh
 
+error_count=0
+
 # 1: check function, 2: right cases
 function check_right_cases() {
     declare -a right_cases=("${!2}")
@@ -38,24 +40,22 @@ function check_wrong_cases() {
 function run_test() {
     local right_cases=("${!3}")
     local wrong_cases=("${!4}")
-    local ret=0
 
     echo "Testing $1 🔎"
 
     check_right_cases $2 right_cases[@]
-    ret=$(( $ret + $? ))
+    error_count=$(( $error_count + $? ))
 
     check_wrong_cases $2 wrong_cases[@]
-    ret=$(( $ret + $? ))
+    error_count=$(( $error_count + $? ))
 
-    if [[ $ret != 0 ]]; then
+    if [[ $error_count != 0 ]]; then
         echo "❌ $1 check not passed"
     else
         echo "✅ $1 check passed"
     fi
 
     echo
-    return $ret
 }
 
 function test_shared_ptr_copy_constructor() {
@@ -76,7 +76,6 @@ function test_shared_ptr_copy_constructor() {
                             "shared_ptr(shared_ptr& ptr)")
 
     run_test "copy ctor" check_shared_ptr_copy_constructor right_copy_ctors[@] wrong_copy_ctors[@]
-    return $?
 }
 
 function test_shared_ptr_move_constructor() {
@@ -93,7 +92,6 @@ function test_shared_ptr_move_constructor() {
                             "shared_ptr(shared_ptr& ptr)")
 
     run_test "move ctor" check_shared_ptr_move_constructor right_move_ctors[@] wrong_move_ctors[@]
-    return $?
 }
 
 function test_shared_ptr_copy_assignment() {
@@ -113,7 +111,6 @@ function test_shared_ptr_copy_assignment() {
                                  "shared_ptr operator=(const shared_ptr& ptr)")
 
     run_test "copy assignment operator" check_shared_ptr_copy_assignment_operator right_copy_assignment[@] wrong_copy_assignment[@]
-    return $?
 }
 
 function test_shared_ptr_move_assignment() {
@@ -130,7 +127,6 @@ function test_shared_ptr_move_assignment() {
                                  "shared_ptr& operator=(shared_ptr&&& other)")
 
     run_test "move assignment operator" check_shared_ptr_move_assignment_operator right_move_assignment[@] wrong_move_assignment[@]
-    return $?
 }
 
 function test_shared_ptr_dereference_operator() {
@@ -145,7 +141,6 @@ function test_shared_ptr_dereference_operator() {
                                       "N &&operator* ()")
 
     run_test "dereference operator" check_shared_ptr_dereference_operator right_dereference_operator[@] wrong_dereference_operator[@]
-    return $?
 }
 
 function test_shared_ptr_arrow_operator() {
@@ -162,7 +157,6 @@ function test_shared_ptr_arrow_operator() {
                                 "N **operator-> ()")
 
     run_test "arrow operator" check_shared_ptr_arrow_operator right_arrow_operator[@] wrong_arrow_operator[@]
-    return $?
 }
 
 function test_shared_ptr_get() {
@@ -179,7 +173,6 @@ function test_shared_ptr_get() {
                      "N get ()")
 
     run_test "get method" check_shared_ptr_get right_get[@] wrong_get[@]
-    return $?
 }
 
 function test_shared_ptr_use_count() {
@@ -191,7 +184,6 @@ function test_shared_ptr_use_count() {
                            "int use_count(double sth)")
 
     run_test "use_count method" check_shared_ptr_use_count right_use_count[@] wrong_use_count[@]
-    return $?
 }
 
 function test_shared_ptr_operator_bool() {
@@ -200,7 +192,6 @@ function test_shared_ptr_operator_bool() {
     local wrong_operator_bool=("operator bool(int arg)")
 
     run_test "operator bool()" check_shared_ptr_operator_bool right_operator_bool[@] wrong_operator_bool[@]
-    return $?
 }
 
 function test_dereference_operator_usage() {
@@ -214,7 +205,6 @@ function test_dereference_operator_usage() {
                                             "double* sth")
 
     run_test "dereference operator usage" check_dereference_operator_usage right_dereference_operator_usage[@] wrong_dereference_operator_usage[@]
-    return $?
 }
 
 function test_arrow_operator_usage() {
@@ -226,7 +216,6 @@ function test_arrow_operator_usage() {
     local wrong_arrow_operator_usage=()
 
     run_test "Arrow operator usage" check_arrow_operator_usage right_arrow_operator_usage[@] wrong_arrow_operator_usage[@]
-    return $?
 }
 
 function test_get_usage() {
@@ -237,7 +226,6 @@ function test_get_usage() {
     local wrong_get_usage=("ptr.get(sth)")
 
     run_test "Get method usage" check_get_usage right_get_usage[@] wrong_get_usage[@]
-    return $?
 }
 
 function test_reset_usage() {
@@ -248,7 +236,6 @@ function test_reset_usage() {
     local wrong_reset_usage=()
 
     run_test "Reset method usage" check_reset_usage right_reset_usage[@] wrong_reset_usage[@]
-    return $?
 }
 
 function test_use_count_usage() {
@@ -259,51 +246,23 @@ function test_use_count_usage() {
     local wrong_use_count_usage=("ptr.use_count(sth)")
 
     run_test "Use_count method usage" check_use_count_usage right_use_count_usage[@] wrong_use_count_usage[@]
-    return $?
 }
 
-ret=0
-
 test_shared_ptr_copy_constructor
-ret=$(( $ret + $? ))
-
 test_shared_ptr_move_constructor
-ret=$(( $ret + $? ))
-
 test_shared_ptr_copy_assignment
-ret=$(( $ret + $? ))
-
 test_shared_ptr_move_assignment
-ret=$(( $ret + $? ))
-
 test_shared_ptr_dereference_operator
-ret=$(( $ret + $? ))
-
 test_shared_ptr_arrow_operator
-ret=$(( $ret + $? ))
-
 test_shared_ptr_get
-ret=$(( $ret + $? ))
-
 test_shared_ptr_use_count
-ret=$(( $ret + $? ))
-
 test_shared_ptr_operator_bool
-ret=$(( $ret + $? ))
+
 
 test_dereference_operator_usage
-ret=$(( $ret + $? ))
-
 test_arrow_operator_usage
-ret=$(( $ret + $? ))
-
 test_get_usage
-ret=$(( $ret + $? ))
-
 test_reset_usage
-ret=$(( $ret + $? ))
-
 test_use_count_usage
-ret=$(( $ret + $? ))
 
-exit $ret
+exit $error_count
