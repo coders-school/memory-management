@@ -18,7 +18,6 @@ public:
     unique_ptr& operator=(unique_ptr&& otherPtr);
 
     T* get() const { return ptr_; }
-    T* release();
     void reset(T* newPtr = nullptr);
 
     T& operator*() const { return *ptr_; }
@@ -46,13 +45,6 @@ template <typename T>
 void unique_ptr<T>::reset(T* newPtr) {
     delete ptr_;
     ptr_ = newPtr;
-}
-
-template <typename T>
-T* unique_ptr<T>::release() {
-    T* temp = ptr_;
-    ptr_ = nullptr;
-    return temp;
 }
 
 }  // namespace my
