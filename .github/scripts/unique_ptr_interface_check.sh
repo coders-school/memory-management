@@ -23,3 +23,7 @@ check_arrow_operator_usage "$TEST_FILE"
 check_get_usage "$TEST_FILE"
 check_reset_usage "$TEST_FILE"
 check_release_usage "$TEST_FILE"
+
+summary
+
+exit $?
