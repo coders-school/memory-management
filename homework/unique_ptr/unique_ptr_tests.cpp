@@ -40,15 +40,6 @@ TEST_F(UniquePtrTest, shouldMoveUniquePtr) {
     ASSERT_EQ(*ptr3, initialValue);
 }
 
-TEST_F(UniquePtrTest, shouldUseResetMethod) {
-    constexpr int newValue = 6;
-    ptr.reset(new int{newValue});
-    ASSERT_EQ(*ptr, newValue);
-
-    ptr.reset();
-    ASSERT_THAT(ptr.get(), IsNull());
-}
-
 TEST_F(UniquePtrTest, shouldUseGetMethod) {
     auto p = ptr.get();
     ASSERT_EQ(*ptr, *p);
