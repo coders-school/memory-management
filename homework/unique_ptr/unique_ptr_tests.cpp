@@ -39,22 +39,3 @@ TEST_F(UniquePtrTest, shouldMoveUniquePtr) {
     EXPECT_THAT(ptr2.get(), IsNull());
     ASSERT_EQ(*ptr3, initialValue);
 }
-
-TEST_F(UniquePtrTest, shouldUseGetMethod) {
-    auto p = ptr.get();
-    ASSERT_EQ(*ptr, *p);
-}
-
-TEST_F(UniquePtrTest, shouldUseReleaseMethod) {
-    auto p = ptr.release();
-
-    ASSERT_EQ(*p, initialValue);
-    ASSERT_THAT(ptr.get(), IsNull());
-
-    delete p;
-}
-
-TEST(UniquePtrTestArrow, shouldUseArrowOperator) {
-    my::unique_ptr ptr(new A{});
-    ASSERT_EQ(ptr->foo(), initialValue);
-}
