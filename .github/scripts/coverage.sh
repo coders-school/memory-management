@@ -19,6 +19,7 @@ if [[ ${report//$'\n'/' '} =~ $pattern_lcov ]]; then
         echo "✅ Test coverage rate is higher than 90%"
     else
         echo "❌ Test coverage rate is lower than 90%"
+        echo "You can download detailed coverage report in action's summary"
         genhtml coverage.info -o report > /dev/null
         exit 1
     fi
