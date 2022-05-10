@@ -55,5 +55,4 @@ T* unique_ptr<T>::release() {
     return temp;
 }
 
-
 }  // namespace my
