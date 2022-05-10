@@ -96,5 +96,5 @@ jobs:
       with:
         name: Coverage-report
         path: .github/scripts/build/report/
-    - uses: actions/coverage-rate-comment
+    - uses: ./.github/actions/coverage-rate-comment
       if: ${{ failure() && github.event_name == 'pull_request' }}
