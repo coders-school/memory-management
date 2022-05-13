@@ -1,7 +1,6 @@
 const fetch = require('cross-fetch');
 
-async function postPRInfo(owner, repo, prNumber, runId) {
-    const url = 'https://hook.integromat.com/r2dowpjpogyhlt7q825cnk9vc2b741hv';
+async function postPRInfo(url, owner, repo, prNumber, runId) {
     const data = {
         owner: owner,
         repo: repo,

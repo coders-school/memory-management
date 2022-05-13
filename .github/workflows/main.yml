@@ -98,3 +98,5 @@ jobs:
         path: .github/scripts/build/report/
     - uses: ./.github/actions/coverage-rate-comment
       if: ${{ failure() && github.event_name == 'pull_request' }}
+      with:
+        webhook: ${{ secrects.COVERAGE_RATE_COMMENT }}
