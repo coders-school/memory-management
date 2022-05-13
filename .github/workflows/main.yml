@@ -99,4 +99,4 @@ jobs:
     - uses: ./.github/actions/coverage-rate-comment
       if: ${{ failure() && github.event_name == 'pull_request' }}
       with:
-        webhook: ${{ secrects.COVERAGE_RATE_COMMENT }}
+        webhook: ${{ secrets.COVERAGE_RATE_COMMENT }}
