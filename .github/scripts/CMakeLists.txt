@@ -21,5 +21,5 @@ include(functions.cmake)
 
 set(HOMEWORK_DIR ../../homework/unique_ptr)
 
-build_test(unique_ptr ${HOMEWORK_DIR})
-build_student_test(unique_ptr ${HOMEWORK_DIR})
+build_test(${TASK} ${HOMEWORK_DIR})
+build_student_test(${TASK} ${HOMEWORK_DIR})
