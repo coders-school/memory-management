@@ -1,0 +1,16 @@
+name: 'Compile and run tests'
+description: 'Compiles and runs homework tests'
+inputs:
+  task_name:
+    description: 'Task name'
+    required: true
+  test_file:
+    description: 'Test file'
+    required: true
+  test_to_run:
+    description: 'Name of test that should be run'
+runs:
+  using: 'composite'
+  steps:
+    - run: $GITHUB_ACTION_PATH/run_tests.sh ${{ inputs.task_name }} ${{ inputs.test_file }} ${{ inputs.test_to_run }}
+      shell: bash
