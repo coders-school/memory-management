@@ -36,7 +36,7 @@ jobs:
       uses: ./.github/actions/run_tests
       with:
         task_name: 'unique_ptr'
-        test_file: '../tests/unique_ptr_tests.cpp'
+        test_file: '../../../homework/unique_ptr/unique_ptr_tests.cpp'
         test_to_run: 'unique_ptr_student'
 
   unique_ptr_formatting_check:
@@ -70,7 +70,7 @@ jobs:
       uses: ./.github/actions/run_tests
       with:
         task_name: 'unique_ptr'
-        test_file: '../tests/unique_ptr_tests.cpp'
+        test_file: '../../../homework/unique_ptr/unique_ptr_tests.cpp'
         test_to_run: 'unique_ptr_student'
     - name: Check coverage report
       working-directory: .github/scripts/build
