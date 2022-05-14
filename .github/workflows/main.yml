@@ -66,17 +66,12 @@ jobs:
     - uses: actions/checkout@v2
     - name: Install lcov
       run: sudo apt install lcov
-    - name: Create build folder
-      working-directory: .github/scripts
-      run: mkdir build
-    - name: Compile
-      working-directory: .github/scripts/build
-      run: |
-        ../cmake_config.sh "../../../homework/unique_ptr/unique_ptr_tests.cpp"
-        make unique_ptr_student
-    - name: Run tests
-      working-directory: .github/scripts/build
-      run: ./unique_ptr_student
+    - name: Run tests and sanitizer
+      uses: ./.github/actions/run_tests
+      with:
+        task_name: 'unique_ptr'
+        test_file: '../tests/unique_ptr_tests.cpp'
+        test_to_run: 'unique_ptr_student'
     - name: Check coverage report
       working-directory: .github/scripts/build
       run: ../coverage.sh
