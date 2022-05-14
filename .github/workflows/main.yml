@@ -20,17 +20,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Create build folder
-      working-directory: .github/scripts
-      run: mkdir build
-    - name: Compile
-      working-directory: .github/scripts/build
-      run: |
-        ../cmake_config.sh "../tests/unique_ptr_tests.cpp"
-        make unique_ptr
     - name: Run tests and sanitizer
-      working-directory: .github/scripts/build
-      run: ./unique_ptr
+      uses: coders-school/github-actions/run-tests@main
+      with:
+        task_name: 'unique_ptr'
+        test_file: '../tests/unique_ptr_tests.cpp'
 
   unique_ptr_students_tests:
     needs: files_check
@@ -38,17 +32,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Create build folder
-      working-directory: .github/scripts
-      run: mkdir build
-    - name: Compile
-      working-directory: .github/scripts/build
-      run: |
-        ../cmake_config.sh "../../../homework/unique_ptr/unique_ptr_tests.cpp"
-        make unique_ptr_student
     - name: Run tests and sanitizer
-      working-directory: .github/scripts/build
-      run: ./unique_ptr_student
+      uses: coders-school/github-actions/run-tests@main
+      with:
+        task_name: 'unique_ptr'
+        test_file: '../../../homework/unique_ptr/unique_ptr_tests.cpp'
+        test_to_run: 'unique_ptr_student'
 
   unique_ptr_formatting_check:
     needs: files_check
@@ -77,17 +66,12 @@ jobs:
     - uses: actions/checkout@v2
     - name: Install lcov
       run: sudo apt install lcov
-    - name: Create build folder
-      working-directory: .github/scripts
-      run: mkdir build
-    - name: Compile
-      working-directory: .github/scripts/build
-      run: |
-        ../cmake_config.sh "../../../homework/unique_ptr/unique_ptr_tests.cpp"
-        make unique_ptr_student
-    - name: Run tests
-      working-directory: .github/scripts/build
-      run: ./unique_ptr_student
+    - name: Run tests and sanitizer
+      uses: coders-school/github-actions/run-tests@main
+      with:
+        task_name: 'unique_ptr'
+        test_file: '../../../homework/unique_ptr/unique_ptr_tests.cpp'
+        test_to_run: 'unique_ptr_student'
     - name: Check coverage report
       working-directory: .github/scripts/build
       run: ../coverage.sh
@@ -96,8 +80,5 @@ jobs:
       with:
         name: Coverage-report
         path: .github/scripts/build/report/
-    - uses: JoseThen/comment-pr@v1.1.1
+    - uses: ./.github/actions/coverage-rate-comment
       if: ${{ failure() && github.event_name == 'pull_request' }}
-      with:
-        comment: "Coverage rate is less than 90%. You can download detailed coverage report in action's summary"
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
