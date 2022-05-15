@@ -80,8 +80,5 @@ jobs:
       with:
         name: Coverage-report
         path: .github/scripts/build/report/
-    - uses: JoseThen/comment-pr@v1.1.1
+    - uses: ./.github/actions/coverage-rate-comment
       if: ${{ failure() && github.event_name == 'pull_request' }}
-      with:
-        comment: "Coverage rate is less than 90%. You can download detailed coverage report in action's summary"
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
