@@ -1,0 +1,22 @@
+name: 'Compile and run tests'
+description: 'Compiles and runs homework tests'
+inputs:
+  task_name:
+    description: 'Task name'
+    required: true
+  test_file:
+    description: 'Test file'
+    required: true
+  test_to_run:
+    description: 'Name of test that should be run'
+runs:
+  using: 'composite'
+  steps:
+    - run: sudo apt install lcov
+      shell: bash
+    - name: Run tests and sanitizer
+      uses: $GITHUB_WORKSPACE/.github/actions/run_tests
+      with:
+        task_name: ${{ inputs.task_name }}
+        test_file: ${{ inputs.test_file }}
+        test_to_run: ${{ inputs.test_to_run }}
