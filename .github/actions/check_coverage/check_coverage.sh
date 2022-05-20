@@ -1,6 +1,7 @@
 #!/bin/bash
 
 file=$(cat "$1")
+ls
 
 if [[ $# == 3 ]]; then
     pattern_template="$3"
