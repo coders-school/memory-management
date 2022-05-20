@@ -2,7 +2,7 @@
 
 file=$(cat "$1")
 
-if [[ $# = 3 ]]; then
+if [[ $# == 3 ]]; then
     pattern_template="$3"
 
     if [[ ! ${file//$'\n'/' '} =~ $pattern_template ]]; then
