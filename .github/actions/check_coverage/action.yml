@@ -19,7 +19,7 @@ runs:
     - run: sudo apt install lcov
       shell: bash
     - name: Run tests and sanitizer
-      uses: ./.github/actions/run_tests
+      uses: $GITHUB_ACTION_PATH/../run_tests
       with:
         task_name: ${{ inputs.task_name }}
         test_file: ${{ inputs.test_file }}
