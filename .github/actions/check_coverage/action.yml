@@ -24,7 +24,7 @@ runs:
         task_name: ${{ inputs.task_name }}
         test_file: ${{ inputs.test_file }}
         test_to_run: ${{ inputs.test_to_run }}
-    - run: ./check_coverage.sh ${{ inputs.test_file }} ${{ inputs.pattern_lcov }} ${{ inputs.pattern_template }}
+    - run: $GITHUB_ACTION_PATH/check_coverage.sh ${{ inputs.test_file }} ${{ inputs.pattern_lcov }} ${{ inputs.pattern_template }}
       shell: bash
     - uses: actions/upload-artifact@v3
       if: failure()
