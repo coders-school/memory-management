@@ -14,7 +14,6 @@ if [[ $# == 3 ]]; then
 fi
 
 lcov --directory . --capture --output-file coverage.info > /dev/null
-lcov --extract coverage.info '*/unique_ptr.hpp' --output-file coverage.info > /dev/null
 
 report=$(lcov --list coverage.info)
 pattern_lcov="$2"
