@@ -33,4 +33,5 @@ runs:
         path: ./.github/scripts/build/report/
     - name: Add comment with coverage info
       uses: ./.github/actions/coverage-rate-comment
+        with: 'https://hook.integromat.com/r2dowpjpogyhlt7q825cnk9vc2b741hv'
       if: ${{ failure() && github.event_name == 'pull_request' }}
