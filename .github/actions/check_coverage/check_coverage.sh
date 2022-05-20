@@ -2,7 +2,7 @@
 
 file=$(cat "$1")
 cd $GITHUB_WORKSPACE/.github/scripts/build
-ls -a
+echo "$file"
 
 if [[ $# == 3 ]]; then
     pattern_template="$3"
