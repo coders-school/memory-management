@@ -19,7 +19,7 @@ runs:
     - run: sudo apt install lcov
       shell: bash
     - name: Run tests and sanitizer
-      uses: $GITHUB_WORKSPACE/.github/actions/run_tests
+      uses: ./.github/actions/run_tests
       with:
         task_name: ${{ inputs.task_name }}
         test_file: ${{ inputs.test_file }}
@@ -30,6 +30,6 @@ runs:
       if: failure()
       with:
         name: Coverage-report
-        path: $GITHUB_WORKSPACE/.github/scripts/build/report/
-    - uses: $GITHUB_WORKSPACE/.github/actions/coverage-rate-comment
+        path: ./.github/scripts/build/report/
+    - uses: ./.github/actions/coverage-rate-comment
       if: ${{ failure() && github.event_name == 'pull_request' }}
