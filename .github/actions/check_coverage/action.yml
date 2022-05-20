@@ -31,5 +31,6 @@ runs:
       with:
         name: Coverage-report
         path: ./.github/scripts/build/report/
-    - uses: ./.github/actions/coverage-rate-comment
+    - name: Add comment with coverage info
+      uses: ./.github/actions/coverage-rate-comment
       if: ${{ failure() && github.event_name == 'pull_request' }}
