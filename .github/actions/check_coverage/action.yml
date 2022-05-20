@@ -9,6 +9,10 @@ inputs:
     required: true
   test_to_run:
     description: 'Name of test that should be run'
+  pattern_lcov:
+    description: 'Regex for searching homework file in lcov report'
+  pattern_template:
+    description: 'Regex for template initialization'
 runs:
   using: 'composite'
   steps:
@@ -20,5 +24,5 @@ runs:
         task_name: ${{ inputs.task_name }}
         test_file: ${{ inputs.test_file }}
         test_to_run: ${{ inputs.test_to_run }}
-    - run: ./check_coverage.sh
+    - run: ./check_coverage.sh ${{ inputs.test_file }} ${{ inputs.pattern_lcov }} ${{ inputs.pattern_template }}
       shell: bash
