@@ -1,0 +1,35 @@
+name: 'Compile and run tests'
+description: 'Compiles and runs homework tests'
+inputs:
+  task_name:
+    description: 'Task name'
+    required: true
+  test_file:
+    description: 'Test file'
+    required: true
+  test_to_run:
+    description: 'Name of test that should be run'
+  pattern_lcov:
+    description: 'Regex for searching homework file in lcov report'
+  pattern_template:
+    description: 'Regex for template initialization'
+runs:
+  using: 'composite'
+  steps:
+    - run: sudo apt install lcov
+      shell: bash
+    - name: Run tests and sanitizer
+      uses: $GITHUB_WORKSPACE/.github/actions/run_tests
+      with:
+        task_name: ${{ inputs.task_name }}
+        test_file: ${{ inputs.test_file }}
+        test_to_run: ${{ inputs.test_to_run }}
+    - run: ./check_coverage.sh ${{ inputs.test_file }} ${{ inputs.pattern_lcov }} ${{ inputs.pattern_template }}
+      shell: bash
+    - uses: actions/upload-artifact@v3
+      if: failure()
+      with:
+        name: Coverage-report
+        path: $GITHUB_WORKSPACE/.github/scripts/build/report/
+    - uses: $GITHUB_WORKSPACE/.github/actions/coverage-rate-comment
+      if: ${{ failure() && github.event_name == 'pull_request' }}

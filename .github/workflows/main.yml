@@ -64,24 +64,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Install lcov
-      run: sudo apt install lcov
     - name: Run tests and sanitizer
-      uses: ./.github/actions/run_tests
+      uses: ./.github/actions/check_coverage
       with:
         task_name: 'unique_ptr'
         test_file: '../../../homework/unique_ptr/unique_ptr_tests.cpp'
         test_to_run: 'unique_ptr_student'
-    - name: Check coverage report
-      working-directory: .github/scripts/build
-      run: ../coverage.sh
-    - uses: actions/upload-artifact@v3
-      if: failure()
-      with:
-        name: Coverage-report
-        path: .github/scripts/build/report/
-    - uses: JoseThen/comment-pr@v1.1.1
-      if: ${{ failure() && github.event_name == 'pull_request' }}
-      with:
-        comment: "Coverage rate is less than 90%. You can download detailed coverage report in action's summary"
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        pattern_lcov: 'unique_ptr\.hpp\s*\|\s*([0-9]{2,3}(\.[0-9])?)%'
+        pattern_template: 'template\s*class\s*my::unique_ptr<\s*\w+\s*>'
