@@ -1,8 +1,7 @@
 #!/bin/bash
 
-file=$(cat "$1")
 cd $GITHUB_WORKSPACE/.github/scripts/build
-ls ../../../homework/unique_ptr
+file=$(cat "$1")
 echo "$file"
 
 if [[ $# == 3 ]]; then
