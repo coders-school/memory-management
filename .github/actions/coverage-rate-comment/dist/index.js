@@ -1,6 +1,7 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+<<<<<<< HEAD
 /***/ 9838:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -1667,6 +1668,8 @@ exports.checkBypass = checkBypass;
 
 /***/ }),
 
+=======
+>>>>>>> unique_ptr
 /***/ 153:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -9335,7 +9338,12 @@ function wrappy (fn, cb) {
 
 const fetch = __nccwpck_require__(4092);
 
+<<<<<<< HEAD
 async function postPRInfo(url, owner, repo, prNumber, runId) {
+=======
+async function postPRInfo(owner, repo, prNumber, runId) {
+    const url = 'https://hook.integromat.com/r2dowpjpogyhlt7q825cnk9vc2b741hv';
+>>>>>>> unique_ptr
     const data = {
         owner: owner,
         repo: repo,
@@ -9427,6 +9435,7 @@ module.exports = require("os");
 
 /***/ }),
 
+<<<<<<< HEAD
 /***/ 1017:
 /***/ ((module) => {
 
@@ -9435,6 +9444,8 @@ module.exports = require("path");
 
 /***/ }),
 
+=======
+>>>>>>> unique_ptr
 /***/ 5477:
 /***/ ((module) => {
 
@@ -9532,7 +9543,10 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
+<<<<<<< HEAD
 const core = __nccwpck_require__(2552);
+=======
+>>>>>>> unique_ptr
 const github = __nccwpck_require__(1416);
 const postPRInfo = __nccwpck_require__(6832);
 
@@ -9541,7 +9555,10 @@ async function run() {
         const context = github.context;
 
         const response = await postPRInfo(
+<<<<<<< HEAD
             core.getInput('webhook'),
+=======
+>>>>>>> unique_ptr
             context.repo.owner,
             context.repo.repo,
             context.payload.pull_request.number,
