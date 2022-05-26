@@ -61,7 +61,7 @@ jobs:
       with:
         check-path: 'homework/unique_ptr'
 
-  check_shared_ptr_interface:
+  check_unique_ptr_interface:
     needs: unique_ptr_formatting_check
     runs-on: ubuntu-latest
     steps:
