@@ -126,21 +126,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Install lcov
-      run: sudo apt install lcov
-    - name: Run tests and sanitizer
-      uses: coders-school/github-actions/run-tests@main
+    - uses: coders-school/github-actions/coverage-check@main
       with:
         task_name: 'shared_ptr'
         test_file: '../../../homework/shared_ptr/shared_ptr_tests.cpp'
         test_to_run: 'shared_ptr_student'
-    - name: Check coverage report
-      working-directory: .github/scripts/build
-      run: ../coverage.sh
-    - uses: actions/upload-artifact@v3
-      if: failure()
-      with:
-        name: Coverage-report
-        path: .github/scripts/build/report/
-    - uses: coders-school/github-actions/coverage-rate-comment@main
-      if: ${{ failure() && github.event_name == 'pull_request' }}
+        lcov_file: 'shared_ptr.hpp'
+        template_pattern: 'template\s*class\s*my::shared_ptr<\s*\w+\s*>'
