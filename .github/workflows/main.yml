@@ -32,17 +32,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Create build folder
-      working-directory: .github/scripts
-      run: mkdir build
-    - name: Compile
-      working-directory: .github/scripts/build
-      run: |
-        ../cmake_config.sh "shared_ptr" "../tests/shared_ptr_tests.cpp"
-        make shared_ptr
     - name: Run tests and sanitizer
-      working-directory: .github/scripts/build
-      run: ./shared_ptr
+      uses: coders-school/github-actions/run-tests@main
+      with:
+        task_name: 'shared_ptr'
+        test_file: '../tests/shared_ptr_tests.cpp'
 
   weak_ptr:
     needs: files_check
@@ -50,17 +44,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Create build folder
-      working-directory: .github/scripts
-      run: mkdir build
-    - name: Compile
-      working-directory: .github/scripts/build
-      run: |
-        ../cmake_config.sh "weak_ptr" "../tests/weak_ptr_tests.cpp"
-        make weak_ptr
     - name: Run tests and sanitizer
-      working-directory: .github/scripts/build
-      run: ./weak_ptr
+      uses: coders-school/github-actions/run-tests@main
+      with:
+        task_name: 'weak_ptr'
+        test_file: '../tests/weak_ptr_tests.cpp'
 
   make_shared:
     needs: files_check
@@ -68,17 +56,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Create build folder
-      working-directory: .github/scripts
-      run: mkdir build
-    - name: Compile
-      working-directory: .github/scripts/build
-      run: |
-        ../cmake_config.sh "make_shared" "../tests/make_shared_tests.cpp"
-        make make_shared
     - name: Run tests and sanitizer
-      working-directory: .github/scripts/build
-      run: ./make_shared
+      uses: coders-school/github-actions/run-tests@main
+      with:
+        task_name: 'make_shared'
+        test_file: '../tests/make_shared_tests.cpp'
 
   shared_ptr_formatting_check:
     needs: files_check
@@ -97,17 +79,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Create build folder
-      working-directory: .github/scripts
-      run: mkdir build
-    - name: Compile
-      working-directory: .github/scripts/build
-      run: |
-        ../cmake_config.sh "shared_ptr" "../../../homework/shared_ptr/shared_ptr_tests.cpp"
-        make shared_ptr_student
     - name: Run tests and sanitizer
-      working-directory: .github/scripts/build
-      run: ./shared_ptr_student
+      uses: coders-school/github-actions/run-tests@main
+      with:
+        task_name: 'shared_ptr'
+        test_file: '../../../homework/shared_ptr/shared_ptr_tests.cpp'
+        test_to_run: 'shared_ptr_student'
 
   weak_ptr_students_tests:
     needs: files_check
@@ -115,17 +92,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Create build folder
-      working-directory: .github/scripts
-      run: mkdir build
-    - name: Compile
-      working-directory: .github/scripts/build
-      run: |
-        ../cmake_config.sh "weak_ptr" "../../../homework/shared_ptr/weak_ptr_tests.cpp"
-        make weak_ptr_student
     - name: Run tests and sanitizer
-      working-directory: .github/scripts/build
-      run: ./weak_ptr_student
+      uses: coders-school/github-actions/run-tests@main
+      with:
+        task_name: 'weak_ptr'
+        test_file: '../../../homework/shared_ptr/weak_ptr_tests.cpp'
+        test_to_run: 'weak_ptr_student'
 
   make_shared_students_tests:
     needs: files_check
@@ -133,17 +105,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Create build folder
-      working-directory: .github/scripts
-      run: mkdir build
-    - name: Compile
-      working-directory: .github/scripts/build
-      run: |
-        ../cmake_config.sh "make_shared" "../../../homework/shared_ptr/make_shared_tests.cpp"
-        make make_shared_student
     - name: Run tests and sanitizer
-      working-directory: .github/scripts/build
-      run: ./make_shared_student
+      uses: coders-school/github-actions/run-tests@main
+      with:
+        task_name: 'make_shared'
+        test_file: '../../../homework/shared_ptr/make_shared_tests.cpp'
+        test_to_run: 'make_shared_student'
 
   check_shared_ptr_interface:
     needs: shared_ptr_formatting_check
@@ -161,17 +128,12 @@ jobs:
     - uses: actions/checkout@v2
     - name: Install lcov
       run: sudo apt install lcov
-    - name: Create build folder
-      working-directory: .github/scripts
-      run: mkdir build
-    - name: Compile
-      working-directory: .github/scripts/build
-      run: |
-        ../cmake_config.sh "shared_ptr" "../../../homework/shared_ptr/shared_ptr_tests.cpp"
-        make shared_ptr_student
-    - name: Run tests
-      working-directory: .github/scripts/build
-      run: ./shared_ptr_student
+    - name: Run tests and sanitizer
+      uses: coders-school/github-actions/run-tests@main
+      with:
+        task_name: 'shared_ptr'
+        test_file: '../../../homework/shared_ptr/shared_ptr_tests.cpp'
+        test_to_run: 'shared_ptr_student'
     - name: Check coverage report
       working-directory: .github/scripts/build
       run: ../coverage.sh
