@@ -46,9 +46,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Run clang-format style check
-      uses: jidicula/clang-format-action@v4.5.0
+      uses: coders-school/github-actions/clang-format-check@main
       with:
-        check-path: 'homework/unique_ptr'
+        check_path: 'homework/unique_ptr'
 
   check_shared_ptr_interface:
     needs: unique_ptr_formatting_check
