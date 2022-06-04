@@ -31,8 +31,8 @@ public:
     shared_ptr& operator=(const shared_ptr& other) noexcept;
     shared_ptr& operator=(shared_ptr&& other) noexcept;
 
-    T& operator*() const noexcept { return *ptr_; }
-    T* operator->() const noexcept { return ptr_; }
+    T& operator*() const noexcept{ return *ptr_; }
+    T* operator->() const noexcept{ return ptr_; }
     explicit operator bool() const noexcept { return ptr_ != nullptr; }
 
     T* get() const noexcept { return ptr_; }
