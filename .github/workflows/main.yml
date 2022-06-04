@@ -71,7 +71,7 @@ jobs:
     - name: Run clang-format style check
       uses: coders-school/github-actions/clang-format-check@main
       with:
-        check-path: 'homework/shared_ptr'
+        check_path: 'homework/shared_ptr'
 
   shared_ptr_students_tests:
     needs: files_check
