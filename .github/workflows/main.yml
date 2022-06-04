@@ -69,7 +69,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Run clang-format style check
-      uses: jidicula/clang-format-action@v4.5.0
+      uses: coders-school/github-actions/clang-format-check@main
       with:
         check-path: 'homework/shared_ptr'
 
