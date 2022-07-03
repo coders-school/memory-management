@@ -13,7 +13,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(googletest)
 
 set(SRC_LIST_UT
-    ./gtest/unique_ptrTest.cpp
+    ./unique_ptr_tests.cpp
 )
 
 enable_testing()
