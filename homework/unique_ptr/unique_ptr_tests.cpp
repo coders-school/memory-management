@@ -1,21 +1,17 @@
 #include <gtest/gtest.h>
 #include "unique_ptr.hpp"
 
-class TestClass
-{
+class TestClass {
 public:
     int number_{100};
-    int numberReturn()
-    {
+    int numberReturn() {
         return number_;
     }
 };
 
-class unique_ptrFixture : public ::testing::Test
-{
+class unique_ptrFixture : public ::testing::Test {
 public:
-    ~unique_ptrFixture()
-    {
+    ~unique_ptrFixture() {
         delete rawPtr;
     }
 
@@ -23,16 +19,14 @@ protected:
     unique_ptr<int> ptr;
     unique_ptr<int> ptr1{new int{10}};
     unique_ptr<TestClass> ptrToClass{new TestClass};
-    int *rawPtr{new int{20}};
+    int* rawPtr{new int{20}};
 };
 
-TEST_F(unique_ptrFixture, DefaultCtorTest)
-{
+TEST_F(unique_ptrFixture, DefaultCtorTest) {
     EXPECT_EQ(ptr.get(), nullptr);
 }
 
-TEST_F(unique_ptrFixture, ParametricCtorTest)
-{
+TEST_F(unique_ptrFixture, ParametricCtorTest) {
     EXPECT_EQ(*ptr1, 10);
 
     unique_ptr<int> ptr2{rawPtr};
@@ -43,14 +37,12 @@ TEST_F(unique_ptrFixture, ParametricCtorTest)
     EXPECT_EQ(ptr3.get(), nullptr);
 }
 
-TEST_F(unique_ptrFixture, MoveCtorTest)
-{
+TEST_F(unique_ptrFixture, MoveCtorTest) {
     unique_ptr<int> ptr2(std::move(ptr1));
     EXPECT_EQ(*ptr2, 10);
 }
 
-TEST_F(unique_ptrFixture, MoveAssingnmentOperatorTest)
-{
+TEST_F(unique_ptrFixture, MoveAssingnmentOperatorTest) {
     unique_ptr<int> ptr2;
     ptr2 = std::move(ptr1);
     EXPECT_EQ(*ptr2, 10);
@@ -65,36 +57,31 @@ TEST_F(unique_ptrFixture, MoveAssingnmentOperatorTest)
     EXPECT_EQ(ptr4.get(), nullptr);
 }
 
-TEST_F(unique_ptrFixture, AsteriskOperatorTest)
-{
+TEST_F(unique_ptrFixture, AsteriskOperatorTest) {
     EXPECT_EQ(*ptr1, 10);
 }
 
-TEST_F(unique_ptrFixture, ArrowOperatorTest)
-{
+TEST_F(unique_ptrFixture, ArrowOperatorTest) {
     EXPECT_EQ(ptrToClass->number_, 100);
     EXPECT_EQ(ptrToClass->numberReturn(), 100);
 }
 
-TEST_F(unique_ptrFixture, GetFunctionTest)
-{
+TEST_F(unique_ptrFixture, GetFunctionTest) {
     unique_ptr<int> ptr2{new int{20}};
     EXPECT_EQ(*ptr2.get(), *rawPtr);
 
     EXPECT_EQ(ptr.get(), nullptr);
 }
 
-TEST_F(unique_ptrFixture, ReleaseFunctionTest)
-{
-    TestClass *rawPtrToTestClass;
+TEST_F(unique_ptrFixture, ReleaseFunctionTest) {
+    TestClass* rawPtrToTestClass;
     rawPtrToTestClass = ptrToClass.release();
     EXPECT_EQ(rawPtrToTestClass->number_, 100);
     EXPECT_EQ(ptrToClass.get(), nullptr);
     delete rawPtrToTestClass;
 }
 
-TEST_F(unique_ptrFixture, ResetFunctionTest)
-{
+TEST_F(unique_ptrFixture, ResetFunctionTest) {
     ptrToClass->number_ = 50;
     ptrToClass.reset(new TestClass);
     EXPECT_EQ(ptrToClass->number_, 100);
