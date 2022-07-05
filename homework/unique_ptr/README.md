@@ -1,6 +1,6 @@
 # `unique_ptr`
 
-(36 XP) Implement your own unique_ptr (simplified).
+(30 XP) Implement your own unique_ptr (simplified).
 
 unique_ptr is a RAII class:
 
