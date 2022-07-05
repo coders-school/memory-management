@@ -26,5 +26,6 @@ ___
   * Ustawienie wskaźnika w obiekcie źródłowym na `nullptr`
 * Wymagane metody: `operator*()`, `operator->()`, `get()`, `release()`, `reset()`
 * Nie zapomnij o testach (pokrycie >90%)
-
-+3 XP za dostarczenie do 13.10.2020 włącznie
+* Implementację umieść w pliku `unique_ptr.hpp` wewnątrz namespace `my`
+* Testy umieść w pliku `unique_ptr_tests.cpp` i użyj GoogleTest lub Catch2
+* Musisz jawnie umieścić instancję szablonu `unique_ptr` w pliku `unique_ptr_tests.cpp` jeszcze przed właściwymi testami, np. `template class my::unique_ptr<int>;`. Jest to wymagane przez narzędzia do sprawdzania pokrycia kodu.
