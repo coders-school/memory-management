@@ -22,7 +22,7 @@ function check_regex () {
 # 1: file
 function check_unique_ptr_copy_constructor() {
     NAME='Copy constructor'
-    PATTERN='unique_ptr\s*\(\s*((const\s+unique_ptr)|(unique_ptr\s+const))\s*&[^&]*\)\s*=\s*delete'
+    PATTERN='unique_ptr\s*\(\s*((const\s+unique_ptr)|(unique_ptr\s+const)|(unique_ptr))\s*&[^&]*\)\s*=\s*delete'
 
     check_regex "$1" "$PATTERN" "$NAME"
     return $?
@@ -40,7 +40,7 @@ function check_unique_ptr_move_constructor() {
 # 1: file
 function check_unique_ptr_copy_assignment_operator() {
     NAME='Copy assignment operator'
-    PATTERN='unique_ptr&\s*operator=\s*\(\s*((const\s*unique_ptr)|(unique_ptr\s*const))\s*&[^&]*\)\s*=\s*delete'
+    PATTERN='unique_ptr&\s*operator=\s*\(\s*((const\s*unique_ptr)|(unique_ptr\s*const)|(unique_ptr))\s*&[^&]*\)\s*=\s*delete'
 
     check_regex "$1" "$PATTERN" "$NAME"
     return $?
