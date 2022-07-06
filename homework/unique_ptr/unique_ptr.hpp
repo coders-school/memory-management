@@ -5,6 +5,7 @@ namespace my {
 template <class T>
 class unique_ptr {
 public:
+    unique_ptr() noexcept = default;
     explicit unique_ptr(T* ptr) noexcept
         : ptr_(ptr) {}
 
@@ -47,7 +48,7 @@ public:
         return temporary;
     }
 
-    void reset(T* other) noexcept {
+    void reset(T* other = nullptr) noexcept {
         delete ptr_;
         ptr_ = other;
     }
