@@ -25,7 +25,6 @@ public:
     unique_ptr(const unique_ptr<T>&) = delete;
     unique_ptr& operator=(const unique_ptr<T>&) = delete;
 
-    // TODO: Check this one
     [[nodiscard]] T* operator->() const noexcept {
         return this->get();
     }

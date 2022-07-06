@@ -46,6 +46,7 @@ TEST(UniquePtrTest, CallTest) {
     constexpr int val{10};
     my::unique_ptr ptr{new DummyClass};
     ASSERT_EQ(ptr->callMe(val), val);
+    ASSERT_EQ((*ptr).callMe(val), val);
 }
 
 TEST(UniquePtrTest, DereferenceTest) {
@@ -80,9 +81,9 @@ TEST(UniquePtrTest, ResetTest) {
 }
 
 TEST(UniquePtrTest, BoolOperatorTest) {
-    my::unique_ptr ptr1 {new DummyClass};
+    my::unique_ptr ptr1{new DummyClass};
     ASSERT_TRUE(ptr1);
 
-    my::unique_ptr<DummyClass> ptr2 {nullptr};
+    my::unique_ptr<DummyClass> ptr2{nullptr};
     ASSERT_FALSE(ptr2);
 }
