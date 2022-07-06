@@ -63,6 +63,7 @@ TEST(UniquePtrTest, ReleaseTest) {
 
     ASSERT_EQ(released_ptr, helper_ptr);
     ASSERT_EQ(ptr.get(), nullptr);
+    delete released_ptr;
 }
 
 TEST(UniquePtrTest, ResetTest) {
