@@ -12,18 +12,18 @@ public:
         delete ptr_;
     }
 
-    unique_ptr(unique_ptr<T>&& other) noexcept {
+    unique_ptr(unique_ptr&& other) noexcept {
         ptr_ = other.release();
     }
 
-    unique_ptr& operator=(unique_ptr<T>&& other) noexcept {
+    unique_ptr& operator=(unique_ptr&& other) noexcept {
         delete ptr_;
         ptr_ = other.release();
         return *this;
     }
 
-    unique_ptr(const unique_ptr<T>&) = delete;
-    unique_ptr& operator=(const unique_ptr<T>&) = delete;
+    unique_ptr(const unique_ptr&) = delete;
+    unique_ptr& operator=(const unique_ptr&) = delete;
 
     [[nodiscard]] T* operator->() const noexcept {
         return this->get();
