@@ -14,6 +14,8 @@ public:
     }
 };
 
+template class my::unique_ptr<int>;
+
 TEST(UniquePtrTest, InitTest) {
     my::unique_ptr<uint8_t> ptr1{nullptr};
     ASSERT_EQ(ptr1.get(), nullptr);
