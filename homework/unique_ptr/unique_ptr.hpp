@@ -20,6 +20,7 @@ public:
     T* get() const noexcept;
     T* release() noexcept;
     void reset(T* ptr) noexcept;
+    void reset() noexcept;
 
 private:
     T* ptr_;
@@ -83,6 +84,12 @@ template <typename T>
 void unique_ptr<T>::reset(T* ptr) noexcept {
     delete ptr_;
     ptr_ = std::move(ptr);
+}
+
+template <typename T>
+void unique_ptr<T>::reset() noexcept {
+    delete ptr_;
+    ptr_ = nullptr;
 }
 
 }  // namespace my

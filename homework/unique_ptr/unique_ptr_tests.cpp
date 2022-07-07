@@ -84,7 +84,15 @@ TEST_F(unique_ptrFixture, ReleaseFunctionTest) {
 }
 
 TEST_F(unique_ptrFixture, ResetFunctionTest) {
+    ptr1.reset();
+    EXPECT_EQ(ptr1.get(), nullptr);
+}
+
+TEST_F(unique_ptrFixture, ResetWithParameterFunctionTest) {
     ptrToClass->number_ = 50;
     ptrToClass.reset(new TestClass);
     EXPECT_EQ(ptrToClass->number_, 100);
+
+    ptr1.reset(nullptr);
+    EXPECT_EQ(ptr1.get(), nullptr);
 }
