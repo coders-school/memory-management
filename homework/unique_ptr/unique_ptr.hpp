@@ -1,5 +1,7 @@
 #include <iostream>
 
+namespace my {
+
 template <typename T>
 class unique_ptr {
 public:
@@ -82,3 +84,5 @@ void unique_ptr<T>::reset(T* ptr) noexcept {
     delete ptr_;
     ptr_ = std::move(ptr);
 }
+
+}  // namespace my

@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 #include "unique_ptr.hpp"
 
+template class my::unique_ptr<int>;
+
 class TestClass {
 public:
     int number_{100};
@@ -16,9 +18,9 @@ public:
     }
 
 protected:
-    unique_ptr<int> ptr;
-    unique_ptr<int> ptr1{new int{10}};
-    unique_ptr<TestClass> ptrToClass{new TestClass};
+    my::unique_ptr<int> ptr;
+    my::unique_ptr<int> ptr1{new int{10}};
+    my::unique_ptr<TestClass> ptrToClass{new TestClass};
     int* rawPtr{new int{20}};
 };
 
@@ -29,30 +31,30 @@ TEST_F(unique_ptrFixture, DefaultCtorTest) {
 TEST_F(unique_ptrFixture, ParametricCtorTest) {
     EXPECT_EQ(*ptr1, 10);
 
-    unique_ptr<int> ptr2{rawPtr};
+    my::unique_ptr<int> ptr2{rawPtr};
     rawPtr = nullptr;
     EXPECT_EQ(*ptr2, 20);
 
-    unique_ptr<int> ptr3(nullptr);
+    my::unique_ptr<int> ptr3(nullptr);
     EXPECT_EQ(ptr3.get(), nullptr);
 }
 
 TEST_F(unique_ptrFixture, MoveCtorTest) {
-    unique_ptr<int> ptr2(std::move(ptr1));
+    my::unique_ptr<int> ptr2(std::move(ptr1));
     EXPECT_EQ(*ptr2, 10);
 }
 
 TEST_F(unique_ptrFixture, MoveAssingnmentOperatorTest) {
-    unique_ptr<int> ptr2;
+    my::unique_ptr<int> ptr2;
     ptr2 = std::move(ptr1);
     EXPECT_EQ(*ptr2, 10);
 
-    unique_ptr<int> ptr3;
+    my::unique_ptr<int> ptr3;
     ptr3 = std::move(rawPtr);
     rawPtr = nullptr;
     EXPECT_EQ(*ptr3, 20);
 
-    unique_ptr<int> ptr4;
+    my::unique_ptr<int> ptr4;
     ptr4 = nullptr;
     EXPECT_EQ(ptr4.get(), nullptr);
 }
@@ -67,7 +69,7 @@ TEST_F(unique_ptrFixture, ArrowOperatorTest) {
 }
 
 TEST_F(unique_ptrFixture, GetFunctionTest) {
-    unique_ptr<int> ptr2{new int{20}};
+    my::unique_ptr<int> ptr2{new int{20}};
     EXPECT_EQ(*ptr2.get(), *rawPtr);
 
     EXPECT_EQ(ptr.get(), nullptr);
