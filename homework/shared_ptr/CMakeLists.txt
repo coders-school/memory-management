@@ -17,7 +17,7 @@ set(SRC_LIST_UT
 )
 
 set(SRC_LIST_CB_UT
-    ./controlBlockTest.cpp
+    ./control_block_tests.cpp
 )
 
 enable_testing()

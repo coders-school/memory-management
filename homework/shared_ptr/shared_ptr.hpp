@@ -1,6 +1,8 @@
 #pragma once
 #include <atomic>
 
+namespace my {
+
 class controlBlock {
 public:
     controlBlock() noexcept
@@ -162,3 +164,5 @@ void shared_ptr<T>::reset() noexcept {
     delete ptr_;
     ptr_ = nullptr;
 }
+
+}  // namespace my
