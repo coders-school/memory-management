@@ -59,12 +59,27 @@ TEST_F(shared_ptrFixture, MoveCtorTest) {
     EXPECT_EQ(ptrToInt1.use_count(), 0);
     EXPECT_EQ(*ptrToInt2, 10);
     EXPECT_EQ(ptrToInt2.use_count(), 1);
+
+    shared_ptr<int> ptrToInt3(rawPtr);
+    rawPtr = nullptr;
+    EXPECT_EQ(*ptrToInt3, 20);
+    EXPECT_EQ(ptrToInt3.use_count(), 1);
+
+    shared_ptr<int> ptrToInt4(emptyPtr);
+    EXPECT_EQ(ptrToInt4.get(), nullptr);
+    EXPECT_EQ(ptrToInt4.use_count(), 0);
+
 }
 
-// TEST_F(shared_ptrFixture, CopyAssingnmentOperatorTest)
-// {
-//     EXPECT_TRUE(TRUE);
-// }
+TEST_F(shared_ptrFixture, CopyAssingnmentOperatorTest) {
+    shared_ptr<int> ptrToInt2 = ptrToInt1;
+    EXPECT_EQ(*ptrToInt2, 10);
+    EXPECT_EQ(ptrToInt2.use_count(), 2);
+
+    shared_ptr<int> ptrToInt3 = emptyPtr;
+    EXPECT_EQ(ptrToInt3.get(), nullptr);
+    EXPECT_EQ(ptrToInt3.use_count(), 0);
+}
 
 TEST_F(shared_ptrFixture, MoveAssingnmentOperatorTest) {
     shared_ptr<int> ptrToInt2;
@@ -112,10 +127,15 @@ TEST_F(shared_ptrFixture, ReleaseFunctionTest) {
     delete rawPtrToTestClass;
 }
 
-TEST_F(shared_ptrFixture, ResetFunctionTest) {
+TEST_F(shared_ptrFixture, ResetFunctionWithParamaterTest) {
     ptrToClass->number_ = 50;
     ptrToClass.reset(new TestClass);
     EXPECT_EQ(ptrToClass->number_, 100);
+}
+
+TEST_F(shared_ptrFixture, ResetFunctionTest){
+    ptrToInt1.reset();
+    EXPECT_EQ(ptrToInt1.get(), nullptr);
 }
 
 TEST_F(shared_ptrFixture, UseCountFunctionTest) {

@@ -28,7 +28,7 @@ public:
 
     ~shared_ptr();
 
-    shared_ptr& operator=(shared_ptr&);
+    shared_ptr& operator=(shared_ptr&) noexcept;
     shared_ptr& operator=(shared_ptr&& other) noexcept;
 
     T& operator*() const noexcept;
@@ -36,6 +36,7 @@ public:
     T* get() const noexcept;
     T* release() noexcept;
     void reset(T* ptr) noexcept;
+    void reset() noexcept;
 
     int use_count() const noexcept {
         if (!ptrToControlBlock_) {
@@ -101,6 +102,19 @@ shared_ptr<T>::~shared_ptr() {
 }
 
 template <typename T>
+shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr& other) noexcept {
+    if (other.ptr != this && other.ptr_ != nullptr) {
+        ptr_ = other.ptr_;
+        ptrToControlBlock_ = other.ptrToControlBlock_;
+        ptrToControlBlock_->incrementSharedRefs();
+    } else if (&other != this && other.ptr_ == nullptr) {
+        delete ptr_;
+        ptr_ = nullptr;
+        delete ptrToControlBlock_;
+    }
+}
+
+template <typename T>
 shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr&& other) noexcept {
     if (&other != this && other.ptr_ != nullptr) {
         ptr_ = std::move(other.ptr_);
@@ -141,4 +155,10 @@ template <typename T>
 void shared_ptr<T>::reset(T* ptr) noexcept {
     delete ptr_;
     ptr_ = std::move(ptr);
+}
+
+template <typename T>
+void shared_ptr<T>::reset() noexcept {
+    delete ptr_;
+    ptr_ = nullptr;
 }
