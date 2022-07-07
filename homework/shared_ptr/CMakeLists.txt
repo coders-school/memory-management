@@ -13,7 +13,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(googletest)
 
 set(SRC_LIST_UT
-    ./shared_ptrTest.cpp
+    ./shared_ptr_tests.cpp
 )
 
 set(SRC_LIST_CB_UT
