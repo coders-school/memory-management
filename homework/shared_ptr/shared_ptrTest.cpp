@@ -68,7 +68,6 @@ TEST_F(shared_ptrFixture, MoveCtorTest) {
     shared_ptr<int> ptrToInt4(emptyPtr);
     EXPECT_EQ(ptrToInt4.get(), nullptr);
     EXPECT_EQ(ptrToInt4.use_count(), 0);
-
 }
 
 TEST_F(shared_ptrFixture, CopyAssingnmentOperatorTest) {
@@ -133,7 +132,7 @@ TEST_F(shared_ptrFixture, ResetFunctionWithParamaterTest) {
     EXPECT_EQ(ptrToClass->number_, 100);
 }
 
-TEST_F(shared_ptrFixture, ResetFunctionTest){
+TEST_F(shared_ptrFixture, ResetFunctionTest) {
     ptrToInt1.reset();
     EXPECT_EQ(ptrToInt1.get(), nullptr);
 }
