@@ -142,3 +142,8 @@ TEST_F(shared_ptrFixture, UseCountFunctionTest) {
     EXPECT_EQ(ptrToInt1.use_count(), 1);
     EXPECT_EQ(ptrToClass.use_count(), 1);
 }
+
+TEST_F(shared_ptrFixture, getControlBlockRefTest) {
+    EXPECT_EQ(emptyPtr.getControlBlockPtr(), nullptr);
+    EXPECT_EQ(ptrToInt1.getControlBlockPtr()->getSharedRefs(), 1);
+}

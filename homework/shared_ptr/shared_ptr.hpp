@@ -48,6 +48,8 @@ public:
         }
     }
 
+    controlBlock* getControlBlockPtr() const noexcept;
+
 private:
     T* ptr_;
     controlBlock* ptrToControlBlock_;
@@ -163,6 +165,14 @@ template <typename T>
 void shared_ptr<T>::reset() noexcept {
     delete ptr_;
     ptr_ = nullptr;
+}
+
+template <typename T>
+controlBlock* shared_ptr<T>::getControlBlockPtr() const noexcept {
+    if (!ptrToControlBlock_) {
+        return nullptr;
+    }
+    else return ptrToControlBlock_;
 }
 
 }  // namespace my
