@@ -14,6 +14,8 @@ public:
     void decrementSharedRefs() noexcept { shared_refs_ -= 1; }
 
     std::size_t getWeakRefs() const noexcept { return weak_refs_; }
+    void incrementWeakRefs() noexcept { weak_refs_ += 1; }
+    void decrementWeakRefs() noexcept { weak_refs_ -= 1; }
 
 private:
     std::atomic<std::size_t> shared_refs_;
@@ -40,13 +42,7 @@ public:
     void reset(T* ptr) noexcept;
     void reset() noexcept;
 
-    int use_count() const noexcept {
-        if (!ptrToControlBlock_) {
-            return 0;
-        } else {
-            return static_cast<int>(ptrToControlBlock_->getSharedRefs());
-        }
-    }
+    int use_count() const noexcept;
 
     controlBlock* getControlBlockPtr() const noexcept;
 
@@ -168,11 +164,20 @@ void shared_ptr<T>::reset() noexcept {
 }
 
 template <typename T>
+int shared_ptr<T>::use_count() const noexcept {
+    if (!ptrToControlBlock_) {
+        return 0;
+    } else {
+        return static_cast<int>(ptrToControlBlock_->getSharedRefs());
+    }
+}
+
+template <typename T>
 controlBlock* shared_ptr<T>::getControlBlockPtr() const noexcept {
     if (!ptrToControlBlock_) {
         return nullptr;
-    }
-    else return ptrToControlBlock_;
+    } else
+        return ptrToControlBlock_;
 }
 
 }  // namespace my

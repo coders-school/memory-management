@@ -24,6 +24,12 @@ TEST_F(weak_ptrFixture, DefaultCtorTest) {
 
 TEST_F(weak_ptrFixture, ParametricCtorTest) {
     EXPECT_EQ(*weakPtrToInt1.get(), 10);
+
+    my::weak_ptr<int> weakPtrToInt2{weakPtrToInt1};
+    EXPECT_EQ(*weakPtrToInt2, 10);
+
+    my::weak_ptr<int> weakPtrToInt3{emptyWeakPtr};
+    EXPECT_EQ(weakPtrToInt3.get(), nullptr);
 }
 
 //     my::shared_ptr<int> ptrToInt2{rawPtr};
@@ -131,8 +137,7 @@ TEST_F(weak_ptrFixture, GetFunctionTest) {
 //     EXPECT_EQ(ptrToInt1.get(), nullptr);
 // }
 
-// TEST_F(shared_ptrFixture, UseCountFunctionTest) {
-//     EXPECT_EQ(emptyPtr.use_count(), 0);
-//     EXPECT_EQ(ptrToInt1.use_count(), 1);
-//     EXPECT_EQ(ptrToClass.use_count(), 1);
-// }
+TEST_F(weak_ptrFixture, UseCountFunctionTest) {
+    EXPECT_EQ(emptyWeakPtr.use_count(), 0);
+    EXPECT_EQ(weakPtrToInt1.use_count(), 1);
+}
