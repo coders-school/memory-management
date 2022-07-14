@@ -1,9 +1,50 @@
 #pragma once
+#include <atomic>
 
 namespace my {
 
 template <class T>
 class shared_ptr {
+    class control_block {
+    public:
+        control_block() noexcept = default;
+        control_block(const control_block&) = delete;
+        control_block& operator=(const control_block&) = delete;
+        control_block(control_block&&) = delete;
+        control_block& operator=(control_block&&) = delete;
+
+        std::atomic<size_t> shared_refs{1};
+        std::atomic<size_t> weak_refs{0};
+    };
+
+public:
+    explicit shared_ptr(T* ptr) noexcept {
+        control_ptr = new control_block;
+        object_ptr = ptr;
+    }
+
+    shared_ptr(const shared_ptr& other) noexcept
+        : object_ptr{other.object_ptr}, control_ptr{other.control_ptr} {
+        ++control_ptr->shared_refs;
+    }
+
+    ~shared_ptr() noexcept {
+        --control_ptr->shared_refs;
+        if (!control_ptr->shared_refs) {
+            delete object_ptr;
+            if (!control_ptr->weak_refs) {
+                delete control_ptr;
+            }
+        }
+    }
+
+    T* get() const noexcept {
+        return object_ptr;
+    }
+
+private:
+    T* object_ptr{nullptr};
+    control_block* control_ptr{nullptr};
 };
 
 }  // namespace my
