@@ -26,4 +26,8 @@ TEST(SharedPtrTest, InitTest) {
     auto* raw_ptr3 = new DummyClass;
     my::shared_ptr ptr3{raw_ptr3};
     ASSERT_EQ(ptr3.get(), raw_ptr3);
+
+    my::shared_ptr ptr4 {new DummyClass};
+    my::shared_ptr ptr4_other {ptr4};
+    ASSERT_EQ(ptr4.get(), ptr4_other.get());
 }
