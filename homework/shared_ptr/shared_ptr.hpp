@@ -46,6 +46,8 @@ public:
     }
 
     shared_ptr& operator=(shared_ptr&& other) noexcept {
+        --control_ptr->shared_refs;
+        delete_content_if_needed();
         object_ptr = other.object_ptr;
         control_ptr = other.control_ptr;
         other.object_ptr = nullptr;
@@ -58,7 +60,11 @@ public:
         delete_content_if_needed();
     }
 
-    T* get() const noexcept {
+    [[nodiscard]] size_t use_count() const noexcept {
+        return control_ptr->shared_refs;
+    }
+
+    [[nodiscard]] T* get() const noexcept {
         return object_ptr;
     }
 
