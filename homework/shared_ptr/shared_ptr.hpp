@@ -16,18 +16,18 @@ class shared_ptr {
 
         std::atomic<size_t> shared_refs{1};
         std::atomic<size_t> weak_refs{0};
-        void (*object_deleter)(T*) = [](T* ptr) { delete ptr; };  // I would prefer std::function here
+        void (*data_deleter)(T*) = [](T* ptr) { delete ptr; };  // I would prefer std::function here
     };
 
 public:
-    explicit shared_ptr(T* ptr) noexcept {
-        data_ptr = ptr;
+    explicit shared_ptr(T* ptr) noexcept
+        : data_ptr{ptr} {
         control_ptr = new control_block;
     }
 
     explicit shared_ptr(T* ptr, void (*deleter)(T*)) noexcept
         : shared_ptr(ptr) {
-        control_ptr->object_deleter = deleter;
+        control_ptr->data_deleter = deleter;
     }
 
     shared_ptr(const shared_ptr& other) noexcept
@@ -98,7 +98,7 @@ public:
 
     void reset(T* other, void (*deleter)(T*)) {
         reset(other);
-        control_ptr->object_deleter = deleter;
+        control_ptr->data_deleter = deleter;
     }
 
 private:
@@ -107,7 +107,7 @@ private:
 
     inline void delete_content_if_needed() noexcept {
         if (!control_ptr->shared_refs) {
-            std::invoke(control_ptr->object_deleter, data_ptr);
+            std::invoke(control_ptr->data_deleter, data_ptr);
             if (!control_ptr->weak_refs) {
                 delete control_ptr;
             }
