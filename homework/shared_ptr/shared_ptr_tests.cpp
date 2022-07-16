@@ -1,7 +1,7 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-#include <iostream>
 #include <utility>
+#include <vector>
 #include "shared_ptr.hpp"
 
 class DummyClass {
@@ -102,4 +102,40 @@ TEST(SharedPtrTest, CustomDeleterTest) {
             ptr1.reset(mocked_ptr2, [](MockDummy* ptr) { ptr->callMe(42); delete ptr; });
         }
     }
+}
+
+TEST(SharedPtrTest, UseCountTest) {
+    constexpr size_t loops{255};
+    std::vector<my::shared_ptr<MockDummy>> vec;
+    my::shared_ptr ptr1{new MockDummy};
+    for (size_t i{0}; i < loops; ++i) {
+        vec.emplace_back(ptr1);
+        ASSERT_EQ(ptr1.use_count(), i + 2);
+    }
+    for (size_t i{loops}; i > 0; --i) {
+        vec[loops - i].reset();
+        ASSERT_EQ(ptr1.use_count(), i);
+    }
+}
+
+TEST(SharedPtrTest, DereferenceTest) {
+    my::shared_ptr ptr1{new int(42)};
+    ASSERT_EQ(*ptr1, 42);
+    auto* mocked_ptr2 = new MockDummy;
+    EXPECT_CALL(*mocked_ptr2, simpleMethod()).Times(5);
+    EXPECT_CALL(*mocked_ptr2, callMe(42)).Times(5);
+    my::shared_ptr ptr2{mocked_ptr2};
+    for (uint8_t i{0}; i < 5; ++i) {
+        ptr2->simpleMethod();
+        ptr2->callMe(42);
+    }
+}
+
+TEST(SharedPtrTest, BoolOperatorTest) {
+    my::shared_ptr<MockDummy> ptr1{nullptr};
+    EXPECT_FALSE(ptr1);
+    ptr1.reset(new MockDummy);
+    EXPECT_TRUE(ptr1);
+    ptr1.reset();
+    EXPECT_FALSE(ptr1);
 }
