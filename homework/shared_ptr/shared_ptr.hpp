@@ -87,7 +87,7 @@ public:
         return data_ptr;
     }
 
-    void reset(T* other = nullptr) {
+    void reset(T* other = nullptr) noexcept {
         if (this->get() != other || other == nullptr) {
             --control_ptr->shared_refs;
             delete_content_if_needed();
@@ -96,7 +96,7 @@ public:
         }
     }
 
-    void reset(T* other, void (*deleter)(T*)) {
+    void reset(T* other, void (*deleter)(T*)) noexcept {
         reset(other);
         control_ptr->data_deleter = deleter;
     }
