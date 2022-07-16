@@ -45,6 +45,9 @@ TEST(SharedPtrTest, CopyTest) {
     }
     ASSERT_EQ(ptr1.use_count(), 2);
     ASSERT_EQ(ptr2.use_count(), 2);
+    ptr1 = ptr2;
+    ASSERT_EQ(ptr1.use_count(), 2);
+    ASSERT_EQ(ptr2.use_count(), 2);
 }
 
 TEST(SharedPtrTest, MoveTest) {

@@ -1,5 +1,6 @@
 #pragma once
 #include <atomic>
+#include <functional>
 
 namespace my {
 
@@ -15,12 +16,18 @@ class shared_ptr {
 
         std::atomic<size_t> shared_refs{1};
         std::atomic<size_t> weak_refs{0};
+        void (*object_deleter)(T*) = [](T* ptr) { delete ptr; };  // I would prefer std::function here
     };
 
 public:
     explicit shared_ptr(T* ptr) noexcept {
         object_ptr = ptr;
         control_ptr = new control_block;
+    }
+
+    explicit shared_ptr(T* ptr, void (*deleter)(T*)) noexcept
+        : shared_ptr(ptr) {
+        control_ptr->object_deleter = deleter;
     }
 
     shared_ptr(const shared_ptr& other) noexcept
@@ -60,12 +67,38 @@ public:
         delete_content_if_needed();
     }
 
+    [[nodiscard]] T* operator->() const noexcept {
+        return this->get();
+    }
+
+    [[nodiscard]] T& operator*() const noexcept {
+        return *this->get();
+    }
+
     [[nodiscard]] size_t use_count() const noexcept {
         return control_ptr->shared_refs;
     }
 
+    [[nodiscard]] explicit operator bool() const noexcept {
+        return object_ptr;
+    }
+
     [[nodiscard]] T* get() const noexcept {
         return object_ptr;
+    }
+
+    void reset(T* other = nullptr) {
+        if (this->get() != other || other == nullptr) {
+            --control_ptr->shared_refs;
+            delete_content_if_needed();
+            object_ptr = other;
+            control_ptr = new control_block;
+        }
+    }
+
+    void reset(T* other, void (*deleter)(T*)) {
+        reset(other);
+        control_ptr->object_deleter = deleter;
     }
 
 private:
@@ -74,7 +107,7 @@ private:
 
     inline void delete_content_if_needed() noexcept {
         if (!control_ptr->shared_refs) {
-            delete object_ptr;
+            std::invoke(control_ptr->object_deleter, object_ptr);
             if (!control_ptr->weak_refs) {
                 delete control_ptr;
             }
