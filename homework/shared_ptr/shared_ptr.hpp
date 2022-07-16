@@ -21,7 +21,7 @@ class shared_ptr {
 
 public:
     explicit shared_ptr(T* ptr) noexcept {
-        object_ptr = ptr;
+        data_ptr = ptr;
         control_ptr = new control_block;
     }
 
@@ -31,7 +31,7 @@ public:
     }
 
     shared_ptr(const shared_ptr& other) noexcept
-        : object_ptr{other.object_ptr}, control_ptr{other.control_ptr} {
+        : data_ptr{other.data_ptr}, control_ptr{other.control_ptr} {
         ++control_ptr->shared_refs;
     }
 
@@ -39,7 +39,7 @@ public:
         if (this != &other) {
             --control_ptr->shared_refs;
             delete_content_if_needed();
-            object_ptr = other.object_ptr;
+            data_ptr = other.data_ptr;
             control_ptr = other.control_ptr;
             ++control_ptr->shared_refs;
         }
@@ -47,17 +47,17 @@ public:
     }
 
     shared_ptr(shared_ptr&& other) noexcept
-        : object_ptr{other.object_ptr}, control_ptr{other.control_ptr} {
-        other.object_ptr = nullptr;
+        : data_ptr{other.data_ptr}, control_ptr{other.control_ptr} {
+        other.data_ptr = nullptr;
         other.control_ptr = new control_block;
     }
 
     shared_ptr& operator=(shared_ptr&& other) noexcept {
         --control_ptr->shared_refs;
         delete_content_if_needed();
-        object_ptr = other.object_ptr;
+        data_ptr = other.data_ptr;
         control_ptr = other.control_ptr;
-        other.object_ptr = nullptr;
+        other.data_ptr = nullptr;
         other.control_ptr = new control_block;
         return *this;
     }
@@ -80,18 +80,18 @@ public:
     }
 
     [[nodiscard]] explicit operator bool() const noexcept {
-        return object_ptr;
+        return data_ptr;
     }
 
     [[nodiscard]] T* get() const noexcept {
-        return object_ptr;
+        return data_ptr;
     }
 
     void reset(T* other = nullptr) {
         if (this->get() != other || other == nullptr) {
             --control_ptr->shared_refs;
             delete_content_if_needed();
-            object_ptr = other;
+            data_ptr = other;
             control_ptr = new control_block;
         }
     }
@@ -102,12 +102,12 @@ public:
     }
 
 private:
-    T* object_ptr{nullptr};
+    T* data_ptr{nullptr};
     control_block* control_ptr{nullptr};
 
     inline void delete_content_if_needed() noexcept {
         if (!control_ptr->shared_refs) {
-            std::invoke(control_ptr->object_deleter, object_ptr);
+            std::invoke(control_ptr->object_deleter, data_ptr);
             if (!control_ptr->weak_refs) {
                 delete control_ptr;
             }
