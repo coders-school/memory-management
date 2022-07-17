@@ -6,6 +6,9 @@ namespace my {
 
 template <class T>
 class shared_ptr {
+    template <class Y>
+    friend class weak_ptr;
+
     class control_block {
     public:
         control_block() noexcept = default;
@@ -36,7 +39,7 @@ public:
     }
 
     shared_ptr& operator=(const shared_ptr& other) noexcept {
-        if (this != &other) {
+        if (data_ptr != other.data_ptr) {
             --control_ptr->shared_refs;
             delete_content_if_needed();
             data_ptr = other.data_ptr;
