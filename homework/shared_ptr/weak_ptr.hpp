@@ -6,15 +6,16 @@ namespace my {
 
 template <typename T>
 class weak_ptr {
+    friend class shared_ptr<T>;
+
 public:
     weak_ptr() noexcept;
-    weak_ptr(shared_ptr<T>& other) noexcept;
-    weak_ptr(weak_ptr<T>& other) noexcept;
+    weak_ptr(const shared_ptr<T>& other) noexcept;
+    weak_ptr(const weak_ptr<T>& other) noexcept;
 
-    T& operator*() const noexcept;
-    T* get() const noexcept;
+    ~weak_ptr() noexcept;
 
-    int use_count() const noexcept;
+    my::shared_ptr<T> lock() const noexcept;
 
 private:
     T* ptr_;
@@ -27,36 +28,37 @@ weak_ptr<T>::weak_ptr() noexcept
 }
 
 template <typename T>
-weak_ptr<T>::weak_ptr(shared_ptr<T>& other) noexcept {
+weak_ptr<T>::weak_ptr(const shared_ptr<T>& other) noexcept {
     ptr_ = other.get();
     ptrToControlBlock_ = other.getControlBlockPtr();
-    ptrToControlBlock_->incrementWeakRefs();
-}
-
-template <typename T>
-weak_ptr<T>::weak_ptr(weak_ptr<T>& other) noexcept {
-    ptr_ = other.ptr_;
-    ptrToControlBlock_ = other.ptrToControlBlock_;
-    //ptrToControlBlock_->incrementWeakRefs();
-}
-
-template <typename T>
-T& weak_ptr<T>::operator*() const noexcept {
-    return *ptr_;
-}
-
-template <typename T>
-int weak_ptr<T>::use_count() const noexcept {
-    if (!ptrToControlBlock_) {
-        return 0;
-    } else {
-        return static_cast<int>(ptrToControlBlock_->getSharedRefs());
+    if (ptr_) {
+        ptrToControlBlock_->incrementWeakRefs();
     }
 }
 
 template <typename T>
-T* weak_ptr<T>::get() const noexcept {
-    return ptr_;
+weak_ptr<T>::weak_ptr(const weak_ptr<T>& other) noexcept {
+    ptr_ = other.ptr_;
+    ptrToControlBlock_ = other.ptrToControlBlock_;
+    if (ptr_ != nullptr) {
+        ptrToControlBlock_->incrementWeakRefs();
+    }
+}
+
+template <typename T>
+weak_ptr<T>::~weak_ptr() noexcept {
+    if (ptrToControlBlock_) {
+        ptrToControlBlock_->decrementWeakRefs();
+        if (ptrToControlBlock_->getSharedRefs() == 0 && ptrToControlBlock_->getWeakRefs() == 0) {
+            delete ptrToControlBlock_;
+        }
+    }
+}
+
+template <typename T>
+shared_ptr<T> weak_ptr<T>::lock() const noexcept {
+    shared_ptr<T> tempPtr(*this);
+    return tempPtr;
 }
 
 }  // namespace my

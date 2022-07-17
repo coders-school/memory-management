@@ -3,6 +3,9 @@
 
 namespace my {
 
+template <typename T>
+class weak_ptr;
+
 class controlBlock {
 public:
     controlBlock() noexcept
@@ -27,8 +30,9 @@ class shared_ptr {
 public:
     shared_ptr() noexcept;
     shared_ptr(T* ptr) noexcept;
-    shared_ptr(shared_ptr& other) noexcept;
+    shared_ptr(const shared_ptr& other) noexcept;
     shared_ptr(shared_ptr&& other) noexcept;
+    explicit shared_ptr(const weak_ptr<T>& other) noexcept;
 
     ~shared_ptr();
 
@@ -67,7 +71,7 @@ shared_ptr<T>::shared_ptr(T* ptr) noexcept
 }
 
 template <typename T>
-shared_ptr<T>::shared_ptr(shared_ptr& other) noexcept {
+shared_ptr<T>::shared_ptr(const shared_ptr& other) noexcept {
     if (other.ptr_ == nullptr) {
         ptr_ = nullptr;
         ptrToControlBlock_ = nullptr;
@@ -85,6 +89,15 @@ shared_ptr<T>::shared_ptr(shared_ptr&& other) noexcept {
         ptrToControlBlock_ = std::move(other.ptrToControlBlock_);
         other.ptr_ = nullptr;
         other.ptrToControlBlock_ = nullptr;
+    }
+}
+
+template <typename T>
+shared_ptr<T>::shared_ptr(const weak_ptr<T>& other) noexcept {
+    ptr_ = other.ptr_;
+    ptrToControlBlock_ = other.ptrToControlBlock_;
+    if (ptr_) {
+        ptrToControlBlock_->incrementSharedRefs();
     }
 }
 
