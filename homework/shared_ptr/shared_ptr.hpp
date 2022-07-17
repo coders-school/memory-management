@@ -28,7 +28,7 @@ public:
         control_ptr = new control_block;
     }
 
-    explicit shared_ptr(T* ptr, void (*deleter)(T*)) noexcept
+    shared_ptr(T* ptr, void (*deleter)(T*)) noexcept
         : shared_ptr(ptr) {
         control_ptr->data_deleter = deleter;
     }
@@ -107,6 +107,11 @@ public:
 private:
     T* data_ptr{nullptr};
     control_block* control_ptr{nullptr};
+
+    shared_ptr(T* data, control_block* control) noexcept
+        : data_ptr{data}, control_ptr{control} {
+        ++control_ptr->shared_refs;
+    }
 
     inline void delete_content_if_needed() noexcept {
         if (!control_ptr->shared_refs) {
