@@ -42,6 +42,10 @@ TEST_F(weak_ptrFixture, CopyCtorWeakPtrAsArgumentTest) {
     EXPECT_EQ(*sharedPtrToInt2, 10);
 }
 
+TEST_F(weak_ptrFixture, UseCountFunctionTest) {
+    EXPECT_EQ(emptyWeakPtr.use_count(), 0);
+}
+
 TEST_F(weak_ptrFixture, LockFunctionTest) {
     my::weak_ptr<int> emptyWeakPtr2{emptySharedPtr};
     my::shared_ptr<int> emptySharedPtr2 = emptyWeakPtr2.lock();
@@ -49,4 +53,10 @@ TEST_F(weak_ptrFixture, LockFunctionTest) {
 
     my::shared_ptr<int> sharedPtrToInt2 = weakPtrToInt1.lock();
     EXPECT_EQ(*sharedPtrToInt2, 10);
+}
+
+TEST_F(weak_ptrFixture, ResetFunctionTest) {
+    weakPtrToInt1.reset();
+    my::shared_ptr<int> sharedPtrToInt2 = weakPtrToInt1.lock();
+    EXPECT_EQ(sharedPtrToInt2.get(), nullptr);
 }

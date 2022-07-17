@@ -15,7 +15,9 @@ public:
 
     ~weak_ptr() noexcept;
 
-    my::shared_ptr<T> lock() const noexcept;
+    int use_count() const noexcept;
+    shared_ptr<T> lock() const noexcept;
+    void reset() noexcept;
 
 private:
     T* ptr_;
@@ -56,9 +58,26 @@ weak_ptr<T>::~weak_ptr() noexcept {
 }
 
 template <typename T>
+int weak_ptr<T>::use_count() const noexcept {
+    if (ptrToControlBlock_) {
+        return ptrToControlBlock_->getSharedRefs();
+    } else
+        return 0;
+}
+
+template <typename T>
 shared_ptr<T> weak_ptr<T>::lock() const noexcept {
     shared_ptr<T> tempPtr(*this);
     return tempPtr;
+}
+
+template <typename T>
+void weak_ptr<T>::reset() noexcept {
+    if (ptr_) {
+        ptrToControlBlock_->decrementWeakRefs();
+    }
+    ptr_ = nullptr;
+    ptrToControlBlock_ = nullptr;
 }
 
 }  // namespace my
