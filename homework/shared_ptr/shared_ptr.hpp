@@ -38,6 +38,7 @@ public:
 
     shared_ptr& operator=(shared_ptr&) noexcept;
     shared_ptr& operator=(shared_ptr&& other) noexcept;
+    explicit operator bool() const noexcept;
 
     T& operator*() const noexcept;
     T* operator->() const noexcept;
@@ -143,6 +144,11 @@ shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr&& other) noexcept {
         delete ptrToControlBlock_;
     }
     return *this;
+}
+
+template <typename T>
+shared_ptr<T>::operator bool() const noexcept {
+    return ptr_ != nullptr;
 }
 
 template <typename T>
