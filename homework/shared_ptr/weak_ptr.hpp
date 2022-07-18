@@ -28,7 +28,7 @@ public:
         return *this;
     }
 
-    weak_ptr(const shared_ptr<T>& other) noexcept
+    explicit weak_ptr(const shared_ptr<T>& other) noexcept
         : data_ptr{other.data_ptr}, control_ptr{other.control_ptr} {
         ++control_ptr->weak_refs;
     }
