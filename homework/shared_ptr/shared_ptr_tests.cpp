@@ -29,6 +29,9 @@ TEST(SharedPtrTest, InitTest) {
     auto* raw_ptr3 = new MockDummy;
     my::shared_ptr ptr3{raw_ptr3};
     ASSERT_EQ(ptr3.get(), raw_ptr3);
+
+    my::shared_ptr<uint8_t> ptr4;
+    ASSERT_EQ(ptr4.get(), nullptr);
 }
 
 TEST(SharedPtrTest, CopyTest) {
