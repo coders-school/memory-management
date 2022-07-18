@@ -16,7 +16,9 @@ public:
 
     ~weak_ptr() noexcept;
 
-    weak_ptr& operator=(const weak_ptr& other) noexcept;
+    weak_ptr& operator=(const weak_ptr<T>& other) noexcept;
+    weak_ptr& operator=(const shared_ptr<T>& other) noexcept;
+    weak_ptr& operator=(const weak_ptr<T>&& other) noexcept;
 
     int use_count() const noexcept;
     bool expired() const noexcept;
@@ -70,11 +72,36 @@ weak_ptr<T>::~weak_ptr() noexcept {
 }
 
 template <typename T>
-weak_ptr<T>& weak_ptr<T>::operator=(const weak_ptr& other) noexcept {
+weak_ptr<T>& weak_ptr<T>::operator=(const weak_ptr<T>& other) noexcept {
     if (other.ptr_ != this && other.ptr_ != nullptr) {
         ptr_ = other.ptr_;
         ptrToControlBlock_ = other.ptrToControlBlock_;
         ptrToControlBlock_->incrementWeakRefs();
+    } else if (other.ptr_ != this && other.ptr_ == nullptr) {
+        ptr_ = nullptr;
+        ptrToControlBlock_ = nullptr;
+    }
+}
+
+template <typename T>
+weak_ptr<T>& weak_ptr<T>::operator=(const shared_ptr<T>& other) noexcept {
+    if (other.ptr_ != this && other.ptr_ != nullptr) {
+        ptr_ = other.ptr_;
+        ptrToControlBlock_ = other.ptrToControlBlock_;
+        ptrToControlBlock_->incrementSharedRefs();
+    } else if (other.ptr_ != this && other.ptr_ == nullptr) {
+        ptr_ = nullptr;
+        ptrToControlBlock_ = nullptr;
+    }
+}
+
+template <typename T>
+weak_ptr<T>& weak_ptr<T>::operator=(const weak_ptr<T>&& other) noexcept {
+    if (other.ptr_ != this && other.ptr_ != nullptr) {
+        ptr_ = other.ptr_;
+        ptrToControlBlock_ = other.ptrToControlBlock_;
+        other.ptr_ = nullptr;
+        other.ptrToControlBlock_ = nullptr;
     } else if (other.ptr_ != this && other.ptr_ == nullptr) {
         ptr_ = nullptr;
         ptrToControlBlock_ = nullptr;

@@ -60,6 +60,16 @@ TEST_F(weak_ptrFixture, CopyOperatorWeakPtrAsArgumentTest) {
 
 TEST_F(weak_ptrFixture, CopyOperatorSharedPtrAsArgument) {
     my::weak_ptr<int> weakPtrToInt2 = sharedPtrToInt1;
+    my::shared_ptr<int> sharedPtrToInt2 = weakPtrToInt2.lock();
+    EXPECT_EQ(*sharedPtrToInt2, 10);
+}
+
+TEST_F(weak_ptrFixture, MoveOperatorWeakPtrAsArgumentAdded) {
+    my::weak_ptr<int> weakPtrToInt2 = std::move(weakPtrToInt1);
+    my::shared_ptr<int> sharedPtrToInt2 = weakPtrToInt2.lock();
+    EXPECT_EQ(*sharedPtrToInt2, 10);
+    my::shared_ptr<int> sharedPtrToInt3 = weakPtrToInt1.lock();
+    EXPECT_EQ(sharedPtrToInt3.get(), nullptr);
 }
 
 TEST_F(weak_ptrFixture, UseCountFunctionTest) {
