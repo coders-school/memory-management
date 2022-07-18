@@ -71,7 +71,7 @@ TEST_F(shared_ptrFixture, MoveCtorTest) {
     EXPECT_EQ(ptrToInt4.use_count(), 0);
 }
 
-TEST_F(shared_ptrFixture, CopyCtorWeakPtrAsArgumentTest){
+TEST_F(shared_ptrFixture, CopyCtorWeakPtrAsArgumentTest) {
     my::weak_ptr<int> weakPtrToInt1{ptrToInt1};
     auto sharedPtrToInt2 = weakPtrToInt1.lock();
     EXPECT_EQ(*sharedPtrToInt2, 10);
