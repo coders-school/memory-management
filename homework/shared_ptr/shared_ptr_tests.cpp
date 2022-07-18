@@ -2,8 +2,8 @@
 #include <gtest/gtest.h>
 #include <utility>
 #include <vector>
-#include "shared_ptr.hpp"
 #include "make_shared.hpp"
+#include "shared_ptr.hpp"
 #include "weak_ptr.hpp"
 
 class DummyClass {
