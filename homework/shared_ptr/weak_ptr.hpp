@@ -16,6 +16,8 @@ public:
 
     ~weak_ptr() noexcept;
 
+    weak_ptr& operator=(const weak_ptr& other) noexcept;
+
     int use_count() const noexcept;
     bool expired() const noexcept;
     shared_ptr<T> lock() const noexcept;
@@ -64,6 +66,18 @@ weak_ptr<T>::~weak_ptr() noexcept {
         if (ptrToControlBlock_->getSharedRefs() == 0 && ptrToControlBlock_->getWeakRefs() == 0) {
             delete ptrToControlBlock_;
         }
+    }
+}
+
+template <typename T>
+weak_ptr<T>& weak_ptr<T>::operator=(const weak_ptr& other) noexcept {
+    if (other.ptr_ != this && other.ptr_ != nullptr) {
+        ptr_ = other.ptr_;
+        ptrToControlBlock_ = other.ptrToControlBlock_;
+        ptrToControlBlock_->incrementWeakRefs();
+    } else if (other.ptr_ != this && other.ptr_ == nullptr) {
+        ptr_ = nullptr;
+        ptrToControlBlock_ = nullptr;
     }
 }
 
