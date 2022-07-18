@@ -16,6 +16,7 @@ public:
     ~weak_ptr() noexcept;
 
     int use_count() const noexcept;
+    bool expired() const noexcept;
     shared_ptr<T> lock() const noexcept;
     void reset() noexcept;
 
@@ -63,6 +64,15 @@ int weak_ptr<T>::use_count() const noexcept {
         return ptrToControlBlock_->getSharedRefs();
     } else
         return 0;
+}
+
+template <typename T>
+bool weak_ptr<T>::expired() const noexcept {
+    if(ptrToControlBlock_)
+    {
+        return ptrToControlBlock_->getSharedRefs() == 0;
+    }
+    return true;
 }
 
 template <typename T>

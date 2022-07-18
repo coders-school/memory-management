@@ -44,6 +44,12 @@ TEST_F(weak_ptrFixture, CopyCtorWeakPtrAsArgumentTest) {
 
 TEST_F(weak_ptrFixture, UseCountFunctionTest) {
     EXPECT_EQ(emptyWeakPtr.use_count(), 0);
+    EXPECT_EQ(weakPtrToInt1.use_count(), 1);
+}
+
+TEST_F(weak_ptrFixture, ExpiredFunctionTest) {
+    EXPECT_EQ(emptyWeakPtr.expired(), true);
+    EXPECT_EQ(weakPtrToInt1.expired(), false);
 }
 
 TEST_F(weak_ptrFixture, LockFunctionTest) {
