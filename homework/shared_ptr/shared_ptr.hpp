@@ -116,15 +116,18 @@ shared_ptr<T>::~shared_ptr() {
 
 template <typename T>
 shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr& other) noexcept {
-    if (other.ptr != this && other.ptr_ != nullptr) {
+    if (other.ptr_ != this && other.ptr_ != nullptr) {
         ptr_ = other.ptr_;
         ptrToControlBlock_ = other.ptrToControlBlock_;
         ptrToControlBlock_->incrementSharedRefs();
+        return *this
     } else if (&other != this && other.ptr_ == nullptr) {
         delete ptr_;
         ptr_ = nullptr;
         delete ptrToControlBlock_;
+        return *this
     }
+    return *this
 }
 
 template <typename T>
