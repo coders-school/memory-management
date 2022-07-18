@@ -9,9 +9,13 @@ class shared_ptr {
     template <class Y>
     friend class weak_ptr;
 
+    template <class U, typename... Args>
+    friend shared_ptr<U> make_shared(Args&&... args);
+
     class control_block {
     public:
-        control_block() noexcept = default;
+        explicit control_block(bool make_shared_flag = false) noexcept
+            : made_with_make_shared{make_shared_flag} {}
         control_block(const control_block&) = delete;
         control_block& operator=(const control_block&) = delete;
         control_block(control_block&&) = delete;
@@ -19,6 +23,7 @@ class shared_ptr {
 
         std::atomic<size_t> shared_refs{1};
         std::atomic<size_t> weak_refs{0};
+        std::atomic<bool> made_with_make_shared{false};
         void (*data_deleter)(T*) = [](T* ptr) { delete ptr; };  // I would prefer std::function here
     };
 
@@ -110,14 +115,21 @@ private:
 
     shared_ptr(T* data, control_block* control) noexcept
         : data_ptr{data}, control_ptr{control} {
-        ++control_ptr->shared_refs;
     }
 
     inline void delete_content_if_needed() noexcept {
-        if (!control_ptr->shared_refs) {
-            std::invoke(control_ptr->data_deleter, data_ptr);
-            if (!control_ptr->weak_refs) {
-                delete control_ptr;
+        if (!control_ptr->made_with_make_shared) {
+            if (!control_ptr->shared_refs) {
+                std::invoke(control_ptr->data_deleter, data_ptr);
+                if (!control_ptr->weak_refs) {
+                    delete control_ptr;
+                }
+            }
+        } else {
+            if (!control_ptr->shared_refs && !control_ptr->weak_refs) {
+                data_ptr->~T();
+                control_ptr->~control_block();
+                delete[] (char*)(data_ptr);
             }
         }
     }

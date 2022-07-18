@@ -1,3 +1,4 @@
+#pragma once
 #include "shared_ptr.hpp"
 
 namespace my {
@@ -86,6 +87,7 @@ public:
         if (expired()) {
             return shared_ptr<T>(nullptr);
         }
+        ++control_ptr->shared_refs;
         return shared_ptr<T>(data_ptr, control_ptr);
     }
 
