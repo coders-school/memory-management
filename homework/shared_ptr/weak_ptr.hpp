@@ -12,6 +12,7 @@ public:
     weak_ptr() noexcept;
     weak_ptr(const shared_ptr<T>& other) noexcept;
     weak_ptr(const weak_ptr<T>& other) noexcept;
+    weak_ptr(weak_ptr<T>&& other) noexcept;
 
     ~weak_ptr() noexcept;
 
@@ -49,6 +50,14 @@ weak_ptr<T>::weak_ptr(const weak_ptr<T>& other) noexcept {
 }
 
 template <typename T>
+weak_ptr<T>::weak_ptr(weak_ptr<T>&& other) noexcept {
+    ptr_ = other.ptr_;
+    other.ptr_ = nullptr;
+    ptrToControlBlock_ = other.ptrToControlBlock_;
+    other.ptrToControlBlock_ = nullptr;
+}
+
+template <typename T>
 weak_ptr<T>::~weak_ptr() noexcept {
     if (ptrToControlBlock_) {
         ptrToControlBlock_->decrementWeakRefs();
@@ -68,8 +77,7 @@ int weak_ptr<T>::use_count() const noexcept {
 
 template <typename T>
 bool weak_ptr<T>::expired() const noexcept {
-    if(ptrToControlBlock_)
-    {
+    if (ptrToControlBlock_) {
         return ptrToControlBlock_->getSharedRefs() == 0;
     }
     return true;

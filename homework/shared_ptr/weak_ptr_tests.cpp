@@ -29,17 +29,22 @@ TEST_F(weak_ptrFixture, CopyCtorSharedPtrAsArgumentTest) {
     my::shared_ptr<int> emptySharedPtr2 = emptyWeakPtr2.lock();
     EXPECT_EQ(emptySharedPtr2.get(), nullptr);
 
-    // std::cout << sharedPtrToInt1.getControlBlockPtr()->getSharedRefs() << std::endl;
-    // std::cout << sharedPtrToInt1.getControlBlockPtr()->getWeakRefs() << std::endl;
     my::shared_ptr<int> sharedPtrToInt2 = weakPtrToInt1.lock();
-    // std::cout << sharedPtrToInt1.getControlBlockPtr()->getSharedRefs() << std::endl;
-    // std::cout << sharedPtrToInt1.getControlBlockPtr()->getWeakRefs() << std::endl;
     EXPECT_EQ(*sharedPtrToInt2, 10);
 }
 
 TEST_F(weak_ptrFixture, CopyCtorWeakPtrAsArgumentTest) {
     my::shared_ptr<int> sharedPtrToInt2 = weakPtrToInt1.lock();
     EXPECT_EQ(*sharedPtrToInt2, 10);
+}
+
+TEST_F(weak_ptrFixture, MoveCtorWeakPtrAsArgumentTest) {
+    my::weak_ptr<int> weakPtrToInt2{std::move(weakPtrToInt1)};
+    my::shared_ptr<int> sharedPtrToInt2 = weakPtrToInt1.lock();
+    EXPECT_EQ(sharedPtrToInt2.get(), nullptr);
+
+    my::shared_ptr<int> sharedPtrToInt3 = weakPtrToInt2.lock();
+    EXPECT_EQ(*sharedPtrToInt3, 10);
 }
 
 TEST_F(weak_ptrFixture, UseCountFunctionTest) {
