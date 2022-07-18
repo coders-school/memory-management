@@ -28,7 +28,7 @@ class shared_ptr {
     };
 
 public:
-    explicit shared_ptr(T* ptr) noexcept
+    explicit shared_ptr(T* ptr = nullptr) noexcept
         : data_ptr{ptr} {
         control_ptr = new control_block;
     }
