@@ -117,7 +117,7 @@ private:
                     data_ptr->~T();
                 }
                 control_ptr->~control_block();
-                delete[] (char*)(data_ptr);
+                delete[](char*)(data_ptr);
             }
         }
     }
