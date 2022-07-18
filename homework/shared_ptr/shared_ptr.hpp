@@ -14,7 +14,7 @@ class shared_ptr {
 
     class control_block {
     public:
-        explicit control_block(bool make_shared_flag = false) noexcept
+        constexpr explicit control_block(bool make_shared_flag = false) noexcept
             : made_with_make_shared{make_shared_flag} {}
         control_block(const control_block&) = delete;
         control_block& operator=(const control_block&) = delete;
@@ -23,7 +23,7 @@ class shared_ptr {
 
         std::atomic<size_t> shared_refs{1};
         std::atomic<size_t> weak_refs{0};
-        std::atomic<bool> made_with_make_shared{false};
+        bool made_with_make_shared{false};
         void (*data_deleter)(T*) = [](T* ptr) { delete ptr; };  // I would prefer std::function here
     };
 
@@ -33,7 +33,7 @@ public:
         control_ptr = new control_block;
     }
 
-    shared_ptr(T* ptr, void (*deleter)(T*)) noexcept
+    constexpr shared_ptr(T* ptr, void (*deleter)(T*)) noexcept
         : shared_ptr(ptr) {
         control_ptr->data_deleter = deleter;
     }
@@ -46,7 +46,7 @@ public:
     shared_ptr& operator=(const shared_ptr& other) noexcept {
         if (data_ptr != other.data_ptr) {
             --control_ptr->shared_refs;
-            delete_content_if_needed();
+            clean_up();
             data_ptr = other.data_ptr;
             control_ptr = other.control_ptr;
             ++control_ptr->shared_refs;
@@ -62,7 +62,7 @@ public:
 
     shared_ptr& operator=(shared_ptr&& other) noexcept {
         --control_ptr->shared_refs;
-        delete_content_if_needed();
+        clean_up();
         data_ptr = other.data_ptr;
         control_ptr = other.control_ptr;
         other.data_ptr = nullptr;
@@ -72,7 +72,7 @@ public:
 
     ~shared_ptr() noexcept {
         --control_ptr->shared_refs;
-        delete_content_if_needed();
+        clean_up();
     }
 
     [[nodiscard]] T* operator->() const noexcept {
@@ -98,7 +98,7 @@ public:
     void reset(T* other = nullptr) noexcept {
         if (this->get() != other || other == nullptr) {
             --control_ptr->shared_refs;
-            delete_content_if_needed();
+            clean_up();
             data_ptr = other;
             control_ptr = new control_block;
         }
@@ -117,7 +117,7 @@ private:
         : data_ptr{data}, control_ptr{control} {
     }
 
-    inline void delete_content_if_needed() noexcept {
+    void clean_up() noexcept {
         if (!control_ptr->made_with_make_shared) {
             if (!control_ptr->shared_refs) {
                 std::invoke(control_ptr->data_deleter, data_ptr);
@@ -127,7 +127,9 @@ private:
             }
         } else {
             if (!control_ptr->shared_refs && !control_ptr->weak_refs) {
-                data_ptr->~T();
+                if (data_ptr) {
+                    data_ptr->~T();
+                }
                 control_ptr->~control_block();
                 delete[] (char*)(data_ptr);
             }
