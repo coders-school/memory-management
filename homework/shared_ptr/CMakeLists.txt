@@ -17,17 +17,10 @@ set(SRC_LIST_UT
     ./weak_ptr_tests.cpp
 )
 
-set(SRC_LIST_CB_UT
-    ./control_block_tests.cpp
-)
-
 enable_testing()
 include(GoogleTest)
 
 add_executable(${PROJECT_NAME}-ut ${SRC_LIST_UT} )
+target_compile_options(${PROJECT_NAME}-ut PRIVATE -Wall -Wextra -Werror)
 target_link_libraries(${PROJECT_NAME}-ut gtest gtest_main)
 add_test(NAME tests COMMAND ${PROJECT_NAME}-ut)
-
-add_executable(controlBlock-ut ${SRC_LIST_CB_UT} )
-target_link_libraries(controlBlock-ut gtest gtest_main)
-add_test(NAME controlBlocktests COMMAND controlBlock-ut)
