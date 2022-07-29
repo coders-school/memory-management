@@ -13,14 +13,13 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(googletest)
 
 set(SRC_LIST_UT
-    ./shared_ptr_tests.cpp
-    ./weak_ptr_tests.cpp
+  ./shared_ptr_tests.cpp
 )
 
 enable_testing()
 include(GoogleTest)
 
-add_executable(${PROJECT_NAME}-ut ${SRC_LIST_UT} )
+add_executable(${PROJECT_NAME}-ut ${SRC_LIST_UT})
 target_compile_options(${PROJECT_NAME}-ut PRIVATE -Wall -Wextra -Werror)
 target_link_libraries(${PROJECT_NAME}-ut gtest gtest_main)
 add_test(NAME tests COMMAND ${PROJECT_NAME}-ut)

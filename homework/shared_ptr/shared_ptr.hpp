@@ -3,26 +3,18 @@
 
 namespace my {
 
-template <typename T>
-class weak_ptr;
-
 class controlBlock {
 public:
     controlBlock() noexcept
-        : shared_refs_(1), weak_refs_(0) {
+        : shared_refs_(1) {
     }
 
     std::size_t getSharedRefs() const noexcept { return shared_refs_; }
     void incrementSharedRefs() noexcept { shared_refs_ += 1; }
     void decrementSharedRefs() noexcept { shared_refs_ -= 1; }
 
-    std::size_t getWeakRefs() const noexcept { return weak_refs_; }
-    void incrementWeakRefs() noexcept { weak_refs_ += 1; }
-    void decrementWeakRefs() noexcept { weak_refs_ -= 1; }
-
 private:
     std::atomic<std::size_t> shared_refs_;
-    std::atomic<std::size_t> weak_refs_;
 };
 
 template <typename T>
@@ -61,21 +53,13 @@ public:
         }
     }
 
-    explicit shared_ptr(const weak_ptr<T>& other) noexcept {
-        ptr_ = other.ptr_;
-        ptrToControlBlock_ = other.ptrToControlBlock_;
-        if (ptr_) {
-            ptrToControlBlock_->incrementSharedRefs();
-        }
-    }
-
     ~shared_ptr() {
         if (ptrToControlBlock_) {
             ptrToControlBlock_->decrementSharedRefs();
             if (ptrToControlBlock_->getSharedRefs() == 0) {
                 delete ptr_;
             }
-            if (ptrToControlBlock_->getSharedRefs() == 0 && ptrToControlBlock_->getWeakRefs() == 0) {
+            if (ptrToControlBlock_->getSharedRefs() == 0) {
                 delete ptrToControlBlock_;
             }
         }

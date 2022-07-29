@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 #include "shared_ptr.hpp"
-#include "weak_ptr.hpp"
 
 class TestClass {
 public:
@@ -69,12 +68,6 @@ TEST_F(shared_ptrFixture, MoveCtorTest) {
     my::shared_ptr<int> ptrToInt4(emptyPtr);
     EXPECT_EQ(ptrToInt4.get(), nullptr);
     EXPECT_EQ(ptrToInt4.use_count(), 0);
-}
-
-TEST_F(shared_ptrFixture, CopyCtorWeakPtrAsArgumentTest) {
-    my::weak_ptr<int> weakPtrToInt1{ptrToInt1};
-    auto sharedPtrToInt2 = weakPtrToInt1.lock();
-    EXPECT_EQ(*sharedPtrToInt2, 10);
 }
 
 TEST_F(shared_ptrFixture, CopyAssingnmentOperatorTest) {
