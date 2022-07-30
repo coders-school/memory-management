@@ -33,7 +33,6 @@ public:
 
     shared_ptr(T* ptr, void (*deleter)(T*)) noexcept
         : shared_ptr(ptr) {
-        ptrToControlBlock_ = new controlBlock;
         ptrToControlBlock_->deleter_ = deleter;
     }
 
@@ -45,10 +44,10 @@ public:
     }
 
     shared_ptr(shared_ptr&& other) noexcept {
-        if (other.ptr_ == nullptr) {
+        if (!other.ptr_) {
             ptr_ = nullptr;
             ptrToControlBlock_ = nullptr;
-        } else if (other.ptr_ != nullptr) {
+        } else if (other.ptr_) {
             ptr_ = other.ptr_;
             ptrToControlBlock_ = other.ptrToControlBlock_;
             other.ptr_ = nullptr;
@@ -66,16 +65,16 @@ public:
         }
     }
 
-    shared_ptr<T>& operator=(shared_ptr& other) noexcept {
+    shared_ptr& operator=(const shared_ptr& other) noexcept {
         if (ptr_ == other.ptr_) {
-        } else if (ptr_ == nullptr && other.ptr_ == nullptr) {
+        } else if (!ptr_ && !other.ptr_) {
             ptr_ = nullptr;
             ptrToControlBlock_ = nullptr;
-        } else if (ptr_ == nullptr && other.ptr_ != nullptr) {
+        } else if (!ptr_ && other.ptr_) {
             ptr_ = other.ptr_;
             ptrToControlBlock_ = other.ptrToControlBlock_;
             ptrToControlBlock_->shared_refs_++;
-        } else if (ptr_ != nullptr && other.ptr_ == nullptr) {
+        } else if (ptr_ && !other.ptr_) {
             ptrToControlBlock_->shared_refs_--;
             if (ptrToControlBlock_->shared_refs_ == 0) {
                 std::invoke(ptrToControlBlock_->deleter_, ptr_);
@@ -83,7 +82,7 @@ public:
             }
             ptr_ = nullptr;
             ptrToControlBlock_ = nullptr;
-        } else if (ptr_ != nullptr && other.ptr_ != nullptr) {
+        } else if (ptr_ && other.ptr_) {
             ptrToControlBlock_->shared_refs_--;
             if (ptrToControlBlock_->shared_refs_ == 0) {
                 std::invoke(ptrToControlBlock_->deleter_, ptr_);
@@ -96,17 +95,17 @@ public:
         return *this;
     }
 
-    shared_ptr<T>& operator=(shared_ptr&& other) noexcept {
+    shared_ptr& operator=(shared_ptr&& other) noexcept {
         if (ptr_ == other.ptr_) {
-        } else if (ptr_ == nullptr && other.ptr_ == nullptr) {
+        } else if (!ptr_ && !other.ptr_) {
             ptr_ = nullptr;
             ptrToControlBlock_ = nullptr;
-        } else if (ptr_ == nullptr && other.ptr_ != nullptr) {
+        } else if (!ptr_ && other.ptr_) {
             ptr_ = other.ptr_;
             ptrToControlBlock_ = other.ptrToControlBlock_;
             other.ptr_ = nullptr;
             other.ptrToControlBlock_ = nullptr;
-        } else if (ptr_ != nullptr && other.ptr_ == nullptr) {
+        } else if (ptr_ && !other.ptr_) {
             ptrToControlBlock_->shared_refs_--;
             if (ptrToControlBlock_->shared_refs_ == 0) {
                 std::invoke(ptrToControlBlock_->deleter_, ptr_);
@@ -114,7 +113,7 @@ public:
             }
             ptr_ = nullptr;
             ptrToControlBlock_ = nullptr;
-        } else if (ptr_ != nullptr && other.ptr_ != nullptr) {
+        } else if (ptr_ && other.ptr_) {
             ptrToControlBlock_->shared_refs_--;
             if (ptrToControlBlock_->shared_refs_ == 0) {
                 std::invoke(ptrToControlBlock_->deleter_, ptr_);
