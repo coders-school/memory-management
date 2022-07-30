@@ -3,22 +3,22 @@
 
 namespace my {
 
-class controlBlock {
-public:
-    controlBlock() noexcept
-        : shared_refs_(1) {
-    }
-
-    std::size_t getSharedRefs() const noexcept { return shared_refs_; }
-    void incrementSharedRefs() noexcept { shared_refs_ += 1; }
-    void decrementSharedRefs() noexcept { shared_refs_ -= 1; }
-
-private:
-    std::atomic<std::size_t> shared_refs_;
-};
-
 template <typename T>
 class shared_ptr {
+    class controlBlock {
+    public:
+        controlBlock() noexcept
+            : shared_refs_(1) {
+        }
+
+        std::size_t getSharedRefs() const noexcept { return shared_refs_; }
+        void incrementSharedRefs() noexcept { shared_refs_ += 1; }
+        void decrementSharedRefs() noexcept { shared_refs_ -= 1; }
+
+    private:
+        std::atomic<std::size_t> shared_refs_;
+    };
+
 public:
     shared_ptr() noexcept
         : ptr_(nullptr), ptrToControlBlock_{nullptr} {
@@ -59,7 +59,7 @@ public:
             if (ptrToControlBlock_->getSharedRefs() == 0) {
                 delete ptr_;
             }
-            if (ptrToControlBlock_->getSharedRefs() == 0 && ptrToControlBlock_->getWeakRefs() == 0) {
+            if (ptrToControlBlock_->getSharedRefs() == 0) {
                 delete ptrToControlBlock_;
             }
         }
