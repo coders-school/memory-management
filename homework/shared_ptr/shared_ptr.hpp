@@ -18,7 +18,7 @@ class shared_ptr {
     private:
         std::atomic<std::size_t> shared_refs_{1};
         std::atomic<std::size_t> weak_refs{0};
-        void (*deleter)(T*) = [](T* ptr_) { delete ptr_; };
+        void (*deleter_)(T*) = [](T* ptr_) { delete ptr_; };
     };
 
 public:
@@ -33,6 +33,12 @@ public:
         } else {
             ptrToControlBlock_ = nullptr;
         }
+    }
+
+    shared_ptr(T* ptr, void (*deleter)(T*)) noexcept
+        : shared_ptr(ptr) {
+        ptrToControlBlock_ = new controlBlock;
+        ptrToControlBlock_->deleter_ = deleter;
     }
 
     shared_ptr(const shared_ptr& other) noexcept {
@@ -59,9 +65,7 @@ public:
         if (ptrToControlBlock_) {
             ptrToControlBlock_->shared_refs_--;
             if (ptrToControlBlock_->shared_refs_ == 0) {
-                delete ptr_;
-            }
-            if (ptrToControlBlock_->shared_refs_ == 0) {
+                std::invoke(ptrToControlBlock_->deleter_, ptr_);
                 delete ptrToControlBlock_;
             }
         }
