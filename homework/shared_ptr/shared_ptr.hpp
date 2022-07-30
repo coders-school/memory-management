@@ -6,17 +6,15 @@ namespace my {
 template <typename T>
 class shared_ptr {
     class controlBlock {
-    public:
-        controlBlock() noexcept
-            : shared_refs_(1) {
-        }
+        friend class shared_ptr;
 
-        std::size_t getSharedRefs() const noexcept { return shared_refs_; }
-        void incrementSharedRefs() noexcept { shared_refs_ += 1; }
-        void decrementSharedRefs() noexcept { shared_refs_ -= 1; }
+    public:
+        controlBlock() noexcept = default;
 
     private:
-        std::atomic<std::size_t> shared_refs_;
+        std::atomic<std::size_t> shared_refs_{1};
+        std::atomic<std::size_t> weak_refs{0};
+        void (*deleter)(T*) = [](T* ptr_) { delete ptr_; };
     };
 
 public:
@@ -40,7 +38,7 @@ public:
         } else {
             ptr_ = other.ptr_;
             ptrToControlBlock_ = other.ptrToControlBlock_;
-            ptrToControlBlock_->incrementSharedRefs();
+            ptrToControlBlock_->shared_refs_++;
         }
     }
 
@@ -55,11 +53,11 @@ public:
 
     ~shared_ptr() {
         if (ptrToControlBlock_) {
-            ptrToControlBlock_->decrementSharedRefs();
-            if (ptrToControlBlock_->getSharedRefs() == 0) {
+            ptrToControlBlock_->shared_refs_--;
+            if (ptrToControlBlock_->shared_refs_ == 0) {
                 delete ptr_;
             }
-            if (ptrToControlBlock_->getSharedRefs() == 0) {
+            if (ptrToControlBlock_->shared_refs_ == 0) {
                 delete ptrToControlBlock_;
             }
         }
@@ -69,7 +67,7 @@ public:
         if (&other != this && other.ptr_ != nullptr) {
             ptr_ = other.ptr_;
             ptrToControlBlock_ = other.ptrToControlBlock_;
-            ptrToControlBlock_->incrementSharedRefs();
+            ptrToControlBlock_->shared_refs_++;
             return *this;
         } else if (&other != this && other.ptr_ == nullptr) {
             delete ptr_;
@@ -130,7 +128,7 @@ public:
         if (!ptrToControlBlock_) {
             return 0;
         } else {
-            return static_cast<int>(ptrToControlBlock_->getSharedRefs());
+            return static_cast<int>(ptrToControlBlock_->shared_refs_);
         }
     }
 

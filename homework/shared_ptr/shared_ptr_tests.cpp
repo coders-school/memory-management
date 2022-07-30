@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 #include "shared_ptr.hpp"
 
+template class my::shared_ptr<int>;
+
 class TestClass {
 public:
     int number_{100};
@@ -145,5 +147,4 @@ TEST_F(shared_ptrFixture, UseCountFunctionTest) {
 
 TEST_F(shared_ptrFixture, getControlBlockRefTest) {
     EXPECT_EQ(emptyPtr.getControlBlockPtr(), nullptr);
-    EXPECT_EQ(ptrToInt1.getControlBlockPtr()->getSharedRefs(), 1);
 }
