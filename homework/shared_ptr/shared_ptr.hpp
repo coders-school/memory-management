@@ -9,7 +9,11 @@ class shared_ptr {
         friend class shared_ptr;
 
     public:
-        controlBlock() noexcept = default;
+        constexpr explicit controlBlock() noexcept {}
+        controlBlock(const controlBlock&) = delete;
+        controlBlock& operator=(const controlBlock&) = delete;
+        controlBlock(controlBlock&&) = delete;
+        controlBlock& operator=(controlBlock&&) = delete;
 
     private:
         std::atomic<std::size_t> shared_refs_{1};
