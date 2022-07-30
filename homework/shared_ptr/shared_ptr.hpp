@@ -3,56 +3,81 @@
 
 namespace my {
 
+class controlBlock {
+public:
+    controlBlock() noexcept
+        : shared_refs_(1) {
+    }
+
+    std::size_t getSharedRefs() const noexcept { return shared_refs_; }
+    void incrementSharedRefs() noexcept { shared_refs_ += 1; }
+    void decrementSharedRefs() noexcept { shared_refs_ -= 1; }
+
+private:
+    std::atomic<std::size_t> shared_refs_;
+};
+
 template <typename T>
 class shared_ptr {
-    class controlBlock {
-        friend class shared_ptr;
-
-    public:
-        controlBlock() noexcept
-            : shared_refs_(1) {
-        }
-
-        std::size_t getSharedRefs() const noexcept { return shared_refs_; }
-        void incrementSharedRefs() noexcept { shared_refs_ += 1; }
-        void decrementSharedRefs() noexcept { shared_refs_ -= 1; }
-
-    private:
-        std::atomic<std::size_t> shared_refs_;
-        void (*deleter)(T*) = [](T* ptr_) { delete ptr_; };
-    };
-
 public:
-    explicit shared_ptr(T* ptr = nullptr) noexcept
+    shared_ptr() noexcept
+        : ptr_(nullptr), ptrToControlBlock_{nullptr} {
+    }
+
+    shared_ptr(T* ptr) noexcept
         : ptr_(ptr) {
-        ptrToControlBlock_ = new controlBlock;
+        if (ptr_) {
+            ptrToControlBlock_ = new controlBlock;
+        } else {
+            ptrToControlBlock_ = nullptr;
+        }
     }
 
-    constexpr shared_ptr(T* ptr, void (*deleter)(T*)) noexcept
-        : shared_ptr(ptr) {
-        ptrToControlBlock_->deleter = deleter;
+    shared_ptr(const shared_ptr& other) noexcept {
+        if (other.ptr_ == nullptr) {
+            ptr_ = nullptr;
+            ptrToControlBlock_ = nullptr;
+        } else {
+            ptr_ = other.ptr_;
+            ptrToControlBlock_ = other.ptrToControlBlock_;
+            ptrToControlBlock_->incrementSharedRefs();
+        }
     }
 
-    shared_ptr(const shared_ptr& other) noexcept
-        : ptr_(other.ptr_), ptrToControlBlock_(other.ptrToControlBlock_) {
-        ptrToControlBlock_->incrementSharedRefs();
-    }
-
-    shared_ptr(shared_ptr&& other) noexcept
-        : ptr_(other.ptr_), ptrToControlBlock_(other.ptrToControlBlock_) {
-        other.ptr_ = nullptr;
-        other.ptrToControlBlock_ = nullptr;
+    shared_ptr(shared_ptr&& other) noexcept {
+        if (&other != this) {
+            ptr_ = std::move(other.ptr_);
+            ptrToControlBlock_ = std::move(other.ptrToControlBlock_);
+            other.ptr_ = nullptr;
+            other.ptrToControlBlock_ = nullptr;
+        }
     }
 
     ~shared_ptr() {
-        ptrToControlBlock_->decrementSharedRefs();
-        cleanUp();
+        if (ptrToControlBlock_) {
+            ptrToControlBlock_->decrementSharedRefs();
+            if (ptrToControlBlock_->getSharedRefs() == 0) {
+                delete ptr_;
+            }
+            if (ptrToControlBlock_->getSharedRefs() == 0 && ptrToControlBlock_->getWeakRefs() == 0) {
+                delete ptrToControlBlock_;
+            }
+        }
     }
 
     shared_ptr<T>& operator=(shared_ptr& other) noexcept {
-        if (ptr_ != other.ptr) {
-            ptrToControlBlock_->decrementSharedRefs();
+        if (&other != this && other.ptr_ != nullptr) {
+            ptr_ = other.ptr_;
+            ptrToControlBlock_ = other.ptrToControlBlock_;
+            ptrToControlBlock_->incrementSharedRefs();
+            return *this;
+        } else if (&other != this && other.ptr_ == nullptr) {
+            delete ptr_;
+            ptr_ = nullptr;
+            delete ptrToControlBlock_;
+            return *this;
         }
+        return *this;
     }
 
     shared_ptr<T>& operator=(shared_ptr&& other) noexcept {
@@ -119,12 +144,6 @@ public:
 private:
     T* ptr_;
     controlBlock* ptrToControlBlock_;
-
-    void cleanUp() {
-        if (ptrToControlBlock_->getSharedRefs()) {
-            ptrToControlBlock_->deleter(ptr_);
-        }
-    }
 };
 
 }  // namespace my

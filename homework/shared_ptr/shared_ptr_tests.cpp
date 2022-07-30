@@ -90,15 +90,15 @@ TEST_F(shared_ptrFixture, MoveAssingnmentOperatorTest) {
 
     my::shared_ptr<int> ptrToInt3;
     EXPECT_EQ(ptrToInt3.use_count(), 0);
-    // ptrToInt3 = std::move(rawPtr);
-    // rawPtr = nullptr;
-    // EXPECT_EQ(*ptrToInt3, 20);
+    ptrToInt3 = std::move(rawPtr);
+    rawPtr = nullptr;
+    EXPECT_EQ(*ptrToInt3, 20);
     EXPECT_EQ(ptrToInt3.use_count(), 1);
 
     my::shared_ptr<int> ptrToInt4;
     EXPECT_EQ(ptrToInt4.use_count(), 0);
-    // ptrToInt4 = nullptr;
-    // EXPECT_EQ(ptrToInt4.get(), nullptr);
+    ptrToInt4 = nullptr;
+    EXPECT_EQ(ptrToInt4.get(), nullptr);
     EXPECT_EQ(ptrToInt4.use_count(), 0);
 }
 
