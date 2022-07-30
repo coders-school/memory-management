@@ -22,11 +22,7 @@ class shared_ptr {
     };
 
 public:
-    shared_ptr() noexcept
-        : ptr_(nullptr), ptrToControlBlock_{nullptr} {
-    }
-
-    shared_ptr(T* ptr) noexcept
+    shared_ptr(T* ptr = nullptr) noexcept
         : ptr_(ptr) {
         if (ptr_) {
             ptrToControlBlock_ = new controlBlock;
