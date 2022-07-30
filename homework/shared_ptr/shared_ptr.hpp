@@ -41,21 +41,20 @@ public:
         ptrToControlBlock_->deleter_ = deleter;
     }
 
-    shared_ptr(const shared_ptr& other) noexcept {
-        if (other.ptr_ == nullptr) {
-            ptr_ = nullptr;
-            ptrToControlBlock_ = nullptr;
-        } else {
-            ptr_ = other.ptr_;
-            ptrToControlBlock_ = other.ptrToControlBlock_;
+    shared_ptr(const shared_ptr& other) noexcept
+        : ptr_(other.ptr_), ptrToControlBlock_(other.ptrToControlBlock_) {
+        if (ptr_) {
             ptrToControlBlock_->shared_refs_++;
         }
     }
 
     shared_ptr(shared_ptr&& other) noexcept {
-        if (&other != this) {
-            ptr_ = std::move(other.ptr_);
-            ptrToControlBlock_ = std::move(other.ptrToControlBlock_);
+        if (other.ptr_ == nullptr) {
+            ptr_ = nullptr;
+            ptrToControlBlock_ = nullptr;
+        } else if (other.ptr_ != nullptr) {
+            ptr_ = other.ptr_;
+            ptrToControlBlock_ = other.ptrToControlBlock_;
             other.ptr_ = nullptr;
             other.ptrToControlBlock_ = nullptr;
         }
@@ -72,30 +71,64 @@ public:
     }
 
     shared_ptr<T>& operator=(shared_ptr& other) noexcept {
-        if (&other != this && other.ptr_ != nullptr) {
+        if (ptr_ == other.ptr_) {
+        } else if (ptr_ == nullptr && other.ptr_ == nullptr) {
+            ptr_ = nullptr;
+            ptrToControlBlock_ = nullptr;
+        } else if (ptr_ == nullptr && other.ptr_ != nullptr) {
             ptr_ = other.ptr_;
             ptrToControlBlock_ = other.ptrToControlBlock_;
             ptrToControlBlock_->shared_refs_++;
-            return *this;
-        } else if (&other != this && other.ptr_ == nullptr) {
-            delete ptr_;
+        } else if (ptr_ != nullptr && other.ptr_ == nullptr) {
+            ptrToControlBlock_->shared_refs_--;
+            if (ptrToControlBlock_->shared_refs_ == 0) {
+                std::invoke(ptrToControlBlock_->deleter_, ptr_);
+                delete ptrToControlBlock_;
+            }
             ptr_ = nullptr;
-            delete ptrToControlBlock_;
-            return *this;
+            ptrToControlBlock_ = nullptr;
+        } else if (ptr_ != nullptr && other.ptr_ != nullptr) {
+            ptrToControlBlock_->shared_refs_--;
+            if (ptrToControlBlock_->shared_refs_ == 0) {
+                std::invoke(ptrToControlBlock_->deleter_, ptr_);
+                delete ptrToControlBlock_;
+            }
+            ptr_ = other.ptr_;
+            ptrToControlBlock_ = other.ptrToControlBlock_;
+            ptrToControlBlock_->shared_refs_++;
         }
         return *this;
     }
 
     shared_ptr<T>& operator=(shared_ptr&& other) noexcept {
-        if (&other != this && other.ptr_ != nullptr) {
-            ptr_ = std::move(other.ptr_);
-            ptrToControlBlock_ = std::move(other.ptrToControlBlock_);
+        if (ptr_ == other.ptr_) {
+        } else if (ptr_ == nullptr && other.ptr_ == nullptr) {
+            ptr_ = nullptr;
+            ptrToControlBlock_ = nullptr;
+        } else if (ptr_ == nullptr && other.ptr_ != nullptr) {
+            ptr_ = other.ptr_;
+            ptrToControlBlock_ = other.ptrToControlBlock_;
             other.ptr_ = nullptr;
             other.ptrToControlBlock_ = nullptr;
-        } else if (&other != this && other.ptr_ == nullptr) {
-            delete ptr_;
+        } else if (ptr_ != nullptr && other.ptr_ == nullptr) {
+            ptrToControlBlock_->shared_refs_--;
+            if (ptrToControlBlock_->shared_refs_ == 0) {
+                std::invoke(ptrToControlBlock_->deleter_, ptr_);
+                delete ptrToControlBlock_;
+            }
             ptr_ = nullptr;
-            delete ptrToControlBlock_;
+            ptrToControlBlock_ = nullptr;
+        } else if (ptr_ != nullptr && other.ptr_ != nullptr) {
+            ptrToControlBlock_->shared_refs_--;
+            if (ptrToControlBlock_->shared_refs_ == 0) {
+                std::invoke(ptrToControlBlock_->deleter_, ptr_);
+                delete ptrToControlBlock_;
+            }
+
+            ptr_ = other.ptr_;
+            ptrToControlBlock_ = other.ptrToControlBlock_;
+            other.ptr_ = nullptr;
+            other.ptrToControlBlock_ = nullptr;
         }
         return *this;
     }
@@ -148,8 +181,8 @@ public:
     }
 
 private:
-    T* ptr_;
-    controlBlock* ptrToControlBlock_;
+    T* ptr_{nullptr};
+    controlBlock* ptrToControlBlock_{nullptr};
 };
 
 }  // namespace my
