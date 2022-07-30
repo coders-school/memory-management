@@ -44,10 +44,7 @@ public:
     }
 
     shared_ptr(shared_ptr&& other) noexcept {
-        if (!other.ptr_) {
-            ptr_ = nullptr;
-            ptrToControlBlock_ = nullptr;
-        } else if (other.ptr_) {
+        if (other.ptr_) {
             ptr_ = other.ptr_;
             ptrToControlBlock_ = other.ptrToControlBlock_;
             other.ptr_ = nullptr;
@@ -57,11 +54,7 @@ public:
 
     ~shared_ptr() {
         if (ptrToControlBlock_) {
-            ptrToControlBlock_->shared_refs_--;
-            if (ptrToControlBlock_->shared_refs_ == 0) {
-                std::invoke(ptrToControlBlock_->deleter_, ptr_);
-                delete ptrToControlBlock_;
-            }
+            cleanUp();
         }
     }
 
@@ -75,19 +68,11 @@ public:
             ptrToControlBlock_ = other.ptrToControlBlock_;
             ptrToControlBlock_->shared_refs_++;
         } else if (ptr_ && !other.ptr_) {
-            ptrToControlBlock_->shared_refs_--;
-            if (ptrToControlBlock_->shared_refs_ == 0) {
-                std::invoke(ptrToControlBlock_->deleter_, ptr_);
-                delete ptrToControlBlock_;
-            }
+            cleanUp();
             ptr_ = nullptr;
             ptrToControlBlock_ = nullptr;
         } else if (ptr_ && other.ptr_) {
-            ptrToControlBlock_->shared_refs_--;
-            if (ptrToControlBlock_->shared_refs_ == 0) {
-                std::invoke(ptrToControlBlock_->deleter_, ptr_);
-                delete ptrToControlBlock_;
-            }
+            cleanUp();
             ptr_ = other.ptr_;
             ptrToControlBlock_ = other.ptrToControlBlock_;
             ptrToControlBlock_->shared_refs_++;
@@ -106,20 +91,11 @@ public:
             other.ptr_ = nullptr;
             other.ptrToControlBlock_ = nullptr;
         } else if (ptr_ && !other.ptr_) {
-            ptrToControlBlock_->shared_refs_--;
-            if (ptrToControlBlock_->shared_refs_ == 0) {
-                std::invoke(ptrToControlBlock_->deleter_, ptr_);
-                delete ptrToControlBlock_;
-            }
+            cleanUp();
             ptr_ = nullptr;
             ptrToControlBlock_ = nullptr;
         } else if (ptr_ && other.ptr_) {
-            ptrToControlBlock_->shared_refs_--;
-            if (ptrToControlBlock_->shared_refs_ == 0) {
-                std::invoke(ptrToControlBlock_->deleter_, ptr_);
-                delete ptrToControlBlock_;
-            }
-
+            cleanUp();
             ptr_ = other.ptr_;
             ptrToControlBlock_ = other.ptrToControlBlock_;
             other.ptr_ = nullptr;
@@ -178,6 +154,14 @@ public:
 private:
     T* ptr_{nullptr};
     controlBlock* ptrToControlBlock_{nullptr};
+
+    void cleanUp() {
+        ptrToControlBlock_->shared_refs_--;
+        if (ptrToControlBlock_->shared_refs_ == 0) {
+            std::invoke(ptrToControlBlock_->deleter_, ptr_);
+            delete ptrToControlBlock_;
+        }
+    }
 };
 
 }  // namespace my
