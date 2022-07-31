@@ -1,8 +1,6 @@
 #include <gtest/gtest.h>
 #include "shared_ptr.hpp"
 
-template class my::shared_ptr<int>;
-
 class TestClass {
 public:
     int number_{100};
@@ -10,6 +8,9 @@ public:
         return number_;
     }
 };
+
+template class my::shared_ptr<int>;
+template class my::shared_ptr<TestClass>;
 
 class shared_ptrFixture : public ::testing::Test {
 public:
@@ -41,6 +42,12 @@ TEST_F(shared_ptrFixture, ParametricCtorTest) {
     EXPECT_EQ(ptrToInt3.use_count(), 0);
 }
 
+TEST_F(shared_ptrFixture, ParametricCtorWithDeleterTest) {
+    my::shared_ptr<int> ptrToInt2{rawPtr, [](int* ptr_) { delete ptr_; }};
+    rawPtr = nullptr;
+    EXPECT_EQ(*ptrToInt2, 20);
+}
+
 TEST_F(shared_ptrFixture, CopyCtorTest) {
     my::shared_ptr<int> ptrToInt2{ptrToInt1};
     EXPECT_EQ(*ptrToInt2, 10);
@@ -62,12 +69,12 @@ TEST_F(shared_ptrFixture, MoveCtorTest) {
     EXPECT_EQ(*ptrToInt2, 10);
     EXPECT_EQ(ptrToInt2.use_count(), 1);
 
-    my::shared_ptr<int> ptrToInt3(rawPtr);
+    my::shared_ptr<int> ptrToInt3{rawPtr};
     rawPtr = nullptr;
     EXPECT_EQ(*ptrToInt3, 20);
     EXPECT_EQ(ptrToInt3.use_count(), 1);
 
-    my::shared_ptr<int> ptrToInt4(emptyPtr);
+    my::shared_ptr<int> ptrToInt4{emptyPtr};
     EXPECT_EQ(ptrToInt4.get(), nullptr);
     EXPECT_EQ(ptrToInt4.use_count(), 0);
 }
@@ -102,6 +109,11 @@ TEST_F(shared_ptrFixture, MoveAssingnmentOperatorTest) {
     ptrToInt4 = nullptr;
     EXPECT_EQ(ptrToInt4.get(), nullptr);
     EXPECT_EQ(ptrToInt4.use_count(), 0);
+}
+
+TEST_F(shared_ptrFixture, BoolOperatorTest) {
+    EXPECT_FALSE(emptyPtr);
+    EXPECT_TRUE(ptrToInt1);
 }
 
 TEST_F(shared_ptrFixture, AsteriskOperatorTest) {
@@ -145,6 +157,6 @@ TEST_F(shared_ptrFixture, UseCountFunctionTest) {
     EXPECT_EQ(ptrToClass.use_count(), 1);
 }
 
-TEST_F(shared_ptrFixture, getControlBlockRefTest) {
+TEST_F(shared_ptrFixture, getControlBlockPtrTest) {
     EXPECT_EQ(emptyPtr.getControlBlockPtr(), nullptr);
 }
