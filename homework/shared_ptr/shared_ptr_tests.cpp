@@ -3,13 +3,16 @@
 
 class TestClass {
 public:
-    int number_{100};
-    int numberReturn() {
+    TestClass(int number = 2) noexcept
+        : number_(number) {}
+    int getNumber() {
         return number_;
     }
+
+private:
+    int number_;
 };
 
-template class my::shared_ptr<int>;
 template class my::shared_ptr<TestClass>;
 
 class shared_ptrFixture : public ::testing::Test {
@@ -19,10 +22,9 @@ public:
     }
 
 protected:
-    my::shared_ptr<int> emptyPtr;
-    my::shared_ptr<int> ptrToInt1{new int{10}};
-    my::shared_ptr<TestClass> ptrToClass{new TestClass};
-    int* rawPtr{new int{20}};
+    my::shared_ptr<TestClass> emptyPtr;
+    my::shared_ptr<TestClass> ptrToClass1{new TestClass{10}};
+    TestClass* rawPtr{new TestClass{20}};
 };
 
 TEST_F(shared_ptrFixture, DefaultCtorTest) {
@@ -30,94 +32,94 @@ TEST_F(shared_ptrFixture, DefaultCtorTest) {
 }
 
 TEST_F(shared_ptrFixture, ParametricCtorTest) {
-    EXPECT_EQ(*ptrToInt1, 10);
+    EXPECT_EQ((*ptrToClass1).getNumber(), 10);
 
-    my::shared_ptr<int> ptrToInt2{rawPtr};
+    my::shared_ptr<TestClass> ptrToClass2{rawPtr};
     rawPtr = nullptr;
-    EXPECT_EQ(*ptrToInt2, 20);
-    EXPECT_EQ(ptrToInt1.use_count(), 1);
+    EXPECT_EQ((*ptrToClass2).getNumber(), 20);
+    EXPECT_EQ(ptrToClass1.use_count(), 1);
 
-    my::shared_ptr<int> ptrToInt3(nullptr);
-    EXPECT_EQ(ptrToInt3.get(), nullptr);
-    EXPECT_EQ(ptrToInt3.use_count(), 0);
+    my::shared_ptr<TestClass> ptrToClass3(nullptr);
+    EXPECT_EQ(ptrToClass3.get(), nullptr);
+    EXPECT_EQ(ptrToClass3.use_count(), 0);
 }
 
 TEST_F(shared_ptrFixture, ParametricCtorWithDeleterTest) {
-    my::shared_ptr<int> ptrToInt2{rawPtr, [](int* ptr_) { delete ptr_; }};
+    my::shared_ptr<TestClass> ptrToClass2{rawPtr, [](TestClass* ptr_) { delete ptr_; }};
     rawPtr = nullptr;
-    EXPECT_EQ(*ptrToInt2, 20);
+    EXPECT_EQ((*ptrToClass2).getNumber(), 20);
 }
 
 TEST_F(shared_ptrFixture, CopyCtorTest) {
-    my::shared_ptr<int> ptrToInt2{ptrToInt1};
-    EXPECT_EQ(*ptrToInt2, 10);
-    EXPECT_EQ(ptrToInt1.use_count(), 2);
+    my::shared_ptr<TestClass> ptrToClass2{ptrToClass1};
+    EXPECT_EQ((*ptrToClass2).getNumber(), 10);
+    EXPECT_EQ(ptrToClass1.use_count(), 2);
 
-    my::shared_ptr<int> ptrToInt3{ptrToInt2};
-    EXPECT_EQ(*ptrToInt3, 10);
-    EXPECT_EQ(ptrToInt3.use_count(), 3);
+    my::shared_ptr<TestClass> ptrToClass3{ptrToClass2};
+    EXPECT_EQ((*ptrToClass3).getNumber(), 10);
+    EXPECT_EQ(ptrToClass3.use_count(), 3);
 
-    my::shared_ptr<int> ptrToInt4{emptyPtr};
-    EXPECT_EQ(ptrToInt4.get(), nullptr);
-    EXPECT_EQ(ptrToInt4.use_count(), 0);
+    my::shared_ptr<TestClass> ptrToClass4{emptyPtr};
+    EXPECT_EQ(ptrToClass4.get(), nullptr);
+    EXPECT_EQ(ptrToClass4.use_count(), 0);
 }
 
 TEST_F(shared_ptrFixture, MoveCtorTest) {
-    my::shared_ptr<int> ptrToInt2{std::move(ptrToInt1)};
-    EXPECT_EQ(ptrToInt1.get(), nullptr);
-    EXPECT_EQ(ptrToInt1.use_count(), 0);
-    EXPECT_EQ(*ptrToInt2, 10);
-    EXPECT_EQ(ptrToInt2.use_count(), 1);
+    my::shared_ptr<TestClass> ptrToClass2{std::move(ptrToClass1)};
+    EXPECT_EQ(ptrToClass1.get(), nullptr);
+    EXPECT_EQ(ptrToClass1.use_count(), 0);
+    EXPECT_EQ((*ptrToClass2).getNumber(), 10);
+    EXPECT_EQ(ptrToClass2.use_count(), 1);
 
-    my::shared_ptr<int> ptrToInt3{rawPtr};
+    my::shared_ptr<TestClass> ptrToClass3{rawPtr};
     rawPtr = nullptr;
-    EXPECT_EQ(*ptrToInt3, 20);
-    EXPECT_EQ(ptrToInt3.use_count(), 1);
+    EXPECT_EQ((*ptrToClass3).getNumber(), 20);
+    EXPECT_EQ(ptrToClass3.use_count(), 1);
 
-    my::shared_ptr<int> ptrToInt4{emptyPtr};
-    EXPECT_EQ(ptrToInt4.get(), nullptr);
-    EXPECT_EQ(ptrToInt4.use_count(), 0);
+    my::shared_ptr<TestClass> ptrToClass4{emptyPtr};
+    EXPECT_EQ(ptrToClass4.get(), nullptr);
+    EXPECT_EQ(ptrToClass4.use_count(), 0);
 }
 
 TEST_F(shared_ptrFixture, CopyAssingnmentOperatorTest) {
-    my::shared_ptr<int> ptrToInt2 = ptrToInt1;
-    EXPECT_EQ(*ptrToInt2, 10);
-    EXPECT_EQ(ptrToInt2.use_count(), 2);
+    my::shared_ptr<TestClass> ptrToClass2 = ptrToClass1;
+    EXPECT_EQ((*ptrToClass2).getNumber(), 10);
+    EXPECT_EQ(ptrToClass2.use_count(), 2);
 
-    my::shared_ptr<int> ptrToInt3 = emptyPtr;
-    EXPECT_EQ(ptrToInt3.get(), nullptr);
-    EXPECT_EQ(ptrToInt3.use_count(), 0);
+    my::shared_ptr<TestClass> ptrToClass3 = emptyPtr;
+    EXPECT_EQ(ptrToClass3.get(), nullptr);
+    EXPECT_EQ(ptrToClass3.use_count(), 0);
 }
 
 TEST_F(shared_ptrFixture, MoveAssingnmentOperatorTest) {
-    my::shared_ptr<int> ptrToInt2;
-    ptrToInt2 = std::move(ptrToInt1);
-    EXPECT_EQ(ptrToInt1.get(), nullptr);
-    EXPECT_EQ(ptrToInt1.use_count(), 0);
-    EXPECT_EQ(*ptrToInt2, 10);
-    EXPECT_EQ(ptrToInt2.use_count(), 1);
+    my::shared_ptr<TestClass> ptrToClass2;
+    ptrToClass2 = std::move(ptrToClass1);
+    EXPECT_EQ(ptrToClass1.get(), nullptr);
+    EXPECT_EQ(ptrToClass1.use_count(), 0);
+    EXPECT_EQ(*ptrToClass2, 10);
+    EXPECT_EQ(ptrToClass2.use_count(), 1);
 
-    my::shared_ptr<int> ptrToInt3;
-    EXPECT_EQ(ptrToInt3.use_count(), 0);
-    ptrToInt3 = std::move(rawPtr);
+    my::shared_ptr<TestClass> ptrToClass3;
+    EXPECT_EQ(ptrToClass3.use_count(), 0);
+    ptrToClass3 = std::move(rawPtr);
     rawPtr = nullptr;
-    EXPECT_EQ(*ptrToInt3, 20);
-    EXPECT_EQ(ptrToInt3.use_count(), 1);
+    EXPECT_EQ((*ptrToClass3).getNumber(), 20);
+    EXPECT_EQ(ptrToClass3.use_count(), 1);
 
-    my::shared_ptr<int> ptrToInt4;
-    EXPECT_EQ(ptrToInt4.use_count(), 0);
-    ptrToInt4 = nullptr;
-    EXPECT_EQ(ptrToInt4.get(), nullptr);
-    EXPECT_EQ(ptrToInt4.use_count(), 0);
+    my::shared_ptr<TestClass> ptrToClass4;
+    EXPECT_EQ(ptrToClass4.use_count(), 0);
+    ptrToClass4 = nullptr;
+    EXPECT_EQ(ptrToClass4.get(), nullptr);
+    EXPECT_EQ(ptrToClass4.use_count(), 0);
 }
 
 TEST_F(shared_ptrFixture, BoolOperatorTest) {
     EXPECT_FALSE(emptyPtr);
-    EXPECT_TRUE(ptrToInt1);
+    EXPECT_TRUE(ptrToClass1);
 }
 
 TEST_F(shared_ptrFixture, AsteriskOperatorTest) {
-    EXPECT_EQ(*ptrToInt1, 10);
+    EXPECT_EQ((*ptrToClass1).getNumber(), 10);
 }
 
 TEST_F(shared_ptrFixture, ArrowOperatorTest) {
@@ -126,8 +128,8 @@ TEST_F(shared_ptrFixture, ArrowOperatorTest) {
 }
 
 TEST_F(shared_ptrFixture, GetFunctionTest) {
-    my::shared_ptr<int> ptrToInt2{new int{20}};
-    EXPECT_EQ(*ptrToInt2.get(), *rawPtr);
+    my::shared_ptr<TestClass> ptrToClass2{new TestClass{20}};
+    EXPECT_EQ(*ptrToClass2.get(), *rawPtr);
 
     EXPECT_EQ(emptyPtr.get(), nullptr);
 }
@@ -147,13 +149,13 @@ TEST_F(shared_ptrFixture, ResetFunctionWithParamaterTest) {
 }
 
 TEST_F(shared_ptrFixture, ResetFunctionTest) {
-    ptrToInt1.reset();
-    EXPECT_EQ(ptrToInt1.get(), nullptr);
+    ptrToClass1.reset();
+    EXPECT_EQ(ptrToClass1.get(), nullptr);
 }
 
 TEST_F(shared_ptrFixture, UseCountFunctionTest) {
     EXPECT_EQ(emptyPtr.use_count(), 0);
-    EXPECT_EQ(ptrToInt1.use_count(), 1);
+    EXPECT_EQ(ptrToClass1.use_count(), 1);
     EXPECT_EQ(ptrToClass.use_count(), 1);
 }
 
