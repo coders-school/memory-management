@@ -9,7 +9,6 @@ public:
         return number_;
     }
 
-private:
     int number_;
 };
 
@@ -96,7 +95,7 @@ TEST_F(shared_ptrFixture, MoveAssingnmentOperatorTest) {
     ptrToClass2 = std::move(ptrToClass1);
     EXPECT_EQ(ptrToClass1.get(), nullptr);
     EXPECT_EQ(ptrToClass1.use_count(), 0);
-    EXPECT_EQ(*ptrToClass2, 10);
+    EXPECT_EQ((*ptrToClass2).getNumber(), 10);
     EXPECT_EQ(ptrToClass2.use_count(), 1);
 
     my::shared_ptr<TestClass> ptrToClass3;
@@ -123,29 +122,28 @@ TEST_F(shared_ptrFixture, AsteriskOperatorTest) {
 }
 
 TEST_F(shared_ptrFixture, ArrowOperatorTest) {
-    EXPECT_EQ(ptrToClass->number_, 100);
-    EXPECT_EQ(ptrToClass->numberReturn(), 100);
+    EXPECT_EQ(ptrToClass1->number_, 2);
 }
 
 TEST_F(shared_ptrFixture, GetFunctionTest) {
-    my::shared_ptr<TestClass> ptrToClass2{new TestClass{20}};
-    EXPECT_EQ(*ptrToClass2.get(), *rawPtr);
+    my::shared_ptr<TestClass> ptrToClass2{rawPtr};
+    EXPECT_EQ(ptrToClass2.get(), rawPtr);
 
     EXPECT_EQ(emptyPtr.get(), nullptr);
 }
 
 TEST_F(shared_ptrFixture, ReleaseFunctionTest) {
     TestClass* rawPtrToTestClass;
-    rawPtrToTestClass = ptrToClass.release();
-    EXPECT_EQ(rawPtrToTestClass->number_, 100);
-    EXPECT_EQ(ptrToClass.get(), nullptr);
+    rawPtrToTestClass = ptrToClass1.release();
+    EXPECT_EQ((*rawPtrToTestClass).getNumber(), 100);
+    EXPECT_EQ(ptrToClass1.get(), nullptr);
     delete rawPtrToTestClass;
 }
 
 TEST_F(shared_ptrFixture, ResetFunctionWithParamaterTest) {
-    ptrToClass->number_ = 50;
-    ptrToClass.reset(new TestClass);
-    EXPECT_EQ(ptrToClass->number_, 100);
+    ptrToClass1->number_ = 50;
+    ptrToClass1.reset(new TestClass);
+    EXPECT_EQ((*ptrToClass1).getNumber(), 2);
 }
 
 TEST_F(shared_ptrFixture, ResetFunctionTest) {
@@ -156,7 +154,7 @@ TEST_F(shared_ptrFixture, ResetFunctionTest) {
 TEST_F(shared_ptrFixture, UseCountFunctionTest) {
     EXPECT_EQ(emptyPtr.use_count(), 0);
     EXPECT_EQ(ptrToClass1.use_count(), 1);
-    EXPECT_EQ(ptrToClass.use_count(), 1);
+    EXPECT_EQ(ptrToClass1.use_count(), 1);
 }
 
 TEST_F(shared_ptrFixture, getControlBlockPtrTest) {
