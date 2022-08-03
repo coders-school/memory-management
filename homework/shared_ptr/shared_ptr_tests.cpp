@@ -74,7 +74,21 @@ TEST_F(shared_ptrFixture, MoveCtorTest) {
     my::shared_ptr<TestClass> ptrToClass4{emptyPtr};
     EXPECT_EQ(ptrToClass4.get(), nullptr);
     EXPECT_EQ(ptrToClass4.use_count(), 0);
+
+    my::shared_ptr<TestClass> ptrToClass5{nullptr};
+    EXPECT_EQ(ptrToClass5.get(), nullptr);
+    EXPECT_EQ(ptrToClass5.use_count(), 0);
 }
+
+// TEST_F(shared_ptrFixture, DtorTest) {
+//     my::shared_ptr<TestClass>* rawPtrToSharedPointer{nullptr};
+//     my::shared_ptr<TestClass> ptrToClass2{new TestClass{30}};
+//     rawPtrToSharedPointer = &ptrToClass2;
+//     EXPECT_EQ((*rawPtrToSharedPointer)->getNumber(), 30);
+//     EXPECT_EQ(ptrToClass2.use_count(), 1);
+//     rawPtrToSharedPointer->~shared_ptr();;
+//     ASSERT_EXIT((deref(nullptr),exit(0)),::testing::KilledBySignal(SIGSEGV),".*");
+// }
 
 TEST_F(shared_ptrFixture, CopyAssingnmentOperatorTest) {
     my::shared_ptr<TestClass> ptrToClass2 = ptrToClass1;
