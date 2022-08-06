@@ -53,7 +53,7 @@ public:
     }
 
     ~shared_ptr() {
-        if (ptrToControlBlock_) {
+        if (ptr_ || ptrToControlBlock_) {
             cleanUp();
         }
     }
@@ -61,8 +61,8 @@ public:
     shared_ptr& operator=(const shared_ptr& other) noexcept {
         if (ptr_ == other.ptr_) {
         } else if (!ptr_ && !other.ptr_) {
-            ptr_ = nullptr;
-            ptrToControlBlock_ = nullptr;
+            ptr_ = nullptr; // should be removed
+            ptrToControlBlock_ = nullptr; // should be removed
         } else if (!ptr_ && other.ptr_) {
             ptr_ = other.ptr_;
             ptrToControlBlock_ = other.ptrToControlBlock_;
@@ -83,8 +83,8 @@ public:
     shared_ptr& operator=(shared_ptr&& other) noexcept {
         if (ptr_ == other.ptr_) {
         } else if (!ptr_ && !other.ptr_) {
-            ptr_ = nullptr;
-            ptrToControlBlock_ = nullptr;
+            ptr_ = nullptr; // should be removed 
+            ptrToControlBlock_ = nullptr; // should be removed
         } else if (!ptr_ && other.ptr_) {
             ptr_ = other.ptr_;
             ptrToControlBlock_ = other.ptrToControlBlock_;
@@ -159,7 +159,9 @@ private:
         ptrToControlBlock_->shared_refs_--;
         if (ptrToControlBlock_->shared_refs_ == 0) {
             std::invoke(ptrToControlBlock_->deleter_, ptr_);
+            ptr_ = nullptr;
             delete ptrToControlBlock_;
+            ptrToControlBlock_ = nullptr;
         }
     }
 };

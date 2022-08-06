@@ -80,46 +80,81 @@ TEST_F(shared_ptrFixture, MoveCtorTest) {
     EXPECT_EQ(ptrToClass5.use_count(), 0);
 }
 
-// TEST_F(shared_ptrFixture, DtorTest) {
-//     my::shared_ptr<TestClass>* rawPtrToSharedPointer{nullptr};
-//     my::shared_ptr<TestClass> ptrToClass2{new TestClass{30}};
-//     rawPtrToSharedPointer = &ptrToClass2;
-//     EXPECT_EQ((*rawPtrToSharedPointer)->getNumber(), 30);
-//     EXPECT_EQ(ptrToClass2.use_count(), 1);
-//     rawPtrToSharedPointer->~shared_ptr();;
-//     ASSERT_EXIT((deref(nullptr),exit(0)),::testing::KilledBySignal(SIGSEGV),".*");
-// }
+TEST_F(shared_ptrFixture, DtorTest) {
+    my::shared_ptr<TestClass> ptrToClass2{new TestClass{30}};
+    my::shared_ptr<TestClass> ptrToClass3{ptrToClass2};
+    EXPECT_EQ(ptrToClass2.use_count(), 2);
+    // ptrToClass3.~shared_ptr();
+    EXPECT_EQ(ptrToClass2.use_count(), 1);
+    // ptrToClass2.~shared_ptr();
+    // EXPECT_EQ(ptrToClass2.use_count(), 0);
+    // EXPECT_EQ(ptrToClass2.get(), nullptr);
+    // EXPECT_EQ(ptrToClass2.getControlBlockPtr(), nullptr);
+}
 
 TEST_F(shared_ptrFixture, CopyAssingnmentOperatorTest) {
-    my::shared_ptr<TestClass> ptrToClass2 = ptrToClass1;
-    EXPECT_EQ((*ptrToClass2).getNumber(), 10);
-    EXPECT_EQ(ptrToClass2.use_count(), 2);
+    my::shared_ptr<TestClass> ptrToClass2{ptrToClass1};
+    ptrToClass2 = ptrToClass1;
+    EXPECT_EQ(ptrToClass1.get(), ptrToClass2.get());
 
-    my::shared_ptr<TestClass> ptrToClass3 = emptyPtr;
+    my::shared_ptr<TestClass> ptrToClass3{};
+    my::shared_ptr<TestClass> ptrToClass4{};
+    ptrToClass3 = ptrToClass4;
     EXPECT_EQ(ptrToClass3.get(), nullptr);
+    EXPECT_EQ(ptrToClass3.getControlBlockPtr(), nullptr);
     EXPECT_EQ(ptrToClass3.use_count(), 0);
+    EXPECT_EQ(ptrToClass4.get(), nullptr);
+    EXPECT_EQ(ptrToClass4.getControlBlockPtr(), nullptr);
+    EXPECT_EQ(ptrToClass4.use_count(), 0);
+
+    my::shared_ptr<TestClass> ptrToClass5{new TestClass{30}};
+    std::cout<<"Hello"<<std::endl;
 }
 
 TEST_F(shared_ptrFixture, MoveAssingnmentOperatorTest) {
-    my::shared_ptr<TestClass> ptrToClass2;
-    ptrToClass2 = std::move(ptrToClass1);
-    EXPECT_EQ(ptrToClass1.get(), nullptr);
-    EXPECT_EQ(ptrToClass1.use_count(), 0);
-    EXPECT_EQ((*ptrToClass2).getNumber(), 10);
-    EXPECT_EQ(ptrToClass2.use_count(), 1);
+    my::shared_ptr<TestClass>ptrToClass2{ptrToClass1};
+    ptrToClass2 = ptrToClass1;
+    EXPECT_EQ(ptrToClass1.get(), ptrToClass2.get());
 
-    my::shared_ptr<TestClass> ptrToClass3;
+    my::shared_ptr<TestClass> ptrToClass3{};
+    my::shared_ptr<TestClass> ptrToClass4{};
+    ptrToClass3 = ptrToClass4;
+    EXPECT_EQ(ptrToClass3.get(), nullptr);
+    EXPECT_EQ(ptrToClass3.getControlBlockPtr(), nullptr);
     EXPECT_EQ(ptrToClass3.use_count(), 0);
-    ptrToClass3 = std::move(rawPtr);
-    rawPtr = nullptr;
-    EXPECT_EQ((*ptrToClass3).getNumber(), 20);
-    EXPECT_EQ(ptrToClass3.use_count(), 1);
-
-    my::shared_ptr<TestClass> ptrToClass4;
-    EXPECT_EQ(ptrToClass4.use_count(), 0);
-    ptrToClass4 = nullptr;
     EXPECT_EQ(ptrToClass4.get(), nullptr);
+    EXPECT_EQ(ptrToClass4.getControlBlockPtr(), nullptr);
     EXPECT_EQ(ptrToClass4.use_count(), 0);
+    
+    // my::shared_ptr<TestClass> ptrToClass5{new TestClass{30}};
+
+
+
+
+
+
+
+
+
+    // my::shared_ptr<TestClass> ptrToClass2;
+    // ptrToClass2 = std::move(ptrToClass1);
+    // EXPECT_EQ(ptrToClass1.get(), nullptr);
+    // EXPECT_EQ(ptrToClass1.use_count(), 0);
+    // EXPECT_EQ((*ptrToClass2).getNumber(), 10);
+    // EXPECT_EQ(ptrToClass2.use_count(), 1);
+
+    // my::shared_ptr<TestClass> ptrToClass3;
+    // EXPECT_EQ(ptrToClass3.use_count(), 0);
+    // ptrToClass3 = std::move(rawPtr);
+    // rawPtr = nullptr;
+    // EXPECT_EQ((*ptrToClass3).getNumber(), 20);
+    // EXPECT_EQ(ptrToClass3.use_count(), 1);
+
+    // my::shared_ptr<TestClass> ptrToClass4;
+    // EXPECT_EQ(ptrToClass4.use_count(), 0);
+    // ptrToClass4 = nullptr;
+    // EXPECT_EQ(ptrToClass4.get(), nullptr);
+    // EXPECT_EQ(ptrToClass4.use_count(), 0);
 }
 
 TEST_F(shared_ptrFixture, BoolOperatorTest) {
