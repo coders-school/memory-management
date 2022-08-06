@@ -218,9 +218,9 @@ TEST_F(shared_ptrFixture, ResetFunctionTest) {
 TEST_F(shared_ptrFixture, UseCountFunctionTest) {
     EXPECT_EQ(emptyPtr.use_count(), 0);
     EXPECT_EQ(ptrToClass1.use_count(), 1);
-    EXPECT_EQ(ptrToClass1.use_count(), 1);
 }
 
 TEST_F(shared_ptrFixture, getControlBlockPtrTest) {
     EXPECT_EQ(emptyPtr.getControlBlockPtr(), nullptr);
+    EXPECT_NE(ptrToClass1.getControlBlockPtr(), nullptr);
 }
