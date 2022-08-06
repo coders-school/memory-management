@@ -81,15 +81,16 @@ TEST_F(shared_ptrFixture, MoveCtorTest) {
 }
 
 TEST_F(shared_ptrFixture, DtorTest) {
-    my::shared_ptr<TestClass> ptrToClass2{new TestClass{30}};
-    my::shared_ptr<TestClass> ptrToClass3{ptrToClass2};
-    EXPECT_EQ(ptrToClass2.use_count(), 2);
-    // ptrToClass3.~shared_ptr();
-    EXPECT_EQ(ptrToClass2.use_count(), 1);
-    // ptrToClass2.~shared_ptr();
-    // EXPECT_EQ(ptrToClass2.use_count(), 0);
-    // EXPECT_EQ(ptrToClass2.get(), nullptr);
-    // EXPECT_EQ(ptrToClass2.getControlBlockPtr(), nullptr);
+    {
+        my::shared_ptr<TestClass> ptrToClass2{new TestClass{30}};
+        {
+            my::shared_ptr<TestClass> ptrToClass3{ptrToClass2};
+            EXPECT_EQ(ptrToClass2.use_count(), 2);
+        }
+        EXPECT_EQ(ptrToClass2.use_count(), 1);
+        EXPECT_NE(ptrToClass2.get(), nullptr);
+        EXPECT_NE(ptrToClass2.getControlBlockPtr(), nullptr);
+    }
 }
 
 TEST_F(shared_ptrFixture, CopyAssingnmentOperatorTest) {
@@ -107,12 +108,35 @@ TEST_F(shared_ptrFixture, CopyAssingnmentOperatorTest) {
     EXPECT_EQ(ptrToClass4.getControlBlockPtr(), nullptr);
     EXPECT_EQ(ptrToClass4.use_count(), 0);
 
-    my::shared_ptr<TestClass> ptrToClass5{new TestClass{30}};
-    std::cout<<"Hello"<<std::endl;
+    my::shared_ptr<TestClass> ptrToClass5;
+    my::shared_ptr<TestClass> ptrToClass6{new TestClass{30}};
+    ptrToClass5 = ptrToClass6;
+    EXPECT_EQ((*ptrToClass5).getNumber(), 30);
+    EXPECT_EQ(ptrToClass5.get(), ptrToClass6.get());
+    EXPECT_EQ(ptrToClass5.getControlBlockPtr(), ptrToClass6.getControlBlockPtr());
+    EXPECT_EQ(ptrToClass5.use_count(), 2);
+
+    my::shared_ptr<TestClass> ptrToClass7{new TestClass{40}};
+    my::shared_ptr<TestClass> ptrToClass8;
+    ptrToClass7 = ptrToClass8;
+    EXPECT_EQ(ptrToClass7.get(), nullptr);
+    EXPECT_EQ(ptrToClass7.getControlBlockPtr(), nullptr);
+    EXPECT_EQ(ptrToClass7.use_count(), 0);
+    EXPECT_EQ(ptrToClass8.get(), nullptr);
+    EXPECT_EQ(ptrToClass8.getControlBlockPtr(), nullptr);
+    EXPECT_EQ(ptrToClass8.use_count(), 0);
+
+    my::shared_ptr<TestClass> ptrToClass9{new TestClass{50}};
+    my::shared_ptr<TestClass> ptrToClass10{new TestClass{60}};
+    ptrToClass9 = ptrToClass10;
+    EXPECT_EQ((*ptrToClass9).getNumber(), 60);
+    EXPECT_EQ(ptrToClass9.get(), ptrToClass10.get());
+    EXPECT_EQ(ptrToClass9.getControlBlockPtr(), ptrToClass10.getControlBlockPtr());
+    EXPECT_EQ(ptrToClass9.use_count(), 2);
 }
 
 TEST_F(shared_ptrFixture, MoveAssingnmentOperatorTest) {
-    my::shared_ptr<TestClass>ptrToClass2{ptrToClass1};
+    my::shared_ptr<TestClass> ptrToClass2{ptrToClass1};
     ptrToClass2 = ptrToClass1;
     EXPECT_EQ(ptrToClass1.get(), ptrToClass2.get());
 
@@ -125,16 +149,8 @@ TEST_F(shared_ptrFixture, MoveAssingnmentOperatorTest) {
     EXPECT_EQ(ptrToClass4.get(), nullptr);
     EXPECT_EQ(ptrToClass4.getControlBlockPtr(), nullptr);
     EXPECT_EQ(ptrToClass4.use_count(), 0);
-    
+
     // my::shared_ptr<TestClass> ptrToClass5{new TestClass{30}};
-
-
-
-
-
-
-
-
 
     // my::shared_ptr<TestClass> ptrToClass2;
     // ptrToClass2 = std::move(ptrToClass1);

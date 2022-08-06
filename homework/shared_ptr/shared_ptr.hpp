@@ -59,10 +59,7 @@ public:
     }
 
     shared_ptr& operator=(const shared_ptr& other) noexcept {
-        if (ptr_ == other.ptr_) {
-        } else if (!ptr_ && !other.ptr_) {
-            ptr_ = nullptr; // should be removed
-            ptrToControlBlock_ = nullptr; // should be removed
+        if (ptr_ == other.ptr_ || (!ptr_ && !other.ptr_)) {
         } else if (!ptr_ && other.ptr_) {
             ptr_ = other.ptr_;
             ptrToControlBlock_ = other.ptrToControlBlock_;
@@ -83,8 +80,8 @@ public:
     shared_ptr& operator=(shared_ptr&& other) noexcept {
         if (ptr_ == other.ptr_) {
         } else if (!ptr_ && !other.ptr_) {
-            ptr_ = nullptr; // should be removed 
-            ptrToControlBlock_ = nullptr; // should be removed
+            ptr_ = nullptr;                // should be removed
+            ptrToControlBlock_ = nullptr;  // should be removed
         } else if (!ptr_ && other.ptr_) {
             ptr_ = other.ptr_;
             ptrToControlBlock_ = other.ptrToControlBlock_;
