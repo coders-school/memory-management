@@ -14,6 +14,7 @@ FetchContent_MakeAvailable(googletest)
 
 set(SRC_LIST_UT
   ./shared_ptr_tests.cpp
+  ./weak_ptr_tests.cpp
 )
 
 enable_testing()
