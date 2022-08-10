@@ -5,11 +5,13 @@ namespace my {
 
 template <typename T>
 class shared_ptr {
-    template <class Y>
+    template <typename Y>
     friend class weak_ptr;
 
     class controlBlock {
         friend class shared_ptr;
+        template <typename Y>
+        friend class weak_ptr;
 
     public:
         constexpr explicit controlBlock() noexcept {}
@@ -151,6 +153,10 @@ public:
 private:
     T* ptr_{nullptr};
     controlBlock* ptrToControlBlock_{nullptr};
+
+    shared_ptr(T* ptr, controlBlock* ptrToControlBlock) noexcept
+        : ptr_(ptr), ptrToControlBlock_(ptrToControlBlock) {
+    }
 
     void cleanUp() {
         ptrToControlBlock_->shared_refs_--;

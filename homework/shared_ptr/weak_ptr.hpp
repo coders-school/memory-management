@@ -3,8 +3,6 @@
 
 namespace my {
 
-class controlBlock;
-
 template <typename T>
 class weak_ptr {
     friend class shared_ptr<T>;
@@ -92,10 +90,13 @@ public:
     //     return true;
     // }
 
-    // shared_ptr<T> lock() const noexcept {
-    //     shared_ptr<T> tempPtr(*this);
-    //     return tempPtr;
-    // }
+    shared_ptr<T> lock() const noexcept {
+        if (ptr_ != nullptr) {
+            ptrToControlBlock_->weak_refs++;
+            return shared_ptr<T>(ptr_, ptrToControlBlock_);
+        }
+        else return shared_ptr<T>(nullptr);
+    }
 
     // void reset() noexcept {
     //     if (ptr_) {
@@ -107,7 +108,7 @@ public:
 
 private:
     T* ptr_{nullptr};
-    controlBlock* ptrToControlBlock_{nullptr};
+    typename shared_ptr<T>::controlBlock* ptrToControlBlock_{nullptr};
 };
 
 }  // namespace my
