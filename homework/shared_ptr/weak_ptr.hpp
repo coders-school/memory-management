@@ -10,9 +10,7 @@ class weak_ptr {
     friend class shared_ptr<T>;
 
 public:
-    // weak_ptr() noexcept
-    //     : ptr_(nullptr), ptrToControlBlock_(nullptr) {
-    // }
+    weak_ptr() noexcept = default;
 
     // weak_ptr(const shared_ptr<T>& other) noexcept {
     //     ptr_ = other.get();
@@ -108,8 +106,8 @@ public:
     // }
 
 private:
-    T* ptr_;
-    controlBlock* ptrToControlBlock_;
+    T* ptr_{nullptr};
+    controlBlock* ptrToControlBlock_{nullptr};
 };
 
 }  // namespace my

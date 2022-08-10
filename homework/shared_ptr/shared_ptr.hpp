@@ -5,6 +5,9 @@ namespace my {
 
 template <typename T>
 class shared_ptr {
+    template <class Y>
+    friend class weak_ptr;
+
     class controlBlock {
         friend class shared_ptr;
 

@@ -28,10 +28,10 @@ protected:
     TestClass* rawPtr{new TestClass{20}};
 };
 
-// TEST_F(weak_ptrFixture, DefaultCtorTest) {
-//     my::shared_ptr<int> emptySharedPtr2 = emptyWeakPtr.lock();
-//     EXPECT_EQ(emptySharedPtr2.get(), nullptr);
-// }
+TEST_F(weak_ptrFixture, DefaultCtorTest) {
+    // my::shared_ptr<int> emptySharedPtr2 = emptyWeakPtr.lock();
+    // EXPECT_EQ(emptySharedPtr2.get(), nullptr);
+}
 
 // TEST_F(weak_ptrFixture, CopyCtorSharedPtrAsArgumentTest) {
 //     my::weak_ptr<int> emptyWeakPtr2{emptySharedPtr};
