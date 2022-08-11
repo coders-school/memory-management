@@ -24,7 +24,7 @@ protected:
     my::weak_ptr<TestClass> emptyWeakPtr;
     my::shared_ptr<TestClass> emptySharedPtr;
     my::shared_ptr<TestClass> sharedPtrToClass1{new TestClass{10}};
-    // my::weak_ptr<int> weakPtrToInt1{sharedPtrToInt1};
+    my::weak_ptr<TestClass> weakPtrToClass1{sharedPtrToClass1};
     TestClass* rawPtr{new TestClass{20}};
 };
 
@@ -33,19 +33,28 @@ TEST_F(weak_ptrFixture, DefaultCtorTest) {
     EXPECT_EQ(emptySharedPtr2.get(), nullptr);
 }
 
-// TEST_F(weak_ptrFixture, CopyCtorSharedPtrAsArgumentTest) {
-//     my::weak_ptr<int> emptyWeakPtr2{emptySharedPtr};
-//     my::shared_ptr<int> emptySharedPtr2 = emptyWeakPtr2.lock();
-//     EXPECT_EQ(emptySharedPtr2.get(), nullptr);
+TEST_F(weak_ptrFixture, CopyCtorSharedPtrAsArgumentTest) {
+    my::weak_ptr<TestClass> emptyWeakPtr2{emptySharedPtr};
+    my::shared_ptr<TestClass> emptySharedPtr2 = emptyWeakPtr2.lock();
+    EXPECT_EQ(emptySharedPtr2.get(), nullptr);
+    EXPECT_EQ(emptySharedPtr2.use_count(), 0);
 
-//     my::shared_ptr<int> sharedPtrToInt2 = weakPtrToInt1.lock();
-//     EXPECT_EQ(*sharedPtrToInt2, 10);
-// }
+    my::shared_ptr<TestClass> sharedPtrToClass2 = weakPtrToClass1.lock();
+    EXPECT_EQ((*sharedPtrToClass2).getNumber(), 10);
+    EXPECT_EQ(sharedPtrToClass2.use_count(), 2);
+}
 
-// TEST_F(weak_ptrFixture, CopyCtorWeakPtrAsArgumentTest) {
-//     my::shared_ptr<int> sharedPtrToInt2 = weakPtrToInt1.lock();
-//     EXPECT_EQ(*sharedPtrToInt2, 10);
-// }
+TEST_F(weak_ptrFixture, CopyCtorWeakPtrAsArgumentTest) {
+    my::weak_ptr<TestClass> emptyWeakPtr2{emptyWeakPtr};
+    my::shared_ptr<TestClass> emptySharedPtr2 = emptyWeakPtr2.lock();
+    EXPECT_EQ(emptySharedPtr2.get(), nullptr);
+    EXPECT_EQ(emptySharedPtr2.use_count(), 0);
+
+    my::weak_ptr<TestClass> weakPtrToClass2{weakPtrToClass1};
+    my::shared_ptr<TestClass> sharedPtrToClass2 = weakPtrToClass2.lock();
+    EXPECT_EQ((*sharedPtrToClass2).getNumber(), 10);
+    EXPECT_EQ(sharedPtrToClass2.use_count(), 2);
+}
 
 // TEST_F(weak_ptrFixture, MoveCtorWeakPtrAsArgumentTest) {
 //     my::weak_ptr<int> weakPtrToInt2{std::move(weakPtrToInt1)};
@@ -81,10 +90,10 @@ TEST_F(weak_ptrFixture, DefaultCtorTest) {
 //     EXPECT_EQ(sharedPtrToInt3.get(), nullptr);
 // }
 
-// TEST_F(weak_ptrFixture, UseCountFunctionTest) {
-//     EXPECT_EQ(emptyWeakPtr.use_count(), 0);
-//     EXPECT_EQ(weakPtrToInt1.use_count(), 1);
-// }
+TEST_F(weak_ptrFixture, UseCountFunctionTest) {
+    EXPECT_EQ(emptyWeakPtr.use_count(), 0);
+    EXPECT_EQ(weakPtrToClass1.use_count(), 1);
+}
 
 // TEST_F(weak_ptrFixture, ExpiredFunctionTest) {
 //     EXPECT_EQ(emptyWeakPtr.expired(), true);
@@ -92,12 +101,12 @@ TEST_F(weak_ptrFixture, DefaultCtorTest) {
 // }
 
 TEST_F(weak_ptrFixture, LockFunctionTest) {
-       auto emptySharedPointer2 = emptyWeakPtr.lock();
-       EXPECT_EQ(emptySharedPtr.get(), nullptr);
-       
-//     my::weak_ptr<int> emptyWeakPtr2{emptySharedPtr};
-//     my::shared_ptr<int> emptySharedPtr2 = emptyWeakPtr2.lock();
-//     EXPECT_EQ(emptySharedPtr2.get(), nullptr);
+    auto emptySharedPointer2 = emptyWeakPtr.lock();
+    EXPECT_EQ(emptySharedPtr.get(), nullptr);
+
+    //     my::weak_ptr<int> emptyWeakPtr2{emptySharedPtr};
+    //     my::shared_ptr<int> emptySharedPtr2 = emptyWeakPtr2.lock();
+    //     EXPECT_EQ(emptySharedPtr2.get(), nullptr);
 }
 
 // TEST_F(weak_ptrFixture, ResetFunctionTest) {

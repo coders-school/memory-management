@@ -10,21 +10,23 @@ class weak_ptr {
 public:
     weak_ptr() noexcept = default;
 
-    // weak_ptr(const shared_ptr<T>& other) noexcept {
-    //     ptr_ = other.get();
-    //     ptrToControlBlock_ = other.getControlBlockPtr();
-    //     if (ptr_) {
-    //         ptrToControlBlock_->incrementWeakRefs();
-    //     }
-    // }
+    weak_ptr(const shared_ptr<T>& other) noexcept {
+        if (other.ptr_) {
+            ptr_ = other.ptr_;
+            ptrToControlBlock_ = other.ptrToControlBlock_;
+            ptrToControlBlock_->weakRefs_++;
+        } else
+            return;
+    }
 
-    // weak_ptr(const weak_ptr<T>& other) noexcept {
-    //     ptr_ = other.ptr_;
-    //     ptrToControlBlock_ = other.ptrToControlBlock_;
-    //     if (ptr_ != nullptr) {
-    //         ptrToControlBlock_->incrementWeakRefs();
-    //     }
-    // }
+    weak_ptr(const weak_ptr<T>& other) noexcept {
+        if (other.ptr_) {
+            ptr_ = other.ptr_;
+            ptrToControlBlock_ = other.ptrToControlBlock_;
+            ptrToControlBlock_->weakRefs_++;
+        } else
+            return;
+    }
 
     // weak_ptr(weak_ptr<T>&& other) noexcept {
     //     ptr_ = other.ptr_;
@@ -76,12 +78,12 @@ public:
     //     }
     // }
 
-    // int use_count() const noexcept {
-    //     if (ptrToControlBlock_) {
-    //         return ptrToControlBlock_->getSharedRefs();
-    //     } else
-    //         return 0;
-    // }
+    int use_count() const noexcept {
+        if (ptrToControlBlock_) {
+            return ptrToControlBlock_->sharedRefs_;
+        } else
+            return 0;
+    }
 
     // bool expired() const noexcept {
     //     if (ptrToControlBlock_) {
@@ -91,11 +93,12 @@ public:
     // }
 
     shared_ptr<T> lock() const noexcept {
-        if (ptr_ != nullptr) {
-            ptrToControlBlock_->weak_refs++;
+        if (ptr_) {
+            ptrToControlBlock_->sharedRefs_++;
             return shared_ptr<T>(ptr_, ptrToControlBlock_);
+        } else {
+            return shared_ptr<T>(nullptr);
         }
-        else return shared_ptr<T>(nullptr);
     }
 
     // void reset() noexcept {

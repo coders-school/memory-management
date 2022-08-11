@@ -21,8 +21,8 @@ class shared_ptr {
         controlBlock& operator=(controlBlock&&) = delete;
 
     private:
-        std::atomic<std::size_t> shared_refs_{1};
-        std::atomic<std::size_t> weak_refs{0};
+        std::atomic<std::size_t> sharedRefs_{1};
+        std::atomic<std::size_t> weakRefs_{0};
         void (*deleter_)(T*) = [](T* ptr_) { delete ptr_; };
     };
 
@@ -44,7 +44,7 @@ public:
     shared_ptr(const shared_ptr& other) noexcept
         : ptr_(other.ptr_), ptrToControlBlock_(other.ptrToControlBlock_) {
         if (ptr_) {
-            ptrToControlBlock_->shared_refs_++;
+            ptrToControlBlock_->sharedRefs_++;
         }
     }
 
@@ -68,7 +68,7 @@ public:
         } else if (!ptr_ && other.ptr_) {
             ptr_ = other.ptr_;
             ptrToControlBlock_ = other.ptrToControlBlock_;
-            ptrToControlBlock_->shared_refs_++;
+            ptrToControlBlock_->sharedRefs_++;
         } else if (ptr_ && !other.ptr_) {
             cleanUp();
             ptr_ = nullptr;
@@ -77,7 +77,7 @@ public:
             cleanUp();
             ptr_ = other.ptr_;
             ptrToControlBlock_ = other.ptrToControlBlock_;
-            ptrToControlBlock_->shared_refs_++;
+            ptrToControlBlock_->sharedRefs_++;
         }
         return *this;
     }
@@ -139,7 +139,7 @@ public:
         if (!ptrToControlBlock_) {
             return 0;
         } else {
-            return static_cast<int>(ptrToControlBlock_->shared_refs_);
+            return static_cast<int>(ptrToControlBlock_->sharedRefs_);
         }
     }
 
@@ -159,8 +159,8 @@ private:
     }
 
     void cleanUp() {
-        ptrToControlBlock_->shared_refs_--;
-        if (ptrToControlBlock_->shared_refs_ == 0) {
+        ptrToControlBlock_->sharedRefs_--;
+        if (ptrToControlBlock_->sharedRefs_ == 0) {
             std::invoke(ptrToControlBlock_->deleter_, ptr_);
             ptr_ = nullptr;
             delete ptrToControlBlock_;
