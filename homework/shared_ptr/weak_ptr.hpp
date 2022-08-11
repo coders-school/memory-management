@@ -28,12 +28,15 @@ public:
             return;
     }
 
-    // weak_ptr(weak_ptr<T>&& other) noexcept {
-    //     ptr_ = other.ptr_;
-    //     other.ptr_ = nullptr;
-    //     ptrToControlBlock_ = other.ptrToControlBlock_;
-    //     other.ptrToControlBlock_ = nullptr;
-    // }
+    weak_ptr(weak_ptr<T>&& other) noexcept {
+        if (other.ptr_) {
+            ptr_ = other.ptr_;
+            ptrToControlBlock_ = other.ptrToControlBlock_;
+            other.ptr_ = nullptr;
+            other.ptrToControlBlock_ = nullptr;
+        } else
+            return;
+    }
 
     // ~weak_ptr() noexcept {
     //     if (ptrToControlBlock_) {
@@ -44,34 +47,30 @@ public:
     //     }
     // }
 
-    // weak_ptr<T>& operator=(const weak_ptr<T>& other) noexcept {
-    //     if (other.ptr_ != this && other.ptr_ != nullptr) {
-    //         ptr_ = other.ptr_;
-    //         ptrToControlBlock_ = other.ptrToControlBlock_;
-    //         ptrToControlBlock_->incrementWeakRefs();
-    //     } else if (other.ptr_ != this && other.ptr_ == nullptr) {
-    //         ptr_ = nullptr;
-    //         ptrToControlBlock_ = nullptr;
-    //     }
-    // }
+    weak_ptr& operator=(weak_ptr<T>& other) noexcept {
+        if (ptr_ == other.ptr_ || (!ptr_ && !other.ptr_)) {
+        } else if (!ptr_ && other.ptr_) {
+            ptr_ = other.ptr_;
+            ptrToControlBlock_ = other.ptrToControlBlock_;
+            ptrToControlBlock_->weakRefs_++;
+        } else if (ptr_ && !other.ptr_) {
+            ptrToControlBlock_->weakRefs_--;
+            ptr_ = nullptr;
+            other.ptrToControlBlock_ = nullptr;
+        } else if (ptr_ && other.ptr_) {
+            ptrToControlBlock_->weakRefs_--;
+            ptr_ = other.ptr_;
+            ptrToControlBlock_ = other.ptrToControlBlock_;
+            ptrToControlBlock_->weakRefs_++;
+        }
+        return *this;
+    }
 
     // weak_ptr<T>& operator=(const shared_ptr<T>& other) noexcept {
     //     if (other.ptr_ != this && other.ptr_ != nullptr) {
     //         ptr_ = other.ptr_;
     //         ptrToControlBlock_ = other.ptrToControlBlock_;
     //         ptrToControlBlock_->incrementSharedRefs();
-    //     } else if (other.ptr_ != this && other.ptr_ == nullptr) {
-    //         ptr_ = nullptr;
-    //         ptrToControlBlock_ = nullptr;
-    //     }
-    // }
-
-    // weak_ptr<T>& operator=(const weak_ptr<T>&& other) noexcept {
-    //     if (other.ptr_ != this && other.ptr_ != nullptr) {
-    //         ptr_ = other.ptr_;
-    //         ptrToControlBlock_ = other.ptrToControlBlock_;
-    //         other.ptr_ = nullptr;
-    //         other.ptrToControlBlock_ = nullptr;
     //     } else if (other.ptr_ != this && other.ptr_ == nullptr) {
     //         ptr_ = nullptr;
     //         ptrToControlBlock_ = nullptr;
