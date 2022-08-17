@@ -85,9 +85,30 @@ public:
         return *this;
     }
 
+    weak_ptr<T>& operator=(weak_ptr<T>&& other) noexcept {
+        if (ptr_ == other.ptr_ || (!ptr_ && !other.ptr_)) {
+        } else if (!ptr_ && other.ptr_) {
+            ptr_ = other.ptr_;
+            ptrToControlBlock_ = other.ptrToControlBlock_;
+            other.ptr_ = nullptr;
+            other.ptrToControlBlock_ = nullptr;
+        } else if (ptr_ && !other.ptr_) {
+            ptrToControlBlock_->weakRefs_--;
+            ptr_ = nullptr;
+            ptrToControlBlock_ = nullptr;
+        } else if (ptr_ && other.ptr_) {
+            ptrToControlBlock_->weakRefs_--;
+            ptr_ = other.ptr_;
+            ptrToControlBlock_ = other.ptrToControlBlock_;
+            other.ptr_ = nullptr;
+            other.ptrToControlBlock_ = nullptr;
+        }
+        return *this;
+    }
+
     int use_count() const noexcept {
         if (ptrToControlBlock_) {
-            return ptrToControlBlock_->sharedRefs_;
+            return static_cast<int>(ptrToControlBlock_->sharedRefs_);
         } else
             return 0;
     }
