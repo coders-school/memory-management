@@ -66,16 +66,24 @@ public:
         return *this;
     }
 
-    // weak_ptr<T>& operator=(const shared_ptr<T>& other) noexcept {
-    //     if (other.ptr_ != this && other.ptr_ != nullptr) {
-    //         ptr_ = other.ptr_;
-    //         ptrToControlBlock_ = other.ptrToControlBlock_;
-    //         ptrToControlBlock_->incrementSharedRefs();
-    //     } else if (other.ptr_ != this && other.ptr_ == nullptr) {
-    //         ptr_ = nullptr;
-    //         ptrToControlBlock_ = nullptr;
-    //     }
-    // }
+    weak_ptr<T>& operator=(const shared_ptr<T>& other) noexcept {
+        if (ptr_ == other.ptr_ || (!ptr_ && !other.ptr_)) {
+        } else if (!ptr_ && other.ptr_) {
+            ptr_ = other.ptr_;
+            ptrToControlBlock_ = other.ptrToControlBlock_;
+            ptrToControlBlock_->weakRefs_++;
+        } else if (ptr_ && !other.ptr_) {
+            ptrToControlBlock_->weakRefs_--;
+            ptr_ = nullptr;
+            ptrToControlBlock_ = nullptr;
+        } else if (ptr_ && other.ptr_) {
+            ptrToControlBlock_->weakRefs_--;
+            ptr_ = other.ptr_;
+            ptrToControlBlock_ = other.ptrToControlBlock_;
+            ptrToControlBlock_->weakRefs_++;
+        }
+        return *this;
+    }
 
     int use_count() const noexcept {
         if (ptrToControlBlock_) {
@@ -84,12 +92,12 @@ public:
             return 0;
     }
 
-    // bool expired() const noexcept {
-    //     if (ptrToControlBlock_) {
-    //         return ptrToControlBlock_->getSharedRefs() == 0;
-    //     }
-    //     return true;
-    // }
+    bool expired() const noexcept {
+        if (ptrToControlBlock_) {
+            return ptrToControlBlock_->sharedRefs_ == 0;
+        }
+        return true;
+    }
 
     shared_ptr<T> lock() const noexcept {
         if (ptr_) {
@@ -100,13 +108,13 @@ public:
         }
     }
 
-    // void reset() noexcept {
-    //     if (ptr_) {
-    //         ptrToControlBlock_->decrementWeakRefs();
-    //     }
-    //     ptr_ = nullptr;
-    //     ptrToControlBlock_ = nullptr;
-    // }
+    void reset() noexcept {
+        if (ptr_) {
+            ptrToControlBlock_->weakRefs_--;
+        }
+        ptr_ = nullptr;
+        ptrToControlBlock_ = nullptr;
+    }
 
 private:
     T* ptr_{nullptr};
