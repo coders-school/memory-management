@@ -114,10 +114,7 @@ public:
     }
 
     bool expired() const noexcept {
-        if (ptrToControlBlock_ && ptrToControlBlock_->sharedRefs_ != 0) {
-            return false;
-        }
-        return true;
+        return use_count() == 0;
     }
 
     shared_ptr<T> lock() const noexcept {
