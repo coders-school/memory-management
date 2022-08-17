@@ -114,8 +114,8 @@ public:
     }
 
     bool expired() const noexcept {
-        if (ptrToControlBlock_) {
-            return ptrToControlBlock_->sharedRefs_ == 0;
+        if (ptrToControlBlock_ && ptrToControlBlock_->sharedRefs_ != 0) {
+            return false;
         }
         return true;
     }
