@@ -38,14 +38,14 @@ public:
             return;
     }
 
-    // ~weak_ptr() noexcept {
-    //     if (ptrToControlBlock_) {
-    //         ptrToControlBlock_->decrementWeakRefs();
-    //         if (ptrToControlBlock_->getSharedRefs() == 0 && ptrToControlBlock_->getWeakRefs() == 0) {
-    //             delete ptrToControlBlock_;
-    //         }
-    //     }
-    // }
+    ~weak_ptr() noexcept {
+        if (ptrToControlBlock_) {
+            ptrToControlBlock_->weakRefs_--;
+            if (ptrToControlBlock_->sharedRefs_ == 0 && ptrToControlBlock_->weakRefs_ == 0) {
+                delete ptrToControlBlock_;
+            }
+        }
+    }
 
     weak_ptr& operator=(weak_ptr<T>& other) noexcept {
         if (ptr_ == other.ptr_ || (!ptr_ && !other.ptr_)) {
