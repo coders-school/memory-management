@@ -55,10 +55,18 @@ public:
             ptrToControlBlock_->weakRefs_++;
         } else if (ptr_ && !other.ptr_) {
             ptrToControlBlock_->weakRefs_--;
+            if (ptrToControlBlock_->weakRefs_ == 0 && expired()) {
+                delete ptrToControlBlock_;
+                ptrToControlBlock_ = nullptr;
+            }
             ptr_ = nullptr;
             other.ptrToControlBlock_ = nullptr;
         } else if (ptr_ && other.ptr_) {
             ptrToControlBlock_->weakRefs_--;
+            if (ptrToControlBlock_->weakRefs_ == 0 && expired()) {
+                delete ptrToControlBlock_;
+                ptrToControlBlock_ = nullptr;
+            }
             ptr_ = other.ptr_;
             ptrToControlBlock_ = other.ptrToControlBlock_;
             ptrToControlBlock_->weakRefs_++;
@@ -74,10 +82,17 @@ public:
             ptrToControlBlock_->weakRefs_++;
         } else if (ptr_ && !other.ptr_) {
             ptrToControlBlock_->weakRefs_--;
+            if (ptrToControlBlock_->weakRefs_ == 0 && expired()) {
+                delete ptrToControlBlock_;
+                ptrToControlBlock_ = nullptr;
+            }
             ptr_ = nullptr;
-            ptrToControlBlock_ = nullptr;
         } else if (ptr_ && other.ptr_) {
             ptrToControlBlock_->weakRefs_--;
+            if (ptrToControlBlock_->weakRefs_ == 0 && expired()) {
+                delete ptrToControlBlock_;
+                ptrToControlBlock_ = nullptr;
+            }
             ptr_ = other.ptr_;
             ptrToControlBlock_ = other.ptrToControlBlock_;
             ptrToControlBlock_->weakRefs_++;
@@ -94,10 +109,17 @@ public:
             other.ptrToControlBlock_ = nullptr;
         } else if (ptr_ && !other.ptr_) {
             ptrToControlBlock_->weakRefs_--;
+            if (ptrToControlBlock_->weakRefs_ == 0 && expired()) {
+                delete ptrToControlBlock_;
+                ptrToControlBlock_ = nullptr;
+            }
             ptr_ = nullptr;
-            ptrToControlBlock_ = nullptr;
         } else if (ptr_ && other.ptr_) {
             ptrToControlBlock_->weakRefs_--;
+            if (ptrToControlBlock_->weakRefs_ == 0 && expired()) {
+                delete ptrToControlBlock_;
+                ptrToControlBlock_ = nullptr;
+            }
             ptr_ = other.ptr_;
             ptrToControlBlock_ = other.ptrToControlBlock_;
             other.ptr_ = nullptr;
