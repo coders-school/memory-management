@@ -40,7 +40,7 @@ public:
     }
 
     Pointer release() noexcept {
-        auto temp = get();
+        auto temp = pointer_;
         pointer_ = nullptr;
         return temp;   
     }
@@ -51,19 +51,19 @@ public:
     }
 
     const ElementType& operator*() const noexcept {
-        return *get();
+        return *pointer_;
     }
 
     ElementType& operator*() noexcept {
-        return *get();
+        return *pointer_;
     }
 
     PointerToConst operator->() const noexcept {
-        return get();
+        return pointer_;
     }
 
     Pointer operator->() noexcept {
-        return get();
+        return pointer_;
     }
 
 private:
