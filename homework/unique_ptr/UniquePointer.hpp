@@ -27,8 +27,7 @@ public:
     }
 
     UniquePointer& operator=(UniquePointer&& other) noexcept {
-        reset();
-        std::swap(pointer_, other.pointer_);
+        reset(other.release());
         return *this;
     }
 
