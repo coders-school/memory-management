@@ -45,7 +45,7 @@ public:
         return temp;   
     }
 
-    void reset(Pointer ptr = Pointer()) noexcept {
+    void reset(Pointer ptr = nullptr) noexcept {
         delete pointer_;
         pointer_ = ptr;
     }
