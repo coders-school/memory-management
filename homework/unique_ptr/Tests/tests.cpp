@@ -34,11 +34,16 @@ TEST(unique_ptr, reset) {
     auto ptr = new int{5};
     auto smartPtr = UniquePointer<int>(ptr);
 
+    smartPtr.reset();
+    EXPECT_EQ(nullptr, smartPtr.get());
+
     smartPtr.reset(nullptr);
     EXPECT_EQ(nullptr, smartPtr.get());
 
     auto otherPtr = new int{6};
+    auto temp = smartPtr.get();
     smartPtr.reset(otherPtr);
+    EXPECT_EQ(nullptr, temp);
     EXPECT_EQ(otherPtr, smartPtr.get());
 }
 
