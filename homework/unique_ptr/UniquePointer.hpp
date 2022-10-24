@@ -23,11 +23,15 @@ public:
     UniquePointer& operator=(const UniquePointer&) = delete;
 
     UniquePointer(UniquePointer&& other) noexcept {
+        delete pointer_;
+        pointer_ = nullptr;
         std::swap(pointer_, other.pointer_);
     }
 
     UniquePointer& operator=(UniquePointer&& other) noexcept {
-        reset(other.release());
+        delete pointer_;
+        pointer_ = nullptr;
+        std::swap(pointer_, other.pointer_);
         return *this;
     }
 
@@ -40,9 +44,10 @@ public:
     }
 
     Pointer release() noexcept {
-        auto temp = pointer_;
+        auto tempPtr = pointer_;
+        delete pointer_;
         pointer_ = nullptr;
-        return temp;   
+        return tempPtr;   
     }
 
     void reset(Pointer ptr = nullptr) noexcept {
