@@ -2,8 +2,6 @@
 
 #include <algorithm>
 
-namespace my_unique_ptr {
-
 template <typename T>
 class unique_ptr {
 public:
@@ -88,5 +86,3 @@ template <typename T>
 unique_ptr<T>::operator bool() const noexcept {
     return static_cast<bool>(ptr_);
 }
-
-}  // namespace my_unique_ptr
