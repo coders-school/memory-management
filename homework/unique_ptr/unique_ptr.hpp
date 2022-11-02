@@ -90,8 +90,3 @@ unique_ptr<T>::operator bool() const noexcept {
 }
 
 }  // namespace my
-
-template class my::unique_ptr<int>;
-template class my::unique_ptr<float>;
-template class my::unique_ptr<double>;
-template class my::unique_ptr<std::string>;

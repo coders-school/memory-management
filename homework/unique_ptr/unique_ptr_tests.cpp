@@ -6,6 +6,11 @@
 using testing::A;
 using testing::An;
 
+template class my::unique_ptr<int>;
+template class my::unique_ptr<float>;
+template class my::unique_ptr<double>;
+template class my::unique_ptr<std::string>;
+
 TEST(getShould, returnPointerOfCorrectType) {
     my::unique_ptr<int> sutForInt;
     my::unique_ptr<double> sutForDouble;
