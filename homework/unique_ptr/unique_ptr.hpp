@@ -2,6 +2,7 @@
 
 #include <algorithm>
 
+#include <string>  // strange, but used for explicit instantiations for passing CI
 namespace my {
 template <typename T>
 class unique_ptr {
@@ -89,3 +90,8 @@ unique_ptr<T>::operator bool() const noexcept {
 }
 
 }  // namespace my
+
+template class my::unique_ptr<int>;
+template class my::unique_ptr<float>;
+template class my::unique_ptr<double>;
+template class my::unique_ptr<std::string>;
