@@ -21,6 +21,7 @@ add_executable(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME}
                       gtest_main
+                      gmock_main
 )
 
 target_compile_options(${PROJECT_NAME}
