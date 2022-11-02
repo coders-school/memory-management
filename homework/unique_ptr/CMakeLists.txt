@@ -16,7 +16,7 @@ FetchContent_MakeAvailable(googletest)
 include(GoogleTest)
 
 add_executable(${PROJECT_NAME}
-               unique_ptr-UT.cpp
+               unique_ptr_tests.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
