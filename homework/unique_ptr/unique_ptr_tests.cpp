@@ -92,6 +92,8 @@ TEST(releaseShould, returnManagedPointeraAndSetInternalPointerToNullptr) {
 
     EXPECT_EQ(expectedValueOfPtrToBeReleased, ptrToBeFilled);
     EXPECT_EQ(sut.get(), nullptr);
+
+    delete ptrToBeFilled;
 }
 
 TEST(resetShould, copyThePassedPtrIntoInternalPtr) {
