@@ -3,6 +3,8 @@
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
+namespace my {
+
 using testing::A;
 using testing::An;
 
@@ -168,3 +170,5 @@ TEST(operatorBoolShould, indicateIfThePointerToManagedObjectIsSet) {
     EXPECT_FALSE(sut);
     EXPECT_TRUE(sut2);
 }
+
+}  // namespace my
