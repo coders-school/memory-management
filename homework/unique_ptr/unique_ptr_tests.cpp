@@ -143,4 +143,5 @@ TEST(unique_ptr, release) {
     auto releasedPtr = smartPtr.release();
     EXPECT_EQ(releasedPtr, ptr);
     EXPECT_EQ(smartPtr.get(), nullptr);
+    delete ptr;
 }
