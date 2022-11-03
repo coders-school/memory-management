@@ -46,9 +46,8 @@ namespace my {
 
         Pointer release() noexcept {
             auto tempPtr = pointer_;
-            delete pointer_;
             pointer_ = nullptr;
-            return tempPtr;   
+            return tempPtr;
         }
 
         void reset(Pointer ptr = nullptr) noexcept {
