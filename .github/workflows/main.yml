@@ -1,0 +1,73 @@
+name: unique_ptr_homework
+on: [push, pull_request]
+
+jobs:
+  files_check:
+    runs-on: ubuntu-latest
+    outputs:
+      unique_ptr_exists: ${{ steps.unique_ptr.outputs.files_exists }}
+    steps:
+    - uses: actions/checkout@v2
+    - name: Check unique_ptr.hpp file existence
+      id: unique_ptr
+      uses: andstor/file-existence-action@v1
+      with:
+        files: "homework/unique_ptr/unique_ptr.hpp"
+
+  unique_ptr:
+    needs: files_check
+    if: needs.files_check.outputs.unique_ptr_exists == 'true'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run tests and sanitizer
+      uses: coders-school/github-actions/run-tests@main
+      with:
+        task_name: 'unique_ptr'
+        test_file: '../tests/unique_ptr_tests.cpp'
+
+  unique_ptr_students_tests:
+    needs: files_check
+    if: needs.files_check.outputs.unique_ptr_exists == 'true'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run tests and sanitizer
+      uses: coders-school/github-actions/run-tests@main
+      with:
+        task_name: 'unique_ptr'
+        test_file: '../../../homework/unique_ptr/unique_ptr_tests.cpp'
+        test_to_run: 'unique_ptr_student'
+
+  unique_ptr_formatting_check:
+    needs: files_check
+    if: needs.files_check.outputs.unique_ptr_exists == 'true'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run clang-format style check
+      uses: coders-school/github-actions/clang-format-check@main
+      with:
+        check_path: 'homework/unique_ptr'
+
+  check_unique_ptr_interface:
+    needs: unique_ptr_formatting_check
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Check unique_ptr has whole interface implemented
+      working-directory: .github/scripts
+      run: ./unique_ptr_interface_check.sh
+
+  unique_ptr_coverage:
+    needs: unique_ptr_students_tests
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: coders-school/github-actions/coverage-check@main
+      with:
+        task_name: 'unique_ptr'
+        test_file: '../../../homework/unique_ptr/unique_ptr_tests.cpp'
+        test_to_run: 'unique_ptr_student'
+        lcov_file: 'unique_ptr.hpp'
+        template_pattern: 'template\s*class\s*my::unique_ptr<\s*\w+\s*>'
