@@ -15,6 +15,9 @@ FetchContent_MakeAvailable(googletest)
 
 include(GoogleTest)
 
+# TODO: consider making one target with all the files
+
+
 # adding shared_ptr tests
 add_executable(shared_ptr-tests
                shared_ptr_tests.cpp
