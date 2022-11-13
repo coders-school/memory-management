@@ -23,16 +23,17 @@ public:
 
     constexpr shared_ptr() noexcept;
     constexpr shared_ptr(std::nullptr_t) noexcept;
-    template <class Deleter>
+    // TODO: VERIFY
+    template <class Deleter = DeleterType>
     shared_ptr(std::nullptr_t ptr, Deleter deleter);
-
+    // TODO: VERIFY
     template <typename OtherType,
-              typename = std::enable_if_t<std::is_convertible_v<OtherType, Type>>>
+              typename = std::enable_if_t<std::is_convertible_v<OtherType*, Type*>>>
     explicit shared_ptr(OtherType* ptr);
 
     template <typename OtherType,
-              typename Deleter,
-              typename = std::enable_if_t<std::is_convertible_v<OtherType, Type>>>
+              typename Deleter = DeleterType,
+              typename = std::enable_if_t<std::is_convertible_v<OtherType&, Type&>>>
     shared_ptr(OtherType* ptr, Deleter deleter);
 
     shared_ptr(const shared_ptr& other) noexcept;
@@ -63,7 +64,7 @@ public:
     // template <class Y, class Deleter>
     // shared_ptr(std::unique_ptr<Y, Deleter>&& r);  // TODO:
 
-    // ~shared_ptr();  // TODO:
+    ~shared_ptr();  // TODO:
 
     // shared_ptr& operator=(const shared_ptr& r) noexcept;  // TODO:
 
@@ -217,6 +218,24 @@ shared_ptr<Type, DelType>::shared_ptr(const shared_ptr<OtherType>& other) noexce
       ptr_(other.get()) {
     if (ptr_) {
         ctrlBlock_->sharedCount_ += 1;
+    }
+}
+
+template <typename Type, void (*DelType)(Type*)>
+shared_ptr<Type, DelType>::~shared_ptr() {
+    if (!ptr_) {
+        return;
+    }
+    ctrlBlock_->sharedCount_--;
+
+    if (ctrlBlock_->sharedCount_ == 0) {
+        ctrlBlock_->deleter_(ptr_);
+        ptr_ = nullptr;
+
+        if (ctrlBlock_->weakCount == 0) {
+            delete ctrlBlock_;
+            ctrlBlock_ = nullptr;
+        }
     }
 }
 

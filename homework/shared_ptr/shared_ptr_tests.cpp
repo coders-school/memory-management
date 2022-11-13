@@ -8,18 +8,29 @@ using testing::A;
 using testing::An;
 using testing::NiceMock;
 
-// TODO: VERIFY name
-class MockDeletionDetector {
+class CustomDeletionDetectorMock {
 public:
     MOCK_METHOD(void, detectCustomDeletion, ());
 };
 
 template <typename ElementType>
 void customDeleter(ElementType* managedObj) {
-    NiceMock<MockDeletionDetector> customDeltionDetector;
-    customDeltionDetector.detectCustomDeletion();
     delete managedObj;
 }
+
+template <>
+void customDeleter(CustomDeletionDetectorMock* managedObject) {
+    managedObject->detectCustomDeletion();
+    delete managedObject;
+}
+
+class DeleteCallDetectorMock {
+public:
+    MOCK_METHOD(void, detectDeleteCall, ());
+    ~DeleteCallDetectorMock() {
+        detectDeleteCall();
+    }
+};
 
 class DummyBase {
 public:
@@ -27,15 +38,6 @@ public:
 };
 
 class DummyDerived : public DummyBase {};
-
-// TODO: VERIFY or most likely remove
-// class NonDerivantConvertibleToDummy {
-// public:
-//     operator DummyBase() {
-//         return d;
-//     }
-//     DummyBase d;
-// };
 
 TEST(SharedPtrShould, bePossibleToBeCratedUsingDefaultConstructor) {
     [[maybe_unused]] my::shared_ptr<int> sut{};
@@ -89,7 +91,6 @@ TEST(SharedPtrShould, returnUseCountEqualZeroAfterCreationWithNullPtrPassed) {
     EXPECT_EQ(sut3.use_count(), 0);
 }
 
-// TODO: VERIFY ---------------------- Current work
 TEST(SharedPtrShould, storeNullPtrAfterCreationWithNullPtrAndDeleterPassed) {
     my::shared_ptr<int> sut{nullptr, customDeleter<int>};
     my::shared_ptr<double> sut2{nullptr, customDeleter<double>};
@@ -109,8 +110,6 @@ TEST(SharedPtrShould, returnUseCountEqualZeroAfterCreationWithNullPtrAndDeleterP
     EXPECT_EQ(sut2.use_count(), 0);
     EXPECT_EQ(sut3.use_count(), 0);
 }
-
-// -------------------------------- Current work end
 
 TEST(SharedPtrShould, bePossibleToBeCreatedWhenPassedPtrToSameTypeDeclared) {
     [[maybe_unused]] my::shared_ptr<int> sut{new int{}};
@@ -256,6 +255,25 @@ TEST(SharedPtrUseCountShould, returnNumberOfSharedPointersSharingResource) {
     EXPECT_EQ(null_sut.use_count(), 0);
 }
 
-// TODO: ADD test for deletion with custom deleter
+TEST(SharedPtrDestructorShould, destroyManagedObjecIfNoDeleterSpecifiedAndLastInstanceDestroyed) {
+    my::shared_ptr<DeleteCallDetectorMock> sut(new DeleteCallDetectorMock);
+    DeleteCallDetectorMock* testMock = sut.get();
+
+    EXPECT_CALL(*testMock, detectDeleteCall);
+}
+
+TEST(SharedPtrDestructorShould, callCustomDeleterOnDestructionIfLastInstanceDestroyed) {
+    auto deleter = customDeleter<CustomDeletionDetectorMock>;
+    my::shared_ptr<CustomDeletionDetectorMock> sut{new CustomDeletionDetectorMock, deleter};
+    CustomDeletionDetectorMock* testMock = sut.get();
+
+    EXPECT_CALL(*testMock, detectCustomDeletion);
+}
+// TODO:
+// TEST(SharedPtrDestructorShould, decreaseSharedCounterOnlyIfMoreThanOneInstanceExist){
+
+// }
+
+// TODO: add test for deletion of control block if weak count ==
 
 }  // namespace tests
