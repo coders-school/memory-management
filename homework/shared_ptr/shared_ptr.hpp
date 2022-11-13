@@ -7,12 +7,21 @@
 namespace my {
 
 template <typename Type>
+void defaultDelete(Type* managedObj) {
+    delete managedObj;
+}
+// TODO: VERIFY
+//  template <typename Type, template <typename DelType> class Deleter = defaultDelete<Type>>
+//  template <typename Type, template <typename DelType> typename = defaultDelete>
+//  template <typename Type, typename Deleter = typename defaultDelete<Type>>
+template <typename Type, void (*DelType)(Type*) = defaultDelete>
 class shared_ptr {
 public:
     // TODO: REMOVE
     // -------------------- DONE PART ----------------------
     using ElementType = Type;
     using DeleterType = void (*)(ElementType*);
+    struct ControlBlock;
 
     constexpr shared_ptr() noexcept;
     constexpr shared_ptr(std::nullptr_t) noexcept;
@@ -23,8 +32,8 @@ public:
 
     shared_ptr(const shared_ptr& other) noexcept;
 
-    template <class OtherType,
-              typename = std::enable_if_t<std::is_convertible_v<OtherType&, Type&>>>
+    template <typename OtherType,
+              typename = std::enable_if_t<std::is_convertible_v<OtherType, Type>>>
     shared_ptr(const shared_ptr<OtherType>& other) noexcept;
 
     Type* get() const noexcept;
@@ -33,11 +42,14 @@ public:
     long weak_count() const noexcept;
     DeleterType get_deleter() const noexcept;
     // TODO: VERIFY
+    ControlBlock* get_control_block() const noexcept;
 
     //  -------------------- END OF DONE PART ----------------------
 
-    // template <class Y, class Deleter>
-    // shared_ptr(Y* ptr, Deleter d);  // TODO:
+    template <typename OtherType,
+              typename Deleter,
+              typename = std::enable_if_t<std::is_convertible_v<OtherType, Type>>>
+    shared_ptr(OtherType* ptr, Deleter d);  // TODO:
 
     // template <class Deleter>
     // shared_ptr(std::nullptr_t ptr, Deleter d);  // TODO:   // NOTE: maybe optional
@@ -110,12 +122,11 @@ public:
     // bool owner_before(const weak_ptr<Y>& other) const noexcept;  // NOTE: OPTIONAL
 
 private:
-    struct ControlBlock;
     ControlBlock* ctrlBlock_ = nullptr;
     ElementType* ptr_ = nullptr;
 };
 
-template <typename Type>
+template <typename Type, typename Deleter>
 struct shared_ptr<Type>::ControlBlock {
     ControlBlock(size_t sharedCount = 0,
                  size_t weakCount = 0,
@@ -129,63 +140,56 @@ struct shared_ptr<Type>::ControlBlock {
     DeleterType deleter_;
 };
 
-template <typename Type>
-constexpr shared_ptr<Type>::shared_ptr() noexcept
-    : ctrlBlock_{},
-      ptr_{nullptr} {
+template <typename Type, typename Deleter constexpr shared_ptr<Type>::shared_ptr() noexcept : ctrlBlock_{}, ptr_{nullptr} {
 }
 
-template <typename Type>
-constexpr shared_ptr<Type>::shared_ptr(std::nullptr_t) noexcept
-    : shared_ptr{} {}
+template <typename Type, typename Deleter constexpr shared_ptr<Type>::shared_ptr(std::nullptr_t) noexcept : shared_ptr{} {}
 
-template <typename Type>
-template <typename OtherType, typename>
-shared_ptr<Type>::shared_ptr(OtherType* ptr)
-    : ctrlBlock_(new ControlBlock{1, 0, nullptr}),
-      ptr_(reinterpret_cast<Type*>(ptr)) {
+template <typename Type, typename Deleter template <typename OtherType, typename> shared_ptr<Type>::shared_ptr(OtherType* ptr) : ctrlBlock_(new ControlBlock{1, 0, nullptr}), ptr_(static_cast<Type*>(ptr)) {
+}
+// TODO: VERIFY
+template <typename Type, typename Deleter template <class OtherType, class Deleter, typename> shared_ptr<Type>::shared_ptr(OtherType* ptr, Deleter d) {
 }
 
-template <typename Type>
-Type* shared_ptr<Type>::get() const noexcept {
+// end of Verify
+
+template <typename Type, typename Deleter Type* shared_ptr<Type>::get() const noexcept {
     return ptr_;
 }
 
-template <typename Type>
-long shared_ptr<Type>::use_count() const noexcept {
+template <typename Type, typename Deleter long shared_ptr<Type>::use_count() const noexcept {
     return ctrlBlock_ ? ctrlBlock_->sharedCount_.load()
                       : 0;
 }
 // TODO: REMOVE maybe
-template <typename Type>
-long shared_ptr<Type>::weak_count() const noexcept {
+template <typename Type, typename Deleter long shared_ptr<Type>::weak_count() const noexcept {
     return ctrlBlock_ ? ctrlBlock_->weakCount.load()
                       : 0;
 }
 
-template <typename Type>
-shared_ptr<Type>::DeleterType shared_ptr<Type>::get_deleter() const noexcept {
+template <typename Type, typename Deleter shared_ptr<Type>::DeleterType shared_ptr<Type>::get_deleter() const noexcept {
     return ctrlBlock_ ? ctrlBlock_->deleter_
                       : nullptr;
 }
 
-template <typename Type>
-shared_ptr<Type>::shared_ptr(const shared_ptr& other) noexcept
-    : ctrlBlock_(other.ctrlBlock_),
-      ptr_(other.ptr_) {
+template <typename Type, typename Deleter shared_ptr<Type>::ControlBlock* shared_ptr<Type>::get_control_block() const noexcept {
+    return ctrlBlock_;
+}
+
+template <typename Type, typename Deleter shared_ptr<Type>::shared_ptr(const shared_ptr& other) noexcept : ctrlBlock_(other.ctrlBlock_), ptr_(other.ptr_) {
     if (ptr_) {
         ctrlBlock_->sharedCount_ += 1;
     }
 }
 
-template <typename Type>
+template <typename Type, typename Deleter>
 template <typename OtherType, typename>
 shared_ptr<Type>::shared_ptr(const shared_ptr<OtherType>& other) noexcept
-    // TODO: VERIFY if deleter should be copied
-    : ctrlBlock_(new ControlBlock(other.use_count(), other.weak_count(), nullptr)),
+    : ctrlBlock_(reinterpret_cast<shared_ptr<Type>::ControlBlock*>(other.get_control_block())),
       ptr_(other.get()) {
     if (ptr_) {
         ctrlBlock_->sharedCount_ += 1;
     }
 }
+
 }  // namespace my
