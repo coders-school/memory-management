@@ -27,8 +27,17 @@ void customDeleter(CustomDeletionDetectorMock* managedObject) {
 class DeleteCallDetectorMock {
 public:
     MOCK_METHOD(void, detectDeleteCall, ());
-    ~DeleteCallDetectorMock() {
+    MOCK_METHOD(void, detectDeleteCallForDerived, ());
+    virtual ~DeleteCallDetectorMock() {
         detectDeleteCall();
+    }
+};
+
+// TODO: VERIFY
+class DerivedDeleteCallDetectorMock : public DeleteCallDetectorMock {
+public:
+    ~DerivedDeleteCallDetectorMock() override {
+        detectDeleteCallForDerived();
     }
 };
 
@@ -247,6 +256,25 @@ TEST(SharedPtrGetShould, returnValueOfStoredPtr) {
     EXPECT_EQ(*sut.get(), 30);
 }
 
+TEST(SharedPtrOperatorStarShould, returnReferenceToManagedObject) {
+    int* ptr = new int(30);
+    my::shared_ptr<int> sut(ptr);
+
+    EXPECT_THAT(*sut, An<const int&>());
+    EXPECT_EQ(*sut, *ptr);
+    EXPECT_EQ(*sut, 30);
+}
+
+TEST(SharedPtrArrowOperatorShould, returnPtrToManagedObjectAndAllowMemberAcces) {
+    auto managedObj = new std::pair<int, std::string>{5, "five"};
+
+    my::shared_ptr<std::pair<int, std::string>> sut(managedObj);
+
+    EXPECT_THAT(sut.operator->(), (A<std::pair<int, std::string>*>()));
+    EXPECT_EQ(sut->first, 5);
+    EXPECT_EQ(sut->second, "five");
+}
+
 TEST(SharedPtrUseCountShould, returnNumberOfSharedPointersSharingResource) {
     my::shared_ptr<int> sut(new int);
     my::shared_ptr<int> null_sut;
@@ -269,11 +297,144 @@ TEST(SharedPtrDestructorShould, callCustomDeleterOnDestructionIfLastInstanceDest
 
     EXPECT_CALL(*testMock, detectCustomDeletion);
 }
-// TODO:
-// TEST(SharedPtrDestructorShould, decreaseSharedCounterOnlyIfMoreThanOneInstanceExist){
 
-// }
+TEST(SharedPtrDestructorShould, decreaseSharedCounterIfMoreThanOneInstanceExist) {
+    my::shared_ptr<double> sut1{new double};
+    my::shared_ptr<std::string> sut2{new std::string};
+    my::shared_ptr<DummyBase> sut3{new DummyDerived};
+    {
+        auto sut1_copy{sut1};
+        auto sut2_copy{sut2};
+        auto sut3_copy{sut3};
+        {
+            auto sut1_copy2{sut1};
+            auto sut2_copy2{sut2};
+            auto sut3_copy2{sut3};
 
-// TODO: add test for deletion of control block if weak count ==
+            EXPECT_EQ(sut1.use_count(), 3);
+            EXPECT_EQ(sut1_copy.use_count(), 3);
+            EXPECT_EQ(sut2.use_count(), 3);
+            EXPECT_EQ(sut2_copy.use_count(), 3);
+            EXPECT_EQ(sut3.use_count(), 3);
+            EXPECT_EQ(sut3_copy.use_count(), 3);
+        }  // first use_count decreased expected
+        EXPECT_EQ(sut1.use_count(), 2);
+        EXPECT_EQ(sut1_copy.use_count(), 2);
+        EXPECT_EQ(sut2.use_count(), 2);
+        EXPECT_EQ(sut2_copy.use_count(), 2);
+        EXPECT_EQ(sut3.use_count(), 2);
+        EXPECT_EQ(sut3_copy.use_count(), 2);
+    }  // second use_count decrease expected
+    EXPECT_EQ(sut1.use_count(), 1);
+    EXPECT_EQ(sut2.use_count(), 1);
+    EXPECT_EQ(sut3.use_count(), 1);
+}
+
+// TODO: add test for deletion of control block if weak count == 0
+
+TEST(SharedPtrCopyAssignmentShould, decreaseUseCountOfPreviouslyManagedObject) {
+    my::shared_ptr<double> sut{new double};
+    my::shared_ptr<double> original_sut_copy = sut;
+    ASSERT_EQ(sut.use_count(), 2);
+    ASSERT_EQ(original_sut_copy.use_count(), 2);
+
+    my::shared_ptr<double> replacing_shared_ptr{new double};
+    sut = replacing_shared_ptr;
+
+    EXPECT_EQ(original_sut_copy.use_count(), 1);
+}
+
+TEST(SharedPtrCopyAssignmentShould, destroyPreviouslyManagedObjectIfNoMoreCopiesLeft) {
+    my::shared_ptr<DeleteCallDetectorMock> sut{new NiceMock<DeleteCallDetectorMock>};
+    my::shared_ptr<DeleteCallDetectorMock> to_be_copied{new NiceMock<DeleteCallDetectorMock>};
+    DeleteCallDetectorMock* managed_object_to_be_deleted = sut.get();
+    EXPECT_CALL(*managed_object_to_be_deleted, detectDeleteCall);
+
+    sut = to_be_copied;
+}
+
+TEST(SharedPtrCopyAssignmentShould, copyPtrToNewManagedObject) {
+    my::shared_ptr<std::string> sut{new std::string("Original")};
+    my::shared_ptr<std::string> to_be_copied{new std::string("Replacing")};
+    // for empty shared_ptr
+    my::shared_ptr<std::string> sut2;
+    my::shared_ptr<std::string> to_be_copied2{new std::string("Replacing empty")};
+
+    sut = to_be_copied;
+    sut2 = to_be_copied2;
+
+    EXPECT_EQ(to_be_copied.get(), sut.get());
+    EXPECT_EQ(*sut.get(), "Replacing");
+    EXPECT_EQ(to_be_copied2.get(), sut2.get());
+    EXPECT_EQ(*sut2.get(), "Replacing empty");
+}
+
+TEST(SharedPtrCopyAssignmentShould, increaseUseCountOfNewManagedObject) {
+    my::shared_ptr<int> sut;
+    my::shared_ptr<int> to_be_copied{new int};
+    ASSERT_EQ(to_be_copied.use_count(), 1);
+
+    sut = to_be_copied;
+    EXPECT_EQ(sut.use_count(), 2);
+    EXPECT_EQ(to_be_copied.use_count(), 2);
+}
+// TODO: add test for deletion of control block if weak count == 0 after copy assignment
+
+TEST(SharedPtrCopyAssignmentForConvertibleTypeShould,
+     decreaseUseCountOfPreviouslyManagedObject) {
+    my::shared_ptr<DummyBase> sut{new DummyBase};
+    my::shared_ptr<DummyBase> original_sut_copy = sut;
+    ASSERT_EQ(sut.use_count(), 2);
+    ASSERT_EQ(original_sut_copy.use_count(), 2);
+
+    my::shared_ptr<DummyDerived> replacing_shared_ptr{new DummyDerived};
+    sut = replacing_shared_ptr;
+
+    EXPECT_EQ(original_sut_copy.use_count(), 1);
+}
+
+TEST(SharedPtrCopyAssignmentForConvertibleTypeShould,
+     destroyPreviouslyManagedObjectIfNoMoreCopiesLeft) {
+    my::shared_ptr<DeleteCallDetectorMock> sut{new NiceMock<DerivedDeleteCallDetectorMock>};
+    my::shared_ptr<DerivedDeleteCallDetectorMock> to_be_copied{new NiceMock<DerivedDeleteCallDetectorMock>};
+    DeleteCallDetectorMock* managed_object_to_be_deleted = sut.get();
+    EXPECT_CALL(*managed_object_to_be_deleted, detectDeleteCallForDerived);
+
+    sut = to_be_copied;
+}
+
+TEST(SharedPtrCopyAssignmentForConvertibleTypeShould, copyPtrToNewManagedObject) {
+    my::shared_ptr<DummyBase> sut{new DummyBase};
+    my::shared_ptr<DummyDerived> to_be_copied{new DummyDerived};
+    // for empty shared_ptr
+    my::shared_ptr<DummyBase> sut2;
+    my::shared_ptr<DummyDerived> to_be_copied2{new DummyDerived};
+
+    sut = to_be_copied;
+    sut2 = to_be_copied2;
+
+    EXPECT_EQ(to_be_copied.get(), sut.get());
+    EXPECT_EQ(to_be_copied2.get(), sut2.get());
+}
+
+TEST(SharedPtrCopyAssignmentForConvertibleTypeShould, increaseUseCountOfNewManagedObject) {
+    my::shared_ptr<DummyBase> sut;
+    my::shared_ptr<DummyDerived> to_be_copied{new DummyDerived};
+    ASSERT_EQ(to_be_copied.use_count(), 1);
+
+    sut = to_be_copied;
+    EXPECT_EQ(sut.use_count(), 2);
+    EXPECT_EQ(to_be_copied.use_count(), 2);
+}
+
+// TODO: add test for deletion of control block if weak count == 0 after copy assignment
+
+TEST(SharedPtrOperatorBoolShould, returnTrueIfSutManagesAnObjectAndFalseOtherwise) {
+    my::shared_ptr<double> sut{};
+    my::shared_ptr<int> sut2{new int};
+
+    EXPECT_FALSE(sut);
+    EXPECT_TRUE(sut2);
+}
 
 }  // namespace tests
