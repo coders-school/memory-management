@@ -126,18 +126,18 @@ TEST(unique_ptr, star_operator) {
     EXPECT_EQ(*ptr, *smartPtr);
 }
 
-TEST(unique_ptr, arrow_operator){
-	struct Foo {
-		int foo() { return 5; }
-	};
-	auto ptr = new Foo{};
-	my::unique_ptr<Foo> fooPtr{ ptr };
+TEST(unique_ptr, arrow_operator) {
+    struct Foo {
+        int foo() { return 5; }
+    };
+    auto ptr = new Foo{};
+    my::unique_ptr<Foo> fooPtr{ptr};
 
-	EXPECT_EQ(fooPtr->foo(), 5);
+    EXPECT_EQ(fooPtr->foo(), 5);
 }
 
 TEST(unique_ptr, release) {
-    auto ptr = new int{ 5 };
+    auto ptr = new int{5};
     auto smartPtr = my::unique_ptr<int>(ptr);
 
     auto releasedPtr = smartPtr.release();
