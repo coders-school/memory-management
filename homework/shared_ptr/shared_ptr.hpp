@@ -15,6 +15,9 @@ void defaultDelete(Type* managedObj) {
 template <typename Type, void (*DelType)(Type*) = defaultDelete>
 class shared_ptr {
 public:
+    template <typename OtherType, void (*OtherDelType)(OtherType*)>
+    friend class shared_ptr;
+
     // TODO: REMOVE
     // -------------------- DONE PART ----------------------
     using ElementType = Type;
@@ -41,7 +44,7 @@ public:
     shared_ptr(const shared_ptr& other) noexcept;
 
     template <typename OtherType,
-              typename = std::enable_if_t<std::is_convertible_v<OtherType, Type>>>
+              typename = std::enable_if_t<std::is_convertible_v<OtherType&, Type&>>>
     shared_ptr(const shared_ptr<OtherType>& other) noexcept;
 
     shared_ptr& operator=(const shared_ptr& other) noexcept;
@@ -50,15 +53,19 @@ public:
               typename = std::enable_if_t<std::is_convertible_v<OtherType&, Type&>>>
     shared_ptr& operator=(const shared_ptr<OtherType>& other) noexcept;
 
+    shared_ptr(shared_ptr&& other) noexcept;
+
+    template <class OtherType,
+              typename = std::enable_if_t<std::is_convertible_v<OtherType&, Type&>>>
+    shared_ptr(shared_ptr<OtherType>&& other) noexcept;
+
     Type* get() const noexcept;
 
     long use_count() const noexcept;
-    // TODO: VERIFY
-    long weak_count() const noexcept;
+    // TODO: REMOVE
+    // long weak_count() const noexcept;
 
-    DeleterType get_deleter() const noexcept;
-    // TODO: VERIFY
-    ControlBlock* get_control_block() const noexcept;
+    // DeleterType get_deleter() const noexcept;
 
     explicit operator bool() const noexcept;
 
@@ -68,11 +75,6 @@ public:
 
     //  -------------------- END OF DONE PART ----------------------
     // TODO: REMOVE
-
-    // shared_ptr(shared_ptr&& r) noexcept;  // TODO:
-
-    // template <class Y>
-    // shared_ptr(shared_ptr<Y>&& r) noexcept;  // TODO:   // NOTE: maybe optional
 
     // template <class Y>
     // explicit shared_ptr(const weak_ptr<Y>& r);  // TODO:
@@ -188,25 +190,20 @@ long shared_ptr<Type, DelType>::use_count() const noexcept {
                       : 0;
 }
 
-// TODO: REMOVE maybe
-template <typename Type, void (*DelType)(Type*)>
-long shared_ptr<Type, DelType>::weak_count() const noexcept {
-    return ctrlBlock_ ? ctrlBlock_->weakCount.load()
-                      : 0;
-}
+// // TODO: REMOVE maybe
+// template <typename Type, void (*DelType)(Type*)>
+// long shared_ptr<Type, DelType>::weak_count() const noexcept {
+//     return ctrlBlock_ ? ctrlBlock_->weakCount.load()
+//                       : 0;
+// }
+
 // TODO: VERIFY maybe remove
-template <typename Type, void (*DelType)(Type*)>
-shared_ptr<Type, DelType>::DeleterType
-shared_ptr<Type, DelType>::get_deleter() const noexcept {
-    return ctrlBlock_ ? ctrlBlock_->deleter_
-                      : nullptr;
-}
-// TODO: VERIFY maybe remove
-template <typename Type, void (*DelType)(Type*)>
-shared_ptr<Type, DelType>::ControlBlock*
-shared_ptr<Type, DelType>::get_control_block() const noexcept {
-    return ctrlBlock_;
-}
+// template <typename Type, void (*DelType)(Type*)>
+// shared_ptr<Type, DelType>::DeleterType
+// shared_ptr<Type, DelType>::get_deleter() const noexcept {
+//     return ctrlBlock_ ? ctrlBlock_->deleter_
+//                       : nullptr;
+// }
 
 template <typename Type, void (*DelType)(Type*)>
 shared_ptr<Type, DelType>::shared_ptr(const shared_ptr& other) noexcept
@@ -219,11 +216,28 @@ shared_ptr<Type, DelType>::shared_ptr(const shared_ptr& other) noexcept
 template <typename Type, void (*DelType)(Type*)>
 template <typename OtherType, typename>
 shared_ptr<Type, DelType>::shared_ptr(const shared_ptr<OtherType>& other) noexcept
-    : ctrlBlock_(reinterpret_cast<shared_ptr<Type>::ControlBlock*>(other.get_control_block())),
+    : ctrlBlock_(reinterpret_cast<shared_ptr<Type>::ControlBlock*>(other.ctrlBlock_)),
       ptr_(other.get()) {
     if (ptr_) {
         ctrlBlock_->sharedCount_ += 1;
     }
+}
+
+template <typename Type, void (*DelType)(Type*)>
+shared_ptr<Type, DelType>::shared_ptr(shared_ptr&& other) noexcept
+    : ctrlBlock_(other.ctrlBlock_),
+      ptr_(other.ptr_) {
+    other.ptr_ = nullptr;
+    other.ctrlBlock_ = nullptr;
+}
+
+template <typename Type, void (*DelType)(Type*)>
+template <typename OtherType, typename>
+shared_ptr<Type, DelType>::shared_ptr(shared_ptr<OtherType>&& other) noexcept
+    : ctrlBlock_(reinterpret_cast<shared_ptr<Type>::ControlBlock*>(other.ctrlBlock_)),
+      ptr_(other.ptr_) {
+    other.ptr_ = nullptr;
+    other.ctrlBlock_ = nullptr;
 }
 
 template <typename Type, void (*DelType)(Type*)>
@@ -269,7 +283,7 @@ shared_ptr<Type, DelType>& shared_ptr<Type, DelType>::operator=(const shared_ptr
     handleCurrentOwnership();
 
     ptr_ = other.get();
-    ctrlBlock_ = reinterpret_cast<shared_ptr<Type>::ControlBlock*>(other.get_control_block());
+    ctrlBlock_ = reinterpret_cast<shared_ptr<Type>::ControlBlock*>(other.ctrlBlock_);
     ctrlBlock_->sharedCount_++;
 
     return *this;

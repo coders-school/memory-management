@@ -151,7 +151,7 @@ TEST(SharedPtrShould, bePossibleToBeCreatedWhenPassedConvertiblePointer) {
     [[maybe_unused]] my::shared_ptr<DummyBase> sut3{new DummyDerived};
 }
 
-TEST(SharedPtrShould, storePtrPassedDuringConstructionWithConvertiblePointer) {
+TEST(SharedPtrConstructorTakingConvertiblePointerShould, storePtrPassedDuringConstruction) {
     DummyDerived* ptr = new DummyDerived;
     my::shared_ptr<DummyBase> sut{ptr};
 
@@ -159,7 +159,8 @@ TEST(SharedPtrShould, storePtrPassedDuringConstructionWithConvertiblePointer) {
     EXPECT_THAT(sut.get(), A<DummyBase*>());
 }
 
-TEST(SharedPtrShould, haveUseCountEqualToOneAfterConstructionWithConvertiblePointer) {
+TEST(SharedPtrConstructorTakingConvertiblePointerShould,
+     haveUseCountEqualToOneAfterConstruction) {
     my::shared_ptr<DummyBase> sut{new DummyDerived};
     EXPECT_EQ(sut.use_count(), 1);
 }
@@ -204,8 +205,8 @@ TEST(SharedPtrsCopyConstructorShould, notIncreaseSharedCounterIfSourceDidNotMana
     EXPECT_EQ(sut.use_count(), 0);
 }
 
-TEST(SharedPtrsCopyConstructorShould,
-     copyTheValueOfPtrOfSourceIfSourcePointerIsConvertibleToDestinationPtr) {
+TEST(SharedPtrsCopyConstructorTakingConvertibleSourceShould,
+     copyTheValueOfPtrStoredInSource) {
     my::shared_ptr<DummyDerived> sut{new DummyDerived};
     ASSERT_NE(sut.get(), nullptr);
 
@@ -214,8 +215,8 @@ TEST(SharedPtrsCopyConstructorShould,
     EXPECT_EQ(sut.get(), sut_copy.get());
 }
 
-TEST(SharedPtrsCopyConstructorShould,
-     increaseSharedCounterIfSourceHadManagedObjectAndConvertiblePtrToDestinationPtr) {
+TEST(SharedPtrsCopyConstructorTakingConvertibleSourceShould,
+     increaseSharedCounterIfSourceHadManagedObject) {
     my::shared_ptr<DummyDerived> sut{new DummyDerived};
     ASSERT_NE(sut.get(), nullptr);
     ASSERT_EQ(sut.use_count(), 1);
@@ -230,11 +231,78 @@ TEST(SharedPtrsCopyConstructorShould,
     EXPECT_EQ(sut.use_count(), 3);
 }
 
+// TODO: move constructor
+
+TEST(SharedPtrsMoveConstructorShould, copyTheValueOfPtrOfSource) {
+    my::shared_ptr<double> null_sut{nullptr};
+    my::shared_ptr<double> sut{new double{10.0}};
+    double* ptr_to_compare = sut.get();
+
+    ASSERT_EQ(null_sut.get(), nullptr);
+    ASSERT_NE(sut.get(), nullptr);
+
+    my::shared_ptr<double> null_sut_moved{std::move(null_sut)};
+    my::shared_ptr<double> sut_moved{std::move(sut)};
+
+    EXPECT_EQ(nullptr, null_sut_moved.get());
+    EXPECT_EQ(ptr_to_compare, sut_moved.get());
+    EXPECT_EQ(*sut_moved.get(), 10.0);
+}
+
+TEST(SharedPtrsMoveConstructorShould, keepValueOfUseCountFromSource) {
+    my::shared_ptr<double> sut{new double{10.0}};
+    ASSERT_NE(sut.get(), nullptr);
+    ASSERT_EQ(sut.use_count(), 1);
+
+    my::shared_ptr<double> sut_moved{std::move(sut)};
+    EXPECT_EQ(sut_moved.use_count(), 1);
+}
+
+TEST(SharedPtrsMoveConstructorShould, setManagedPtrOfSourceToNullptr) {
+    my::shared_ptr<double> sut{new double{10.0}};
+    ASSERT_NE(sut.get(), nullptr);
+
+    my::shared_ptr<double> sut_moved{std::move(sut)};
+    EXPECT_EQ(sut.get(), nullptr);
+}
+
+TEST(SharedPtrsMoveConstructorTakingConvertibleSourceShould,
+     copyTheValueOfPtrOfSource) {
+    my::shared_ptr<DummyDerived> sut{new DummyDerived};
+    ASSERT_NE(sut.get(), nullptr);
+    auto ptr_to_compare = sut.get();
+
+    my::shared_ptr<DummyBase> sut_moved{std::move(sut)};
+
+    EXPECT_EQ(ptr_to_compare, sut_moved.get());
+}
+TEST(SharedPtrsMoveConstructorTakingConvertibleSourceShould,
+     keepValueOfUseCountFromSource) {
+    my::shared_ptr<DummyDerived> sut{new DummyDerived};
+    ASSERT_NE(sut.get(), nullptr);
+    ASSERT_EQ(sut.use_count(), 1);
+
+    my::shared_ptr<DummyBase> sut_moved{std::move(sut)};
+
+    EXPECT_EQ(sut_moved.use_count(), 1);
+}
+
+TEST(SharedPtrsMoveConstructorTakingConvertibleSourceShould, setManagedPtrOfSourceToNullptr) {
+    my::shared_ptr<DummyDerived> sut{new DummyDerived};
+    ASSERT_NE(sut.get(), nullptr);
+
+    my::shared_ptr<DummyBase> sut_moved{std::move(sut)};
+
+    EXPECT_EQ(sut.get(), nullptr);
+}
+
+// ------------------------------
+
 TEST(SharedPtrShould, bePossibleToBeCreatedWhenPassedConvertiblePointerForCustomDeleterUsed) {
     [[maybe_unused]] my::shared_ptr<DummyBase> sut{new DummyDerived, customDeleter<DummyBase>};
 }
 
-TEST(SharedPtrShould, storePtrPassedDuringConstructionWithConvertiblePointerAndCustomdeleter) {
+TEST(SharedPtrConstructorTakingConvertiblePointerAndCustomDeleterShould, storePtrPassedDuringConstruction) {
     DummyDerived* ptr = new DummyDerived;
     my::shared_ptr<DummyBase> sut{ptr, customDeleter<DummyBase>};
 
@@ -242,7 +310,7 @@ TEST(SharedPtrShould, storePtrPassedDuringConstructionWithConvertiblePointerAndC
     EXPECT_THAT(sut.get(), A<DummyBase*>());
 }
 
-TEST(SharedPtrShould, haveUseCountEqualToOneAfterConstructionWithConvertiblePointerAndDeleterPassed) {
+TEST(SharedPtrConstructorTakingConvertiblePointerAndCustomDeleterShould, haveUseCountEqualToOneAfterConstruction) {
     my::shared_ptr<DummyBase> sut{new DummyDerived, customDeleter<DummyBase>};
     EXPECT_EQ(sut.use_count(), 1);
 }
