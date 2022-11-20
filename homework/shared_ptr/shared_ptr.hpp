@@ -43,6 +43,12 @@ public:
 
     shared_ptr(const shared_ptr& other) noexcept;
 
+    shared_ptr(shared_ptr&& other) noexcept;
+
+    template <class OtherType,
+              typename = std::enable_if_t<std::is_convertible_v<OtherType&, Type&>>>
+    shared_ptr(shared_ptr<OtherType>&& other) noexcept;
+
     template <typename OtherType,
               typename = std::enable_if_t<std::is_convertible_v<OtherType&, Type&>>>
     shared_ptr(const shared_ptr<OtherType>& other) noexcept;
@@ -53,11 +59,11 @@ public:
               typename = std::enable_if_t<std::is_convertible_v<OtherType&, Type&>>>
     shared_ptr& operator=(const shared_ptr<OtherType>& other) noexcept;
 
-    shared_ptr(shared_ptr&& other) noexcept;
+    shared_ptr& operator=(shared_ptr&& other) noexcept;
 
     template <class OtherType,
               typename = std::enable_if_t<std::is_convertible_v<OtherType&, Type&>>>
-    shared_ptr(shared_ptr<OtherType>&& other) noexcept;
+    shared_ptr& operator=(shared_ptr<OtherType>&& other) noexcept;  // NOTE: maybe optional
 
     Type* get() const noexcept;
 
@@ -80,20 +86,22 @@ public:
     // explicit shared_ptr(const weak_ptr<Y>& r);  // TODO:
 
     // template <class Y, class Deleter>
-    // shared_ptr(std::unique_ptr<Y, Deleter>&& r);  // TODO:
-
-    // shared_ptr& operator=(shared_ptr&& r) noexcept;  // TODO:
-
-    // template <class Y>
-    // shared_ptr& operator=(shared_ptr<Y>&& r) noexcept;  // NOTE: maybe optional
+    // shared_ptr(std::unique_ptr<Y, Deleter>&& r);   NOTE: maybe optional
 
     // template <class Y, class Deleter>
-    // shared_ptr& operator=(std::unique_ptr<Y, Deleter>&& r);  // TODO:
+    // shared_ptr& operator=(std::unique_ptr<Y, Deleter>&& r);   NOTE: maybe optional
 
-    // void reset() noexcept;  // TODO:
+    void reset() noexcept;  // TODO:
 
-    // template <class Y>
-    // void reset(Y* ptr);  // TODO:
+    // TODO: VERIFY
+    template <typename OtherType,
+              typename = std::enable_if_t<std::is_convertible_v<OtherType*, Type*>>>
+    void reset(OtherType* ptr);  // TODO:
+
+    template <typename OtherType,
+              typename Deleter = DeleterType,
+              typename = std::enable_if_t<std::is_convertible_v<OtherType&, Type&>>>
+    void reset(OtherType* ptr, Deleter d);
 
     // template <class Y, class Deleter>
     // void reset(Y* ptr, Deleter d);  // TODO:
@@ -126,7 +134,7 @@ public:
     // bool owner_before(const weak_ptr<Y>& other) const noexcept;  // NOTE: OPTIONAL
 
 private:
-    void handleCurrentOwnership();
+    void freeCurrentOwnership();
 
     ControlBlock* ctrlBlock_ = nullptr;
     ElementType* ptr_ = nullptr;
@@ -239,10 +247,16 @@ shared_ptr<Type, DelType>::shared_ptr(shared_ptr<OtherType>&& other) noexcept
     other.ptr_ = nullptr;
     other.ctrlBlock_ = nullptr;
 }
-
+// TODO: VERIFY if controlblock destroyed always
 template <typename Type, void (*DelType)(Type*)>
 shared_ptr<Type, DelType>::~shared_ptr() {
     if (!ptr_) {
+        // TODO: VERIFY I thing its needed
+        if (ctrlBlock_ && ctrlBlock_->weakCount == 0) {
+            delete ctrlBlock_;
+            ctrlBlock_ = nullptr;
+        }
+
         return;
     }
     ctrlBlock_->sharedCount_--;
@@ -264,7 +278,7 @@ shared_ptr<Type, DelType>& shared_ptr<Type, DelType>::operator=(const shared_ptr
         return *this;
     }
 
-    handleCurrentOwnership();
+    freeCurrentOwnership();
 
     ptr_ = other.ptr_;
     ctrlBlock_ = other.ctrlBlock_;
@@ -280,7 +294,7 @@ shared_ptr<Type, DelType>& shared_ptr<Type, DelType>::operator=(const shared_ptr
         return *this;
     }
 
-    handleCurrentOwnership();
+    freeCurrentOwnership();
 
     ptr_ = other.get();
     ctrlBlock_ = reinterpret_cast<shared_ptr<Type>::ControlBlock*>(other.ctrlBlock_);
@@ -290,16 +304,60 @@ shared_ptr<Type, DelType>& shared_ptr<Type, DelType>::operator=(const shared_ptr
 }
 
 template <typename Type, void (*DelType)(Type*)>
-void shared_ptr<Type, DelType>::handleCurrentOwnership() {
+shared_ptr<Type, DelType>& shared_ptr<Type, DelType>::operator=(shared_ptr&& other) noexcept {
+    if (this == &other) {
+        return *this;
+    }
+
+    freeCurrentOwnership();
+
+    ptr_ = other.get();
+    ctrlBlock_ = other.ctrlBlock_;
+
+    other.ptr_ = nullptr;
+    other.ctrlBlock_ = nullptr;
+
+    return *this;
+}
+
+template <typename Type, void (*DelType)(Type*)>
+template <class OtherType, typename>
+shared_ptr<Type, DelType>& shared_ptr<Type, DelType>::operator=(shared_ptr<OtherType>&& other) noexcept {
+    if (this == reinterpret_cast<const shared_ptr<Type, DelType>*>(&other)) {
+        return *this;
+    }
+
+    freeCurrentOwnership();
+
+    ptr_ = other.get();
+    ctrlBlock_ = reinterpret_cast<shared_ptr<Type>::ControlBlock*>(other.ctrlBlock_);
+
+    other.ptr_ = nullptr;
+    other.ctrlBlock_ = nullptr;
+
+    return *this;
+}
+
+template <typename Type, void (*DelType)(Type*)>
+void shared_ptr<Type, DelType>::freeCurrentOwnership() {
     if (ptr_) {
         ctrlBlock_->sharedCount_--;
 
         if (ctrlBlock_->sharedCount_ == 0) {
             ctrlBlock_->deleter_(ptr_);
+            ptr_ = nullptr;
 
             if (ctrlBlock_->weakCount == 0) {
                 delete ctrlBlock_;
+                ctrlBlock_ = nullptr;
             }
+        }
+    }
+    // TODO: VERIFY perhaps needed to prevent leaks
+    else {
+        if (ctrlBlock_ && ctrlBlock_->weakCount == 0) {
+            delete ctrlBlock_;
+            ctrlBlock_ = nullptr;
         }
     }
 }
@@ -317,6 +375,32 @@ Type& shared_ptr<Type, DelType>::operator*() const noexcept {
 template <typename Type, void (*DelType)(Type*)>
 Type* shared_ptr<Type, DelType>::operator->() const noexcept {
     return ptr_;
+}
+
+template <typename Type, void (*DelType)(Type*)>
+void shared_ptr<Type, DelType>::reset() noexcept {
+    freeCurrentOwnership();
+}
+
+template <typename Type, void (*DelType)(Type*)>
+template <typename OtherType, typename>
+void shared_ptr<Type, DelType>::reset(OtherType* ptr) {
+    freeCurrentOwnership();
+    ptr_ = ptr;
+    if (ptr_) {
+        ctrlBlock_ = new ControlBlock(1, 0, DelType);
+    }
+}
+
+template <typename Type, void (*DelType)(Type*)>
+template <typename OtherType, typename Deleter, typename>
+void shared_ptr<Type, DelType>::reset(OtherType* ptr, Deleter deleter) {
+    freeCurrentOwnership();
+    ptr_ = ptr;
+
+    if (ptr_) {
+        ctrlBlock_ = new ControlBlock(1, 0, deleter);
+    }
 }
 
 }  // namespace my
