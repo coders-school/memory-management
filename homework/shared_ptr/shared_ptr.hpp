@@ -27,11 +27,12 @@ public:
     ~shared_ptr();
 
     constexpr shared_ptr() noexcept;
+
     constexpr shared_ptr(std::nullptr_t) noexcept;
-    // TODO: VERIFY
+
     template <class Deleter = DeleterType>
     shared_ptr(std::nullptr_t ptr, Deleter deleter);
-    // TODO: VERIFY
+
     template <typename OtherType,
               typename = std::enable_if_t<std::is_convertible_v<OtherType*, Type*>>>
     explicit shared_ptr(OtherType* ptr);
@@ -63,7 +64,18 @@ public:
 
     template <class OtherType,
               typename = std::enable_if_t<std::is_convertible_v<OtherType&, Type&>>>
-    shared_ptr& operator=(shared_ptr<OtherType>&& other) noexcept;  // NOTE: maybe optional
+    shared_ptr& operator=(shared_ptr<OtherType>&& other) noexcept;
+
+    void reset() noexcept;
+
+    template <typename OtherType,
+              typename = std::enable_if_t<std::is_convertible_v<OtherType*, Type*>>>
+    void reset(OtherType* ptr);
+
+    template <typename OtherType,
+              typename Deleter = DeleterType,
+              typename = std::enable_if_t<std::is_convertible_v<OtherType&, Type&>>>
+    void reset(OtherType* ptr, Deleter deleter);
 
     Type* get() const noexcept;
 
@@ -79,7 +91,7 @@ public:
 
     Type* operator->() const noexcept;  // TODO:
 
-    //  -------------------- END OF DONE PART ----------------------
+    //  -------------------- MAYBE OPTIONAL  ----------------------
     // TODO: REMOVE
 
     // template <class Y>
@@ -90,21 +102,6 @@ public:
 
     // template <class Y, class Deleter>
     // shared_ptr& operator=(std::unique_ptr<Y, Deleter>&& r);   NOTE: maybe optional
-
-    void reset() noexcept;  // TODO:
-
-    // TODO: VERIFY
-    template <typename OtherType,
-              typename = std::enable_if_t<std::is_convertible_v<OtherType*, Type*>>>
-    void reset(OtherType* ptr);  // TODO:
-
-    template <typename OtherType,
-              typename Deleter = DeleterType,
-              typename = std::enable_if_t<std::is_convertible_v<OtherType&, Type&>>>
-    void reset(OtherType* ptr, Deleter d);
-
-    // template <class Y, class Deleter>
-    // void reset(Y* ptr, Deleter d);  // TODO:
 
     // // TODO: CONSIDER deduction guides
 
@@ -164,7 +161,6 @@ constexpr shared_ptr<Type, DelType>::shared_ptr(std::nullptr_t) noexcept
     // TODO: VERIFY if empty initialization
     : shared_ptr{} {}
 
-// TODO: VERIFY === current work
 template <typename Type, void (*DelType)(Type*)>
 template <class Deleter>
 shared_ptr<Type, DelType>::shared_ptr(std::nullptr_t, Deleter)
@@ -250,26 +246,7 @@ shared_ptr<Type, DelType>::shared_ptr(shared_ptr<OtherType>&& other) noexcept
 // TODO: VERIFY if controlblock destroyed always
 template <typename Type, void (*DelType)(Type*)>
 shared_ptr<Type, DelType>::~shared_ptr() {
-    if (!ptr_) {
-        // TODO: VERIFY I thing its needed
-        if (ctrlBlock_ && ctrlBlock_->weakCount == 0) {
-            delete ctrlBlock_;
-            ctrlBlock_ = nullptr;
-        }
-
-        return;
-    }
-    ctrlBlock_->sharedCount_--;
-
-    if (ctrlBlock_->sharedCount_ == 0) {
-        ctrlBlock_->deleter_(ptr_);
-        ptr_ = nullptr;
-
-        if (ctrlBlock_->weakCount == 0) {
-            delete ctrlBlock_;
-            ctrlBlock_ = nullptr;
-        }
-    }
+    freeCurrentOwnership();
 }
 
 template <typename Type, void (*DelType)(Type*)>
@@ -345,13 +322,13 @@ void shared_ptr<Type, DelType>::freeCurrentOwnership() {
 
         if (ctrlBlock_->sharedCount_ == 0) {
             ctrlBlock_->deleter_(ptr_);
-            ptr_ = nullptr;
 
             if (ctrlBlock_->weakCount == 0) {
                 delete ctrlBlock_;
                 ctrlBlock_ = nullptr;
             }
         }
+        ptr_ = nullptr;
     }
     // TODO: VERIFY perhaps needed to prevent leaks
     else {
@@ -379,7 +356,10 @@ Type* shared_ptr<Type, DelType>::operator->() const noexcept {
 
 template <typename Type, void (*DelType)(Type*)>
 void shared_ptr<Type, DelType>::reset() noexcept {
+    // TODO: VERIFY if check if needed
+    // if (ptr_) {
     freeCurrentOwnership();
+    ctrlBlock_ = nullptr;
 }
 
 template <typename Type, void (*DelType)(Type*)>
