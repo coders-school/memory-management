@@ -3,10 +3,10 @@
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
+// TODO: VERIFY if not my namespace
 namespace tests {
 using testing::A;
 using testing::An;
-using testing::NiceMock;
 
 class CustomDeletionDetectorMock {
 public:

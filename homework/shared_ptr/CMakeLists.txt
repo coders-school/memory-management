@@ -79,7 +79,5 @@ target_compile_features(make_shared-tests
                         cxx_std_20)
 
 
-gtest_discover_tests(shared_ptr-tests
-                     weak_ptr-tests
-                     make_shared_tests
-)
+gtest_discover_tests(shared_ptr-tests)
+gtest_discover_tests(weak_ptr-tests)

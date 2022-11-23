@@ -133,8 +133,8 @@ public:
 private:
     void freeCurrentOwnership();
 
-    ControlBlock* ctrlBlock_ = nullptr;
-    ElementType* ptr_ = nullptr;
+    ControlBlock* ctrlBlock_;
+    ElementType* ptr_;
 };
 
 template <typename Type, void (*DelType)(Type*)>
