@@ -1,5 +1,5 @@
 #pragma once
-
+// TODO: VERIFY if can be substituted with declaration but unlikely
 #include "shared_ptr.hpp"
 
 namespace my {
@@ -10,12 +10,12 @@ namespace my {
 // template <typename Type, void (*DelType)(Type*)>
 // struct shared_ptr<Type, DelType>::ControlBlock;
 
-template <typename Type, void (*DelType)(Type*) = defaultDelete>
+template <typename Type>
 class weak_ptr {
 public:
     using ElementType = Type;
     // TODO: VERIFY
-    using DeleterType = void (*)(ElementType*);
+    // using DeleterType = void (*)(ElementType*);
 
     constexpr weak_ptr() noexcept;  // TODO:
 
@@ -57,13 +57,13 @@ public:
     // void swap( weak_ptr& r ) noexcept; NOTE: OPTIONAL
 
 private:
-    shared_ptr<Type, DelType>::ControlBlock* ctrlBlock_;
+    shared_ptr<Type>::ControlBlock* ctrlBlock_;
 
     ElementType* ptr_;
 };
 
-template <typename Type, void (*DelType)(Type*)>
-constexpr weak_ptr<Type, DelType>::weak_ptr() noexcept
+template <typename Type>
+constexpr weak_ptr<Type>::weak_ptr() noexcept
     : ctrlBlock_(nullptr),
       ptr_(nullptr) {
 }

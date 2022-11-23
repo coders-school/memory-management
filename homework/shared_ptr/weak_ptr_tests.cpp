@@ -11,6 +11,7 @@ TEST(WeakPtrShould, bePossibleToBeCratedUsingDefaultConstructor) {
     [[maybe_unused]] my::weak_ptr<double> sut2{};
     [[maybe_unused]] my::weak_ptr<std::string> sut3;
 }
+
 // TODO: VERIFY remove or refactor when ptr access after lock() available
 //  TEST(WeakPtrShould, storeNullPtrAfterCreationWithDefaultConstructor) {
 //      my::weak_ptr<int> sut{};
