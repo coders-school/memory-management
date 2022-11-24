@@ -19,6 +19,9 @@ public:
     template <typename OtherType>
     friend class shared_ptr;
 
+    template <typename OtherType>
+    friend class weak_ptr;
+
     // TODO: REMOVE
     // -------------------- DONE PART ----------------------
     using ElementType = Type;
