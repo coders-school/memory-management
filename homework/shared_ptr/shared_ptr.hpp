@@ -1,11 +1,18 @@
 #pragma once
 // TODO: VERIFY INCLUDES
+
+#include "weak_ptr.hpp"
+
 #include <atomic>
 // TODO: REMOVE
 #include <functional>
 #include <iostream>
 #include <type_traits>
 namespace my {
+
+// TODO: VERIFY if needed
+template <typename Type>
+class weak_ptr;
 
 template <typename Type>
 void defaultDelete(Type* managedObj) {
@@ -24,7 +31,7 @@ public:
 
     // TODO: REMOVE
     // -------------------- DONE PART ----------------------
-    using ElementType = Type;
+    // using ElementType = Type;  // TODO: REMOVE
     using DeleterType = std::function<void(Type*)>;
     struct ControlBlock;
 
@@ -70,6 +77,10 @@ public:
               typename = std::enable_if_t<std::is_convertible_v<OtherType&, Type&>>>
     shared_ptr& operator=(shared_ptr<OtherType>&& other) noexcept;
 
+    template <typename OtherType,
+              typename = std::enable_if_t<std::is_convertible_v<OtherType*, Type*>>>
+    explicit shared_ptr(const weak_ptr<OtherType>& other);
+
     void reset() noexcept;
 
     template <typename OtherType,
@@ -98,9 +109,6 @@ public:
 
     //  -------------------- MAYBE OPTIONAL  ----------------------
     // TODO: REMOVE
-
-    // template <class Y>
-    // explicit shared_ptr(const weak_ptr<Y>& r);  // TODO:
 
     // template <class Y, class Deleter>
     // shared_ptr(std::unique_ptr<Y, Deleter>&& r);   NOTE: maybe optional
@@ -139,7 +147,7 @@ private:
     void freeCurrentOwnership();
 
     ControlBlock* ctrlBlock_;
-    ElementType* ptr_;
+    Type* ptr_;
 };
 // TODO: VERIFY
 //  template <typename Type, void (*DelType)(Type*)>
@@ -259,6 +267,16 @@ shared_ptr<Type>::shared_ptr(shared_ptr<OtherType>&& other) noexcept
       ptr_(other.ptr_) {
     other.ptr_ = nullptr;
     other.ctrlBlock_ = nullptr;
+}
+
+template <typename Type>
+template <typename OtherType, typename>
+shared_ptr<Type>::shared_ptr(const weak_ptr<OtherType>& other)
+    : ctrlBlock_(reinterpret_cast<shared_ptr<Type>::ControlBlock*>(other.ctrlBlock_)),
+      ptr_(other.ptr_) {
+    if (ctrlBlock_) {
+        ctrlBlock_->sharedCount_++;
+    }
 }
 
 // TODO: VERIFY if controlblock destroyed always

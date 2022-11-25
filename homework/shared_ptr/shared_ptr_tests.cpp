@@ -1,4 +1,5 @@
 #include "shared_ptr.hpp"
+// TODO: VERIFY
 
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
@@ -320,6 +321,75 @@ TEST(SharedPtrsMoveConstructorTakingConvertibleSourceShould, setManagedPtrOfSour
     my::shared_ptr<DummyBase> sut_moved{std::move(sut)};
 
     EXPECT_EQ(sut.get(), nullptr);
+}
+
+// tests for constructor taking weak_ptr to same type
+TEST(SharedPtrsConstructorFromWeakPtrShould, copyPtrFromWeakPtr) {
+    my::shared_ptr<float> sut_original{new float};
+    my::weak_ptr<float> weak_from_original{sut_original};
+    ASSERT_EQ(sut_original.use_count(), 1);
+
+    my::shared_ptr<float> sut_from_weak{weak_from_original};
+
+    EXPECT_EQ(*sut_from_weak, *sut_original);
+}
+
+TEST(SharedPtrsConstructorFromWeakPtrToConvertibleTypeShould, copyPtrFromWeakPtr) {
+    my::shared_ptr<DummyDerived> sut_original{new DummyDerived};
+    my::weak_ptr<DummyDerived> weak_from_original{sut_original};
+    ASSERT_EQ(sut_original.use_count(), 1);
+
+    my::shared_ptr<DummyBase> sut_from_weak{weak_from_original};
+
+    EXPECT_EQ(sut_from_weak.get(), sut_original.get());
+}
+
+TEST(SharedPtrsConstructorFromWeakPtrShould, increaseUseCountIfWeakPtrNotExpired) {
+    my::shared_ptr<float> sut_original{new float};
+    my::weak_ptr<float> weak_from_original{sut_original};
+    ASSERT_EQ(sut_original.use_count(), 1);
+
+    my::shared_ptr<float> sut_from_weak{weak_from_original};
+
+    EXPECT_EQ(sut_from_weak.use_count(), 2);
+    EXPECT_EQ(sut_original.use_count(), 2);
+}
+
+TEST(SharedPtrsConstructorFromWeakPtrToConvertibleTypeShould,
+     increaseUseCountIfWeakPtrNotExpired) {
+    my::shared_ptr<DummyDerived> sut_original{new DummyDerived};
+    my::weak_ptr<DummyDerived> weak_from_original{sut_original};
+    ASSERT_EQ(sut_original.use_count(), 1);
+
+    my::shared_ptr<DummyBase> sut_from_weak{weak_from_original};
+
+    EXPECT_EQ(sut_from_weak.use_count(), 2);
+    EXPECT_EQ(sut_original.use_count(), 2);
+}
+
+TEST(SharedPtrsConstructorFromWeakPtrShould, notIncreaseUseCountIfWeakPtrExpired) {
+    my::shared_ptr<float> sut_original;
+    my::weak_ptr<float> weak_from_original{sut_original};
+    ASSERT_EQ(sut_original.use_count(), 0);
+    ASSERT_TRUE(weak_from_original.expired());
+
+    my::shared_ptr<float> sut_from_weak{weak_from_original};
+
+    EXPECT_EQ(sut_from_weak.use_count(), 0);
+    EXPECT_EQ(sut_original.use_count(), 0);
+}
+
+TEST(SharedPtrsConstructorFromWeakPtrToConvertibleTypeShould,
+     notIncreaseUseCountIfWeakPtrExpired) {
+    my::shared_ptr<DummyDerived> sut_original;
+    my::weak_ptr<DummyDerived> weak_from_original{sut_original};
+    ASSERT_EQ(sut_original.use_count(), 0);
+    ASSERT_TRUE(weak_from_original.expired());
+
+    my::shared_ptr<DummyBase> sut_from_weak{weak_from_original};
+
+    EXPECT_EQ(sut_from_weak.use_count(), 0);
+    EXPECT_EQ(sut_original.use_count(), 0);
 }
 
 // tests for get member function
