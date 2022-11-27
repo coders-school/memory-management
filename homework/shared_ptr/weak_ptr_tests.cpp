@@ -4,7 +4,6 @@
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
-// TODO: VERIFY if not my namespace
 namespace tests {
 
 class DummyBase {
@@ -152,7 +151,7 @@ TEST(WeakPtrCopyConstructorTakingWeakPtrToConvertibleTypeShould, copyManagedPtrS
     ASSERT_NE(shared.get(), nullptr);
     EXPECT_EQ(shared_final_for_comparing.get(), shared.get());
 }
-// TODO: VERIFY current work
+
 TEST(WeakPtrCopyConstructorTakingWeakPtrToConvertibleTypeShould, copyNullPtrStoredInSource) {
     my::shared_ptr<DummyDerived> shared;
     my::weak_ptr<DummyDerived> sut_from_shared{shared};
@@ -164,67 +163,306 @@ TEST(WeakPtrCopyConstructorTakingWeakPtrToConvertibleTypeShould, copyNullPtrStor
     ASSERT_EQ(shared.get(), nullptr);
     EXPECT_EQ(shared_final_for_comparing.get(), shared.get());
 }
-// TODO: VERIFY current work
+
 TEST(WeakPtrCopyConstructorTakingWeakPtrToConvertibleTypeShould, haveTheSameUseCountAsSource) {
     my::shared_ptr<DummyDerived> shared(new DummyDerived);
     ASSERT_EQ(shared.use_count(), 1);
     my::shared_ptr<DummyDerived> shared_null;
     ASSERT_EQ(shared_null.use_count(), 0);
+    my::weak_ptr<DummyDerived> sut_from_shared{shared};
+    my::weak_ptr<DummyDerived> sut_from_shared_null{shared_null};
 
-    my::weak_ptr<DummyBase> sut_from_shared{shared};
-    my::weak_ptr<DummyBase> sut_from_shared_null{shared_null};
+    my::weak_ptr<DummyBase> sut_from_sut_to_convertible{sut_from_shared};
+    my::weak_ptr<DummyBase> sut_from_sut_null_to_convertible{sut_from_shared_null};
+    // the only way to access managed ptr is to construct shared_ptr from sut
+    my::shared_ptr<DummyBase> shared_final_for_comparing{sut_from_sut_to_convertible};
+    my::shared_ptr<DummyBase> shared_null_final_for_comparing{sut_from_sut_null_to_convertible};
 
-    EXPECT_EQ(sut_from_shared.use_count(), shared.use_count());
-    EXPECT_EQ(sut_from_shared_null.use_count(), shared_null.use_count());
+    EXPECT_EQ(shared_final_for_comparing.use_count(), shared.use_count());
+    EXPECT_EQ(shared_null_final_for_comparing.use_count(), shared_null.use_count());
 }
 
-// NOTE: remember about nullptr case
-// TODO: VERIFY remove or refactor when ptr access after lock() available
-// TEST(WeakPtrMoveConstructorShould, copyManagedPtrStoredInSourceAndMakeSourceEmpty) {}
+TEST(WeakPtrMoveConstructorShould, copyManagedPtrStoredInSource) {
+    my::shared_ptr<float> shared_original{new float};
+    ASSERT_NE(shared_original.get(), nullptr);
+    my::weak_ptr<float> sut_from_original{shared_original};
 
-// TODO: VERIFY remove or refactor when ptr access after lock() available ????????????
-// TEST(WeakPtrDestructorShould, decreaseWeakCountOfSharedPtrSharingControlBlock) {}
+    my::weak_ptr<float> sut_from_moved{std::move(sut_from_original)};
+    // the only way to access managed ptr is to construct shared_ptr from sut
+    my::shared_ptr<float> shared_final_to_compare{sut_from_moved};
+
+    EXPECT_EQ(shared_final_to_compare.get(), shared_original.get());
+}
+
+TEST(WeakPtrMoveConstructorShould, setManagedPtrStoredInSourceToNullptr) {
+    my::shared_ptr<float> shared_original{new float};
+    ASSERT_NE(shared_original.get(), nullptr);
+    my::weak_ptr<float> sut_to_be_moved{shared_original};
+
+    my::weak_ptr<float> sut_from_moved{std::move(sut_to_be_moved)};
+    // the only way to access managed ptr is to construct shared_ptr from sut
+    my::shared_ptr<float> shared_final_to_compare{sut_to_be_moved};
+
+    EXPECT_EQ(shared_final_to_compare.get(), nullptr);
+}
+
+TEST(WeakPtrMoveConstructorShould, takeOverUseCountFromSource) {
+    my::shared_ptr<float> shared_original{new float};
+    ASSERT_EQ(shared_original.use_count(), 1);
+    my::weak_ptr<float> sut_to_be_moved{shared_original};
+
+    my::weak_ptr<float> sut_from_moved{std::move(sut_to_be_moved)};
+
+    EXPECT_EQ(sut_from_moved.use_count(), 1);
+    EXPECT_EQ(sut_to_be_moved.use_count(), 0);
+}
+
+TEST(WeakPtrMoveConstructorTakingWeakPtrToConvertibleTypeShould,
+     copyManagedPtrStoredInSource) {
+    my::shared_ptr<DummyDerived> shared_original{new DummyDerived};
+    ASSERT_NE(shared_original.get(), nullptr);
+    my::weak_ptr<DummyDerived> sut_from_original{shared_original};
+
+    my::weak_ptr<DummyBase> sut_from_moved{std::move(sut_from_original)};
+    // the only way to access managed ptr is to construct shared_ptr from sut
+    my::shared_ptr<DummyBase> shared_final_to_compare{sut_from_moved};
+
+    EXPECT_EQ(shared_final_to_compare.get(), shared_original.get());
+}
+
+TEST(WeakPtrMoveConstructorTakingWeakPtrToConvertibleTypeShould,
+     setManagedPtrStoredInSourceToNullptr) {
+    my::shared_ptr<DummyDerived> shared_original{new DummyDerived};
+    ASSERT_NE(shared_original.get(), nullptr);
+    my::weak_ptr<DummyDerived> sut_to_be_moved{shared_original};
+
+    my::weak_ptr<DummyBase> sut_from_moved{std::move(sut_to_be_moved)};
+    // the only way to access managed ptr is to construct shared_ptr from sut
+    my::shared_ptr<DummyBase> shared_final_to_compare{sut_to_be_moved};
+
+    EXPECT_EQ(shared_final_to_compare.get(), nullptr);
+}
+
+TEST(WeakPtrMoveConstructorTakingWeakPtrToConvertibleTypeShould,
+     takeOverUseCountFromSource) {
+    my::shared_ptr<DummyDerived> shared_original{new DummyDerived};
+    ASSERT_EQ(shared_original.use_count(), 1);
+    my::weak_ptr<DummyDerived> sut_to_be_moved{shared_original};
+
+    my::weak_ptr<DummyBase> sut_from_moved{std::move(sut_to_be_moved)};
+
+    EXPECT_EQ(sut_from_moved.use_count(), 1);
+    EXPECT_EQ(sut_to_be_moved.use_count(), 0);
+}
 
 // copy assignment tests
-// NOTE: remember about nullptr case
-// TODO: VERIFY remove or refactor when ptr access after lock() available
-// TEST(WeakPtrCopyAssignmentShould, copyManagedPtrStoredInSource) {}
+TEST(WeakPtrCopyAssignmentShould, copyManagedPtrStoredInSource) {
+    my::shared_ptr<double> shared(new double);
+    my::weak_ptr<double> sut_to_be_copied(shared);
 
-// NOTE: remember about nullptr case
-// TODO: VERIFY remove or refactor when ptr access after lock() available
-// TEST(WeakPtrAfterCopyAssignmentShould, haveTheSameUseCountAsSource) {}
+    my::weak_ptr<double> sut;
+    sut = sut_to_be_copied;
+    // the only way to access managed ptr is to construct shared_ptr from sut
+    my::shared_ptr<double> shared_final_to_compare{sut};
 
-// copy assignment tests
-// NOTE: remember about nullptr case
-// TODO: VERIFY remove or refactor when ptr access after lock() available
-// TEST(WeakPtrCopyAssignmentFromWeakPtrToConvertibleTypeShould, copyManagedPtrStoredInSource) {}
+    ASSERT_NE(shared.get(), nullptr);
+    EXPECT_EQ(shared.get(), shared_final_to_compare.get());
+}
 
-// NOTE: remember about nullptr case
-// TODO: VERIFY remove or refactor when ptr access after lock() available
-// TEST(WeakPtrAfterCopyAssignmentFromWeakPtrShould, haveTheSameUseCountAsSource) {}
+TEST(WeakPtrAfterCopyAssignmentShould, haveTheSameUseCountAsSource) {
+    my::shared_ptr<double> shared(new double);
+    ASSERT_EQ(shared.use_count(), 1);
+    my::weak_ptr<double> sut_to_be_copied(shared);
 
-// copy assignment tests
-// NOTE: remember about nullptr case
-// TODO: VERIFY remove or refactor when ptr access after lock() available
-// TEST(WeakPtrCopyAssignmentFromSharedPtrToConvertibleTypeShould, copyManagedPtrStoredInSource) {}
+    my::weak_ptr<double> sut;
+    sut = sut_to_be_copied;
+    // the only way to access managed ptr is to construct shared_ptr from sut
+    my::shared_ptr<double> shared_final_to_compare{sut};
 
-// NOTE: remember about nullptr case
-// TODO: VERIFY remove or refactor when ptr access after lock() available
-// TEST(WeakPtrAfterCopyAssignmentFromSharedPtrShould, haveTheSameUseCountAsSource) {}
+    ASSERT_EQ(shared.use_count(), 2);
+    EXPECT_EQ(shared.use_count(), shared_final_to_compare.use_count());
+}
 
-// move assignment tests
-// NOTE: remember about nullptr case
-// TODO: VERIFY remove or refactor when ptr access after lock() available
-// TEST(WeakPtrMoveAssignmentShould, copyManagedPtrStoredInSourceAndMakeSourceEmpty) {}
+TEST(WeakPtrCopyAssignmentTakingToWeakPtrToConvertibleTypeShould, copyManagedPtrStoredInSource) {
+    my::shared_ptr<DummyDerived> shared(new DummyDerived);
+    my::weak_ptr<DummyDerived> sut_to_be_copied(shared);
 
-// NOTE: remember about nullptr case
-// TODO: VERIFY remove or refactor when ptr access after lock() available
-// TEST(WeakPtrMoveAssignmentFromWeakPtrToConvertibleTypeShould, copyManagedPtrStoredInSourceAndMakeSourceEmpty) {}
+    my::weak_ptr<DummyBase> sut;
+    sut = sut_to_be_copied;
+    // the only way to access managed ptr is to construct shared_ptr from sut
+    my::shared_ptr<DummyBase> shared_final_to_compare{sut};
+
+    ASSERT_NE(shared.get(), nullptr);
+    EXPECT_EQ(shared.get(), shared_final_to_compare.get());
+}
+
+TEST(WeakPtrCopyAssignmentTakingToWeakPtrToConvertibleTypeShould, haveTheSameUseCountAsSource) {
+    my::shared_ptr<DummyDerived> shared(new DummyDerived);
+    ASSERT_EQ(shared.use_count(), 1);
+    my::weak_ptr<DummyDerived> sut_to_be_copied(shared);
+
+    my::weak_ptr<DummyBase> sut;
+    sut = sut_to_be_copied;
+    // the only way to access managed ptr is to construct shared_ptr from sut
+    my::shared_ptr<DummyBase> shared_final_to_compare{sut};
+
+    ASSERT_EQ(shared.use_count(), 2);
+    EXPECT_EQ(shared.use_count(), shared_final_to_compare.use_count());
+}
+
+TEST(WeakPtrCopyAssignmentTakingSharedPtrToSameTypeShould, copyManagedPtrStoredInSource) {
+    my::shared_ptr<float> shared(new float);
+    my::shared_ptr<float> shared_null;
+
+    my::weak_ptr<float> sut;
+    sut = shared;
+    my::weak_ptr<float> sut_from_null;
+    sut_from_null = shared_null;
+    // the only way to access managed ptr is to construct shared_ptr from sut
+    my::shared_ptr<float> shared_final_to_compare{sut};
+    my::shared_ptr<float> shared_final_to_compare_form_null{sut_from_null};
+
+    ASSERT_NE(shared.get(), nullptr);
+    ASSERT_EQ(shared_null.get(), nullptr);
+    EXPECT_EQ(shared.get(), shared_final_to_compare.get());
+    EXPECT_EQ(shared_null.get(), shared_final_to_compare_form_null.get());
+}
+
+TEST(WeakPtrCopyAssignmentTakingSharedPtrToConvertibleTypeShould, copyManagedPtrStoredInSource) {
+    my::shared_ptr<DummyDerived> shared(new DummyDerived);
+    my::shared_ptr<DummyDerived> shared_null;
+
+    my::weak_ptr<DummyBase> sut;
+    sut = shared;
+    my::weak_ptr<DummyBase> sut_from_null;
+    sut_from_null = shared_null;
+    // the only way to access managed ptr is to construct shared_ptr from sut
+    my::shared_ptr<DummyBase> shared_final_to_compare{sut};
+    my::shared_ptr<DummyBase> shared_final_to_compare_form_null{sut_from_null};
+
+    ASSERT_NE(shared.get(), nullptr);
+    ASSERT_EQ(shared_null.get(), nullptr);
+    EXPECT_EQ(shared.get(), shared_final_to_compare.get());
+    EXPECT_EQ(shared_null.get(), shared_final_to_compare_form_null.get());
+}
+
+TEST(WeakPtrCopyAssignmentTakingSharedPtrToSameTypeShould, haveTheSameUseCountAsSource) {
+    my::shared_ptr<float> shared(new float);
+    my::shared_ptr<float> shared_null;
+    ASSERT_EQ(shared.use_count(), 1);
+    ASSERT_EQ(shared_null.use_count(), 0);
+
+    my::weak_ptr<float> sut;
+    sut = shared;
+    my::weak_ptr<float> sut_from_null;
+    sut_from_null = shared_null;
+    // the only way to access managed ptr is to construct shared_ptr from sut
+    my::shared_ptr<float> shared_final_to_compare{sut};
+    my::shared_ptr<float> shared_final_to_compare_form_null{sut_from_null};
+
+    EXPECT_EQ(shared.use_count(), shared_final_to_compare.use_count());
+    EXPECT_EQ(shared_null.use_count(), shared_final_to_compare_form_null.use_count());
+}
+
+TEST(WeakPtrCopyAssignmentTakingSharedPtrToConvertibleTypeShould, haveTheSameUseCountAsSource) {
+    my::shared_ptr<DummyDerived> shared(new DummyDerived);
+    my::shared_ptr<DummyDerived> shared_null;
+    ASSERT_EQ(shared.use_count(), 1);
+    ASSERT_EQ(shared_null.use_count(), 0);
+
+    my::weak_ptr<DummyBase> sut;
+    sut = shared;
+    my::weak_ptr<DummyBase> sut_from_null;
+    sut_from_null = shared_null;
+    // the only way to access managed ptr is to construct shared_ptr from sut
+    my::shared_ptr<DummyBase> shared_final_to_compare{sut};
+    my::shared_ptr<DummyBase> shared_final_to_compare_form_null{sut_from_null};
+
+    EXPECT_EQ(shared.use_count(), shared_final_to_compare.use_count());
+    EXPECT_EQ(shared_null.use_count(), shared_final_to_compare_form_null.use_count());
+}
+
+TEST(WeakPtrMoveAssignmentTakingWeakPtrToSameTypeShould, copyManagedPtrStoredInSource) {
+    my::shared_ptr<float> shared(new float);
+    my::weak_ptr<float> sut_for_moving{shared};
+
+    my::weak_ptr<float> sut;
+    sut = std::move(sut_for_moving);
+    // the only way to access managed ptr is to construct shared_ptr from sut
+    my::shared_ptr<float> shared_final_to_compare{sut};
+
+    ASSERT_NE(shared.get(), nullptr);
+    EXPECT_EQ(shared.get(), shared_final_to_compare.get());
+}
+
+TEST(WeakPtrMoveAssignmentTakingWeakPtrToSameTypeShould, setManagedPtrStoredInSourceToNullptr) {
+    my::shared_ptr<float> shared(new float);
+    my::weak_ptr<float> sut_for_moving{shared};
+
+    my::weak_ptr<float> sut;
+    sut = std::move(sut_for_moving);
+    // the only way to access managed ptr is to construct shared_ptr from sut
+    my::shared_ptr<float> shared_final_from_moved{sut_for_moving};
+
+    ASSERT_NE(shared.get(), nullptr);
+    EXPECT_EQ(shared_final_from_moved.get(), nullptr);
+}
+
+TEST(WeakPtrMoveAssignmentTakingWeakPtrToSameTypeShould, takeOverUseCountFromSource) {
+    my::shared_ptr<float> shared(new float);
+    // make copy of shared just to set the use_count to 2
+    my::shared_ptr<float> shared_copy{shared};
+    my::weak_ptr<float> sut_for_moving{shared};
+
+    my::weak_ptr<float> sut;
+    sut = std::move(sut_for_moving);
+
+    ASSERT_EQ(shared.use_count(), 2);
+    EXPECT_EQ(sut.use_count(), 2);
+    EXPECT_EQ(sut_for_moving.use_count(), 0);
+}
+
+TEST(WeakPtrMoveAssignmentTakingWeakPtrToConvertibleTypeShould, copyManagedPtrStoredInSource) {
+    my::shared_ptr<DummyDerived> shared(new DummyDerived);
+    my::weak_ptr<DummyDerived> sut_for_moving{shared};
+
+    my::weak_ptr<DummyBase> sut;
+    sut = std::move(sut_for_moving);
+    // the only way to access managed ptr is to construct shared_ptr from sut
+    my::shared_ptr<DummyBase> shared_final_to_compare{sut};
+
+    ASSERT_NE(shared.get(), nullptr);
+    EXPECT_EQ(shared.get(), shared_final_to_compare.get());
+}
+
+TEST(WeakPtrMoveAssignmentTakingWeakPtrToConvertibleTypeShould, setManagedPtrStoredInSourceToNullptr) {
+    my::shared_ptr<DummyDerived> shared(new DummyDerived);
+    my::weak_ptr<DummyDerived> sut_for_moving{shared};
+
+    my::weak_ptr<DummyBase> sut;
+    sut = std::move(sut_for_moving);
+    // the only way to access managed ptr is to construct shared_ptr from sut
+    my::shared_ptr<DummyBase> shared_final_from_moved{sut_for_moving};
+
+    ASSERT_NE(shared.get(), nullptr);
+    EXPECT_EQ(shared_final_from_moved.get(), nullptr);
+}
+
+TEST(WeakPtrMoveAssignmentTakingWeakPtrToConvertibleTypeShould, takeOverUseCountFromSource) {
+    my::shared_ptr<DummyDerived> shared(new DummyDerived);
+    // make copy of shared just to set the use_count to 2
+    my::shared_ptr<DummyDerived> shared_copy{shared};
+    my::weak_ptr<DummyDerived> sut_for_moving{shared};
+
+    my::weak_ptr<DummyBase> sut;
+    sut = std::move(sut_for_moving);
+
+    ASSERT_EQ(shared.use_count(), 2);
+    EXPECT_EQ(sut.use_count(), 2);
+    EXPECT_EQ(sut_for_moving.use_count(), 0);
+}
 
 // other functions tests
-// TODO: VERIFY remove or refactor when ptr access after lock() available
-// TEST(WeakPtrsResetShould, setReferencedPtrToNull) {}
-
 TEST(WeakPtrsUseCountShould, returnNumberOfSharedPtrsOwningManagedPtr) {
     my::shared_ptr<double> shared{new double{1.0}};
     my::shared_ptr<double> shared_null{};
@@ -240,7 +478,6 @@ TEST(WeakPtrsUseCountShould, returnNumberOfSharedPtrsOwningManagedPtr) {
     EXPECT_EQ(sut_from_null.use_count(), shared_null.use_count());
 }
 
-// TODO: add case when use_count drops to 0 but weak_ptr exists (after assignment done)
 TEST(WeakPtrsExpired, returnTrueIfAnySharedPtrOwnsManagedPtr) {
     my::shared_ptr<int> shared{new int{1}};
     my::shared_ptr<int> shared_null{};
@@ -254,20 +491,56 @@ TEST(WeakPtrsExpired, returnTrueIfAnySharedPtrOwnsManagedPtr) {
     EXPECT_TRUE(sut_from_null.expired());
 }
 
-// TEST(WeakPtrsLockShould, returnSharedPtrToManagedObjectIfManagedPtrNotNull) {
-//     my::shared_ptr<int> shared(new int);
-//     ASSERT_EQ(shared.use_count(), 1);
+TEST(WeakPtrsExpired, returnTrueAfterWeakPtrExistsAfterAllSharedPtrsDestroyed) {
+    my::weak_ptr<double> sut;
+    {
+        my::shared_ptr<double> shared(new double);
+        sut = shared;
+        EXPECT_FALSE(sut.expired());
+    }
 
-//     my::weak_ptr<int> sut = shared;
-//     my::shared_ptr<int> shared_from_lock = sut.lock();
+    EXPECT_TRUE(sut.expired());
+}
 
-//     EXPECT_EQ(*shared_from_lock, *shared);
-//     EXPECT_EQ(shared_from_lock.use_count(), shared.use_count());
-// }
+TEST(WeakPtrsLockShould, createSharedPtrToManagedObjectIfNotExpired) {
+    my::shared_ptr<int> shared(new int{20});
+    ASSERT_EQ(shared.use_count(), 1);
+    my::weak_ptr<int> sut = shared;
 
-// TEST(WeakPtrsLockShould, returnDefaultConstructedSharedPtrIfManagedPtrIsNull)
-// {
-//  // TODO:
-// }
+    my::shared_ptr<int> shared_from_lock = sut.lock();
+
+    EXPECT_NE(shared_from_lock.get(), nullptr);
+    EXPECT_EQ(shared_from_lock.use_count(), 2);
+    EXPECT_EQ(*shared_from_lock, *shared);
+    EXPECT_EQ(shared_from_lock.use_count(), shared.use_count());
+}
+
+TEST(WeakPtrsLockShould, returnDefaultConstructedSharedPtrIfManagedPtrIsNull) {
+    my::shared_ptr<int> shared;
+    ASSERT_EQ(shared.use_count(), 0);
+    ASSERT_EQ(shared.get(), nullptr);
+    my::weak_ptr<int> sut = shared;
+    ASSERT_TRUE(sut.expired());
+
+    my::shared_ptr<int> shared_from_lock = sut.lock();
+
+    EXPECT_EQ(shared_from_lock.get(), nullptr);
+    EXPECT_EQ(shared_from_lock.use_count(), 0);
+}
+
+TEST(WeakPtrsResetShould, setManagedPtrToNullptr) {
+    my::shared_ptr<int> shared{new int};
+    my::weak_ptr<int> sut{shared};
+    // the only way to access managed ptr is to construct shared_ptr from sut
+    auto shared_from_sut_before_reset = sut.lock();
+
+    sut.reset();
+
+    auto shared_from_sut_after_reset = sut.lock();
+
+    ASSERT_NE(shared.get(), nullptr);
+    ASSERT_NE(shared_from_sut_before_reset.get(), nullptr);
+    EXPECT_EQ(shared_from_sut_after_reset.get(), nullptr);
+}
 
 }  // namespace tests

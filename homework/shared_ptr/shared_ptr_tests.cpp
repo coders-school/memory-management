@@ -1,10 +1,8 @@
 #include "shared_ptr.hpp"
-// TODO: VERIFY
 
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
-// TODO: VERIFY if not my namespace
 namespace tests {
 using testing::A;
 using testing::An;
@@ -34,7 +32,6 @@ public:
     }
 };
 
-// TODO: VERIFY
 class DerivedDeleteCallDetectorMock : public DeleteCallDetectorMock {
 public:
     ~DerivedDeleteCallDetectorMock() override {
@@ -489,8 +486,6 @@ TEST(SharedPtrDestructorShould, decreaseSharedCounterIfMoreThanOneInstanceExist)
     EXPECT_EQ(sut3.use_count(), 1);
 }
 
-// // TODO: add test for deletion of control block if weak count == 0
-
 // tests for copy assignment taking shared_ptr to the same type of argument
 TEST(SharedPtrCopyAssignmentShould, decreaseUseCountOfPreviouslyManagedObject) {
     my::shared_ptr<double> sut{new double};
@@ -539,8 +534,6 @@ TEST(SharedPtrCopyAssignmentShould, increaseUseCountOfNewManagedObject) {
     EXPECT_EQ(sut.use_count(), 2);
     EXPECT_EQ(to_be_copied.use_count(), 2);
 }
-
-// // TODO: add test for deletion of control block if weak count == 0 after copy assignment
 
 // tests for copy assignment taking shared_ptr to convertible type
 TEST(SharedPtrCopyAssignmentForConvertibleTypeShould,
@@ -593,8 +586,6 @@ TEST(SharedPtrCopyAssignmentForConvertibleTypeShould, increaseUseCountOfNewManag
     EXPECT_EQ(sut.use_count(), 2);
     EXPECT_EQ(to_be_copied.use_count(), 2);
 }
-
-// // TODO: add test for deletion of control block if weak count == 0 after copy assignment
 
 // tests for move assignment taking shared_ptr to same type
 TEST(SharedPtrMoveAssignmentShould, decreaseUseCountOfPreviouslyManagedObject) {
@@ -833,7 +824,7 @@ TEST(SharedPtrsResetTakingPtrAndDeleterShould, decreaseUseCountOfPreviouslyManag
 }
 
 TEST(SharedPtrsResetTakingPtrAndDeleterShould, setManagedPtrToNewValue) {
-    // for oridinary type
+    // for ordinary type
     my::shared_ptr<double> sut{new double};
     ASSERT_NE(sut.get(), nullptr);
 
