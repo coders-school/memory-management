@@ -149,20 +149,7 @@ private:
     ControlBlock* ctrlBlock_;
     Type* ptr_;
 };
-// TODO: VERIFY
-//  template <typename Type, void (*DelType)(Type*)>
-//  struct shared_ptr<Type, DelType>::ControlBlock {
-//      ControlBlock(size_t sharedCount = 0,
-//                   size_t weakCount = 0,
-//                   DeleterType deleter = DelType)
-//          : sharedCount_{sharedCount},
-//            weakCount{weakCount},
-//            deleter_{deleter} {}
 
-//     std::atomic<size_t> sharedCount_;
-//     std::atomic<size_t> weakCount;
-//     DeleterType deleter_;
-// };
 template <typename Type>
 struct shared_ptr<Type>::ControlBlock {
     ControlBlock(size_t sharedCount = 0,
