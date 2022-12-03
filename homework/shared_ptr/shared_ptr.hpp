@@ -1,19 +1,13 @@
 #pragma once
-// TODO: VERIFY INCLUDES
 
 #include "make_shared.hpp"
 #include "weak_ptr.hpp"
 
 #include <atomic>
-// TODO: REMOVE
 #include <functional>
-#include <iostream>
 #include <type_traits>
-namespace my {
 
-// TODO: VERIFY if needed
-template <typename Type>
-class weak_ptr;
+namespace my {
 
 template <typename Type>
 void defaultDelete(Type* managedObj) {
@@ -33,9 +27,6 @@ public:
     template <typename T, typename... Args>
     friend shared_ptr<T> make_shared(Args&&... args);
 
-    // TODO: REMOVE
-    // -------------------- DONE PART ----------------------
-    // using ElementType = Type;  // TODO: REMOVE
     using DeleterType = std::function<void(Type*)>;
     struct ControlBlock;
 
@@ -99,11 +90,6 @@ public:
     Type* get() const noexcept;
 
     long use_count() const noexcept;
-
-    // // TODO: REMOVE
-    // // long weak_count() const noexcept;
-
-    // // DeleterType get_deleter() const noexcept;
 
     explicit operator bool() const noexcept;
 
@@ -179,16 +165,13 @@ constexpr shared_ptr<Type>::shared_ptr() noexcept
 
 template <typename Type>
 constexpr shared_ptr<Type>::shared_ptr(std::nullptr_t) noexcept
-    // TODO: VERIFY if empty initialization
     : shared_ptr{} {}
 
 template <typename Type>
 template <class Deleter>
 shared_ptr<Type>::shared_ptr(std::nullptr_t, Deleter)
-    // TODO: VERIFY if empty initialization
     : shared_ptr{} {}
 
-// TODO: VERIFY maybe enable_if not needed here and everywhere
 template <typename Type>
 template <typename OtherType, typename>
 shared_ptr<Type>::shared_ptr(OtherType* ptr)
@@ -202,15 +185,6 @@ shared_ptr<Type>::shared_ptr(OtherType* ptr, Deleter deleter)
     : ctrlBlock_(new ControlBlock{1, 0, deleter}),
       ptr_(static_cast<Type*>(ptr)) {
 }
-// ======================== // TODO: =======================
-
-// template <typename Type>
-// template <class OtherType, class Deleter, class Alloc>
-// shared_ptr<Type>::shared_ptr(OtherType* ptr, Deleter d, Alloc alloc)
-//     : {
-// }
-
-// ======================== // TODO: =======================
 
 template <typename Type>
 Type* shared_ptr<Type>::get() const noexcept {
@@ -222,21 +196,6 @@ long shared_ptr<Type>::use_count() const noexcept {
     return ctrlBlock_ ? ctrlBlock_->sharedCount_.load()
                       : 0;
 }
-
-// // // TODO: REMOVE maybe
-// // template <typename Type, void (*DelType)(Type*)>
-// // long shared_ptr<Type, DelType>::weak_count() const noexcept {
-// //     return ctrlBlock_ ? ctrlBlock_->weakCount.load()
-// //                       : 0;
-// // }
-
-// // TODO: VERIFY maybe remove
-// // template <typename Type, void (*DelType)(Type*)>
-// // shared_ptr<Type, DelType>::DeleterType
-// // shared_ptr<Type, DelType>::get_deleter() const noexcept {
-// //     return ctrlBlock_ ? ctrlBlock_->deleter_
-// //                       : nullptr;
-// // }
 
 template <typename Type>
 shared_ptr<Type>::shared_ptr(const shared_ptr& other) noexcept
@@ -283,7 +242,6 @@ shared_ptr<Type>::shared_ptr(const weak_ptr<OtherType>& other)
     }
 }
 
-// TODO: VERIFY if controlblock destroyed always
 template <typename Type>
 shared_ptr<Type>::~shared_ptr() {
     freeCurrentOwnership();
@@ -368,22 +326,10 @@ void shared_ptr<Type>::freeCurrentOwnership() {
                     delete ctrlBlock_;
                     ctrlBlock_ = nullptr;
                 }
-                // TODO: VERIFY
-                else {
-                    ctrlBlock_->~ControlBlock();
-                    delete[] ctrlBlock_->memory_storage_;
-                }
             }
         }
         ptr_ = nullptr;
     }
-    // TODO: VERIFY perhaps needed to prevent leaks
-    // else {
-    //     if (ctrlBlock_ && ctrlBlock_->weakCount == 0) {
-    //         delete ctrlBlock_;
-    //         ctrlBlock_ = nullptr;
-    //     }
-    // }
 }
 
 template <typename Type>

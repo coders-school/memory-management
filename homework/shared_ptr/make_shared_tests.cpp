@@ -1,6 +1,3 @@
-// TODO: VERIFY
-#include "shared_ptr.hpp"
-
 #include "make_shared.hpp"
 
 #include "gmock/gmock.h"
@@ -43,27 +40,5 @@ TEST(MakeSharedShould, createSharedPtrPossibleToBeCopiedToDefaultConstructedShar
     EXPECT_EQ(sut3.use_count(), shared3.use_count());
     EXPECT_EQ(sut4.use_count(), shared4.use_count());
 }
-
-// TODO: VERIFY
-// TEST(MakeSharedShould, createCreateSharedPtrWhenNullPtrPassed) {
-//     // [[maybe_unused]] my::shared_ptr<int> sut = my::make_shared<int>(nullptr);
-//     // [[maybe_unused]] my::shared_ptr<double> sut2 = my::make_shared<double>(nullptr);
-//     // [[maybe_unused]] my::shared_ptr<float> sut3 = my::make_shared<float>(nullptr);
-//     // [[maybe_unused]] my::shared_ptr<std::string> sut4 = my::make_shared<std::string>(nullptr);
-//     my::shared_ptr<int> test(nullptr);
-// }
-
-// TODO: REMOVE if considered optional
-// TEST(MakeSharedShould, createSharedPtrFromGivenArguments) {
-//     [[maybe_unused]] my::shared_ptr<int> sut = my::make_shared<int>{};
-//     [[maybe_unused]] my::shared_ptr<float> sut2 = my::make_shared<float>{};
-//     [[maybe_unused]] my::shared_ptr<float> sut3 = my::make_shared<float>{});
-//     [[maybe_unused]] my::shared_ptr<std::string> sut4 = my::make_shared<std::string>{};
-// }
-
-// TODO:
-// test copying pointer created by make_shared
-
-// test getting pointer created by make_shared
 
 }  // namespace tests
