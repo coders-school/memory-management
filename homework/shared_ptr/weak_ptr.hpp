@@ -74,7 +74,7 @@ weak_ptr<Type>::weak_ptr(const shared_ptr<OtherType>& other) noexcept
     : ctrlBlock_(reinterpret_cast<shared_ptr<Type>::ControlBlock*>(other.ctrlBlock_)),
       ptr_(other.ptr_) {
     if (ctrlBlock_) {
-        ctrlBlock_->weakCount++;
+        ctrlBlock_->weakCount_++;
     }
 }
 
@@ -83,7 +83,7 @@ weak_ptr<Type>::weak_ptr(const weak_ptr& other) noexcept
     : ctrlBlock_(other.ctrlBlock_),
       ptr_(other.ptr_) {
     if (ctrlBlock_) {
-        ctrlBlock_->weakCount++;
+        ctrlBlock_->weakCount_++;
     }
 }
 
@@ -93,7 +93,7 @@ weak_ptr<Type>::weak_ptr(const weak_ptr<OtherType>& other) noexcept
     : ctrlBlock_(reinterpret_cast<shared_ptr<Type>::ControlBlock*>(other.ctrlBlock_)),
       ptr_(other.ptr_) {
     if (ctrlBlock_) {
-        ctrlBlock_->weakCount++;
+        ctrlBlock_->weakCount_++;
     }
 }
 
@@ -122,10 +122,10 @@ weak_ptr<Type>::~weak_ptr() {
 template <class Type>
 void weak_ptr<Type>::reset() noexcept {
     if (ctrlBlock_) {
-        if (ctrlBlock_->weakCount > 0) {
-            ctrlBlock_->weakCount--;
+        if (ctrlBlock_->weakCount_ > 0) {
+            ctrlBlock_->weakCount_--;
         }
-        if (ctrlBlock_->weakCount == 0 && ctrlBlock_->sharedCount_ == 0) {
+        if (ctrlBlock_->weakCount_ == 0 && ctrlBlock_->sharedCount_ == 0) {
             if (!ctrlBlock_->memory_storage_) {
                 delete ctrlBlock_;
             } else {
@@ -143,7 +143,7 @@ weak_ptr<Type>& weak_ptr<Type>::operator=(const weak_ptr& other) noexcept {
     ctrlBlock_ = other.ctrlBlock_;
     ptr_ = other.ptr_;
     if (ctrlBlock_) {
-        ctrlBlock_->weakCount++;
+        ctrlBlock_->weakCount_++;
     }
     return *this;
 }
@@ -154,7 +154,7 @@ weak_ptr<Type>& weak_ptr<Type>::operator=(const weak_ptr<OtherType>& other) noex
     ctrlBlock_ = reinterpret_cast<shared_ptr<Type>::ControlBlock*>(other.ctrlBlock_);
     ptr_ = other.ptr_;
     if (ctrlBlock_) {
-        ctrlBlock_->weakCount++;
+        ctrlBlock_->weakCount_++;
     }
 
     return *this;
@@ -166,7 +166,7 @@ weak_ptr<Type>& weak_ptr<Type>::operator=(const shared_ptr<OtherType>& other) no
     ctrlBlock_ = reinterpret_cast<shared_ptr<Type>::ControlBlock*>(other.ctrlBlock_);
     ptr_ = other.ptr_;
     if (ctrlBlock_) {
-        ctrlBlock_->weakCount++;
+        ctrlBlock_->weakCount_++;
     }
 
     return *this;

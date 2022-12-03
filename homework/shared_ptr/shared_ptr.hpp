@@ -111,12 +111,12 @@ struct shared_ptr<Type>::ControlBlock {
                  DeleterType deleter = defaultDelete<Type>,
                  char* memoryStorage = nullptr)
         : sharedCount_{sharedCount},
-          weakCount{weakCount},
+          weakCount_{weakCount},
           deleter_{deleter},
           memory_storage_(memoryStorage) {}
 
     std::atomic<size_t> sharedCount_;
-    std::atomic<size_t> weakCount;
+    std::atomic<size_t> weakCount_;
     DeleterType deleter_;
     char* memory_storage_;
 };
@@ -286,7 +286,7 @@ void shared_ptr<Type>::freeCurrentOwnership() {
         if (ctrlBlock_->sharedCount_ == 0) {
             ctrlBlock_->deleter_(ptr_);
 
-            if (ctrlBlock_->weakCount == 0) {
+            if (ctrlBlock_->weakCount_ == 0) {
                 if (!ctrlBlock_->memory_storage_) {
                     delete ctrlBlock_;
                 } else {
