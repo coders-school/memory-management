@@ -125,9 +125,16 @@ weak_ptr<Type>::~weak_ptr() {
 template <class Type>
 void weak_ptr<Type>::reset() noexcept {
     if (ctrlBlock_) {
-        ctrlBlock_->weakCount--;
-        if (ctrlBlock_->weakCount == 0) {
-            delete ctrlBlock_;
+        if (ctrlBlock_->weakCount > 0) {
+            ctrlBlock_->weakCount--;
+        }
+        if (ctrlBlock_->weakCount == 0 && ctrlBlock_->sharedCount_ == 0) {
+            if (!ctrlBlock_->memory_storage_) {
+                delete ctrlBlock_;
+            } else {
+                delete[] ctrlBlock_->memory_storage_;
+            }
+            ctrlBlock_ = nullptr;
         }
     }
     ctrlBlock_ = nullptr;

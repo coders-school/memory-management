@@ -320,7 +320,7 @@ TEST(SharedPtrsMoveConstructorTakingConvertibleSourceShould, setManagedPtrOfSour
     EXPECT_EQ(sut.get(), nullptr);
 }
 
-// tests for constructor taking weak_ptr to same type
+// // tests for constructor taking weak_ptr to same type
 TEST(SharedPtrsConstructorFromWeakPtrShould, copyPtrFromWeakPtr) {
     my::shared_ptr<float> sut_original{new float};
     my::weak_ptr<float> weak_from_original{sut_original};
@@ -328,7 +328,7 @@ TEST(SharedPtrsConstructorFromWeakPtrShould, copyPtrFromWeakPtr) {
 
     my::shared_ptr<float> sut_from_weak{weak_from_original};
 
-    EXPECT_EQ(*sut_from_weak, *sut_original);
+    EXPECT_EQ(sut_from_weak.get(), sut_original.get());
 }
 
 TEST(SharedPtrsConstructorFromWeakPtrToConvertibleTypeShould, copyPtrFromWeakPtr) {

@@ -237,7 +237,7 @@ template <typename OtherType, typename>
 shared_ptr<Type>::shared_ptr(const weak_ptr<OtherType>& other)
     : ctrlBlock_(reinterpret_cast<shared_ptr<Type>::ControlBlock*>(other.ctrlBlock_)),
       ptr_(other.ptr_) {
-    if (ctrlBlock_) {
+    if (ptr_ && ctrlBlock_) {
         ctrlBlock_->sharedCount_++;
     }
 }
@@ -315,8 +315,10 @@ shared_ptr<Type>& shared_ptr<Type>::operator=(shared_ptr<OtherType>&& other) noe
 
 template <typename Type>
 void shared_ptr<Type>::freeCurrentOwnership() {
-    if (ptr_ && ctrlBlock_) {
-        ctrlBlock_->sharedCount_--;
+    if (ctrlBlock_) {
+        if (ctrlBlock_->sharedCount_ > 0) {
+            ctrlBlock_->sharedCount_--;
+        }
 
         if (ctrlBlock_->sharedCount_ == 0) {
             ctrlBlock_->deleter_(ptr_);
@@ -324,9 +326,11 @@ void shared_ptr<Type>::freeCurrentOwnership() {
             if (ctrlBlock_->weakCount == 0) {
                 if (!ctrlBlock_->memory_storage_) {
                     delete ctrlBlock_;
-                    ctrlBlock_ = nullptr;
+                } else {
+                    delete[] ctrlBlock_->memory_storage_;
                 }
             }
+            ctrlBlock_ = nullptr;
         }
         ptr_ = nullptr;
     }
