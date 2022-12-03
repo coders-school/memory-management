@@ -4,6 +4,10 @@
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
+template class my::weak_ptr<int>;
+template class my::weak_ptr<double>;
+template class my::weak_ptr<float>;
+template class my::weak_ptr<std::string>;
 
 class DummyBase {
 public:
