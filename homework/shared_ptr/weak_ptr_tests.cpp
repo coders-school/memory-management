@@ -4,7 +4,6 @@
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
-namespace tests {
 
 class DummyBase {
 public:
@@ -542,5 +541,3 @@ TEST(WeakPtrsResetShould, setManagedPtrToNullptr) {
     ASSERT_NE(shared_from_sut_before_reset.get(), nullptr);
     EXPECT_EQ(shared_from_sut_after_reset.get(), nullptr);
 }
-
-}  // namespace tests

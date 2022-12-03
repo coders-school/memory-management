@@ -3,8 +3,6 @@
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
-namespace tests {
-
 TEST(MakeSharedShould, createDefaultSharedPtrWhenNoArgumentsPassed) {
     [[maybe_unused]] my::shared_ptr<int> sut = my::make_shared<int>(100);
     [[maybe_unused]] my::shared_ptr<double> sut2 = my::make_shared<double>(200.0);
@@ -40,5 +38,3 @@ TEST(MakeSharedShould, createSharedPtrPossibleToBeCopiedToDefaultConstructedShar
     EXPECT_EQ(sut3.use_count(), shared3.use_count());
     EXPECT_EQ(sut4.use_count(), shared4.use_count());
 }
-
-}  // namespace tests

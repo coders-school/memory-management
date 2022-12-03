@@ -3,9 +3,13 @@
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
-namespace tests {
 using testing::A;
 using testing::An;
+
+template class my::shared_ptr<int>;
+template class my::shared_ptr<double>;
+template class my::shared_ptr<float>;
+template class my::shared_ptr<std::string>;
 
 class CustomDeletionDetectorMock {
 public:
@@ -860,5 +864,3 @@ TEST(SharedPtrsResetTakingPtrAndDeleterShould, setUseCountToOneIfPtrIsNotNull) {
     EXPECT_EQ(sut.use_count(), 1);
     EXPECT_EQ(sut2.use_count(), 1);
 }
-
-}  // namespace tests
