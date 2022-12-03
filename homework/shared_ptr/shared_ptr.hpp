@@ -97,43 +97,6 @@ public:
 
     Type* operator->() const noexcept;
 
-    //  -------------------- MAYBE OPTIONAL  ----------------------
-    // TODO: REMOVE
-
-    // template <class Y, class Deleter>
-    // shared_ptr(std::unique_ptr<Y, Deleter>&& r);   NOTE: maybe optional
-
-    // template <class Y, class Deleter>
-    // shared_ptr& operator=(std::unique_ptr<Y, Deleter>&& r);   NOTE: maybe optional
-
-    // // TODO: CONSIDER deduction guides
-
-    // template <class OtherType, class Deleter, class Alloc>
-    // shared_ptr(OtherType* ptr, Deleter d, Alloc alloc);  // NOTE:  OPTIONAL
-
-    // template <class Deleter, class Alloc>
-    // shared_ptr(std::nullptr_t ptr, Deleter d, Alloc alloc);  // NOTE:  OPTIONAL
-
-    // template <class Y, class Deleter, class Alloc>
-    // void reset(Y* ptr, Deleter d, Alloc alloc);  // NOTE:  OPTIONAL
-
-    // void swap(shared_ptr& r) noexcept;  // NOTE:  OPTIONAL
-
-    // // ------------------ PURE OPTIONAL ---------------------------------
-
-    // template <class Y>
-    // shared_ptr(const shared_ptr<Y>& r, element_type* ptr) noexcept;  // NOTE:  OPTIONAL
-
-    // element_type* get() const noexcept;  // NOTE:  OPTIONAL
-
-    // bool unique() const noexcept;  // NOTE: OPTIONAL
-
-    // template <class Y>
-    // bool owner_before(const shared_ptr<Y>& other) const noexcept;  // NOTE: OPTIONAL
-
-    // template <class Y>
-    // bool owner_before(const weak_ptr<Y>& other) const noexcept;  // NOTE: OPTIONAL
-
 private:
     void freeCurrentOwnership();
 

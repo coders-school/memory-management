@@ -57,9 +57,6 @@ public:
     shared_ptr<Type> lock();
     void reset() noexcept;
 
-    // ================= OPTIONAL ========================
-    // void swap( weak_ptr& r ) noexcept; NOTE: OPTIONAL
-
 private:
     shared_ptr<Type>::ControlBlock* ctrlBlock_;
     Type* ptr_;
