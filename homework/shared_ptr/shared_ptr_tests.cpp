@@ -182,6 +182,14 @@ TEST(SharedPtrsCopyConstructorShould, copyTheValueOfPtrOfSource) {
     EXPECT_EQ(*sut_copy.get(), 10.0);
 }
 
+// ======================== // TODO: =======================
+    // tests for
+    // template <class Y, class Deleter, class Alloc>
+    // shared_ptr(Y* ptr, Deleter d, Alloc alloc);  // NOTE:  OPTIONAL
+
+// =========================================================
+
+
 TEST(SharedPtrsCopyConstructorShould, increaseSharedCounterIfSourceHadManagedObject) {
     my::shared_ptr<double> sut{new double{10.0}};
     ASSERT_NE(sut.get(), nullptr);

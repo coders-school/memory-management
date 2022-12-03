@@ -1,18 +1,50 @@
-// #pragma once
+#pragma once
 
-// #include "shared_ptr.hpp"
+#include "shared_ptr.hpp"
+// TODO: VERIFY
+#include <type_traits>
+#include <utility>
 
-// // TODO: VERIFY
-// //  #include <cstddef>
+// TODO: VERIFY
+//  #include <cstddef>
 
-// namespace my {
+namespace my {
 
-// template <typename Type>
-// void deleteForMakeShared(Type* managedObj) {
-//     // TODO:
-//     // delete managedObj;
-//     // managedObj = nullptr;
-// }
+template <typename Type>
+void deleteForMakeShared(Type* managedObj) {
+    // TODO:
+    if (!std::is_fundamental_v<Type>) {
+        managedObj->~Type();
+    }
+    managedObj = nullptr;
+    // delete managedObj;
+    // managedObj = nullptr;
+}
+
+template <typename Type>
+class shared_ptr;
+
+template <class Type, class... Args>
+shared_ptr<Type> make_shared(Args&&... args) {
+    constexpr auto controlBlockSize = sizeof(typename my::shared_ptr<Type>::ControlBlock);
+    constexpr auto sizeToAlloc = sizeof(Type) + controlBlockSize;
+    char* allocatedStorage = new char[sizeToAlloc];
+
+    auto* createdObject = new (allocatedStorage) Type(std::forward<Args>(args)...);
+    auto* controlBlock = new (allocatedStorage + sizeof(Type))
+        my::shared_ptr<Type>::ControlBlock(1,
+                                           0,
+                                           deleteForMakeShared<Type>,
+                                           allocatedStorage);
+
+    my::shared_ptr<Type> result;
+    result.ctrlBlock_ = controlBlock;
+    result.ptr_ = createdObject;
+
+    return result;
+}
+
+// TODO: make version for default construction;
 
 // // TODO: VERIFY
 // template <typename Type>
@@ -52,4 +84,4 @@
 // // template <class T>
 // // shared_ptr<T> make_shared(const std::remove_extent_t<T>& u);  // NOTE: OPTIONAL most likely
 
-// };  // namespace my
+};  // namespace my

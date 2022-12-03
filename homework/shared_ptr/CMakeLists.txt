@@ -81,3 +81,4 @@ target_compile_features(make_shared-tests
 
 gtest_discover_tests(shared_ptr-tests)
 gtest_discover_tests(weak_ptr-tests)
+gtest_discover_tests(make_shared-tests)
