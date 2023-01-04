@@ -1,4 +1,4 @@
-valgrind --leak-check=full ./resourceD
+valgrind --leak-check=full ./resourceD d
 ==22615== Memcheck, a memory error detector
 ==22615== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
 ==22615== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
