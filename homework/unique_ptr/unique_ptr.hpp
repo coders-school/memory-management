@@ -5,13 +5,9 @@ namespace my {
 template <typename T>
 class unique_ptr {
 public:
-    using ElementType = T;
-    using Pointer = T*;
-    using PointerToConst = const T*;
-
     unique_ptr() = default;
 
-    explicit unique_ptr(Pointer ptr)
+    explicit unique_ptr(T* ptr)
         : pointer_(ptr){};
 
     ~unique_ptr() noexcept {
@@ -36,42 +32,30 @@ public:
         return *this;
     }
 
-    PointerToConst get() const noexcept {
+    T* get() const noexcept {
         return pointer_;
     }
 
-    Pointer get() noexcept {
-        return pointer_;
-    }
-
-    Pointer release() noexcept {
+    T* release() noexcept {
         auto tempPtr = pointer_;
         pointer_ = nullptr;
         return tempPtr;
     }
 
-    void reset(Pointer ptr = nullptr) noexcept {
+    void reset(T* ptr = nullptr) noexcept {
         delete pointer_;
         pointer_ = ptr;
     }
 
-    const ElementType& operator*() const noexcept {
+    T& operator*() const noexcept {
         return *pointer_;
     }
 
-    ElementType& operator*() noexcept {
-        return *pointer_;
-    }
-
-    PointerToConst operator->() const noexcept {
-        return pointer_;
-    }
-
-    Pointer operator->() noexcept {
+    T* operator->() const noexcept {
         return pointer_;
     }
 
 private:
-    Pointer pointer_{nullptr};
+    T* pointer_{nullptr};
 };
 }  // namespace my
