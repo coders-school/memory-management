@@ -10,7 +10,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Check unique_ptr.hpp file existence
       id: unique_ptr
-      uses: andstor/file-existence-action@v1
+      uses: andstor/file-existence-action@v2
       with:
         files: "homework/unique_ptr/unique_ptr.hpp"
 
