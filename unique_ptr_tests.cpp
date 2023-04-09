@@ -21,7 +21,29 @@ public:
     }
 };
 
+class MyUniquePtr : public ::testing::Test {
+ protected:
+  void SetUp() override {
+
+  }
+
+  void TearDown() override {}
+};
+
+TEST(MyUniquePtr, create_with_nullptr) {
+    my::unique_ptr<ClassForTestPurposes> a;
+    my::unique_ptr<ClassForTestPurposes> b{nullptr};
+
+    EXPECT_TRUE(a == nullptr);    
+    EXPECT_TRUE(b == nullptr);
+}
+
 TEST(MyUniquePtr, check_operator_indication) {
     my::unique_ptr<ClassForTestPurposes> a{new ClassForTestPurposes};
     EXPECT_EQ(a->give_me_class(), "This is class");
 }
+
+// TEST(MyUniquePtr, disallow_to_copy_ponters) {
+//     my::unique_ptr<ClassForTestPurposes> a{new ClassForTestPurposes};
+//     EXPECT_EQ(a->give_me_class(), "This is class");
+// }

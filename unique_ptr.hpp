@@ -28,14 +28,30 @@ class unique_ptr {
     T* ptr_ = nullptr;
 
 public:
-    unique_ptr(T* ptr)
+    unique_ptr() noexcept
+        : ptr_{nullptr} {
+        std::cout << "unique_ptr::Ctor default" << std::endl;
+        std::cout << "ptr_ = " << ptr_ << std::endl;
+    }
+
+    unique_ptr(T* ptr) noexcept
         : ptr_{ptr} {
         std::cout << "unique_ptr::Ctor" << std::endl;
         std::cout << "ptr_ = " << ptr_ << std::endl;
     }
 
+    // T& unique_ptr(const unique_ptr&) = delete;
+
     T* operator->() const noexcept {
         return ptr_;
+    }
+
+    bool operator==(std::nullptr_t) const noexcept {
+        return ptr_ == nullptr;
+    }
+
+    bool operator!=(std::nullptr_t) const noexcept {
+        return ptr_ != nullptr;
     }
 
     ~unique_ptr() {
