@@ -43,7 +43,16 @@ TEST(MyUniquePtr, check_operator_indication) {
     EXPECT_EQ(a->give_me_class(), "This is class");
 }
 
-// TEST(MyUniquePtr, disallow_to_copy_ponters) {
-//     my::unique_ptr<ClassForTestPurposes> a{new ClassForTestPurposes};
-//     EXPECT_EQ(a->give_me_class(), "This is class");
-// }
+TEST(MyUniquePtr, disallow_copy_assigement) {
+    my::unique_ptr<ClassForTestPurposes> a{new ClassForTestPurposes};
+    //Not possible
+    //my::unique_ptr<ClassForTestPurposes> b = a;
+}
+
+TEST(MyUniquePtr, disallow_copy_constructor) {
+    my::unique_ptr<ClassForTestPurposes> a{nullptr};
+    //Not possible
+    //my::unique_ptr<ClassForTestPurposes> b{a};
+}
+
+

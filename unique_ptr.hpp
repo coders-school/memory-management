@@ -40,7 +40,7 @@ public:
         std::cout << "ptr_ = " << ptr_ << std::endl;
     }
 
-    // T& unique_ptr(const unique_ptr&) = delete;
+    unique_ptr(const unique_ptr&) = delete;
 
     T* operator->() const noexcept {
         return ptr_;
@@ -52,6 +52,11 @@ public:
 
     bool operator!=(std::nullptr_t) const noexcept {
         return ptr_ != nullptr;
+    }
+
+    template<typename T1, typename T2>
+    friend bool operator==(const unique_ptr<T1>& ptr1, const unique_ptr<T2>& ptr2) noexcept {
+        return typeid(T1) == typeid(T2);
     }
 
     ~unique_ptr() {
