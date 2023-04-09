@@ -22,19 +22,18 @@ public:
 };
 
 class MyUniquePtr : public ::testing::Test {
- protected:
-  void SetUp() override {
+protected:
+    void SetUp() override {
+    }
 
-  }
-
-  void TearDown() override {}
+    void TearDown() override {}
 };
 
 TEST(MyUniquePtr, create_with_nullptr) {
     my::unique_ptr<ClassForTestPurposes> a;
     my::unique_ptr<ClassForTestPurposes> b{nullptr};
 
-    EXPECT_TRUE(a == nullptr);    
+    EXPECT_TRUE(a == nullptr);
     EXPECT_TRUE(b == nullptr);
 }
 
@@ -45,14 +44,29 @@ TEST(MyUniquePtr, check_operator_indication) {
 
 TEST(MyUniquePtr, disallow_copy_assigement) {
     my::unique_ptr<ClassForTestPurposes> a{new ClassForTestPurposes};
-    //Not possible
-    //my::unique_ptr<ClassForTestPurposes> b = a;
+    // Not possible
+    // my::unique_ptr<ClassForTestPurposes> b = a;
 }
 
 TEST(MyUniquePtr, disallow_copy_constructor) {
     my::unique_ptr<ClassForTestPurposes> a{nullptr};
-    //Not possible
-    //my::unique_ptr<ClassForTestPurposes> b{a};
+    // Not possible
+    // my::unique_ptr<ClassForTestPurposes> b{a};
 }
 
+TEST(MyUniquePtr, allow_move_constructor) {
+    my::unique_ptr<ClassForTestPurposes> a{new ClassForTestPurposes};
+    my::unique_ptr<ClassForTestPurposes> b{std::move(a)};
 
+    EXPECT_TRUE(a == nullptr);
+    EXPECT_TRUE(b != nullptr);
+}
+
+TEST(MyUniquePtr, allow_move_assignment_operator) {
+    my::unique_ptr<ClassForTestPurposes> a{new ClassForTestPurposes};
+    my::unique_ptr<ClassForTestPurposes> b;
+    b = std::move(a);
+
+    EXPECT_TRUE(a == nullptr);
+    EXPECT_TRUE(b != nullptr);
+}

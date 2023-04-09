@@ -42,6 +42,17 @@ public:
 
     unique_ptr(const unique_ptr&) = delete;
 
+    unique_ptr& operator=(unique_ptr<T>&& pointer) noexcept {
+        ptr_ = pointer.ptr_;
+        pointer.ptr_ = nullptr;
+        return *this;
+    }
+
+    unique_ptr(unique_ptr<T>&& pointer) noexcept {
+        ptr_ = pointer.ptr_;
+        pointer.ptr_ = nullptr;
+    }
+
     T* operator->() const noexcept {
         return ptr_;
     }
@@ -54,7 +65,7 @@ public:
         return ptr_ != nullptr;
     }
 
-    template<typename T1, typename T2>
+    template <typename T1, typename T2>
     friend bool operator==(const unique_ptr<T1>& ptr1, const unique_ptr<T2>& ptr2) noexcept {
         return typeid(T1) == typeid(T2);
     }
