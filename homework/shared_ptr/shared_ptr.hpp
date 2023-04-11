@@ -16,7 +16,7 @@ struct ControlBlock {
 template <typename Type>
 class shared_ptr {
 public:
-    shared_ptr() = default;
+    shared_ptr() : pointer_(nullptr), control_block_pointer_(nullptr) {};
 
     explicit shared_ptr(Type* ptr)
         : pointer_(ptr), control_block_pointer_(new ControlBlock) {};
@@ -45,18 +45,18 @@ public:
         return *this;
     }
 
-    // shared_ptr(shared_ptr&& other) noexcept {
-    //     delete pointer_;
-    //     pointer_ = nullptr;
-    //     std::swap(pointer_, other.pointer_);
-    // }
+    shared_ptr(shared_ptr&& other) noexcept {
+        delete pointer_;
+        pointer_ = nullptr;
+        std::swap(pointer_, other.pointer_);
+    }
 
-    // shared_ptr& operator=(shared_ptr&& other) noexcept {
-    //     delete pointer_;
-    //     pointer_ = nullptr;
-    //     std::swap(pointer_, other.pointer_);
-    //     return *this;
-    // }
+    shared_ptr& operator=(shared_ptr&& other) noexcept {
+        delete pointer_;
+        pointer_ = nullptr;
+        std::swap(pointer_, other.pointer_);
+        return *this;
+    }
 
     Type* get() const noexcept {
         return pointer_;
