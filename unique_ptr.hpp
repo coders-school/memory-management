@@ -61,6 +61,12 @@ public:
         return get();
     }
 
+    T* release() noexcept {
+        T* ptr = ptr_;
+        ptr_ = nullptr;
+        return ptr;
+    }
+
     bool operator==(std::nullptr_t) const noexcept {
         return ptr_ == nullptr;
     }
@@ -80,6 +86,7 @@ public:
 
     ~unique_ptr() {
         delete ptr_;
+        ptr_ = nullptr;
     }
 };
 

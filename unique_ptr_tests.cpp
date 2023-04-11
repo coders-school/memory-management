@@ -96,3 +96,14 @@ TEST(MyUniquePtr, check_get_method) {
 
     EXPECT_TRUE(res->give_me_class() == "This is class");
 }
+
+TEST(MyUniquePtr, check_release_method) {
+    my::unique_ptr<ClassForTestPurposes> a(new ClassForTestPurposes);
+
+    ClassForTestPurposes* res = a.release();
+    assert(a.get() == nullptr);
+    assert(a == nullptr);
+
+    EXPECT_TRUE(res->give_me_class() == "This is class");
+    delete res;
+}
