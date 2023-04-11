@@ -13,12 +13,12 @@ struct ControlBlock {
    void (*deleter_pointer)(int){nullptr};
 };
 
-template <typename T>
+template <typename Type>
 class shared_ptr {
 public:
     shared_ptr() = default;
 
-    explicit shared_ptr(T* ptr)
+    explicit shared_ptr(Type* ptr)
         : pointer_(ptr), control_block_pointer_(new ControlBlock) {};
 
     ~shared_ptr() noexcept {
@@ -33,48 +33,51 @@ public:
         }
     }
 
-    shared_ptr(const shared_ptr&) = delete;
-
-    shared_ptr& operator=(const shared_ptr&) = delete;
-
-    shared_ptr(shared_ptr&& other) noexcept {
-        delete pointer_;
-        pointer_ = nullptr;
-        std::swap(pointer_, other.pointer_);
+    shared_ptr(const shared_ptr& other)
+        : pointer_(other.pointer_), control_block_pointer_(other.control_block_pointer_) {
+        ++this->control_block_pointer_->shared_refs;
     }
 
-    shared_ptr& operator=(shared_ptr&& other) noexcept {
-        delete pointer_;
-        pointer_ = nullptr;
-        std::swap(pointer_, other.pointer_);
-        return *this;
-    }
+    // shared_ptr& operator=(const shared_ptr&) = delete;
 
-    T* get() const noexcept {
+    // shared_ptr(shared_ptr&& other) noexcept {
+    //     delete pointer_;
+    //     pointer_ = nullptr;
+    //     std::swap(pointer_, other.pointer_);
+    // }
+
+    // shared_ptr& operator=(shared_ptr&& other) noexcept {
+    //     delete pointer_;
+    //     pointer_ = nullptr;
+    //     std::swap(pointer_, other.pointer_);
+    //     return *this;
+    // }
+
+    Type* get() const noexcept {
         return pointer_;
     }
 
-    T* release() noexcept {
-        auto tempPtr = pointer_;
-        pointer_ = nullptr;
-        return tempPtr;
-    }
+    // Type* release() noexcept {
+    //     auto tempPtr = pointer_;
+    //     pointer_ = nullptr;
+    //     return tempPtr;
+    // }
 
-    void reset(T* ptr = nullptr) noexcept {
-        delete pointer_;
-        pointer_ = ptr;
-    }
+    // void reset(Type* ptr = nullptr) noexcept {
+    //     delete pointer_;
+    //     pointer_ = ptr;
+    // }
 
-    T& operator*() const noexcept {
-        return *pointer_;
-    }
+    // Type& operator*() const noexcept {
+    //     return *pointer_;
+    // }
 
-    T* operator->() const noexcept {
-        return pointer_;
-    }
+    // Type* operator->() const noexcept {
+    //     return pointer_;
+    // }
 
 private:
-    T* pointer_{nullptr};
+    Type* pointer_{nullptr};
     ControlBlock* control_block_pointer_{nullptr};
 };
 }  // namespace my

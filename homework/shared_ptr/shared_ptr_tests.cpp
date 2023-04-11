@@ -4,24 +4,24 @@
 
 template class my::shared_ptr<int>;
 
-class TestObject {
+class TestType {
 public:
-    TestObject() = default;
-    ~TestObject() noexcept { Destructor(); }
+    TestType() = default;
+    ~TestType() noexcept { Destructor(); }
 
     MOCK_METHOD(void, Destructor, (), (noexcept));
 };
 
 TEST(shared_ptr, destructor) {
-    auto ptr = new TestObject();
-    auto smartPtr = my::shared_ptr<TestObject>(ptr);
+    auto ptr = new TestType();
+    auto smartPtr = my::shared_ptr<TestType>(ptr);
 
     EXPECT_CALL(*ptr, Destructor);
     delete ptr;
 }
 
 // TEST(shared_ptr, default_constructor) {
-//     auto smartPtr = my::shared_ptr<TestObject>();
+//     auto smartPtr = my::shared_ptr<TestType>();
 
 //     EXPECT_EQ(smartPtr.get(), nullptr);
 // }
@@ -48,30 +48,50 @@ TEST(shared_ptr, parametric_constructor) {
 //     EXPECT_EQ(smartPtr.get(), otherPtr);
 // }
 
-// TEST(shared_ptr, move_ctor_with_nullptr) {
-//     auto otherSmartPtr = my::shared_ptr<TestObject>();
+TEST(shared_ptr, copy_ctor_with_nullptr) {
+    auto otherSmartPtr = my::shared_ptr<TestType>();
+    my::shared_ptr<TestType> smartPtr(otherSmartPtr);
 
-//     my::shared_ptr<TestObject> smartPtr(std::move(otherSmartPtr));
+    EXPECT_EQ(smartPtr.get(), nullptr);
+    EXPECT_EQ(otherSmartPtr.get(), nullptr);
+}
+
+TEST(shared_ptr, copy_ctor_with_ptr) {
+    auto ptr = new TestType();
+    auto otherSmartPtr = my::shared_ptr<TestType>(ptr);
+
+    EXPECT_CALL(*ptr, Destructor);
+
+    my::shared_ptr<TestType> smartPtr(otherSmartPtr);
+
+    EXPECT_EQ(smartPtr.get(), ptr);
+    EXPECT_EQ(otherSmartPtr.get(), nullptr);
+}
+
+// TEST(shared_ptr, move_ctor_with_nullptr) {
+//     auto otherSmartPtr = my::shared_ptr<TestType>();
+
+//     my::shared_ptr<TestType> smartPtr(std::move(otherSmartPtr));
 
 //     EXPECT_EQ(smartPtr.get(), nullptr);
 //     EXPECT_EQ(otherSmartPtr.get(), nullptr);
 // }
 
 // TEST(shared_ptr, move_ctor_with_ptr) {
-//     auto ptr = new TestObject();
-//     auto otherSmartPtr = my::shared_ptr<TestObject>(ptr);
+//     auto ptr = new TestType();
+//     auto otherSmartPtr = my::shared_ptr<TestType>(ptr);
 
 //     EXPECT_CALL(*ptr, Destructor);
 
-//     my::shared_ptr<TestObject> smartPtr(std::move(otherSmartPtr));
+//     my::shared_ptr<TestType> smartPtr(std::move(otherSmartPtr));
 
 //     EXPECT_EQ(smartPtr.get(), ptr);
 //     EXPECT_EQ(otherSmartPtr.get(), nullptr);
 // }
 
 // TEST(shared_ptr, move_assignment_from_nullptr_to_nullptr) {
-//     auto smartPtr = my::shared_ptr<TestObject>();
-//     auto otherSmartPtr = my::shared_ptr<TestObject>();
+//     auto smartPtr = my::shared_ptr<TestType>();
+//     auto otherSmartPtr = my::shared_ptr<TestType>();
 
 //     smartPtr = std::move(otherSmartPtr);
 
@@ -80,9 +100,9 @@ TEST(shared_ptr, parametric_constructor) {
 // }
 
 // TEST(shared_ptr, move_assignment_from_nullptr_to_ptr) {
-//     auto otherPtr = new TestObject();
-//     auto smartPtr = my::shared_ptr<TestObject>();
-//     auto otherSmartPtr = my::shared_ptr<TestObject>(otherPtr);
+//     auto otherPtr = new TestType();
+//     auto smartPtr = my::shared_ptr<TestType>();
+//     auto otherSmartPtr = my::shared_ptr<TestType>(otherPtr);
 
 //     EXPECT_CALL(*otherPtr, Destructor);
 
@@ -93,9 +113,9 @@ TEST(shared_ptr, parametric_constructor) {
 // }
 
 // TEST(shared_ptr, move_assignment_from_ptr_to_nullptr) {
-//     auto ptr = new TestObject();
-//     auto smartPtr = my::shared_ptr<TestObject>(ptr);
-//     auto otherSmartPtr = my::shared_ptr<TestObject>();
+//     auto ptr = new TestType();
+//     auto smartPtr = my::shared_ptr<TestType>(ptr);
+//     auto otherSmartPtr = my::shared_ptr<TestType>();
 
 //     EXPECT_CALL(*ptr, Destructor);
 
@@ -106,10 +126,10 @@ TEST(shared_ptr, parametric_constructor) {
 // }
 
 // TEST(shared_ptr, move_assignment_from_ptr_to_ptr) {
-//     auto ptr = new TestObject();
-//     auto otherPtr = new TestObject();
-//     auto smartPtr = my::shared_ptr<TestObject>(ptr);
-//     auto otherSmartPtr = my::shared_ptr<TestObject>(otherPtr);
+//     auto ptr = new TestType();
+//     auto otherPtr = new TestType();
+//     auto smartPtr = my::shared_ptr<TestType>(ptr);
+//     auto otherSmartPtr = my::shared_ptr<TestType>(otherPtr);
 
 //     EXPECT_CALL(*ptr, Destructor);
 //     EXPECT_CALL(*otherPtr, Destructor);
