@@ -6,6 +6,9 @@
 #include <iostream>
 #include <string>
 
+template <class T>
+class unique_ptr;
+
 // Demonstrate some basic assertions.
 TEST(HelloTest, BasicAssertions) {
     // Expect two strings not to be equal.
@@ -15,9 +18,14 @@ TEST(HelloTest, BasicAssertions) {
 }
 
 class ClassForTestPurposes {
+    const std::string message = "This is class";
 public:
     const std::string give_me_class() {
-        return "This is class";
+        return message;
+    }
+
+    friend bool operator==(const ClassForTestPurposes& obj1, const ClassForTestPurposes& obj2) noexcept {
+        return obj1.message == obj2.message;
     }
 };
 
@@ -69,4 +77,17 @@ TEST(MyUniquePtr, allow_move_assignment_operator) {
 
     EXPECT_TRUE(a == nullptr);
     EXPECT_TRUE(b != nullptr);
+}
+
+TEST(MyUniquePtr, check_access_operator) {
+    my::unique_ptr<ClassForTestPurposes> a{new ClassForTestPurposes};
+    ClassForTestPurposes b;
+
+    ClassForTestPurposes& x = *a;
+    EXPECT_TRUE(x == b);
+}
+
+
+TEST(MyUniquePtr, xxx) {
+    
 }

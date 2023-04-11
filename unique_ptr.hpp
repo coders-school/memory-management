@@ -65,6 +65,10 @@ public:
         return ptr_ != nullptr;
     }
 
+    T& operator*() const {
+        return *ptr_;
+    }
+
     template <typename T1, typename T2>
     friend bool operator==(const unique_ptr<T1>& ptr1, const unique_ptr<T2>& ptr2) noexcept {
         return typeid(T1) == typeid(T2);
