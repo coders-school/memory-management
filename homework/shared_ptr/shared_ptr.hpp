@@ -22,8 +22,15 @@ public:
         : pointer_(ptr), control_block_pointer_(new ControlBlock) {};
 
     ~shared_ptr() noexcept {
-        delete pointer_;
-        pointer_ = nullptr;
+        --this->control_block_pointer_->shared_refs;
+        if (this->control_block_pointer_->shared_refs == 0) {
+            if (this->control_block_pointer_->weak_refs == 0) {
+                delete control_block_pointer_;
+                control_block_pointer_ = nullptr;
+            }
+            delete pointer_;
+            pointer_ = nullptr;
+        }
     }
 
     shared_ptr(const shared_ptr&) = delete;
