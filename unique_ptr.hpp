@@ -53,8 +53,12 @@ public:
         pointer.ptr_ = nullptr;
     }
 
-    T* operator->() const noexcept {
+    T* get() const noexcept {
         return ptr_;
+    }
+
+    T* operator->() const noexcept {
+        return get();
     }
 
     bool operator==(std::nullptr_t) const noexcept {

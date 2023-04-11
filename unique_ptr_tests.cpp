@@ -19,6 +19,7 @@ TEST(HelloTest, BasicAssertions) {
 
 class ClassForTestPurposes {
     const std::string message = "This is class";
+
 public:
     const std::string give_me_class() {
         return message;
@@ -84,10 +85,14 @@ TEST(MyUniquePtr, check_access_operator) {
     ClassForTestPurposes b;
 
     ClassForTestPurposes& x = *a;
+
     EXPECT_TRUE(x == b);
 }
 
+TEST(MyUniquePtr, check_get_method) {
+    my::unique_ptr<ClassForTestPurposes> a(new ClassForTestPurposes);
 
-TEST(MyUniquePtr, xxx) {
-    
+    ClassForTestPurposes* res = a.get();
+
+    EXPECT_TRUE(res->give_me_class() == "This is class");
 }

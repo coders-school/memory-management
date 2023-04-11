@@ -11,7 +11,7 @@ unique_ptr is a RAII class:
 * V Moving is allowed and it means:
   * V Copying original pointer to a new object
   * V Setting source pointer to nullptr
-* Member functions:V  operator*(), V operator->(), get(), release(), reset()
+* Member functions:V  operator*(), V operator->(), Vget(), release(), reset()
 * V   Should be implemented in `unique_ptr.hpp` file inside `my` namespace
 * V   Tests should be written inside `unique_ptr_tests.cpp` using GoogleTest or Catch2
 * You should instantiate `unique_ptr` template class in `unique_ptr_tests.cpp` above your test cases, e.g. `template class my::unique_ptr<int>;` It's needed for code coverage check to work properly.
