@@ -38,7 +38,12 @@ public:
         ++this->control_block_pointer_->shared_refs;
     }
 
-    // shared_ptr& operator=(const shared_ptr&) = delete;
+    shared_ptr& operator=(const shared_ptr& other) {
+        this->pointer_ = other.pointer_;
+        this->control_block_pointer_ = other.control_block_pointer_;
+        ++this->control_block_pointer_->shared_refs;
+        return *this;
+    }
 
     // shared_ptr(shared_ptr&& other) noexcept {
     //     delete pointer_;

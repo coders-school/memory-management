@@ -68,6 +68,29 @@ TEST(shared_ptr, copy_ctor_with_ptr) {
     EXPECT_EQ(otherSmartPtr.get(), nullptr);
 }
 
+TEST(shared_ptr, copy_assignment_from_nullptr_to_nullptr) {
+    auto smartPtr = my::shared_ptr<TestType>();
+    auto otherSmartPtr = my::shared_ptr<TestType>();
+
+    smartPtr = otherSmartPtr;
+
+    EXPECT_EQ(smartPtr.get(), nullptr);
+    EXPECT_EQ(otherSmartPtr.get(), nullptr);
+}
+
+TEST(shared_ptr, copy_assignment_from_nullptr_to_ptr) {
+    auto smartPtr = my::shared_ptr<TestType>();
+    auto otherPtr = new TestType();
+    auto otherSmartPtr = my::shared_ptr<TestType>(otherPtr);
+
+    EXPECT_CALL(*otherPtr, Destructor);
+
+    smartPtr = otherSmartPtr;
+
+    EXPECT_EQ(smartPtr.get(), otherPtr);
+    EXPECT_EQ(otherSmartPtr.get(), nullptr);
+}
+
 // TEST(shared_ptr, move_ctor_with_nullptr) {
 //     auto otherSmartPtr = my::shared_ptr<TestType>();
 
