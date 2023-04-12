@@ -20,11 +20,11 @@ TEST(shared_ptr, destructor) {
     delete ptr;
 }
 
-// TEST(shared_ptr, default_constructor) {
-//     auto smartPtr = my::shared_ptr<TestType>();
+TEST(shared_ptr, default_constructor) {
+    my::shared_ptr<TestType> smartPtr;
 
-//     EXPECT_EQ(smartPtr.get(), nullptr);
-// }
+    EXPECT_EQ(smartPtr.get(), nullptr);
+}
 
 TEST(shared_ptr, parametric_constructor) {
     auto ptr = new int{5};
@@ -33,30 +33,15 @@ TEST(shared_ptr, parametric_constructor) {
     EXPECT_EQ(smartPtr.get(), ptr);
 }
 
-// TEST(shared_ptr, reset) {
-//     auto ptr = new int{5};
-//     auto smartPtr = my::shared_ptr<int>(ptr);
+TEST(shared_ptr, copy_constructor_with_nullptr) {
+    my::shared_ptr<TestType> otherSmartPtr;
+    my::shared_ptr<TestType> smartPtr(otherSmartPtr);
 
-//     smartPtr.reset();
-//     EXPECT_EQ(smartPtr.get(), nullptr);
+    EXPECT_EQ(smartPtr.get(), nullptr);
+    EXPECT_EQ(otherSmartPtr.get(), nullptr);
+}
 
-//     smartPtr.reset(nullptr);
-//     EXPECT_EQ(smartPtr.get(), nullptr);
-
-//     auto otherPtr = new int{6};
-//     smartPtr.reset(otherPtr);
-//     EXPECT_EQ(smartPtr.get(), otherPtr);
-// }
-
-// TEST(shared_ptr, copy_ctor_with_nullptr) {
-//     auto otherSmartPtr = my::shared_ptr<TestType>();
-//     my::shared_ptr<TestType> smartPtr(otherSmartPtr);
-
-//     EXPECT_EQ(smartPtr.get(), nullptr);
-//     EXPECT_EQ(otherSmartPtr.get(), nullptr);
-// }
-
-TEST(shared_ptr, copy_ctor_with_ptr) {
+TEST(shared_ptr, copy_constructor_with_ptr) {
     auto ptr = new TestType();
     auto otherSmartPtr = my::shared_ptr<TestType>(ptr);
 
@@ -66,33 +51,37 @@ TEST(shared_ptr, copy_ctor_with_ptr) {
 
     EXPECT_EQ(smartPtr.get(), ptr);
     EXPECT_EQ(otherSmartPtr.get(), ptr);
+
+    delete ptr;
 }
 
-// TEST(shared_ptr, copy_assignment_from_nullptr_to_nullptr) {
-//     auto smartPtr = my::shared_ptr<TestType>();
-//     auto otherSmartPtr = my::shared_ptr<TestType>();
+TEST(shared_ptr, copy_assignment_from_nullptr_to_nullptr) {
+    auto smartPtr = my::shared_ptr<TestType>();
+    auto otherSmartPtr = my::shared_ptr<TestType>();
 
-//     smartPtr = otherSmartPtr;
+    smartPtr = otherSmartPtr;
 
-//     EXPECT_EQ(smartPtr.get(), nullptr);
-//     EXPECT_EQ(otherSmartPtr.get(), nullptr);
-// }
+    EXPECT_EQ(smartPtr.get(), nullptr);
+    EXPECT_EQ(otherSmartPtr.get(), nullptr);
+}
 
-// TEST(shared_ptr, copy_assignment_from_nullptr_to_ptr) {
-//     auto smartPtr = my::shared_ptr<TestType>();
-//     auto otherPtr = new TestType();
-//     auto otherSmartPtr = my::shared_ptr<TestType>(otherPtr);
+TEST(shared_ptr, copy_assignment_from_nullptr_to_ptr) {
+    my::shared_ptr<TestType> smartPtr;
+    auto otherPtr = new TestType();
+    auto otherSmartPtr = my::shared_ptr<TestType>(otherPtr);
 
-//     EXPECT_CALL(*otherPtr, Destructor);
+    EXPECT_CALL(*otherPtr, Destructor);
 
-//     smartPtr = otherSmartPtr;
+    smartPtr = otherSmartPtr;
 
-//     EXPECT_EQ(smartPtr.get(), otherPtr);
-//     EXPECT_EQ(otherSmartPtr.get(), nullptr);
-// }
+    EXPECT_EQ(smartPtr.get(), otherPtr);
+    EXPECT_EQ(otherSmartPtr.get(), otherPtr);
 
-// TEST(shared_ptr, move_ctor_with_nullptr) {
-//     auto otherSmartPtr = my::shared_ptr<TestType>();
+    delete otherPtr;
+}
+
+// TEST(shared_ptr, move_constructor_with_nullptr) {
+//     my::shared_ptr<TestType> otherSmartPtr;
 
 //     my::shared_ptr<TestType> smartPtr(std::move(otherSmartPtr));
 
@@ -100,7 +89,7 @@ TEST(shared_ptr, copy_ctor_with_ptr) {
 //     EXPECT_EQ(otherSmartPtr.get(), nullptr);
 // }
 
-// TEST(shared_ptr, move_ctor_with_ptr) {
+// TEST(shared_ptr, move_constructor_with_ptr) {
 //     auto ptr = new TestType();
 //     auto otherSmartPtr = my::shared_ptr<TestType>(ptr);
 
@@ -161,6 +150,21 @@ TEST(shared_ptr, copy_ctor_with_ptr) {
 
 //     EXPECT_EQ(smartPtr.get(), otherPtr);
 //     EXPECT_EQ(otherSmartPtr.get(), nullptr);
+// }
+
+// TEST(shared_ptr, reset) {
+//     auto ptr = new int{5};
+//     auto smartPtr = my::shared_ptr<int>(ptr);
+
+//     smartPtr.reset();
+//     EXPECT_EQ(smartPtr.get(), nullptr);
+
+//     smartPtr.reset(nullptr);
+//     EXPECT_EQ(smartPtr.get(), nullptr);
+
+//     auto otherPtr = new int{6};
+//     smartPtr.reset(otherPtr);
+//     EXPECT_EQ(smartPtr.get(), otherPtr);
 // }
 
 // TEST(shared_ptr, star_operator) {
