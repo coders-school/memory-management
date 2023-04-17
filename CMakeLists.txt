@@ -17,7 +17,6 @@ enable_testing()
 
 add_executable(
     unique_ptr
-    unique_ptr.cpp
     unique_ptr_tests.cpp
 )
 target_link_libraries(

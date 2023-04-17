@@ -1,6 +1,5 @@
 
 #include <gtest/gtest.h>
-
 #include "unique_ptr.hpp"
 
 #include <iostream>
@@ -8,6 +7,8 @@
 
 template <class T>
 class unique_ptr;
+
+template class my::unique_ptr<int>;  // for coverage?
 
 // Demonstrate some basic assertions.
 TEST(HelloTest, BasicAssertions) {
@@ -106,4 +107,29 @@ TEST(MyUniquePtr, check_release_method) {
 
     EXPECT_TRUE(res->give_me_class() == "This is class");
     delete res;
+}
+
+class IFoo {
+public:
+    virtual ~IFoo() {}
+    virtual void Create(std::string x) = 0;
+    virtual void Destroy() = 0;
+};
+
+struct Foo {  // object to manage
+    std::string x_;
+    Foo(std::string x)
+        : x_{x} { std::cout << "Foo... " << x_ << "\n"; }
+    ~Foo() { std::cout << "~Foo... " << x_ << "\n"; }
+};
+
+TEST(MyUniquePtr, check_reset_method) {
+    std::cout << "Creating new Foo...\n";
+    my::unique_ptr<Foo> up(new Foo("First"));  // up owns the Foo pointer (deleter D)
+
+    std::cout << "Replace owned Foo with a new Foo...\n";
+    up.reset(new Foo("Second"));  // calls deleter for the old one
+
+    std::cout << "Release and delete the owned Foo...\n";
+    up.reset(nullptr);
 }
