@@ -109,13 +109,6 @@ TEST(MyUniquePtr, check_release_method) {
     delete res;
 }
 
-class IFoo {
-public:
-    virtual ~IFoo() {}
-    virtual void Create(std::string x) = 0;
-    virtual void Destroy() = 0;
-};
-
 struct Foo {  // object to manage
     std::string x_;
     Foo(std::string x)
@@ -132,4 +125,19 @@ TEST(MyUniquePtr, check_reset_method) {
 
     std::cout << "Release and delete the owned Foo...\n";
     up.reset();
+}
+
+TEST(MyUniquePtr, check_move_constructor) {
+    my::unique_ptr<Foo> up5a(new Foo("AAA"));
+    my::unique_ptr<Foo> up5b(std::move(up5a));  // ownership transfer
+}
+
+TEST(MyUniquePtr, check_move_assignment_operator) {
+    my::unique_ptr<Foo> p1(new Foo("AAA"));
+    {
+        my::unique_ptr<Foo> p2(new Foo("BBB"));
+        // p1 = p2; // Error ! can't copy unique_ptr
+        p1 = std::move(p2);
+        std::cout << "About to leave inner block...\n";
+    }
 }
