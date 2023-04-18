@@ -41,9 +41,9 @@ public:
     }
 
     unique_ptr(const unique_ptr&) = delete;
-    unique_ptr(unique_ptr&) = delete;
+    unique_ptr& operator=(const unique_ptr&) = delete;
 
-    unique_ptr& operator=(unique_ptr<T>&& pointer) noexcept {
+    unique_ptr& operator=(unique_ptr&& pointer) noexcept {
         std::cout << "unique_ptr::Move Assignment template operator" << std::endl;
         if (ptr_) {
             delete ptr_;
