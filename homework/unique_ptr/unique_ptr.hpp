@@ -79,7 +79,7 @@ public:
         return *ptr_;
     }
 
-    void reset(T* ptr) noexcept {
+    void reset(T* ptr = nullptr) noexcept {
         auto old_ptr = ptr_;
         ptr_ = ptr;
         if (old_ptr) {
@@ -88,8 +88,10 @@ public:
     }
 
     ~unique_ptr() {
-        delete ptr_;
-        ptr_ = nullptr;
+        if (ptr_) {
+            delete ptr_;
+            ptr_ = nullptr;
+        }
     }
 };
 

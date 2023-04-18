@@ -131,5 +131,5 @@ TEST(MyUniquePtr, check_reset_method) {
     up.reset(new Foo("Second"));  // calls deleter for the old one
 
     std::cout << "Release and delete the owned Foo...\n";
-    up.reset(nullptr);
+    up.reset();
 }
