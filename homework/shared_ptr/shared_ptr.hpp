@@ -1,15 +1,16 @@
 #pragma once
 #include <atomic>
 #include <cstddef>
-#include <utility>
 
 namespace my {
 
 // void deleter() {}
 
 struct ControlBlock {
-    std::atomic<size_t> shared_refs{0};
-    std::atomic<size_t> weak_refs{0};
+    // std::atomic<size_t> shared_refs{0};
+    // std::atomic<size_t> weak_refs{0};
+    size_t shared_refs{0};
+    size_t weak_refs{0};
     // void (*deleter_pointer)(int){nullptr};
 };
 
@@ -27,26 +28,28 @@ public:
         }
 
     ~shared_ptr() noexcept {
-        --this->control_block_pointer_->shared_refs;
-        if (this->control_block_pointer_->shared_refs == 0) {
-            if (this->control_block_pointer_->weak_refs == 0) {
-                if (!control_block_pointer_) {
+        if (control_block_pointer_) {  // delete only for objects with allocated control block, i.e. not for moved objects
+            this->control_block_pointer_->shared_refs--;
+            if (this->control_block_pointer_->shared_refs == 0) {
+                if (this->control_block_pointer_->weak_refs == 0) {
                     delete control_block_pointer_;
                     control_block_pointer_ = nullptr;
                 }
-            }
-            if (!pointer_) {
-                delete pointer_;
-                pointer_ = nullptr;
+                if (pointer_) {
+                    delete pointer_;
+                    pointer_ = nullptr;
+                }
             }
         }
     }
 
+    // copy constructor
     shared_ptr(const shared_ptr& other)
         : pointer_(other.pointer_), control_block_pointer_(other.control_block_pointer_) {
         this->control_block_pointer_->shared_refs++;
     }
 
+    // copy assignment operator
     shared_ptr& operator=(const shared_ptr& other) {
         this->pointer_ = other.pointer_;
         this->control_block_pointer_ = other.control_block_pointer_;
@@ -54,12 +57,17 @@ public:
         return *this;
     }
 
+    // move constructor
     shared_ptr(shared_ptr&& other) noexcept {
         delete pointer_;
+        delete control_block_pointer_;
         pointer_ = nullptr;
+        control_block_pointer_ = nullptr;
         std::swap(pointer_, other.pointer_);
+        std::swap(control_block_pointer_, other.control_block_pointer_);
     }
 
+    // move assignment operator
     shared_ptr& operator=(shared_ptr&& other) noexcept {
         delete pointer_;
         pointer_ = nullptr;
@@ -69,6 +77,14 @@ public:
 
     Type* get() const noexcept {
         return pointer_;
+    }
+
+    size_t getCounterShared() const noexcept {
+        return control_block_pointer_->shared_refs;
+    }
+
+    size_t getCounterWeak() const noexcept {
+        return control_block_pointer_->shared_refs;
     }
 
     // Type* release() noexcept {
