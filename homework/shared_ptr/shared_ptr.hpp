@@ -81,9 +81,21 @@ public:
 
     // move assignment operator
     shared_ptr& operator=(shared_ptr&& other) noexcept {
-        delete pointer_;
+        this->control_block_pointer_->shared_refs--;
+        // while overwriting an object we may to erase the last object pointing to a resource
+        if (this->control_block_pointer_->shared_refs == 0) {
+            if (this->control_block_pointer_->weak_refs == 0) {
+                delete control_block_pointer_;
+                control_block_pointer_ = nullptr;
+            }
+            if (pointer_) {
+                delete pointer_;
+                pointer_ = nullptr;
+            }
+        }
         pointer_ = nullptr;
         std::swap(pointer_, other.pointer_);
+        std::swap(control_block_pointer_, other.control_block_pointer_);
         return *this;
     }
 
