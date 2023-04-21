@@ -162,22 +162,22 @@ TEST(shared_ptr, reset) {
     EXPECT_EQ(smartPtr.get(), otherPtr);
 }
 
-// TEST(shared_ptr, star_operator) {
-//     auto ptr = new int{5};
-//     auto smartPtr = my::shared_ptr<int>(ptr);
+TEST(shared_ptr, star_operator) {
+    auto ptr = new int{5};
+    auto smartPtr = my::shared_ptr<int>(ptr);
 
-//     EXPECT_EQ(*ptr, *smartPtr);
-// }
+    EXPECT_EQ(*ptr, *smartPtr);
+}
 
-// TEST(shared_ptr, arrow_operator) {
-//     struct Foo {
-//         int foo() { return 5; }
-//     };
-//     auto ptr = new Foo{};
-//     my::shared_ptr<Foo> fooPtr{ptr};
+TEST(shared_ptr, arrow_operator) {
+    struct Foo {
+        int foo() { return 5; }
+    };
+    auto ptr = new Foo{};
+    my::shared_ptr<Foo> fooPtr{ptr};
 
-//     EXPECT_EQ(fooPtr->foo(), 5);
-// }
+    EXPECT_EQ(fooPtr->foo(), 5);
+}
 
 // TEST(shared_ptr, release) {
 //     auto ptr = new int{5};

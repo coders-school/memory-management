@@ -101,23 +101,23 @@ public:
         return control_block_pointer_->shared_refs;
     }
 
-    // Type* release() noexcept {
-    //     auto tempPtr = pointer_;
-    //     pointer_ = nullptr;
-    //     return tempPtr;
-    // }
-
     void reset(Type* pointer = nullptr) noexcept {
         delete pointer_;
         pointer_ = pointer;
     }
 
-    // Type& operator*() const noexcept {
-    //     return *pointer_;
-    // }
+    Type& operator*() const noexcept {
+        return *pointer_;
+    }
 
-    // Type* operator->() const noexcept {
-    //     return pointer_;
+    Type* operator->() const noexcept {
+        return pointer_;
+    }
+
+    // Type* release() noexcept {
+    //     auto tempPtr = pointer_;
+    //     pointer_ = nullptr;
+    //     return tempPtr;
     // }
 
 private:
