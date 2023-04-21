@@ -19,19 +19,19 @@ class shared_ptr {
 public:
     shared_ptr()
         : pointer_(nullptr), control_block_pointer_(new ControlBlock) {
-            this->control_block_pointer_->shared_refs++;
+            control_block_pointer_->shared_refs++;
         }
 
     explicit shared_ptr(Type* pointer)
         : pointer_(pointer), control_block_pointer_(new ControlBlock) {
-            this->control_block_pointer_->shared_refs++;
+            control_block_pointer_->shared_refs++;
         }
 
     ~shared_ptr() noexcept {
         if (control_block_pointer_) {  // delete only for objects with allocated control block, i.e. not for moved objects
-            this->control_block_pointer_->shared_refs--;
-            if (this->control_block_pointer_->shared_refs == 0) {
-                if (this->control_block_pointer_->weak_refs == 0) {
+            control_block_pointer_->shared_refs--;
+            if (control_block_pointer_->shared_refs == 0) {
+                if (control_block_pointer_->weak_refs == 0) {
                     if (control_block_pointer_) {
                         delete control_block_pointer_;
                         control_block_pointer_ = nullptr;
@@ -48,15 +48,15 @@ public:
     // copy constructor
     shared_ptr(const shared_ptr& other)
         : pointer_(other.pointer_), control_block_pointer_(other.control_block_pointer_) {
-        this->control_block_pointer_->shared_refs++;
+        control_block_pointer_->shared_refs++;
     }
 
     // copy assignment operator
     shared_ptr& operator=(const shared_ptr& other) {
-        this->control_block_pointer_->shared_refs--;
+        control_block_pointer_->shared_refs--;
         // while overwriting an object we may to erase the last object pointing to a resource
-        if (this->control_block_pointer_->shared_refs == 0) {
-            if (this->control_block_pointer_->weak_refs == 0) {
+        if (control_block_pointer_->shared_refs == 0) {
+            if (control_block_pointer_->weak_refs == 0) {
                 delete control_block_pointer_;
                 control_block_pointer_ = nullptr;
             }
@@ -65,9 +65,9 @@ public:
                 pointer_ = nullptr;
             }
         }
-        this->pointer_ = other.pointer_;
-        this->control_block_pointer_ = other.control_block_pointer_;
-        this->control_block_pointer_->shared_refs++;
+        pointer_ = other.pointer_;
+        control_block_pointer_ = other.control_block_pointer_;
+        control_block_pointer_->shared_refs++;
         return *this;
     }
 
@@ -81,10 +81,10 @@ public:
 
     // move assignment operator
     shared_ptr& operator=(shared_ptr&& other) noexcept {
-        this->control_block_pointer_->shared_refs--;
+        control_block_pointer_->shared_refs--;
         // while overwriting an object we may to erase the last object pointing to a resource
-        if (this->control_block_pointer_->shared_refs == 0) {
-            if (this->control_block_pointer_->weak_refs == 0) {
+        if (control_block_pointer_->shared_refs == 0) {
+            if (control_block_pointer_->weak_refs == 0) {
                 delete control_block_pointer_;
                 control_block_pointer_ = nullptr;
             }
@@ -94,6 +94,7 @@ public:
             }
         }
         pointer_ = nullptr;
+        control_block_pointer_ = nullptr;
         std::swap(pointer_, other.pointer_);
         std::swap(control_block_pointer_, other.control_block_pointer_);
         return *this;

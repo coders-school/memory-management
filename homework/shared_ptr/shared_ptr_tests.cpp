@@ -193,6 +193,11 @@ TEST(shared_ptr, use_count) {
 
     EXPECT_EQ(smartPtr.use_count(), 2);
     EXPECT_EQ(otherSmartPtr.use_count(), 2);
+
+    smartPtr = std::move(otherSmartPtr);
+
+    EXPECT_EQ(smartPtr.use_count(), 1);
+    // EXPECT_EQ(otherSmartPtr.use_count(), 1);  // -> should cause undefined behaviour
 }
 
 // TEST(shared_ptr, release) {
