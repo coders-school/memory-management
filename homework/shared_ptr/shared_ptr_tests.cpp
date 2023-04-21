@@ -147,20 +147,20 @@ TEST(shared_ptr, move_assignment_from_ptr_to_ptr) {
     EXPECT_EQ(otherSmartPtr.get(), nullptr);
 }
 
-// TEST(shared_ptr, reset) {
-//     auto ptr = new int{5};
-//     auto smartPtr = my::shared_ptr<int>(ptr);
+TEST(shared_ptr, reset) {
+    auto ptr = new int{5};
+    auto smartPtr = my::shared_ptr<int>(ptr);
 
-//     smartPtr.reset();
-//     EXPECT_EQ(smartPtr.get(), nullptr);
+    smartPtr.reset();
+    EXPECT_EQ(smartPtr.get(), nullptr);
 
-//     smartPtr.reset(nullptr);
-//     EXPECT_EQ(smartPtr.get(), nullptr);
+    smartPtr.reset(nullptr);
+    EXPECT_EQ(smartPtr.get(), nullptr);
 
-//     auto otherPtr = new int{6};
-//     smartPtr.reset(otherPtr);
-//     EXPECT_EQ(smartPtr.get(), otherPtr);
-// }
+    auto otherPtr = new int{6};
+    smartPtr.reset(otherPtr);
+    EXPECT_EQ(smartPtr.get(), otherPtr);
+}
 
 // TEST(shared_ptr, star_operator) {
 //     auto ptr = new int{5};

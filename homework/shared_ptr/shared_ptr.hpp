@@ -22,8 +22,8 @@ public:
             this->control_block_pointer_->shared_refs++;
         }
 
-    explicit shared_ptr(Type* ptr)
-        : pointer_(ptr), control_block_pointer_(new ControlBlock) {
+    explicit shared_ptr(Type* pointer)
+        : pointer_(pointer), control_block_pointer_(new ControlBlock) {
             this->control_block_pointer_->shared_refs++;
         }
 
@@ -107,10 +107,10 @@ public:
     //     return tempPtr;
     // }
 
-    // void reset(Type* ptr = nullptr) noexcept {
-    //     delete pointer_;
-    //     pointer_ = ptr;
-    // }
+    void reset(Type* pointer = nullptr) noexcept {
+        delete pointer_;
+        pointer_ = pointer;
+    }
 
     // Type& operator*() const noexcept {
     //     return *pointer_;
