@@ -179,6 +179,20 @@ TEST(shared_ptr, arrow_operator) {
     EXPECT_EQ(fooPtr->foo(), 5);
 }
 
+TEST(shared_ptr, use_count) {
+    auto smartPtr = my::shared_ptr<int>();
+
+    EXPECT_EQ(smartPtr.use_count(), 1);
+
+    auto otherPtr = new int{5};
+    auto otherSmartPtr = my::shared_ptr<int>(otherPtr);
+
+    smartPtr = otherSmartPtr;
+
+    EXPECT_EQ(smartPtr.use_count(), 2);
+    EXPECT_EQ(otherSmartPtr.use_count(), 2);
+}
+
 // TEST(shared_ptr, release) {
 //     auto ptr = new int{5};
 //     auto smartPtr = my::shared_ptr<int>(ptr);

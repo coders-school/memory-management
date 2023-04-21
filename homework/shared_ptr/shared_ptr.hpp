@@ -93,14 +93,6 @@ public:
         return pointer_;
     }
 
-    size_t getCounterShared() const noexcept {
-        return control_block_pointer_->shared_refs;
-    }
-
-    size_t getCounterWeak() const noexcept {
-        return control_block_pointer_->shared_refs;
-    }
-
     void reset(Type* pointer = nullptr) noexcept {
         delete pointer_;
         pointer_ = pointer;
@@ -112,6 +104,10 @@ public:
 
     Type* operator->() const noexcept {
         return pointer_;
+    }
+
+    size_t use_count() const noexcept {
+        return control_block_pointer_->shared_refs;
     }
 
     // Type* release() noexcept {
