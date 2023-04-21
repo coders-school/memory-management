@@ -63,7 +63,7 @@ TEST(shared_ptr, copy_assignment_from_nullptr_to_nullptr) {
     EXPECT_EQ(otherSmartPtr.get(), nullptr);
 }
 
-TEST(shared_ptr, copy_assignment_from_nullptr_to_ptr) {
+TEST(shared_ptr, copy_assignment_from_ptr_to_nullptr) {
     my::shared_ptr<TestType> smartPtr;
     auto otherPtr = new TestType();
     auto otherSmartPtr = my::shared_ptr<TestType>(otherPtr);

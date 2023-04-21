@@ -32,8 +32,10 @@ public:
             this->control_block_pointer_->shared_refs--;
             if (this->control_block_pointer_->shared_refs == 0) {
                 if (this->control_block_pointer_->weak_refs == 0) {
-                    delete control_block_pointer_;
-                    control_block_pointer_ = nullptr;
+                    if (control_block_pointer_) {
+                        delete control_block_pointer_;
+                        control_block_pointer_ = nullptr;
+                    }
                 }
                 if (pointer_) {
                     delete pointer_;
@@ -51,6 +53,18 @@ public:
 
     // copy assignment operator
     shared_ptr& operator=(const shared_ptr& other) {
+        this->control_block_pointer_->shared_refs--;
+        // while overwriting an object we may to erase the last object pointing to a resource
+        if (this->control_block_pointer_->shared_refs == 0) {
+            if (this->control_block_pointer_->weak_refs == 0) {
+                delete control_block_pointer_;
+                control_block_pointer_ = nullptr;
+            }
+            if (pointer_) {
+                delete pointer_;
+                pointer_ = nullptr;
+            }
+        }
         this->pointer_ = other.pointer_;
         this->control_block_pointer_ = other.control_block_pointer_;
         this->control_block_pointer_->shared_refs++;
