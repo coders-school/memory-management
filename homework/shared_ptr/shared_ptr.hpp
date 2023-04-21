@@ -7,10 +7,8 @@ namespace my {
 // void deleter() {}
 
 struct ControlBlock {
-    // std::atomic<size_t> shared_refs{0};
-    // std::atomic<size_t> weak_refs{0};
-    size_t shared_refs{0};
-    size_t weak_refs{0};
+    std::atomic<size_t> shared_refs{0};
+    std::atomic<size_t> weak_refs{0};
     // void (*deleter_pointer)(int){nullptr};
 };
 
