@@ -17,13 +17,13 @@ class shared_ptr {
 public:
     shared_ptr()
         : pointer_(nullptr), control_block_pointer_(new ControlBlock) {
-            control_block_pointer_->shared_refs++;
-        }
+        control_block_pointer_->shared_refs++;
+    }
 
     explicit shared_ptr(Type* pointer)
         : pointer_(pointer), control_block_pointer_(new ControlBlock) {
-            control_block_pointer_->shared_refs++;
-        }
+        control_block_pointer_->shared_refs++;
+    }
 
     ~shared_ptr() noexcept {
         if (control_block_pointer_) {  // delete only for objects with allocated control block, i.e. not for moved objects
