@@ -1,9 +1,9 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <utility>
-#include "shared_ptr.hpp"
+#include "weak_ptr.hpp"
 
-template class my::shared_ptr<int>;
+template class my::weak_ptr<int>;
 
 class TestType {
 public:
@@ -13,49 +13,49 @@ public:
     MOCK_METHOD(void, Destructor, (), (noexcept));
 };
 
-TEST(shared_ptr, destructor) {
+TEST(weak_ptr, destructor) {
     auto ptr = new TestType();
-    auto smartPtr = my::shared_ptr<TestType>(ptr);
+    auto smartPtr = my::weak_ptr<TestType>(ptr);
 
     EXPECT_CALL(*ptr, Destructor);
 }
 
-TEST(shared_ptr, default_constructor) {
-    my::shared_ptr<TestType> smartPtr;
+TEST(weak_ptr, default_constructor) {
+    my::weak_ptr<TestType> smartPtr;
 
     EXPECT_EQ(smartPtr.get(), nullptr);
 }
 
-TEST(shared_ptr, parametric_constructor) {
+TEST(weak_ptr, parametric_constructor) {
     auto ptr = new int{5};
-    auto smartPtr = my::shared_ptr<int>(ptr);
+    auto smartPtr = my::weak_ptr<int>(ptr);
 
     EXPECT_EQ(smartPtr.get(), ptr);
 }
 
-TEST(shared_ptr, copy_constructor_with_nullptr) {
-    my::shared_ptr<TestType> otherSmartPtr;
-    my::shared_ptr<TestType> smartPtr(otherSmartPtr);
+TEST(weak_ptr, copy_constructor_with_nullptr) {
+    my::weak_ptr<TestType> otherSmartPtr;
+    my::weak_ptr<TestType> smartPtr(otherSmartPtr);
 
     EXPECT_EQ(smartPtr.get(), nullptr);
     EXPECT_EQ(otherSmartPtr.get(), nullptr);
 }
 
-TEST(shared_ptr, copy_constructor_with_ptr) {
+TEST(weak_ptr, copy_constructor_with_ptr) {
     auto ptr = new TestType();
-    auto otherSmartPtr = my::shared_ptr<TestType>(ptr);
+    auto otherSmartPtr = my::weak_ptr<TestType>(ptr);
 
     EXPECT_CALL(*ptr, Destructor);
 
-    my::shared_ptr<TestType> smartPtr(otherSmartPtr);
+    my::weak_ptr<TestType> smartPtr(otherSmartPtr);
 
     EXPECT_EQ(smartPtr.get(), ptr);
     EXPECT_EQ(otherSmartPtr.get(), ptr);
 }
 
-TEST(shared_ptr, copy_assignment_from_nullptr_to_nullptr) {
-    auto smartPtr = my::shared_ptr<TestType>();
-    auto otherSmartPtr = my::shared_ptr<TestType>();
+TEST(weak_ptr, copy_assignment_from_nullptr_to_nullptr) {
+    auto smartPtr = my::weak_ptr<TestType>();
+    auto otherSmartPtr = my::weak_ptr<TestType>();
 
     smartPtr = otherSmartPtr;
 
@@ -63,10 +63,10 @@ TEST(shared_ptr, copy_assignment_from_nullptr_to_nullptr) {
     EXPECT_EQ(otherSmartPtr.get(), nullptr);
 }
 
-TEST(shared_ptr, copy_assignment_from_ptr_to_nullptr) {
-    my::shared_ptr<TestType> smartPtr;
+TEST(weak_ptr, copy_assignment_from_ptr_to_nullptr) {
+    my::weak_ptr<TestType> smartPtr;
     auto otherPtr = new TestType();
-    auto otherSmartPtr = my::shared_ptr<TestType>(otherPtr);
+    auto otherSmartPtr = my::weak_ptr<TestType>(otherPtr);
 
     EXPECT_CALL(*otherPtr, Destructor);
 
@@ -76,9 +76,9 @@ TEST(shared_ptr, copy_assignment_from_ptr_to_nullptr) {
     EXPECT_EQ(otherSmartPtr.get(), otherPtr);
 }
 
-TEST(shared_ptr, move_constructor_with_nullptr) {
-    my::shared_ptr<TestType> otherSmartPtr;
-    my::shared_ptr<TestType> smartPtr(std::move(otherSmartPtr));
+TEST(weak_ptr, move_constructor_with_nullptr) {
+    my::weak_ptr<TestType> otherSmartPtr;
+    my::weak_ptr<TestType> smartPtr(std::move(otherSmartPtr));
 
     EXPECT_EQ(smartPtr.get(), nullptr);
     EXPECT_EQ(smartPtr.use_count(), 1);
@@ -86,21 +86,21 @@ TEST(shared_ptr, move_constructor_with_nullptr) {
     // EXPECT_EQ(otherSmartPtr.use_count(), 0);  // -> should cause segmentation fault
 }
 
-TEST(shared_ptr, move_constructor_with_ptr) {
+TEST(weak_ptr, move_constructor_with_ptr) {
     auto otherPtr = new TestType();
-    auto otherSmartPtr = my::shared_ptr<TestType>(otherPtr);
+    auto otherSmartPtr = my::weak_ptr<TestType>(otherPtr);
 
     EXPECT_CALL(*otherPtr, Destructor);
 
-    my::shared_ptr<TestType> smartPtr(std::move(otherSmartPtr));
+    my::weak_ptr<TestType> smartPtr(std::move(otherSmartPtr));
 
     EXPECT_EQ(smartPtr.get(), otherPtr);
     EXPECT_EQ(otherSmartPtr.get(), nullptr);
 }
 
-TEST(shared_ptr, move_assignment_from_nullptr_to_nullptr) {
-    auto smartPtr = my::shared_ptr<TestType>();
-    auto otherSmartPtr = my::shared_ptr<TestType>();
+TEST(weak_ptr, move_assignment_from_nullptr_to_nullptr) {
+    auto smartPtr = my::weak_ptr<TestType>();
+    auto otherSmartPtr = my::weak_ptr<TestType>();
 
     smartPtr = std::move(otherSmartPtr);
 
@@ -108,10 +108,10 @@ TEST(shared_ptr, move_assignment_from_nullptr_to_nullptr) {
     EXPECT_EQ(otherSmartPtr.get(), nullptr);
 }
 
-TEST(shared_ptr, move_assignment_from_nullptr_to_ptr) {
+TEST(weak_ptr, move_assignment_from_nullptr_to_ptr) {
     auto otherPtr = new TestType();
-    auto smartPtr = my::shared_ptr<TestType>();
-    auto otherSmartPtr = my::shared_ptr<TestType>(otherPtr);
+    auto smartPtr = my::weak_ptr<TestType>();
+    auto otherSmartPtr = my::weak_ptr<TestType>(otherPtr);
 
     EXPECT_CALL(*otherPtr, Destructor);
 
@@ -121,10 +121,10 @@ TEST(shared_ptr, move_assignment_from_nullptr_to_ptr) {
     EXPECT_EQ(otherSmartPtr.get(), nullptr);
 }
 
-TEST(shared_ptr, move_assignment_from_ptr_to_nullptr) {
+TEST(weak_ptr, move_assignment_from_ptr_to_nullptr) {
     auto ptr = new TestType();
-    auto smartPtr = my::shared_ptr<TestType>(ptr);
-    auto otherSmartPtr = my::shared_ptr<TestType>();
+    auto smartPtr = my::weak_ptr<TestType>(ptr);
+    auto otherSmartPtr = my::weak_ptr<TestType>();
 
     EXPECT_CALL(*ptr, Destructor);
 
@@ -134,11 +134,11 @@ TEST(shared_ptr, move_assignment_from_ptr_to_nullptr) {
     EXPECT_EQ(otherSmartPtr.get(), nullptr);
 }
 
-TEST(shared_ptr, move_assignment_from_ptr_to_ptr) {
+TEST(weak_ptr, move_assignment_from_ptr_to_ptr) {
     auto ptr = new TestType();
     auto otherPtr = new TestType();
-    auto smartPtr = my::shared_ptr<TestType>(ptr);
-    auto otherSmartPtr = my::shared_ptr<TestType>(otherPtr);
+    auto smartPtr = my::weak_ptr<TestType>(ptr);
+    auto otherSmartPtr = my::weak_ptr<TestType>(otherPtr);
 
     EXPECT_CALL(*ptr, Destructor);
     EXPECT_CALL(*otherPtr, Destructor);
@@ -149,9 +149,9 @@ TEST(shared_ptr, move_assignment_from_ptr_to_ptr) {
     EXPECT_EQ(otherSmartPtr.get(), nullptr);
 }
 
-TEST(shared_ptr, reset) {
+TEST(weak_ptr, reset) {
     auto ptr = new int{5};
-    auto smartPtr = my::shared_ptr<int>(ptr);
+    auto smartPtr = my::weak_ptr<int>(ptr);
 
     smartPtr.reset();
     EXPECT_EQ(smartPtr.get(), nullptr);
@@ -164,30 +164,13 @@ TEST(shared_ptr, reset) {
     EXPECT_EQ(smartPtr.get(), otherPtr);
 }
 
-TEST(shared_ptr, star_operator) {
-    auto ptr = new int{5};
-    auto smartPtr = my::shared_ptr<int>(ptr);
-
-    EXPECT_EQ(*ptr, *smartPtr);
-}
-
-TEST(shared_ptr, arrow_operator) {
-    struct Foo {
-        int foo() { return 5; }
-    };
-    auto ptr = new Foo{};
-    my::shared_ptr<Foo> fooPtr{ptr};
-
-    EXPECT_EQ(fooPtr->foo(), 5);
-}
-
-TEST(shared_ptr, use_count) {
-    auto smartPtr = my::shared_ptr<int>();
+TEST(weak_ptr, use_count) {
+    auto smartPtr = my::weak_ptr<int>();
 
     EXPECT_EQ(smartPtr.use_count(), 1);
 
     auto otherPtr = new int{5};
-    auto otherSmartPtr = my::shared_ptr<int>(otherPtr);
+    auto otherSmartPtr = my::weak_ptr<int>(otherPtr);
 
     smartPtr = otherSmartPtr;
 
@@ -198,15 +181,4 @@ TEST(shared_ptr, use_count) {
 
     EXPECT_EQ(smartPtr.use_count(), 1);
     // EXPECT_EQ(otherSmartPtr.use_count(), 1);  // -> should cause segmentation fault
-}
-
-TEST(shared_ptr, bool) {
-    auto ptr = new int{5};
-    auto smartPtr = my::shared_ptr<int>(ptr);
-
-    EXPECT_EQ(bool(smartPtr), true);
-
-    smartPtr.reset();
-
-    EXPECT_EQ(bool(smartPtr), false);
 }
