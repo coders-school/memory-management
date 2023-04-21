@@ -83,7 +83,7 @@ TEST(shared_ptr, move_constructor_with_nullptr) {
     EXPECT_EQ(smartPtr.get(), nullptr);
     EXPECT_EQ(smartPtr.use_count(), 1);
     EXPECT_EQ(otherSmartPtr.get(), nullptr);
-    // EXPECT_EQ(otherSmartPtr.use_count(), 0);
+    // EXPECT_EQ(otherSmartPtr.use_count(), 0);  // -> should cause segmentation fault
 }
 
 TEST(shared_ptr, move_constructor_with_ptr) {
@@ -197,5 +197,5 @@ TEST(shared_ptr, use_count) {
     smartPtr = std::move(otherSmartPtr);
 
     EXPECT_EQ(smartPtr.use_count(), 1);
-    // EXPECT_EQ(otherSmartPtr.use_count(), 1);  // -> should cause undefined behaviour
+    // EXPECT_EQ(otherSmartPtr.use_count(), 1);  // -> should cause segmentation fault
 }
