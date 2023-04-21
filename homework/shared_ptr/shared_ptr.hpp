@@ -130,6 +130,10 @@ public:
         return pointer_;
     }
 
+    explicit operator bool() const {
+        return pointer_;
+    }
+
     size_t use_count() const noexcept {
         return control_block_pointer_->shared_refs;
     }

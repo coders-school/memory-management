@@ -199,3 +199,14 @@ TEST(shared_ptr, use_count) {
     EXPECT_EQ(smartPtr.use_count(), 1);
     // EXPECT_EQ(otherSmartPtr.use_count(), 1);  // -> should cause segmentation fault
 }
+
+TEST(shared_ptr, bool) {
+    auto ptr = new int{5};
+    auto smartPtr = my::shared_ptr<int>(ptr);
+
+    EXPECT_EQ(bool(smartPtr), true);
+
+    smartPtr.reset();
+
+    EXPECT_EQ(bool(smartPtr), false);
+}
