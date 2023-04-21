@@ -134,12 +134,6 @@ public:
         return control_block_pointer_->shared_refs;
     }
 
-    // Type* release() noexcept {
-    //     auto tempPtr = pointer_;
-    //     pointer_ = nullptr;
-    //     return tempPtr;
-    // }
-
 private:
     Type* pointer_{nullptr};
     ControlBlock* control_block_pointer_{nullptr};

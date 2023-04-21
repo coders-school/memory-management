@@ -199,13 +199,3 @@ TEST(shared_ptr, use_count) {
     EXPECT_EQ(smartPtr.use_count(), 1);
     // EXPECT_EQ(otherSmartPtr.use_count(), 1);  // -> should cause undefined behaviour
 }
-
-// TEST(shared_ptr, release) {
-//     auto ptr = new int{5};
-//     auto smartPtr = my::shared_ptr<int>(ptr);
-
-//     auto releasedPtr = smartPtr.release();
-//     EXPECT_EQ(releasedPtr, ptr);
-//     EXPECT_EQ(smartPtr.get(), nullptr);
-//     delete ptr;
-// }
