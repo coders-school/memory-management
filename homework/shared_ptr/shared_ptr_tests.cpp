@@ -81,7 +81,9 @@ TEST(shared_ptr, move_constructor_with_nullptr) {
     my::shared_ptr<TestType> smartPtr(std::move(otherSmartPtr));
 
     EXPECT_EQ(smartPtr.get(), nullptr);
+    EXPECT_EQ(smartPtr.use_count(), 1);
     EXPECT_EQ(otherSmartPtr.get(), nullptr);
+    // EXPECT_EQ(otherSmartPtr.use_count(), 0);
 }
 
 TEST(shared_ptr, move_constructor_with_ptr) {

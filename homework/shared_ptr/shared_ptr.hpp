@@ -73,8 +73,6 @@ public:
 
     // move constructor
     shared_ptr(shared_ptr&& other) noexcept {
-        delete pointer_;
-        delete control_block_pointer_;
         pointer_ = nullptr;
         control_block_pointer_ = nullptr;
         std::swap(pointer_, other.pointer_);
