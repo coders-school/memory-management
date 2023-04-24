@@ -10,7 +10,7 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-add_executable(${PROJECT_NAME}-ut shared_ptr_tests_main.cpp shared_ptr_tests.cpp)
+add_executable(${PROJECT_NAME}-ut shared_ptr_tests_main.cpp shared_ptr_tests.cpp weak_ptr_tests.cpp)
 target_link_libraries(${PROJECT_NAME}-ut PRIVATE gtest_main gmock_main pthread)
 
 target_compile_options(${PROJECT_NAME}-ut PRIVATE -Wall -Wextra -pedantic)
