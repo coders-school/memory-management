@@ -26,7 +26,7 @@ public:
     }
 
     ~shared_ptr() noexcept {
-        if (control_block_pointer_) {  // delete only for objects with allocated control block, i.e. not for moved objects
+        if (control_block_pointer_) {  // delete only objects with allocated control block, not moved objects
             control_block_pointer_->shared_refs--;
             if (control_block_pointer_->shared_refs == 0) {
                 if (control_block_pointer_->weak_refs == 0) {
@@ -100,6 +100,10 @@ public:
 
     Type* get() const noexcept {
         return pointer_;
+    }
+
+    ControlBlock* getControlBlock() const noexcept {
+        return control_block_pointer_;
     }
 
     void reset(Type* pointer = nullptr) noexcept {

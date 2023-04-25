@@ -29,7 +29,9 @@ public:
 
     // copy assignment operator
     weak_ptr& operator=(const weak_ptr& other) {
-        control_block_pointer_->weak_refs--;
+        if (control_block_pointer_) {
+            control_block_pointer_->weak_refs--;
+        }
 
         pointer_ = other.pointer_;
         control_block_pointer_ = other.control_block_pointer_;
@@ -37,9 +39,23 @@ public:
         return *this;
     }
 
+    // copy assignment operator (shared_ptr)
+    weak_ptr& operator=(const my::shared_ptr<Type>& other) {
+        if (control_block_pointer_) {  // in case weak_ptr was default-constructed and is empty
+            control_block_pointer_->weak_refs--;
+        }
+
+        pointer_ = other.get();
+        control_block_pointer_ = other.getControlBlock();
+        control_block_pointer_->weak_refs++;
+        return *this;
+    }
+
     // move constructor
     weak_ptr(weak_ptr&& other) noexcept {
-        control_block_pointer_->weak_refs--;
+        if (control_block_pointer_) {
+            control_block_pointer_->weak_refs--;
+        }
 
         pointer_ = nullptr;
         control_block_pointer_ = nullptr;
@@ -49,7 +65,9 @@ public:
 
     // move assignment operator
     weak_ptr& operator=(weak_ptr&& other) noexcept {
-        control_block_pointer_->weak_refs--;
+        if (control_block_pointer_) {
+            control_block_pointer_->weak_refs--;
+        }
 
         pointer_ = nullptr;
         control_block_pointer_ = nullptr;
@@ -63,11 +81,12 @@ public:
     }
 
     void reset(Type* pointer = nullptr) noexcept {
-        control_block_pointer_->weak_refs--;
+        if (control_block_pointer_) {
+            control_block_pointer_->weak_refs--;
+        }
 
         pointer_ = pointer;
-        control_block_pointer_ = new ControlBlock;
-        control_block_pointer_->weak_refs++;
+        control_block_pointer_ = nullptr;
     }
 
     size_t use_count() const noexcept {
