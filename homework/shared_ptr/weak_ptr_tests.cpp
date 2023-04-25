@@ -1,6 +1,7 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <utility>
+#include "shared_ptr.hpp"
 #include "weak_ptr.hpp"
 
 template class my::weak_ptr<int>;
@@ -18,6 +19,7 @@ TEST(weak_ptr, destructor) {
     auto smartPtr = my::weak_ptr<TestType>(ptr);
 
     EXPECT_CALL(*ptr, Destructor);
+    delete ptr;
 }
 
 TEST(weak_ptr, default_constructor) {
@@ -182,3 +184,16 @@ TEST(weak_ptr, default_constructor) {
 //     EXPECT_EQ(smartPtr.use_count(), 1);
 //     // EXPECT_EQ(otherSmartPtr.use_count(), 1);  // -> should cause segmentation fault
 // }
+
+TEST(weak_ptr, reference_cycle) {
+    struct Node {
+        my::shared_ptr<Node> child;
+        my::shared_ptr<Node> parent;
+    };
+
+    auto root = my::shared_ptr<Node>(new Node);
+    auto leaf = my::shared_ptr<Node>(new Node);
+
+    root->child = leaf;
+    leaf->parent = root;
+}
