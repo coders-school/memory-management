@@ -8,13 +8,10 @@ namespace my {
 template <typename Type>
 class weak_ptr {
 public:
+    // default constructor
     weak_ptr() = default;
 
-    explicit weak_ptr(Type* pointer)
-        : pointer_(pointer), control_block_pointer_(control_block_pointer_) {
-        control_block_pointer_->weak_refs++;
-    }
-
+    // destructor
     ~weak_ptr() noexcept {
         if (control_block_pointer_) {  // address only objects with allocated control block, i.e. not for moved objects
             control_block_pointer_->weak_refs--;
@@ -78,6 +75,10 @@ public:
 
     Type* get() const noexcept {
         return pointer_;
+    }
+
+    ControlBlock* getControlBlock() const noexcept {
+        return control_block_pointer_;
     }
 
     void reset(Type* pointer = nullptr) noexcept {

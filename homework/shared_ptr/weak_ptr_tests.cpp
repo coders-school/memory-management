@@ -27,13 +27,6 @@ TEST(weak_ptr, default_constructor) {
     EXPECT_EQ(smartPtr.get(), nullptr);
 }
 
-// TEST(weak_ptr, parametric_constructor) {
-//     auto ptr = new int{5};
-//     auto smartPtr = my::weak_ptr<int>(ptr);
-
-//     EXPECT_EQ(smartPtr.get(), ptr);
-// }
-
 // TEST(weak_ptr, copy_constructor_with_nullptr) {
 //     my::weak_ptr<TestType> otherSmartPtr;
 //     my::weak_ptr<TestType> smartPtr(otherSmartPtr);
