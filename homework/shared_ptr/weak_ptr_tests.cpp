@@ -14,12 +14,13 @@ public:
     MOCK_METHOD(void, Destructor, (), (noexcept));
 };
 
-// TEST(weak_ptr, destructor) {
-//     auto ptr = new TestType();
-//     auto smartPtr = my::weak_ptr<TestType>(ptr);
+TEST(weak_ptr, destructor) {
+    auto pointer = new TestType();
+    auto sharedPointer = my::shared_ptr<TestType>(pointer);
+    auto weakPointer = my::weak_ptr<TestType>(sharedPointer);
 
-//     EXPECT_CALL(*ptr, Destructor);
-// }
+    EXPECT_CALL(*pointer, Destructor);
+}
 
 // TEST(weak_ptr, default_constructor) {
 //     my::weak_ptr<TestType> weakPointer;
@@ -101,6 +102,7 @@ TEST(weak_ptr, use_count) {
 
     EXPECT_EQ(otherWeakPointer.use_count(), 1);
     // EXPECT_EQ(weakPointer.use_count(), 1);  // -> should cause segmentation fault
+    EXPECT_CALL(*pointer, Destructor);
 }
 
 // TEST(weak_ptr, reference_cycle) {
