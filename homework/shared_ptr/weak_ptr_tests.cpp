@@ -74,20 +74,16 @@ TEST(weak_ptr, move_assignment) {
     EXPECT_CALL(*pointer, Destructor);
 }
 
-// TEST(weak_ptr, reset) {
-//     auto ptr = new int{5};
-//     auto smartPtr = my::weak_ptr<int>(ptr);
+TEST(weak_ptr, reset) {
+    auto pointer = new TestType();
+    auto sharedPointer = my::shared_ptr<TestType>(pointer);
+    auto weakPointer = my::weak_ptr<TestType>(sharedPointer);
 
-//     smartPtr.reset();
-//     EXPECT_EQ(smartPtr.get(), nullptr);
+    weakPointer.reset();
 
-//     smartPtr.reset(nullptr);
-//     EXPECT_EQ(smartPtr.get(), nullptr);
-
-//     auto otherPtr = new int{6};
-//     smartPtr.reset(otherPtr);
-//     EXPECT_EQ(smartPtr.get(), otherPtr);
-// }
+    EXPECT_EQ(weakPointer.get(), nullptr);
+    EXPECT_CALL(*pointer, Destructor);
+}
 
 // TEST(weak_ptr, use_count) {
 //     auto smartPtr = my::weak_ptr<int>();
