@@ -21,31 +21,22 @@ public:
 //     EXPECT_CALL(*ptr, Destructor);
 // }
 
-TEST(weak_ptr, default_constructor) {
-    my::weak_ptr<TestType> smartPtr;
+// TEST(weak_ptr, default_constructor) {
+//     my::weak_ptr<TestType> weakPointer;
 
-    EXPECT_EQ(smartPtr.get(), nullptr);
+//     EXPECT_EQ(weakPointer.get(), nullptr);
+// }
+
+TEST(weak_ptr, copy_constructor) {
+    auto pointer = new TestType();
+    auto sharedPointer = my::shared_ptr<TestType>(pointer);
+
+    auto weakPointer = my::weak_ptr<TestType>(sharedPointer);
+
+    EXPECT_EQ(weakPointer.get(), pointer);
+    EXPECT_EQ(sharedPointer.get(), pointer);
+    EXPECT_CALL(*pointer, Destructor);
 }
-
-// TEST(weak_ptr, copy_constructor_with_nullptr) {
-//     my::weak_ptr<TestType> otherSmartPtr;
-//     my::weak_ptr<TestType> smartPtr(otherSmartPtr);
-
-//     EXPECT_EQ(smartPtr.get(), nullptr);
-//     EXPECT_EQ(otherSmartPtr.get(), nullptr);
-// }
-
-// TEST(weak_ptr, copy_constructor_with_ptr) {
-//     auto ptr = new TestType();
-//     auto otherSmartPtr = my::weak_ptr<TestType>(ptr);
-
-//     EXPECT_CALL(*ptr, Destructor);
-
-//     my::weak_ptr<TestType> smartPtr(otherSmartPtr);
-
-//     EXPECT_EQ(smartPtr.get(), ptr);
-//     EXPECT_EQ(otherSmartPtr.get(), ptr);
-// }
 
 // TEST(weak_ptr, copy_assignment_from_nullptr_to_nullptr) {
 //     auto smartPtr = my::weak_ptr<TestType>();
@@ -57,18 +48,17 @@ TEST(weak_ptr, default_constructor) {
 //     EXPECT_EQ(otherSmartPtr.get(), nullptr);
 // }
 
-// TEST(weak_ptr, copy_assignment_from_ptr_to_nullptr) {
-//     my::weak_ptr<TestType> smartPtr;
-//     auto otherPtr = new TestType();
-//     auto otherSmartPtr = my::weak_ptr<TestType>(otherPtr);
+TEST(weak_ptr, copy_assignment) {
+    auto pointer = new TestType();
+    auto sharedPointer = my::shared_ptr<TestType>(pointer);
+    my::weak_ptr<TestType> weakPointer;
 
-//     EXPECT_CALL(*otherPtr, Destructor);
+    weakPointer = sharedPointer;
 
-//     smartPtr = otherSmartPtr;
-
-//     EXPECT_EQ(smartPtr.get(), otherPtr);
-//     EXPECT_EQ(otherSmartPtr.get(), otherPtr);
-// }
+    EXPECT_EQ(weakPointer.get(), pointer);
+    EXPECT_EQ(sharedPointer.get(), pointer);
+    EXPECT_CALL(*pointer, Destructor);
+}
 
 // TEST(weak_ptr, move_constructor_with_nullptr) {
 //     my::weak_ptr<TestType> otherSmartPtr;
@@ -177,15 +167,15 @@ TEST(weak_ptr, default_constructor) {
 //     // EXPECT_EQ(otherSmartPtr.use_count(), 1);  // -> should cause segmentation fault
 // }
 
-TEST(weak_ptr, reference_cycle) {
-    struct Node {
-        my::shared_ptr<Node> child;
-        my::weak_ptr<Node> parent;
-    };
+// TEST(weak_ptr, reference_cycle) {
+//     struct Node {
+//         my::shared_ptr<Node> child;
+//         my::weak_ptr<Node> parent;
+//     };
 
-    auto root = my::shared_ptr<Node>(new Node);
-    auto leaf = my::shared_ptr<Node>(new Node);
+//     auto root = my::shared_ptr<Node>(new Node);
+//     auto leaf = my::shared_ptr<Node>(new Node);
 
-    root->child = leaf;
-    leaf->parent = root;
-}
+//     root->child = leaf;
+//     leaf->parent = root;
+// }

@@ -9,7 +9,10 @@ template <typename Type>
 class weak_ptr {
 public:
     // default constructor
-    weak_ptr() = default;
+    weak_ptr()
+        : pointer_(nullptr), control_block_pointer_(new ControlBlock) {
+        control_block_pointer_->weak_refs++;
+    }
 
     // destructor
     ~weak_ptr() noexcept {
@@ -19,8 +22,14 @@ public:
     }
 
     // copy constructor
-    weak_ptr(const weak_ptr& other)
+    weak_ptr(const weak_ptr<Type>& other)
         : pointer_(other.pointer_), control_block_pointer_(other.control_block_pointer_) {
+        control_block_pointer_->weak_refs++;
+    }
+
+    // copy constructor
+    weak_ptr(const shared_ptr<Type>& other)
+        : pointer_(other.get()), control_block_pointer_(other.getControlBlock()) {
         control_block_pointer_->weak_refs++;
     }
 
