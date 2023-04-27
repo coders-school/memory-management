@@ -70,17 +70,17 @@ TEST(weak_ptr, copy_assignment) {
 //     // EXPECT_EQ(otherSmartPtr.use_count(), 0);  // -> should cause segmentation fault
 // }
 
-// TEST(weak_ptr, move_constructor_with_ptr) {
-//     auto otherPtr = new TestType();
-//     auto otherSmartPtr = my::weak_ptr<TestType>(otherPtr);
+TEST(weak_ptr, move_constructor) {
+    auto pointer = new TestType();
+    auto sharedPointer = my::shared_ptr<TestType>(pointer);
+    auto weakPointer = my::weak_ptr<TestType>(sharedPointer);
 
-//     EXPECT_CALL(*otherPtr, Destructor);
+    auto otherWeakPointer = my::weak_ptr<TestType>(std::move(weakPointer));
 
-//     my::weak_ptr<TestType> smartPtr(std::move(otherSmartPtr));
-
-//     EXPECT_EQ(smartPtr.get(), otherPtr);
-//     EXPECT_EQ(otherSmartPtr.get(), nullptr);
-// }
+    EXPECT_EQ(weakPointer.get(), nullptr);
+    EXPECT_EQ(otherWeakPointer.get(), pointer);
+    EXPECT_CALL(*pointer, Destructor);
+}
 
 // TEST(weak_ptr, move_assignment_from_nullptr_to_nullptr) {
 //     auto smartPtr = my::weak_ptr<TestType>();

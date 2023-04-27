@@ -21,19 +21,19 @@ public:
         }
     }
 
-    // copy constructor
+    // copy constructor (weak_ptr)
     weak_ptr(const weak_ptr<Type>& other)
         : pointer_(other.pointer_), control_block_pointer_(other.control_block_pointer_) {
         control_block_pointer_->weak_refs++;
     }
 
-    // copy constructor
+    // copy constructor (shared_ptr)
     weak_ptr(const shared_ptr<Type>& other)
         : pointer_(other.get()), control_block_pointer_(other.getControlBlock()) {
         control_block_pointer_->weak_refs++;
     }
 
-    // copy assignment operator
+    // copy assignment operator (weak_ptr)
     weak_ptr& operator=(const weak_ptr& other) {
         if (control_block_pointer_) {
             control_block_pointer_->weak_refs--;
