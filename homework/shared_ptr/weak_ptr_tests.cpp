@@ -85,24 +85,23 @@ TEST(weak_ptr, reset) {
     EXPECT_CALL(*pointer, Destructor);
 }
 
-// TEST(weak_ptr, use_count) {
-//     auto smartPtr = my::weak_ptr<int>();
+TEST(weak_ptr, use_count) {
+    auto pointer = new TestType();
+    auto sharedPointer = my::shared_ptr<TestType>(pointer);
+    auto weakPointer = my::weak_ptr<TestType>(sharedPointer);
 
-//     EXPECT_EQ(smartPtr.use_count(), 1);
+    EXPECT_EQ(weakPointer.use_count(), 1);
 
-//     auto otherPtr = new int{5};
-//     auto otherSmartPtr = my::weak_ptr<int>(otherPtr);
+    auto otherWeakPointer = my::weak_ptr<TestType>(weakPointer);
 
-//     smartPtr = otherSmartPtr;
+    EXPECT_EQ(weakPointer.use_count(), 2);
+    EXPECT_EQ(otherWeakPointer.use_count(), 2);
 
-//     EXPECT_EQ(smartPtr.use_count(), 2);
-//     EXPECT_EQ(otherSmartPtr.use_count(), 2);
+    otherWeakPointer = std::move(weakPointer);
 
-//     smartPtr = std::move(otherSmartPtr);
-
-//     EXPECT_EQ(smartPtr.use_count(), 1);
-//     // EXPECT_EQ(otherSmartPtr.use_count(), 1);  // -> should cause segmentation fault
-// }
+    EXPECT_EQ(otherWeakPointer.use_count(), 1);
+    // EXPECT_EQ(weakPointer.use_count(), 1);  // -> should cause segmentation fault
+}
 
 // TEST(weak_ptr, reference_cycle) {
 //     struct Node {
