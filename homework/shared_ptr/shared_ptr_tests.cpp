@@ -76,3 +76,8 @@ TEST_F(SharedPtrClassTest, whenCreatedPtrToInt_thenPossibleToDelete) {
 TEST_F(SharedPtrClassTest, whenCreatedPtrToIntWithCustomDeleter_thenPossibleToDelete) {
     my::shared_ptr<int> shared_ptr{new int(9), my_fancy_deleter};
 }
+
+TEST_F(SharedPtrClassTest, whenCreatedPtrToIntBeforeSharedPtrCreated_thenPossibleToDelete) {
+    auto int_ptr = new int(13);
+    my::shared_ptr<int> shared_ptr{int_ptr};
+}
