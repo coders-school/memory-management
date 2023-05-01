@@ -27,6 +27,7 @@ Do not forget about CI - UT + Valgrind / ASAN. Work in pairs.
 
 Read the notes on cppreference.com
 */
+#include <atomic>
 #include <iostream>
 
 namespace my {
@@ -53,10 +54,6 @@ class ControlBlock {
     weak_refs count (as std::atomic<size_t>)
     deleter (function pointer)
     */
-    T* ptr_ = nullptr;
-    std::atomic<size_t> shared_refs_ = 1;
-    std::atomic<size_t> weak_refs_ = 0;
-    std::function<void(T* ptr)> deleter_ptr_ = static_cast<void (*)(T*)>(my::default_deleter<T>);
 
 public:
     ControlBlock(T* ptr)
@@ -76,6 +73,20 @@ public:
     void call_deleter() {
         deleter_ptr_(ptr_);
     }
+
+    std::atomic<size_t> shared_refs() const {
+        return shared_refs_.load();
+    }
+
+    std::atomic<size_t> weak_refs() const {
+        return weak_refs_.load();
+    }
+
+private:
+    T* ptr_ = nullptr;
+    std::atomic<size_t> shared_refs_ = 1;
+    std::atomic<size_t> weak_refs_ = 0;
+    std::function<void(T* ptr)> deleter_ptr_ = static_cast<void (*)(T*)>(my::default_deleter<T>);
 };
 
 template <class T>
@@ -106,6 +117,14 @@ public:
             delete control_block_ptr;
             print_msg("destructor ~shared_ptr");
         }
+    }
+
+    std::atomic<size_t> get_shared_cnt() const {
+        return control_block_ptr->shared_refs();
+    }
+
+    std::atomic<size_t> get_weak_cnt() const {
+        return control_block_ptr->weak_refs();
     }
 };
 

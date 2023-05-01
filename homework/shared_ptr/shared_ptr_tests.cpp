@@ -81,3 +81,9 @@ TEST_F(SharedPtrClassTest, whenCreatedPtrToIntBeforeSharedPtrCreated_thenPossibl
     auto int_ptr = new int(13);
     my::shared_ptr<int> shared_ptr{int_ptr};
 }
+
+TEST_F(SharedPtrClassTest, whenCreatedWithNullptr_thenExpectOneSharedAndZeroWeakCnts) {
+    my::shared_ptr<int> shared_ptr{nullptr};
+    EXPECT_EQ(1, shared_ptr.get_shared_cnt());
+    EXPECT_EQ(0, shared_ptr.get_weak_cnt());
+}
