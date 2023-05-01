@@ -31,17 +31,55 @@ Read the notes on cppreference.com
 
 namespace my {
 
-void print_msg(const std::string& msg)
-{
+void print_msg(const std::string& msg) {
     std::cout << static_cast<std::string>(msg) << std::endl;
 }
 
 template <class T>
+void default_deleter(T* ptr) {
+    delete ptr;
+    ptr = nullptr;
+    print_msg("Called default deleter!");
+}
+
+template <class T>
+class ControlBlock {
+    /*
+    Holds a pointer to shared control block with 2 counters and a deleter:
+    shared_refs count (as std::atomic<size_t>)
+    weak_refs count (as std::atomic<size_t>)
+    deleter (function pointer)
+    */
+    T* ptr_ = nullptr;
+    std::atomic<size_t> shared_refs_ = 1;
+    std::atomic<size_t> weak_refs_ = 0;
+    std::function<void(T* ptr)> deleter_ptr_ = static_cast<void (*)(T*)>(my::default_deleter<T>);
+
+public:
+    ControlBlock() {
+        print_msg("constructor ControlBlock");
+    }
+
+    ~ControlBlock() {
+        print_msg("destructor ~ControlBlock");
+    }
+};
+
+template <class T>
 class shared_ptr {
     T* ptr_ = nullptr;
+    ControlBlock<T>* control_block_ptr = nullptr;
+
 public:
-    shared_ptr(T* ptr) : ptr_{ptr} { print_msg("constructor shared_ptr"); }
-    ~shared_ptr() { print_msg("destructor ~shared_ptr"); } 
+    shared_ptr(T* ptr)
+        : ptr_{ptr}, control_block_ptr{new ControlBlock<T>()} {
+        print_msg("constructor shared_ptr (body)");
+    }
+
+    ~shared_ptr() {
+        delete control_block_ptr;
+        print_msg("destructor ~shared_ptr");
+    }
 };
 
 }  // namespace my
