@@ -42,6 +42,7 @@ void default_deleter(T* ptr) {
     print_msg("Called default deleter!");
 }
 
+
 template <class T>
 class ControlBlock {
     /*
@@ -63,6 +64,11 @@ public:
     ~ControlBlock() {
         print_msg("destructor ~ControlBlock");
     }
+
+    void call_deleter()
+    {
+        deleter_ptr_(ptr_);
+    }
 };
 
 template <class T>
@@ -77,6 +83,7 @@ public:
     }
 
     ~shared_ptr() {
+        control_block_ptr->call_deleter();
         delete control_block_ptr;
         print_msg("destructor ~shared_ptr");
     }
