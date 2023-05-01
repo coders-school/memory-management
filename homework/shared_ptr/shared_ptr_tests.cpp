@@ -55,3 +55,20 @@ TEST_F(SharedPtrClassTest, whenCreated_thenPossibleToDelete) {
 TEST_F(SharedPtrClassTest, whenCreatedPtrToInt_thenPossibleToDelete) {
     my::shared_ptr<int> shared_ptr{new int(7)};
 }
+
+void print_msg(const std::string& msg) {
+    std::cout << static_cast<std::string>(msg) << std::endl;
+}
+
+void my_fancy_deleter(int* ptr) {
+    if (ptr) {
+        print_msg("Called fancy deleter!");
+        print_msg("Deleting " + std::to_string(*ptr));
+        delete ptr;
+        ptr = nullptr;
+    }
+}
+
+TEST_F(SharedPtrClassTest, whenCreatedPtrToIntWithCustomDeleter_thenPossibleToDelete) {
+    my::shared_ptr<int> shared_ptr{new int(9), my_fancy_deleter};
+}

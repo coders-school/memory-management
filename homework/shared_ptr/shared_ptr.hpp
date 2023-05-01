@@ -64,6 +64,11 @@ public:
         print_msg("constructor ControlBlock");
     }
 
+    ControlBlock(T* ptr, std::function<void(T*)> deleter)
+        : ptr_(ptr), deleter_ptr_{deleter} {
+        print_msg("constructor ControlBlock with deleter");
+    }
+
     ~ControlBlock() {
         print_msg("destructor ~ControlBlock");
     }
@@ -82,6 +87,14 @@ public:
     shared_ptr(T* ptr)
         : ptr_{ptr}, control_block_ptr{new ControlBlock<T>(ptr_)} {
         print_msg("constructor shared_ptr (body)");
+        if (ptr_) {
+            print_msg("Created " + std::to_string(*ptr_));
+        }
+    }
+
+    shared_ptr(T* ptr, std::function<void(T*)> deleter)
+        : ptr_{ptr}, control_block_ptr{new ControlBlock<T>(ptr_, deleter)} {
+        print_msg("constructor shared_ptr (body) with deleter");
         if (ptr_) {
             print_msg("Created " + std::to_string(*ptr_));
         }
