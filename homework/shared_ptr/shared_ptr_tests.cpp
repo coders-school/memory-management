@@ -48,12 +48,8 @@ protected:
     // for Foo.
 };
 
-TEST_F(SharedPtrClassTest, whenCreated_thenPossibleToDelete) {
+TEST_F(SharedPtrClassTest, whenCreatedWithNullptr_thenPossibleToDelete) {
     my::shared_ptr<int> shared_ptr{nullptr};
-}
-
-TEST_F(SharedPtrClassTest, whenCreatedPtrToInt_thenPossibleToDelete) {
-    my::shared_ptr<int> shared_ptr{new int(7)};
 }
 
 void print_msg(const std::string& msg) {
@@ -67,6 +63,14 @@ void my_fancy_deleter(int* ptr) {
         delete ptr;
         ptr = nullptr;
     }
+}
+
+TEST_F(SharedPtrClassTest, whenCreatedWithNullptrAndCustomDeleter_thenPossibleToDelete) {
+    my::shared_ptr<int> shared_ptr{nullptr, my_fancy_deleter};
+}
+
+TEST_F(SharedPtrClassTest, whenCreatedPtrToInt_thenPossibleToDelete) {
+    my::shared_ptr<int> shared_ptr{new int(7)};
 }
 
 TEST_F(SharedPtrClassTest, whenCreatedPtrToIntWithCustomDeleter_thenPossibleToDelete) {
