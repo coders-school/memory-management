@@ -7,10 +7,10 @@ shared_ptr
 shared_ptr is a RAII class:
 
 V   Holds a pointer to managed object (template class)
-Holds a pointer to shared control block with 2 counters and a deleter:
-shared_refs count (as std::atomic<size_t>)
-weak_refs count (as std::atomic<size_t>)
-deleter (function pointer)
+V   Holds a pointer to shared control block with 2 counters and a deleter:
+V   shared_refs count (as std::atomic<size_t>)
+V   weak_refs count (as std::atomic<size_t>)
+V   deleter (function pointer)
 Constructor copies a pointer and allocate the control block
 Destructor decrease shared_refs and:
 if shared_refs == 0 -> release the managed object
