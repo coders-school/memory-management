@@ -51,3 +51,7 @@ protected:
 TEST_F(SharedPtrClassTest, whenCreated_thenPossibleToDelete) {
     my::shared_ptr<int> shared_ptr{nullptr};
 }
+
+TEST_F(SharedPtrClassTest, whenCreatedPtrToInt_thenPossibleToDelete) {
+    my::shared_ptr<int> shared_ptr{new int(7)};
+}

@@ -37,11 +37,13 @@ void print_msg(const std::string& msg) {
 
 template <class T>
 void default_deleter(T* ptr) {
-    delete ptr;
-    ptr = nullptr;
-    print_msg("Called default deleter!");
+    if (ptr) {
+        print_msg("Called default deleter!");
+        print_msg("Deleting " + std::to_string(*ptr));
+        delete ptr;
+        ptr = nullptr;
+    }
 }
-
 
 template <class T>
 class ControlBlock {
@@ -57,7 +59,8 @@ class ControlBlock {
     std::function<void(T* ptr)> deleter_ptr_ = static_cast<void (*)(T*)>(my::default_deleter<T>);
 
 public:
-    ControlBlock() {
+    ControlBlock(T* ptr)
+        : ptr_(ptr) {
         print_msg("constructor ControlBlock");
     }
 
@@ -65,8 +68,7 @@ public:
         print_msg("destructor ~ControlBlock");
     }
 
-    void call_deleter()
-    {
+    void call_deleter() {
         deleter_ptr_(ptr_);
     }
 };
@@ -78,14 +80,19 @@ class shared_ptr {
 
 public:
     shared_ptr(T* ptr)
-        : ptr_{ptr}, control_block_ptr{new ControlBlock<T>()} {
+        : ptr_{ptr}, control_block_ptr{new ControlBlock<T>(ptr_)} {
         print_msg("constructor shared_ptr (body)");
+        if (ptr_) {
+            print_msg("Created " + std::to_string(*ptr_));
+        }
     }
 
     ~shared_ptr() {
-        control_block_ptr->call_deleter();
-        delete control_block_ptr;
-        print_msg("destructor ~shared_ptr");
+        if (control_block_ptr) {
+            control_block_ptr->call_deleter();
+            delete control_block_ptr;
+            print_msg("destructor ~shared_ptr");
+        }
     }
 };
 
