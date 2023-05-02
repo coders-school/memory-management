@@ -71,10 +71,6 @@ public:
 
     // move constructor
     weak_ptr(weak_ptr&& other) noexcept {
-        if (control_block_pointer_) {
-            control_block_pointer_->weak_refs--;
-        }
-
         pointer_ = nullptr;
         control_block_pointer_ = nullptr;
         std::swap(pointer_, other.pointer_);
