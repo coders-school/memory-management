@@ -123,12 +123,12 @@ public:
 
     ~shared_ptr() {
         print_msg("destructor ~shared_ptr");
-        if (control_block_ptr) {
-            control_block_ptr->decrement_shared();
-            if (control_block_ptr->shared_refs() == 0 && control_block_ptr->weak_refs() == 0) {
-                control_block_ptr->call_deleter();
-                delete control_block_ptr;
-            }
+        control_block_ptr->decrement_shared();
+        if (control_block_ptr->shared_refs() == 0) {
+            control_block_ptr->call_deleter();
+        }
+        if (control_block_ptr->shared_refs() == 0 && control_block_ptr->weak_refs() == 0) {
+            delete control_block_ptr;
         }
     }
 
