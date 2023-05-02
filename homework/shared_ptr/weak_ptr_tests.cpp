@@ -105,15 +105,15 @@ TEST(weak_ptr, use_count) {
     EXPECT_CALL(*pointer, Destructor);
 }
 
-// TEST(weak_ptr, reference_cycle) {
-//     struct Node {
-//         my::shared_ptr<Node> child;
-//         my::weak_ptr<Node> parent;
-//     };
+TEST(weak_ptr, reference_cycle) {
+    struct Node {
+        my::shared_ptr<Node> child;
+        my::weak_ptr<Node> parent;
+    };
 
-//     auto root = my::shared_ptr<Node>(new Node);
-//     auto leaf = my::shared_ptr<Node>(new Node);
+    auto root = my::shared_ptr<Node>(new Node);
+    auto leaf = my::shared_ptr<Node>(new Node);
 
-//     root->child = leaf;
-//     leaf->parent = root;
-// }
+    root->child = leaf;
+    leaf->parent = root;
+}
