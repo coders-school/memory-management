@@ -172,3 +172,9 @@ TEST_F(SharedPtrClassTest, checkGetMethod) {
     my::shared_ptr<MyClass> ptr{new MyClass(42)};
     EXPECT_EQ(42, ptr.get()->get_value());
 }
+
+TEST_F(SharedPtrClassTest, checkResetWithoutArgs) {
+    my::shared_ptr<int> ptr{new int(42)};
+    ptr.reset();
+    EXPECT_EQ(0, ptr.use_count());
+}
