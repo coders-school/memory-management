@@ -123,12 +123,14 @@ public:
 
     ~shared_ptr() {
         print_msg("destructor ~shared_ptr");
-        control_block_ptr->decrement_shared();
-        if (control_block_ptr->shared_refs() == 0) {
-            control_block_ptr->call_deleter();
-        }
-        if (control_block_ptr->shared_refs() == 0 && control_block_ptr->weak_refs() == 0) {
-            delete control_block_ptr;
+        if (control_block_ptr) {
+            control_block_ptr->decrement_shared();
+            if (control_block_ptr->shared_refs() == 0) {
+                control_block_ptr->call_deleter();
+            }
+            if (control_block_ptr->shared_refs() == 0 && control_block_ptr->weak_refs() == 0) {
+                delete control_block_ptr;
+            }
         }
     }
 
@@ -176,6 +178,33 @@ If *this already owns an object and it is the last shared_ptr owning it, and oth
         ptr_ = other.ptr_;
         control_block_ptr = other.control_block_ptr;
         control_block_ptr->increment_shared();
+    }
+
+    shared_ptr& operator=(shared_ptr&& other) {
+        print_msg("moving operator");
+
+        // remove original
+        print_msg("//remove original ");
+        if (control_block_ptr) {
+            control_block_ptr->call_deleter();
+            // delete ptr_;
+            delete control_block_ptr;
+            control_block_ptr = nullptr;
+        }
+
+        // assing other
+        print_msg("//assing other ");
+        ptr_ = std::move(other.ptr_);
+        control_block_ptr = std::move(other.control_block_ptr);
+        other.ptr_ = nullptr;
+        other.control_block_ptr = nullptr;
+
+        print_msg("//return *this;");
+        return *this;
+    }
+
+    inline bool operator==(std::nullptr_t) const noexcept {
+        return control_block_ptr == nullptr;
     }
 };
 
