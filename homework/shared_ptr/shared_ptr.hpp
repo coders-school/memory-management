@@ -19,7 +19,7 @@ V   Copying is allowed - it increments shared_refs
 V   Moving is allowed and it means:
 V   Copying original pointers to a new object
 V   Setting source pointer to nullptr
-Member functions: operator*(), operator->(), get(), reset(), use_count(), operator bool()
+Member functions: V operator*(), V operator->(), V get(), reset(), use_count(), operator bool()
 Should be implemented in shared_ptr.hpp file inside my namespace
 Tests should be written inside shared_ptr_tests.cpp using GoogleTest or Catch2
 You should instantiate shared_ptr template class in shared_ptr_tests.cpp above your test cases, e.g. template class my::shared_ptr<int>; It's needed for code coverage check to work properly.
@@ -40,7 +40,7 @@ template <class T>
 void default_deleter(T* ptr) {
     if (ptr) {
         print_msg("Called default deleter!");
-        print_msg("Deleting " + std::to_string(*ptr));
+        // print_msg("Deleting " + std::to_string(*ptr));
         delete ptr;
         ptr = nullptr;
     }
@@ -108,9 +108,6 @@ public:
     shared_ptr(T* ptr = nullptr)
         : ptr_{ptr}, control_block_ptr{new ControlBlock<T>(ptr_)} {
         print_msg("constructor shared_ptr (body)");
-        if (ptr_) {
-            print_msg("Created " + std::to_string(*ptr_));
-        }
     }
 
     shared_ptr(T* ptr, std::function<void(T*)> deleter)
@@ -187,7 +184,6 @@ If *this already owns an object and it is the last shared_ptr owning it, and oth
         print_msg("//remove original ");
         if (control_block_ptr) {
             control_block_ptr->call_deleter();
-            // delete ptr_;
             delete control_block_ptr;
             control_block_ptr = nullptr;
         }
@@ -209,6 +205,14 @@ If *this already owns an object and it is the last shared_ptr owning it, and oth
 
     T& operator*() const noexcept {
         return *ptr_;
+    }
+
+    T* operator->() const noexcept {
+        return ptr_;
+    }
+
+    T* get() const noexcept {
+        return ptr_;
     }
 };
 

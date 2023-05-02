@@ -154,3 +154,21 @@ TEST_F(SharedPtrClassTest, checkDereferenceOperator) {
     my::shared_ptr<int> shared_ptr{new int(17)};
     EXPECT_EQ(17, *shared_ptr);
 }
+
+class MyClass {
+public:
+    int value;
+    MyClass(int val)
+        : value(val) {}
+    int get_value() const { return value; }
+};
+
+TEST_F(SharedPtrClassTest, checkReturnPointerOperator) {
+    my::shared_ptr<MyClass> ptr{new MyClass(42)};
+    EXPECT_EQ(42, ptr->get_value());
+}
+
+TEST_F(SharedPtrClassTest, checkGetMethod) {
+    my::shared_ptr<MyClass> ptr{new MyClass(42)};
+    EXPECT_EQ(42, ptr.get()->get_value());
+}
