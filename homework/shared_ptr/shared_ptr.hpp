@@ -105,7 +105,7 @@ class shared_ptr {
     ControlBlock<T>* control_block_ptr = nullptr;
 
 public:
-    shared_ptr(T* ptr)
+    shared_ptr(T* ptr = nullptr)
         : ptr_{ptr}, control_block_ptr{new ControlBlock<T>(ptr_)} {
         print_msg("constructor shared_ptr (body)");
         if (ptr_) {
@@ -141,15 +141,35 @@ public:
         return control_block_ptr->weak_refs();
     }
 
-    // shared_ptr& operator=(const shared_ptr& other)
-    // {
-    //     print_msg("assignment operator");
-    //     // Guard self assignment
-    //     if (this == &other)
-    //         return *this;
+    shared_ptr& operator=(const shared_ptr& other) {
+        print_msg("assignment operator");
+        /* from cppreference
+        Replaces the managed object with the one managed by other.
 
-    //     return *this;
-    // }
+If *this already owns an object and it is the last shared_ptr owning it, and other is not the same as *this, the object is destroyed through the owned deleter.
+
+1) Shares ownership of the object managed by other. If other manages no object, *this manages no object too. Equivalent to shared_ptr<T>(other).swap(*this).
+        */
+        if (this != &other) {  // avoid self-assignment
+
+            if (control_block_ptr) {
+                if (control_block_ptr->shared_refs() == 1) {
+                    control_block_ptr->call_deleter();
+                    // delete ptr_;
+                    delete control_block_ptr;
+                }
+            }
+
+            // Share ownership of the object managed by other
+            ptr_ = other.ptr_;
+            control_block_ptr = other.control_block_ptr;
+            if (control_block_ptr) {
+                control_block_ptr->increment_shared();
+            }
+        }
+
+        return *this;
+    }
 
     shared_ptr(const shared_ptr& other) {
         print_msg("copy constructor");
