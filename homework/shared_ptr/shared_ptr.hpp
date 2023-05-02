@@ -11,11 +11,11 @@ V   Holds a pointer to shared control block with 2 counters and a deleter:
 V   shared_refs count (as std::atomic<size_t>)
 V   weak_refs count (as std::atomic<size_t>)
 V   deleter (function pointer)
-Constructor copies a pointer and allocate the control block
-Destructor decrease shared_refs and:
-if shared_refs == 0 -> release the managed object
-if shared_refs == 0 and weak_refs == 0 -> release the control block
-Copying is allowed - it increments shared_refs
+V   Constructor copies a pointer and allocate the control block
+V   Destructor decrease shared_refs and:
+V   if shared_refs == 0 -> release the managed object
+V   if shared_refs == 0 and weak_refs == 0 -> release the control block
+V   Copying is allowed - it increments shared_refs
 Moving is allowed and it means:
 Copying original pointers to a new object
 Setting source pointer to nullptr
