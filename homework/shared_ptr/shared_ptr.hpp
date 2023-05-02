@@ -246,6 +246,7 @@ If *this already owns an object and it is the last shared_ptr owning it, and oth
             control_block_ptr->call_deleter();
             delete control_block_ptr;
             control_block_ptr = nullptr;
+            ptr_ = nullptr;
         }
     }
 
