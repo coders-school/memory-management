@@ -16,9 +16,9 @@ V   Destructor decrease shared_refs and:
 V   if shared_refs == 0 -> release the managed object
 V   if shared_refs == 0 and weak_refs == 0 -> release the control block
 V   Copying is allowed - it increments shared_refs
-Moving is allowed and it means:
-Copying original pointers to a new object
-Setting source pointer to nullptr
+V   Moving is allowed and it means:
+V   Copying original pointers to a new object
+V   Setting source pointer to nullptr
 Member functions: operator*(), operator->(), get(), reset(), use_count(), operator bool()
 Should be implemented in shared_ptr.hpp file inside my namespace
 Tests should be written inside shared_ptr_tests.cpp using GoogleTest or Catch2
@@ -205,6 +205,10 @@ If *this already owns an object and it is the last shared_ptr owning it, and oth
 
     inline bool operator==(std::nullptr_t) const noexcept {
         return control_block_ptr == nullptr;
+    }
+
+    T& operator*() const noexcept {
+        return *ptr_;
     }
 };
 

@@ -149,3 +149,8 @@ TEST_F(SharedPtrClassTest, checkMovingOperator) {
     EXPECT_EQ(1, shared_ptr2.get_shared_cnt());
     EXPECT_EQ(0, shared_ptr2.get_weak_cnt());
 }
+
+TEST_F(SharedPtrClassTest, checkDereferenceOperator) {
+    my::shared_ptr<int> shared_ptr{new int(17)};
+    EXPECT_EQ(17, *shared_ptr);
+}
