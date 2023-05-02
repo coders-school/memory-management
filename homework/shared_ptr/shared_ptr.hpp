@@ -19,9 +19,9 @@ V   Copying is allowed - it increments shared_refs
 V   Moving is allowed and it means:
 V   Copying original pointers to a new object
 V   Setting source pointer to nullptr
-Member functions: V operator*(), V operator->(), V get(), V reset(), V use_count(), V operator bool()
-Should be implemented in shared_ptr.hpp file inside my namespace
-Tests should be written inside shared_ptr_tests.cpp using GoogleTest or Catch2
+V   Member functions: V operator*(), V operator->(), V get(), V reset(), V use_count(), V operator bool()
+V   Should be implemented in shared_ptr.hpp file inside my namespace
+V   Tests should be written inside shared_ptr_tests.cpp using GoogleTest or Catch2
 You should instantiate shared_ptr template class in shared_ptr_tests.cpp above your test cases, e.g. template class my::shared_ptr<int>; It's needed for code coverage check to work properly.
 Do not forget about CI - UT + Valgrind / ASAN. Work in pairs.
 
