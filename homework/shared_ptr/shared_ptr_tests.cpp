@@ -138,6 +138,13 @@ TEST_F(SharedPtrClassTest, checkAssignOpeatorForPtrOwningSomeMemory) {
     EXPECT_EQ(0, shared_ptr2.get_weak_cnt());
 }
 
+TEST_F(SharedPtrClassTest, checkMoveConstructor) {
+    my::shared_ptr<int> ptr{new int(15)};
+    my::shared_ptr<int> second_ptr{std::move(ptr)};
+    EXPECT_EQ(0, ptr.use_count());
+    EXPECT_EQ(1, second_ptr.use_count());
+}
+
 TEST_F(SharedPtrClassTest, checkMovingOperator) {
     my::shared_ptr<int> shared_ptr{new int(15)};
     EXPECT_EQ(1, shared_ptr.get_shared_cnt());

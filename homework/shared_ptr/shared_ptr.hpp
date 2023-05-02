@@ -181,6 +181,27 @@ If *this already owns an object and it is the last shared_ptr owning it, and oth
         control_block_ptr->increment_shared();
     }
 
+    shared_ptr(shared_ptr&& other) {
+        print_msg("move constructor");
+
+        // remove original
+        print_msg("//remove original ");
+        if (control_block_ptr) {
+            control_block_ptr->call_deleter();
+            delete control_block_ptr;
+            control_block_ptr = nullptr;
+        }
+
+        // assing other
+        print_msg("//assing other ");
+        ptr_ = std::move(other.ptr_);
+        control_block_ptr = std::move(other.control_block_ptr);
+        other.ptr_ = nullptr;
+        other.control_block_ptr = nullptr;
+
+        print_msg("move constructor end");
+    }
+
     shared_ptr& operator=(shared_ptr&& other) {
         print_msg("moving operator");
 
