@@ -84,8 +84,7 @@ TEST_F(SharedPtrClassTest, whenCreatedPtrToIntBeforeSharedPtrCreated_thenPossibl
 
 TEST_F(SharedPtrClassTest, whenCreatedWithNullptr_thenExpectOneSharedAndZeroWeakCnts) {
     my::shared_ptr<int> shared_ptr{nullptr};
-    EXPECT_EQ(1, shared_ptr.get_shared_cnt());
-    EXPECT_EQ(0, shared_ptr.get_weak_cnt());
+    EXPECT_EQ(0, shared_ptr.use_count());
 }
 
 TEST_F(SharedPtrClassTest, whenCreatedIntWithPtrAndCreatedSecondPtrWithCopy_thenExpectTwoSharedAndZeroWeakCnts) {
@@ -187,4 +186,15 @@ TEST_F(SharedPtrClassTest, checkResetWithArgs) {
     ptr.reset(new int(72));
     EXPECT_EQ(1, ptr.use_count());
     EXPECT_EQ(72, *ptr.get());
+}
+
+TEST_F(SharedPtrClassTest, checkBoolOperator) {
+    my::shared_ptr<int> ptr1;
+    my::shared_ptr<int> ptr2(new int(42));
+
+    EXPECT_FALSE(ptr1);
+    EXPECT_TRUE(ptr2);
+
+    ptr1.reset(new int(13));
+    EXPECT_TRUE(ptr1);
 }

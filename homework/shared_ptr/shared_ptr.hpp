@@ -19,7 +19,7 @@ V   Copying is allowed - it increments shared_refs
 V   Moving is allowed and it means:
 V   Copying original pointers to a new object
 V   Setting source pointer to nullptr
-Member functions: V operator*(), V operator->(), V get(), reset(), use_count(), operator bool()
+Member functions: V operator*(), V operator->(), V get(), V reset(), V use_count(), V operator bool()
 Should be implemented in shared_ptr.hpp file inside my namespace
 Tests should be written inside shared_ptr_tests.cpp using GoogleTest or Catch2
 You should instantiate shared_ptr template class in shared_ptr_tests.cpp above your test cases, e.g. template class my::shared_ptr<int>; It's needed for code coverage check to work properly.
@@ -106,14 +106,18 @@ class shared_ptr {
 
 public:
     shared_ptr(T* ptr = nullptr)
-        : ptr_{ptr}, control_block_ptr{new ControlBlock<T>(ptr_)} {
+        : ptr_{ptr} {
+        if (ptr_) {
+            control_block_ptr = new ControlBlock<T>(ptr_);
+        }
         print_msg("constructor shared_ptr (body)");
     }
 
     shared_ptr(T* ptr, std::function<void(T*)> deleter)
-        : ptr_{ptr}, control_block_ptr{new ControlBlock<T>(ptr_, deleter)} {
+        : ptr_{ptr} {
         print_msg("constructor shared_ptr (body) with deleter");
         if (ptr_) {
+            control_block_ptr = new ControlBlock<T>(ptr_, deleter);
             print_msg("Created " + std::to_string(*ptr_));
         }
     }
@@ -239,6 +243,10 @@ If *this already owns an object and it is the last shared_ptr owning it, and oth
         if (!control_block_ptr)
             return 0;
         return get_shared_cnt();
+    }
+
+    explicit operator bool() const noexcept {
+        return static_cast<bool>(control_block_ptr);
     }
 };
 
