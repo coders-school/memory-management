@@ -216,12 +216,23 @@ If *this already owns an object and it is the last shared_ptr owning it, and oth
     }
 
     void reset() noexcept {
-        print_msg("reset");
+        print_msg("reset without args");
         if (control_block_ptr) {
             control_block_ptr->call_deleter();
             delete control_block_ptr;
             control_block_ptr = nullptr;
         }
+    }
+
+    void reset(T* other) noexcept {
+        print_msg("reset with args");
+        if (control_block_ptr) {
+            control_block_ptr->call_deleter();
+            delete control_block_ptr;
+            control_block_ptr = nullptr;
+        }
+        ptr_ = other;
+        control_block_ptr = new ControlBlock<T>(other);
     }
 
     long use_count() const noexcept {

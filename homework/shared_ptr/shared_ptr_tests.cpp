@@ -175,6 +175,16 @@ TEST_F(SharedPtrClassTest, checkGetMethod) {
 
 TEST_F(SharedPtrClassTest, checkResetWithoutArgs) {
     my::shared_ptr<int> ptr{new int(42)};
+    EXPECT_EQ(1, ptr.use_count());
     ptr.reset();
     EXPECT_EQ(0, ptr.use_count());
+}
+
+TEST_F(SharedPtrClassTest, checkResetWithArgs) {
+    my::shared_ptr<int> ptr{new int(42)};
+    EXPECT_EQ(1, ptr.use_count());
+    EXPECT_EQ(42, *ptr.get());
+    ptr.reset(new int(72));
+    EXPECT_EQ(1, ptr.use_count());
+    EXPECT_EQ(72, *ptr.get());
 }
