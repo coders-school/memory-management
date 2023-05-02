@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
-project(my_project)
+project(shared_ptr)
 
 # GoogleTest requires at least C++14
 set(CMAKE_CXX_STANDARD 20)
@@ -16,13 +16,26 @@ FetchContent_MakeAvailable(googletest)
 enable_testing()
 
 add_executable(
-    shared_ptr
+  ${CMAKE_PROJECT_NAME}
     shared_ptr_tests.cpp
 )
 target_link_libraries(
-    shared_ptr
+  ${CMAKE_PROJECT_NAME}
     GTest::gtest_main
 )
 
 include(GoogleTest)
-gtest_discover_tests(shared_ptr)
+gtest_discover_tests(${CMAKE_PROJECT_NAME})
+
+###################
+## Memcheck
+###################
+#added command "make mc" (which means: "make memcheck"). It will run just valgrind to check memory leaks
+add_custom_target(mc
+  COMMAND ${CMAKE_COMMAND} -E env valgrind --leak-check=full ./${CMAKE_PROJECT_NAME}
+  DEPENDS ${CMAKE_PROJECT_NAME}
+  COMMENT "Running valgrind on ${CMAKE_PROJECT_NAME}"
+)
+add_custom_command(TARGET mc POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E echo "Valgrind can be run with \\'make valgrind\\'"
+)
