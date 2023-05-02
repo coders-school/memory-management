@@ -87,3 +87,16 @@ TEST_F(SharedPtrClassTest, whenCreatedWithNullptr_thenExpectOneSharedAndZeroWeak
     EXPECT_EQ(1, shared_ptr.get_shared_cnt());
     EXPECT_EQ(0, shared_ptr.get_weak_cnt());
 }
+
+TEST_F(SharedPtrClassTest, whenCreatedIntWithPtrAndCreatedSecondPtrWithCopy_thenExpectTwoSharedAndZeroWeakCnts) {
+    my::shared_ptr<int> shared_ptr{new int(11)};
+    EXPECT_EQ(1, shared_ptr.get_shared_cnt());
+    EXPECT_EQ(0, shared_ptr.get_weak_cnt());
+    {
+        auto shared_ptr2 = shared_ptr;
+        EXPECT_EQ(2, shared_ptr2.get_shared_cnt());
+        EXPECT_EQ(0, shared_ptr2.get_weak_cnt());
+    }
+    EXPECT_EQ(1, shared_ptr.get_shared_cnt());
+    EXPECT_EQ(0, shared_ptr.get_weak_cnt());
+}

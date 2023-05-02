@@ -82,6 +82,16 @@ public:
         return weak_refs_.load();
     }
 
+    void increment_shared() {
+        shared_refs_.exchange(shared_refs_ + 1);
+    }
+
+    void decrement_shared() {
+        if (shared_refs_) {
+            shared_refs_.exchange(shared_refs_ - 1);
+        }
+    }
+
 private:
     T* ptr_ = nullptr;
     std::atomic<size_t> shared_refs_ = 1;
@@ -112,19 +122,40 @@ public:
     }
 
     ~shared_ptr() {
+        print_msg("destructor ~shared_ptr");
         if (control_block_ptr) {
-            control_block_ptr->call_deleter();
-            delete control_block_ptr;
-            print_msg("destructor ~shared_ptr");
+            control_block_ptr->decrement_shared();
+            if (control_block_ptr->shared_refs() == 0 && control_block_ptr->weak_refs() == 0) {
+                control_block_ptr->call_deleter();
+                delete control_block_ptr;
+            }
         }
     }
 
     std::atomic<size_t> get_shared_cnt() const {
+        // print_msg("control_block_ptr = " + std::to_string((control_block_ptr ? true : false)));
         return control_block_ptr->shared_refs();
     }
 
     std::atomic<size_t> get_weak_cnt() const {
         return control_block_ptr->weak_refs();
+    }
+
+    // shared_ptr& operator=(const shared_ptr& other)
+    // {
+    //     print_msg("assignment operator");
+    //     // Guard self assignment
+    //     if (this == &other)
+    //         return *this;
+
+    //     return *this;
+    // }
+
+    shared_ptr(const shared_ptr& other) {
+        print_msg("copy constructor");
+        ptr_ = other.ptr_;
+        control_block_ptr = other.control_block_ptr;
+        control_block_ptr->increment_shared();
     }
 };
 
