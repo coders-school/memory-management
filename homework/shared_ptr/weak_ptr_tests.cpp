@@ -105,6 +105,20 @@ TEST(weak_ptr, use_count) {
     EXPECT_CALL(*pointer, Destructor);
 }
 
+TEST(weak_ptr, expired) {
+    auto pointer = new TestType();
+    auto sharedPointer = my::shared_ptr<TestType>(pointer);
+    auto weakPointer = my::weak_ptr<TestType>(sharedPointer);
+
+    auto otherWeakPointer = std::move(weakPointer);
+
+    EXPECT_EQ(weakPointer.get(), nullptr);
+    EXPECT_EQ(weakPointer.expired(), true);
+    EXPECT_EQ(otherWeakPointer.get(), pointer);
+    EXPECT_EQ(otherWeakPointer.expired(), false);
+    EXPECT_CALL(*pointer, Destructor);
+}
+
 TEST(weak_ptr, reference_cycle) {
     struct Node {
         my::shared_ptr<Node> child;

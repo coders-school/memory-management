@@ -115,6 +115,10 @@ public:
         return control_block_pointer_->weak_refs;
     }
 
+    bool expired() const noexcept {
+        return (!control_block_pointer_ || use_count() == 0);
+    }
+
 private:
     Type* pointer_{nullptr};
     ControlBlock* control_block_pointer_{nullptr};
