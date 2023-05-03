@@ -1,8 +1,8 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <utility>
-#include "weak_ptr.hpp"
 #include "shared_ptr.hpp"
+#include "weak_ptr.hpp"
 
 template class my::weak_ptr<int>;
 
