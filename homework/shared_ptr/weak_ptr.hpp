@@ -14,13 +14,14 @@ public:
     // default constructor
     weak_ptr()
         : pointer_(nullptr), control_block_pointer_(new ControlBlock) {
-        control_block_pointer_->weak_refs++;
     }
 
     // destructor
     ~weak_ptr() noexcept {
         if (control_block_pointer_) {  // address only objects with allocated control block, i.e. not for moved objects
-            control_block_pointer_->weak_refs--;
+            if (control_block_pointer_->weak_refs > 0) {
+                control_block_pointer_->weak_refs--;
+            }
             if (control_block_pointer_->weak_refs == 0 && control_block_pointer_->shared_refs == 0) {
                 delete control_block_pointer_;
                 control_block_pointer_ = nullptr;
@@ -42,8 +43,10 @@ public:
 
     // copy assignment operator (weak_ptr)
     weak_ptr& operator=(const weak_ptr& other) {
-        if (control_block_pointer_) {
-            control_block_pointer_->weak_refs--;
+        if (control_block_pointer_) {  // address only objects with allocated control block, i.e. not for moved objects
+            if (control_block_pointer_->weak_refs > 0) {
+                control_block_pointer_->weak_refs--;
+            }
             if (control_block_pointer_->weak_refs == 0 && control_block_pointer_->shared_refs == 0) {
                 delete control_block_pointer_;
                 control_block_pointer_ = nullptr;
@@ -58,8 +61,10 @@ public:
 
     // copy assignment operator (shared_ptr)
     weak_ptr& operator=(const my::shared_ptr<Type>& other) {
-        if (control_block_pointer_) {
-            control_block_pointer_->weak_refs--;
+        if (control_block_pointer_) {  // address only objects with allocated control block, i.e. not for moved objects
+            if (control_block_pointer_->weak_refs > 0) {
+                control_block_pointer_->weak_refs--;
+            }
             if (control_block_pointer_->weak_refs == 0 && control_block_pointer_->shared_refs == 0) {
                 delete control_block_pointer_;
                 control_block_pointer_ = nullptr;
@@ -82,8 +87,10 @@ public:
 
     // move assignment operator
     weak_ptr& operator=(weak_ptr&& other) noexcept {
-        if (control_block_pointer_) {
-            control_block_pointer_->weak_refs--;
+        if (control_block_pointer_) {  // address only objects with allocated control block, i.e. not for moved objects
+            if (control_block_pointer_->weak_refs > 0) {
+                control_block_pointer_->weak_refs--;
+            }
             if (control_block_pointer_->weak_refs == 0 && control_block_pointer_->shared_refs == 0) {
                 delete control_block_pointer_;
                 control_block_pointer_ = nullptr;
