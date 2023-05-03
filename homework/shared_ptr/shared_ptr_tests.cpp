@@ -2,6 +2,7 @@
 #include <gtest/gtest.h>
 #include <utility>
 #include "shared_ptr.hpp"
+#include "weak_ptr.hpp"
 
 template class my::shared_ptr<int>;
 

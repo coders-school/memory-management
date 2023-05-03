@@ -1,8 +1,8 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <utility>
-#include "shared_ptr.hpp"
 #include "weak_ptr.hpp"
+#include "shared_ptr.hpp"
 
 template class my::weak_ptr<int>;
 
@@ -116,6 +116,18 @@ TEST(weak_ptr, expired) {
     EXPECT_EQ(weakPointer.expired(), true);
     EXPECT_EQ(otherWeakPointer.get(), pointer);
     EXPECT_EQ(otherWeakPointer.expired(), false);
+    EXPECT_CALL(*pointer, Destructor);
+}
+
+TEST(weak_ptr, lock) {
+    auto pointer = new TestType();
+    auto sharedPointer = my::shared_ptr<TestType>(pointer);
+    auto weakPointer = my::weak_ptr<TestType>(sharedPointer);
+
+    auto otherSharedPointer = weakPointer.lock();
+
+    EXPECT_EQ(otherSharedPointer.get(), pointer);
+    EXPECT_EQ(otherSharedPointer.use_count(), 2);
     EXPECT_CALL(*pointer, Destructor);
 }
 

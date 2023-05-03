@@ -13,8 +13,14 @@ struct ControlBlock {
 };
 
 template <typename Type>
+class weak_ptr;
+
+template <typename Type>
 class shared_ptr {
 public:
+    template <typename OtherType>
+    friend class weak_ptr;
+
     shared_ptr()
         : pointer_(nullptr), control_block_pointer_(new ControlBlock) {
         control_block_pointer_->shared_refs++;
@@ -45,6 +51,12 @@ public:
 
     // copy constructor
     shared_ptr(const shared_ptr& other)
+        : pointer_(other.pointer_), control_block_pointer_(other.control_block_pointer_) {
+        control_block_pointer_->shared_refs++;
+    }
+
+    // copy constructor (weak_ptr)
+    explicit shared_ptr(const weak_ptr<Type>& other)
         : pointer_(other.pointer_), control_block_pointer_(other.control_block_pointer_) {
         control_block_pointer_->shared_refs++;
     }

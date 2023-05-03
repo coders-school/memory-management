@@ -8,6 +8,9 @@ namespace my {
 template <typename Type>
 class weak_ptr {
 public:
+    template <typename OtherType>
+    friend class shared_ptr;
+
     // default constructor
     weak_ptr()
         : pointer_(nullptr), control_block_pointer_(new ControlBlock) {
@@ -117,6 +120,10 @@ public:
 
     bool expired() const noexcept {
         return (!control_block_pointer_ || use_count() == 0);
+    }
+
+    shared_ptr<Type> lock() const noexcept {
+        return my::shared_ptr<Type>(*this);
     }
 
 private:
