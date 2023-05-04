@@ -118,20 +118,22 @@ public:
         return control_block_pointer_;
     }
 
-    void reset(Type* pointer = nullptr) noexcept {
-        control_block_pointer_->shared_refs--;
-        // while overwriting an object we may to erase the last object pointing to a resource
-        if (control_block_pointer_->shared_refs == 0) {
-            if (control_block_pointer_->weak_refs == 0) {
-                delete control_block_pointer_;
-                control_block_pointer_ = nullptr;
-            }
-            if (pointer_) {
-                delete pointer_;
-                pointer_ = nullptr;
+    void reset(Type* other = nullptr) noexcept {
+        if (control_block_pointer_) {
+            control_block_pointer_->shared_refs--;
+            // while overwriting an object we may to erase the last object pointing to a resource
+            if (control_block_pointer_->shared_refs == 0) {
+                if (control_block_pointer_->weak_refs == 0) {
+                    delete control_block_pointer_;
+                    control_block_pointer_ = nullptr;
+                }
+                if (pointer_) {
+                    delete pointer_;
+                    pointer_ = nullptr;
+                }
             }
         }
-        pointer_ = pointer;
+        pointer_ = other;
         control_block_pointer_ = new ControlBlock;
         control_block_pointer_->shared_refs++;
     }

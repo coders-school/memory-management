@@ -113,8 +113,14 @@ public:
     }
 
     void reset(Type* pointer = nullptr) noexcept {
-        if (control_block_pointer_) {
-            control_block_pointer_->weak_refs--;
+        if (control_block_pointer_) {  // address only objects with allocated control block, i.e. not for moved objects
+            if (control_block_pointer_->weak_refs > 0) {
+                control_block_pointer_->weak_refs--;
+            }
+            if (control_block_pointer_->weak_refs == 0 && control_block_pointer_->shared_refs == 0) {
+                delete control_block_pointer_;
+                control_block_pointer_ = nullptr;
+            }
         }
 
         pointer_ = pointer;
