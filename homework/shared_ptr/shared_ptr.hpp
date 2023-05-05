@@ -126,10 +126,10 @@ public:
                 if (control_block_pointer_->weak_refs == 0) {
                     delete control_block_pointer_;
                     control_block_pointer_ = nullptr;
-                }
-                if (pointer_) {
-                    delete pointer_;
-                    pointer_ = nullptr;
+                    if (pointer_) {
+                        delete pointer_;
+                        pointer_ = nullptr;
+                    }
                 }
             }
         }

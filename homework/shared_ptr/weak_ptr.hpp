@@ -128,7 +128,10 @@ public:
     }
 
     size_t use_count() const noexcept {
-        return control_block_pointer_->weak_refs;
+        if (control_block_pointer_) {
+            return control_block_pointer_->shared_refs;
+        }
+        return 0;
     }
 
     bool expired() const noexcept {

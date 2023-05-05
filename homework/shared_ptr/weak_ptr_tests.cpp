@@ -22,11 +22,11 @@ TEST(weak_ptr, destructor) {
     EXPECT_CALL(*pointer, Destructor);
 }
 
-// TEST(weak_ptr, default_constructor) {
-//     my::weak_ptr<TestType> weakPointer;
+TEST(weak_ptr, default_constructor) {
+    my::weak_ptr<TestType> weakPointer;
 
-//     EXPECT_EQ(weakPointer.get(), nullptr);
-// }
+    EXPECT_EQ(weakPointer.get(), nullptr);
+}
 
 TEST(weak_ptr, copy_constructor) {
     auto pointer = new TestType();
@@ -82,6 +82,7 @@ TEST(weak_ptr, reset) {
 
     weakPointer.reset();
 
+    EXPECT_EQ(weakPointer.expired(), true);
     EXPECT_EQ(weakPointer.get(), nullptr);
     EXPECT_CALL(*pointer, Destructor);
 }
@@ -95,8 +96,8 @@ TEST(weak_ptr, use_count) {
 
     auto otherWeakPointer = my::weak_ptr<TestType>(weakPointer);
 
-    EXPECT_EQ(weakPointer.use_count(), 2);
-    EXPECT_EQ(otherWeakPointer.use_count(), 2);
+    EXPECT_EQ(weakPointer.use_count(), 1);
+    EXPECT_EQ(otherWeakPointer.use_count(), 1);
 
     otherWeakPointer = std::move(weakPointer);
 
@@ -110,12 +111,9 @@ TEST(weak_ptr, expired) {
     auto sharedPointer = my::shared_ptr<TestType>(pointer);
     auto weakPointer = my::weak_ptr<TestType>(sharedPointer);
 
-    auto otherWeakPointer = std::move(weakPointer);
-
-    EXPECT_EQ(weakPointer.get(), nullptr);
+    EXPECT_EQ(weakPointer.expired(), false);
+    weakPointer.reset();
     EXPECT_EQ(weakPointer.expired(), true);
-    EXPECT_EQ(otherWeakPointer.get(), pointer);
-    EXPECT_EQ(otherWeakPointer.expired(), false);
     EXPECT_CALL(*pointer, Destructor);
 }
 
