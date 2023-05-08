@@ -6,7 +6,7 @@ ___
 
 ## Pre-work
 
-* Read the [presentation about move semantics and std::forward](https://github.com/coders-school/modern-cpp/raw/master/module3/move_semantics.pdf)
+* Read the [presentation about move semantics and std::forward](https://github.com/coders-school/memory-management/blob/main/06-move-semantics/move_semantics.pdf)
 * Read the [variadic template part of this presentation](https://github.com/coders-school/kurs_cpp_lato_2019/raw/master/L07-modern-cpp/modern_cpp.pdf)
 
 It will be useful for a post-work ;)
