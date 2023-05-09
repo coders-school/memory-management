@@ -35,17 +35,16 @@ TEST_F(WeakPtrTest, lockMethodShouldReturnSharedPtrThatStoresManagedObject) {
     my::weak_ptr<int> wptr2{};
 
     ASSERT_TRUE(wptr2.expired());
-    std::cout << "wptr2.expired() = " << wptr2.expired() << "\n";
-    // auto sptr3 = wptr2.lock();
     ASSERT_THAT(wptr2.lock().get(), ::testing::IsNull());
 }
 
-// TEST_F(WeakPtrTest, expireMethodInformsIfManagedObjectWasDeleted) {
-//     ASSERT_FALSE(wptr.expired());
+TEST_F(WeakPtrTest, expireMethodInformsIfManagedObjectWasDeleted) {
+    ASSERT_FALSE(wptr.expired());
 
-//     sptr.reset();
-//     ASSERT_TRUE(wptr.expired());
-// }
+    sptr.reset();
+    
+    ASSERT_TRUE(wptr.expired());
+}
 
 // TEST_F(WeakPtrTest, weakPtrMoveContructorMakesOriginalPtrExpired) {
 //     constexpr int useCountValueSharedPtr = 1;

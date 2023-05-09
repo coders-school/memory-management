@@ -135,7 +135,8 @@ public:
     }
 
     bool expired() const noexcept {
-        return (!control_block_pointer_ || use_count() == 0);
+        // return (!control_block_pointer_ || use_count() == 0);
+        return (use_count() == 0);
     }
 
     shared_ptr<Type> lock() const noexcept {
