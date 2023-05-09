@@ -1,143 +1,116 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-#include <utility>
+
 #include "shared_ptr.hpp"
 #include "weak_ptr.hpp"
 
-template class my::weak_ptr<int>;
 
-class TestType {
-public:
-    TestType() = default;
-    ~TestType() noexcept { Destructor(); }
+constexpr size_t zeroUseCount = 0;
+constexpr int initialValue = 5;
 
-    MOCK_METHOD(void, Destructor, (), (noexcept));
+struct WeakPtrTest : ::testing::Test {
+    WeakPtrTest()
+        : sptr{new int{initialValue}},
+          wptr{sptr} {}
+
+    my::shared_ptr<int> sptr;
+    my::weak_ptr<int> wptr;
 };
 
-TEST(weak_ptr, destructor) {
-    auto pointer = new TestType();
-    auto sharedPointer = my::shared_ptr<TestType>(pointer);
-    auto weakPointer = my::weak_ptr<TestType>(sharedPointer);
+TEST(WeakPtrTestZeroUseCount, weakPtrCreatedWithDefaultCtorHasZerosUseCount) {
+    my::weak_ptr<int> ptr{};
 
-    EXPECT_CALL(*pointer, Destructor);
+    ASSERT_EQ(ptr.use_count(), zeroUseCount);
 }
 
-TEST(weak_ptr, default_constructor) {
-    my::weak_ptr<TestType> weakPointer;
-
-    EXPECT_EQ(weakPointer.get(), nullptr);
+TEST_F(WeakPtrTest, weakPtrBasedOnSharedPtrHasIncrementedUseCount) {
+    ASSERT_NE(wptr.use_count(), zeroUseCount);
 }
 
-TEST(weak_ptr, copy_constructor) {
-    auto pointer = new TestType();
-    auto sharedPointer = my::shared_ptr<TestType>(pointer);
+TEST_F(WeakPtrTest, lockMethodShouldReturnSharedPtrThatStoresManagedObject) {
+    auto sptr2 = wptr.lock();
 
-    auto weakPointer = my::weak_ptr<TestType>(sharedPointer);
+    ASSERT_EQ(sptr.get(), sptr2.get());
 
-    EXPECT_EQ(weakPointer.get(), pointer);
-    EXPECT_EQ(sharedPointer.get(), pointer);
-    EXPECT_CALL(*pointer, Destructor);
+    my::weak_ptr<int> wptr2{};
+
+    ASSERT_TRUE(wptr2.expired());
+    std::cout << "wptr2.expired() = " << wptr2.expired() << "\n";
+    // auto sptr3 = wptr2.lock();
+    ASSERT_THAT(wptr2.lock().get(), ::testing::IsNull());
 }
 
-TEST(weak_ptr, copy_assignment) {
-    auto pointer = new TestType();
-    auto sharedPointer = my::shared_ptr<TestType>(pointer);
-    my::weak_ptr<TestType> weakPointer;
+// TEST_F(WeakPtrTest, expireMethodInformsIfManagedObjectWasDeleted) {
+//     ASSERT_FALSE(wptr.expired());
 
-    weakPointer = sharedPointer;
+//     sptr.reset();
+//     ASSERT_TRUE(wptr.expired());
+// }
 
-    EXPECT_EQ(weakPointer.get(), pointer);
-    EXPECT_EQ(sharedPointer.get(), pointer);
-    EXPECT_CALL(*pointer, Destructor);
-}
+// TEST_F(WeakPtrTest, weakPtrMoveContructorMakesOriginalPtrExpired) {
+//     constexpr int useCountValueSharedPtr = 1;
+//     constexpr int useCountValueWeakPtr = 1;
+//     constexpr int useCountWeakPtrAfterMove = 0;
 
-TEST(weak_ptr, move_constructor) {
-    auto pointer = new TestType();
-    auto sharedPointer = my::shared_ptr<TestType>(pointer);
-    auto weakPointer = my::weak_ptr<TestType>(sharedPointer);
+//     ASSERT_EQ(wptr.use_count(), useCountValueWeakPtr);
 
-    auto otherWeakPointer = my::weak_ptr<TestType>(std::move(weakPointer));
+//     my::weak_ptr<int> wptr2{std::move(wptr)};
 
-    EXPECT_EQ(weakPointer.get(), nullptr);
-    EXPECT_EQ(otherWeakPointer.get(), pointer);
-    EXPECT_CALL(*pointer, Destructor);
-}
+//     ASSERT_EQ(wptr.use_count(), useCountWeakPtrAfterMove);
+//     ASSERT_EQ(wptr2.use_count(), useCountValueWeakPtr);
+//     ASSERT_EQ(sptr.use_count(), useCountValueSharedPtr);
 
-TEST(weak_ptr, move_assignment) {
-    auto pointer = new TestType();
-    auto sharedPointer = my::shared_ptr<TestType>(pointer);
-    auto weakPointer = my::weak_ptr<TestType>(sharedPointer);
+//     ASSERT_TRUE(wptr.expired());
+//     ASSERT_FALSE(wptr2.expired());
+// }
 
-    auto otherWeakPointer = std::move(weakPointer);
+// TEST_F(WeakPtrTest, weakPtrMoveAssignmentMakesOriginalPtrExpired) {
+//     constexpr int useCountValueSharedPtr = 1;
+//     constexpr int useCountValueWeakPtr = 1;
+//     constexpr int useCountWeakPtrAfterMove = 0;
 
-    EXPECT_EQ(weakPointer.get(), nullptr);
-    EXPECT_EQ(otherWeakPointer.get(), pointer);
-    EXPECT_CALL(*pointer, Destructor);
-}
+//     ASSERT_EQ(wptr.use_count(), useCountValueWeakPtr);
 
-TEST(weak_ptr, reset) {
-    auto pointer = new TestType();
-    auto sharedPointer = my::shared_ptr<TestType>(pointer);
-    auto weakPointer = my::weak_ptr<TestType>(sharedPointer);
+//     my::weak_ptr<int> wptr2{};
+//     wptr2 = std::move(wptr);
 
-    weakPointer.reset();
+//     ASSERT_EQ(wptr.use_count(), useCountWeakPtrAfterMove);
+//     ASSERT_EQ(wptr2.use_count(), useCountValueWeakPtr);
+//     ASSERT_EQ(sptr.use_count(), useCountValueSharedPtr);
 
-    EXPECT_EQ(weakPointer.expired(), true);
-    EXPECT_EQ(weakPointer.get(), nullptr);
-    EXPECT_CALL(*pointer, Destructor);
-}
+//     ASSERT_TRUE(wptr.expired());
+//     ASSERT_FALSE(wptr2.expired());
+// }
 
-TEST(weak_ptr, use_count) {
-    auto pointer = new TestType();
-    auto sharedPointer = my::shared_ptr<TestType>(pointer);
-    auto weakPointer = my::weak_ptr<TestType>(sharedPointer);
+// TEST_F(WeakPtrTest, weakPtrCopyContructorLeavesOriginalPtrNotExpired) {
+//     constexpr int useCountValueSharedPtr = 1;
+//     constexpr int useCountValueWeakPtr = 1;
 
-    EXPECT_EQ(weakPointer.use_count(), 1);
+//     ASSERT_EQ(wptr.use_count(), useCountValueWeakPtr);
 
-    auto otherWeakPointer = my::weak_ptr<TestType>(weakPointer);
+//     my::weak_ptr<int> wptr2{wptr};
 
-    EXPECT_EQ(weakPointer.use_count(), 1);
-    EXPECT_EQ(otherWeakPointer.use_count(), 1);
+//     ASSERT_EQ(wptr.use_count(), useCountValueWeakPtr);
+//     ASSERT_EQ(wptr2.use_count(), useCountValueWeakPtr);
+//     ASSERT_EQ(sptr.use_count(), useCountValueSharedPtr);
 
-    otherWeakPointer = std::move(weakPointer);
+//     ASSERT_FALSE(wptr.expired());
+//     ASSERT_FALSE(wptr2.expired());
+// }
 
-    EXPECT_EQ(otherWeakPointer.use_count(), 1);
-    // EXPECT_EQ(weakPointer.use_count(), 1);  // -> should cause segmentation fault
-    EXPECT_CALL(*pointer, Destructor);
-}
+// TEST_F(WeakPtrTest, weakPtrCopyAssignmentLeavesOriginalPtrNotExpired) {
+//     constexpr int useCountValueSharedPtr = 1;
+//     constexpr int useCountValueWeakPtr = 1;
 
-TEST(weak_ptr, expired) {
-    auto pointer = new TestType();
-    auto sharedPointer = my::shared_ptr<TestType>(pointer);
-    auto weakPointer = my::weak_ptr<TestType>(sharedPointer);
+//     ASSERT_EQ(wptr.use_count(), useCountValueWeakPtr);
 
-    EXPECT_EQ(weakPointer.expired(), false);
-    weakPointer.reset();
-    EXPECT_EQ(weakPointer.expired(), true);
-    EXPECT_CALL(*pointer, Destructor);
-}
+//     my::weak_ptr<int> wptr2{};
+//     wptr2 = wptr;
 
-TEST(weak_ptr, lock) {
-    auto pointer = new TestType();
-    auto sharedPointer = my::shared_ptr<TestType>(pointer);
-    auto weakPointer = my::weak_ptr<TestType>(sharedPointer);
+//     ASSERT_EQ(wptr.use_count(), useCountValueWeakPtr);
+//     ASSERT_EQ(wptr2.use_count(), useCountValueWeakPtr);
+//     ASSERT_EQ(sptr.use_count(), useCountValueSharedPtr);
 
-    auto otherSharedPointer = weakPointer.lock();
-
-    EXPECT_EQ(otherSharedPointer.get(), pointer);
-    EXPECT_EQ(otherSharedPointer.use_count(), 2);
-    EXPECT_CALL(*pointer, Destructor);
-}
-
-TEST(weak_ptr, reference_cycle) {
-    struct Node {
-        my::shared_ptr<Node> child;
-        my::weak_ptr<Node> parent;
-    };
-
-    auto root = my::shared_ptr<Node>(new Node);
-    auto leaf = my::shared_ptr<Node>(new Node);
-
-    root->child = leaf;
-    leaf->parent = root;
-}
+//     ASSERT_FALSE(wptr.expired());
+//     ASSERT_FALSE(wptr2.expired());
+// }

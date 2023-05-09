@@ -139,6 +139,9 @@ public:
     }
 
     shared_ptr<Type> lock() const noexcept {
+        if (this->expired()) {
+            control_block_pointer_->weak_refs++;
+        }
         return my::shared_ptr<Type>(*this);
     }
 
