@@ -1,5 +1,4 @@
 #pragma once
-
 namespace my
 {
     template <class T>
