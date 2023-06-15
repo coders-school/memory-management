@@ -1,61 +1,65 @@
 #pragma once
-template <class T>
 
-class MyUniquePtr
+namespace my
 {
-private:
-    T * ptr_ = nullptr;
-public:
-    MyUniquePtr() : ptr_(nullptr){}
-    MyUniquePtr(T * ptr) : ptr_(ptr){}
-    MyUniquePtr(const MyUniquePtr & ) = delete; // deleted copy ctor
-    MyUniquePtr(MyUniquePtr && obj)
+    template <class T>
+
+    class unique_ptr
     {
-        ptr_ = obj.ptr_;
-        obj.ptr_ = nullptr;
-    }
-    MyUniquePtr& operator=(const MyUniquePtr &) = delete; // deleted copy assignment 
-    MyUniquePtr& operator=(MyUniquePtr&& other)
-    {
-        if(other.ptr_ != nullptr)
+    private:
+        T * ptr_ = nullptr;
+    public:
+        unique_ptr() : ptr_(nullptr){}
+        unique_ptr(T * ptr) : ptr_(ptr){}
+        unique_ptr(const unique_ptr & ) = delete; // deleted copy ctor
+        unique_ptr(unique_ptr && obj)
         {
-            delete ptr_;
-            ptr_ = other.ptr_;
-            other.ptr_ = nullptr;
+            ptr_ = obj.ptr_;
+            obj.ptr_ = nullptr;
         }
-        return *this;
-    }
-    T* operator->()
-    {
-        return ptr_;
-    }
-    T& operator*()
-    {
-        return *(ptr_);
-    }
-    T* get() const
-    {
-        return ptr_;
-    }
-    T* release()
-    {
-        auto newPtr = ptr_;
-        ptr_ = nullptr;
-        return newPtr;
-    }
-    void reset()
-    {
-        if(ptr_ != nullptr)
+        unique_ptr& operator=(const unique_ptr &) = delete; // deleted copy assignment 
+        unique_ptr& operator=(unique_ptr&& other)
         {
-            delete ptr_;
+            if(other.ptr_ != nullptr)
+            {
+                delete ptr_;
+                ptr_ = other.ptr_;
+                other.ptr_ = nullptr;
+            }
+            return *this;
+        }
+        T* operator->()
+        {
+            return ptr_;
+        }
+        T& operator*()
+        {
+            return *(ptr_);
+        }
+        T* get() const
+        {
+            return ptr_;
+        }
+        T* release()
+        {
+            auto newPtr = ptr_;
             ptr_ = nullptr;
+            return newPtr;
         }
-    }
-    ~MyUniquePtr()
-    {
-        if(ptr_ != nullptr)
+        void reset()
         {
-            delete ptr_;
+            if(ptr_ != nullptr)
+            {
+                delete ptr_;
+                ptr_ = nullptr;
+            }
         }
-    }
-};
+        ~unique_ptr()
+        {
+            if(ptr_ != nullptr)
+            {
+                delete ptr_;
+            }
+        }
+    };
+}
