@@ -1,4 +1,5 @@
 #pragma once
+
 namespace my
 {
     template <class T>
@@ -45,12 +46,14 @@ namespace my
             ptr_ = nullptr;
             return newPtr;
         }
-        void reset()
+        void reset(T* newPtr = nullptr)
         {
-            if(ptr_ != nullptr)
+            T* tempPtr = ptr_;
+            ptr_ = newPtr;
+            if(tempPtr != nullptr)
             {
-                delete ptr_;
-                ptr_ = nullptr;
+                delete tempPtr;
+                tempPtr = nullptr;
             }
         }
         ~unique_ptr()
@@ -58,6 +61,7 @@ namespace my
             if(ptr_ != nullptr)
             {
                 delete ptr_;
+                ptr_ = nullptr;
             }
         }
     };
