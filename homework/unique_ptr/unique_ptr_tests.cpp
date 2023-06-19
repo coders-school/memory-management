@@ -104,6 +104,7 @@ TEST(unique_ptrTest, FunctionReleaseOriginalPtrEqualsNullTest) {
     auto nullValue = originalPtr.get();
 
     EXPECT_EQ(expected, nullValue);
+    delete nullValue;
 }
 
 TEST(unique_ptrTest, FunctionReleaseNewPtrNotEqualsNullTest) {
