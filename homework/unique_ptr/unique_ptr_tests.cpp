@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "my_unique_ptr.hpp"
+#include "unique_ptr.hpp"
 
 struct TestObject {
     int value_;
