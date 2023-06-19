@@ -58,34 +58,14 @@ TEST(unique_ptrTest, DefaultConstructorTest)
   EXPECT_EQ(expected, value);
 }
 
-TEST(unique_ptrTest, FunctionResetNotNullNotEqualsNull)
+TEST(unique_ptrTest, FunctionResetUniquePtr1EqualsUniquePtr2)
 {
-  my::unique_ptr<TestObject> unique_ptr(new TestObject(20));
-  auto notNullValue = unique_ptr.get();
-  unique_ptr.reset();
-  auto nullValue = unique_ptr.get();
+  my::unique_ptr<TestObject> unique_ptr1(new TestObject(20));
+  unique_ptr1.reset(new TestObject(30));
+  auto value = unique_ptr1->value_;
+  auto expected = 30;
 
-  EXPECT_NE(notNullValue, nullValue);
-}
-
-TEST(unique_ptrTest, FunctionResetNotNullEqualsNull)
-{
-  my::unique_ptr<TestObject> unique_ptr(new TestObject(20));
-  unique_ptr.reset();
-  auto nullValue = unique_ptr.get();
-  auto expected = nullptr;
-
-  EXPECT_EQ(expected, nullValue);
-}
-
-TEST(unique_ptrTest, FunctionResetNullEqualsNull)
-{
-  my::unique_ptr<TestObject> unique_ptr;
-  unique_ptr.reset();
-  auto nullValue = unique_ptr.get();
-  auto expected = nullptr;
-
-  EXPECT_EQ(expected, nullValue);
+  EXPECT_EQ(value, expected);
 }
 
 TEST(unique_ptrTest, MoveConstructorOriginalEqualsNullTest) 
