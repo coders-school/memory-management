@@ -99,12 +99,13 @@ TEST(unique_ptrTest, MoveOperatorMoveNewPtrNotEqualsNullTest) {
 
 TEST(unique_ptrTest, FunctionReleaseOriginalPtrEqualsNullTest) {
     my::unique_ptr<TestObject> originalPtr(new TestObject(20));
-    originalPtr.release();
+    auto newPtr = originalPtr.release();
     auto expected = nullptr;
     auto nullValue = originalPtr.get();
 
     EXPECT_EQ(expected, nullValue);
     delete nullValue;
+    delete newPtr;
 }
 
 TEST(unique_ptrTest, FunctionReleaseNewPtrNotEqualsNullTest) {
