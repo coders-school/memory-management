@@ -72,6 +72,9 @@ public:
             (*counter_)--;
         }
     }
+    void reset(){
+        deleter();
+    }
     long use_count() const {
         return *counter_;
     }
