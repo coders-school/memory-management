@@ -72,8 +72,16 @@ public:
             (*counter_)--;
         }
     }
-    void reset(){
-        deleter();
+    void reset() {
+        if (ptr_) {
+            delete ptr_;
+            ptr_ = nullptr;
+            if (counter_) {
+                if (*(counter_)) {
+                    (*counter_)--;
+                }
+            }
+        }
     }
     long use_count() const {
         return *counter_;
