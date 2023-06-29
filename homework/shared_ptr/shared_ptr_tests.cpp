@@ -12,18 +12,34 @@ struct TestObject {
     }
 };
 
-TEST(shared_ptrTest, ArrowOperatorTest) {
+TEST(shared_ptrTest, ArrowOperatorTestNumberEqualsForty) {
     my::shared_ptr<TestObject> shared_ptr(new TestObject{20});
     auto expected = 40;
 
     EXPECT_EQ(expected, shared_ptr->multiplyValueByTwo());
 }
 
-TEST(shared_ptrTest, DereferenceOperatorTest) {
+TEST(shared_ptrTest, ArrowOperatorTestNumberEqualsZero) {
+    my::shared_ptr<TestObject> shared_ptr(new TestObject{0});
+    auto expected = 0;
+
+    EXPECT_EQ(expected, shared_ptr->multiplyValueByTwo());
+}
+
+TEST(shared_ptrTest, DereferenceOperatorTestNumberEqualsForty) {
     my::shared_ptr<TestObject> shared_ptr(new TestObject(20));
     TestObject& dereferencedObj = *shared_ptr;
     auto result = dereferencedObj.multiplyValueByTwo();
     auto expected = 40;
+
+    EXPECT_EQ(expected, result);
+}
+
+TEST(shared_ptrTest, DereferenceOperatorTestNumberEqualsZero) {
+    my::shared_ptr<TestObject> shared_ptr(new TestObject(0));
+    TestObject& dereferencedObj = *shared_ptr;
+    auto result = dereferencedObj.multiplyValueByTwo();
+    auto expected = 0;
 
     EXPECT_EQ(expected, result);
 }
@@ -36,10 +52,19 @@ TEST(shared_ptrTest, FunctionGetExpectedNotNullTest) {
     EXPECT_NE(expected, rawPtr);
 }
 
-TEST(shared_ptrTest, FunctionGetExpectedValueTest) {
+TEST(shared_ptrTest, FunctionGetExpectedFortyTest) {
     my::shared_ptr<TestObject> shared_ptr(new TestObject(20));
     TestObject* rawPtr = shared_ptr.get();
     auto expected = 40;
+    auto result = rawPtr->multiplyValueByTwo();
+
+    EXPECT_EQ(expected, result);
+}
+
+TEST(shared_ptrTest, FunctionGetExpectedZeroTest) {
+    my::shared_ptr<TestObject> shared_ptr(new TestObject(0));
+    TestObject* rawPtr = shared_ptr.get();
+    auto expected = 0;
     auto result = rawPtr->multiplyValueByTwo();
 
     EXPECT_EQ(expected, result);
@@ -72,7 +97,7 @@ TEST(shared_ptrTest, MoveConstructorMovedNotEqualsNullTest) {
 }
 
 TEST(shared_ptrTest, MoveConstructorMovedEqualsZero) {
-    my::shared_ptr<int> originalPtr(new int {0});
+    my::shared_ptr<int> originalPtr(new int{0});
     my::shared_ptr<int> movedPtr(std::move(originalPtr));
     auto nullValue = movedPtr.get();
     auto notExpected = nullptr;
@@ -191,6 +216,15 @@ TEST(shared_ptrTest, MoveOperatorMoveOriginalPtrEqualsNullTest) {
 
 TEST(shared_ptrTest, MoveOperatorMoveNewPtrNotEqualsNullTest) {
     my::shared_ptr<TestObject> originalPtr(new TestObject(20));
+    auto newPtr = std::move(originalPtr);
+    auto notNullValue = newPtr.get();
+    auto notExpected = nullptr;
+
+    EXPECT_NE(notExpected, notNullValue);
+}
+
+TEST(shared_ptrTest, MoveOperatorMoveNewZeroPtrNotEqualsNullTest) {
+    my::shared_ptr<int> originalPtr(new int{0});
     auto newPtr = std::move(originalPtr);
     auto notNullValue = newPtr.get();
     auto notExpected = nullptr;
