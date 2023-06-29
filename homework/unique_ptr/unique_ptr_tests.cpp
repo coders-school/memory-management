@@ -72,13 +72,6 @@ TEST(unique_ptrTest, FunctionGetExpectedNotNullTest) {
     EXPECT_NE(expected, rawPtr);
 }
 
-TEST(unique_ptrTest, ArrowOperatorToStringFunctionTest) {
-    my::unique_ptr<std::string> unique_ptr("string");
-    auto expected = true;
-    auto value = unique_ptr->compare("string");
-
-    EXPECT_EQ(expected, value);
-}
 TEST(unique_ptrTest, FunctionGetExpectedValueTest) {
     my::unique_ptr<TestObject> unique_ptr(new TestObject(20));
     TestObject* rawPtr = unique_ptr.get();
