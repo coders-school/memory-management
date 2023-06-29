@@ -195,6 +195,29 @@ TEST(shared_ptrTest, CopyAssignmentFourDefultConstructorTest) {
     EXPECT_EQ(expected, ptrCounter);
 }
 
+TEST(shared_ptrTest, CopyAssignmentThreerDefultConstructorAssignesToOneTest) {
+    my::shared_ptr<TestObject> ptr;
+    my::shared_ptr<TestObject> ptr2;
+    my::shared_ptr<TestObject> ptr3;
+    ptr3 = ptr2 = ptr;
+    auto ptrCounter = ptr.use_count();
+    auto expected = 0;
+
+    EXPECT_EQ(expected, ptrCounter);
+}
+
+TEST(shared_ptrTest, CopyAssignmentFourDefultConstructorAssignesToOneTest) {
+    my::shared_ptr<TestObject> ptr;
+    my::shared_ptr<TestObject> ptr2;
+    my::shared_ptr<TestObject> ptr3;
+    my::shared_ptr<TestObject> ptr4;
+    ptr4 = ptr3 = ptr2 = ptr;
+    auto ptrCounter = ptr.use_count();
+    auto expected = 0;
+
+    EXPECT_EQ(expected, ptrCounter);
+}
+
 TEST(shared_ptrTest, CopyAssignmentFourDefultIntegerConstructorTest) {
     my::shared_ptr<double> ptr;
     my::shared_ptr<double> ptr2;
@@ -229,6 +252,19 @@ TEST(shared_ptrTest, CopyAssignmentCounterEqualsFiveTestObjectsTest) {
     ptr3 = ptr;
     ptr4 = ptr;
     ptr5 = ptr;
+    auto ptrCounter = ptr.use_count();
+    auto expected = 5;
+
+    EXPECT_EQ(expected, ptrCounter);
+}
+
+TEST(shared_ptrTest, CopyAssignmentAssignToOneCounterEqualsFiveTestObjectsTest) {
+    my::shared_ptr<TestObject> ptr(new TestObject(20));
+    my::shared_ptr<TestObject> ptr2(new TestObject(30));
+    my::shared_ptr<TestObject> ptr3(new TestObject(40));
+    my::shared_ptr<TestObject> ptr4(new TestObject(50));
+    my::shared_ptr<TestObject> ptr5(new TestObject(60));
+    ptr5 = ptr4 = ptr3 = ptr2 = ptr;
     auto ptrCounter = ptr.use_count();
     auto expected = 5;
 
