@@ -19,11 +19,19 @@ TEST(shared_ptrTest, ArrowOperatorTestNumberEqualsForty) {
     EXPECT_EQ(expected, shared_ptr->multiplyValueByTwo());
 }
 
+TEST(shared_ptrTest, ArrowOperatorTestNumberEqualsVector) {
+    my::shared_ptr<std::vector<int>> shared_ptr(new std::vector<int>{1, 2, 3});
+    auto expected = 3;
+    auto value = shared_ptr->size();
+
+    EXPECT_EQ(expected, value);
+}
+
 TEST(shared_ptrTest, ArrowOperatorTestNumberEqualsZero) {
     my::shared_ptr<TestObject> shared_ptr(new TestObject{0});
     auto expected = 0;
-
-    EXPECT_EQ(expected, shared_ptr->multiplyValueByTwo());
+    auto value = shared_ptr->multiplyValueByTwo();
+    EXPECT_EQ(expected, value);
 }
 
 TEST(shared_ptrTest, DereferenceOperatorTestNumberEqualsForty) {
@@ -31,6 +39,15 @@ TEST(shared_ptrTest, DereferenceOperatorTestNumberEqualsForty) {
     TestObject& dereferencedObj = *shared_ptr;
     auto result = dereferencedObj.multiplyValueByTwo();
     auto expected = 40;
+
+    EXPECT_EQ(expected, result);
+}
+
+TEST(shared_ptrTest, DereferenceOperatorTestNumberEqualsVector) {
+    my::shared_ptr<std::vector<int>> shared_ptr(new std::vector<int>{1, 2, 3});
+    std::vector<int>& dereferencedObj = *shared_ptr;
+    auto result = dereferencedObj.size();
+    auto expected = 3;
 
     EXPECT_EQ(expected, result);
 }
@@ -61,6 +78,15 @@ TEST(shared_ptrTest, FunctionGetExpectedFortyTest) {
     EXPECT_EQ(expected, result);
 }
 
+TEST(shared_ptrTest, FunctionGetExpectedSizeThreeVector) {
+    my::shared_ptr<std::vector<int>> shared_ptr(new std::vector<int>{1, 2, 3});
+    std::vector<int>* rawPtr = shared_ptr.get();
+    auto expected = 3;
+    auto result = rawPtr->size();
+
+    EXPECT_EQ(expected, result);
+}
+
 TEST(shared_ptrTest, FunctionGetExpectedZeroTest) {
     my::shared_ptr<TestObject> shared_ptr(new TestObject(0));
     TestObject* rawPtr = shared_ptr.get();
@@ -72,6 +98,14 @@ TEST(shared_ptrTest, FunctionGetExpectedZeroTest) {
 
 TEST(shared_ptrTest, DefaultConstructorTest) {
     my::shared_ptr<TestObject> shared_ptr;
+    auto value = shared_ptr.get();
+    auto expected = nullptr;
+
+    EXPECT_EQ(expected, value);
+}
+
+TEST(shared_ptrTest, DefaultConstructorOfVectorTest) {
+    my::shared_ptr<std::vector<int>> shared_ptr;
     auto value = shared_ptr.get();
     auto expected = nullptr;
 
@@ -90,6 +124,15 @@ TEST(shared_ptrTest, MoveConstructorOriginalEqualsNullTest) {
 TEST(shared_ptrTest, MoveConstructorMovedNotEqualsNullTest) {
     my::shared_ptr<TestObject> originalPtr(new TestObject(20));
     my::shared_ptr<TestObject> movedPtr(std::move(originalPtr));
+    auto nullValue = movedPtr.get();
+    auto notExpected = nullptr;
+
+    EXPECT_NE(notExpected, nullValue);
+}
+
+TEST(shared_ptrTest, MoveConstructorMovedVectorNotEqualsNullTest) {
+    my::shared_ptr<std::vector<int>> originalPtr(new std::vector<int>{1, 2, 3});
+    my::shared_ptr<std::vector<int>> movedPtr(std::move(originalPtr));
     auto nullValue = movedPtr.get();
     auto notExpected = nullptr;
 
@@ -116,6 +159,15 @@ TEST(shared_ptrTest, MoveConstructorMovedEqualsOneAndAHalf) {
 
 TEST(shared_ptrTest, CopyConstructorCounterEqualsTwoTest) {
     my::shared_ptr<TestObject> ptr(new TestObject(20));
+    auto ptr2(ptr);
+    auto ptrCounter = ptr.use_count();
+    auto expected = 2;
+
+    EXPECT_EQ(expected, ptrCounter);
+}
+
+TEST(shared_ptrTest, CopyConstructorOfVectorCounterEqualsTwoTest) {
+    my::shared_ptr<std::vector<int>> ptr(new std::vector<int>{1, 2, 3});
     auto ptr2(ptr);
     auto ptrCounter = ptr.use_count();
     auto expected = 2;
@@ -174,6 +226,16 @@ TEST(shared_ptrTest, CopyConstructorCounterEqualsThreeTestOfDoubles) {
 TEST(shared_ptrTest, CopyAssignmentTwoDefultConstructorTest) {
     my::shared_ptr<TestObject> ptr;
     my::shared_ptr<TestObject> ptr2;
+    ptr2 = ptr;
+    auto ptrCounter = ptr.use_count();
+    auto expected = 0;
+
+    EXPECT_EQ(expected, ptrCounter);
+}
+
+TEST(shared_ptrTest, CopyAssignmentTwoDefultConstructorOfVectorTest) {
+    my::shared_ptr<std::vector<int>> ptr;
+    my::shared_ptr<std::vector<int>> ptr2;
     ptr2 = ptr;
     auto ptrCounter = ptr.use_count();
     auto expected = 0;
@@ -326,8 +388,19 @@ TEST(shared_ptrTest, MoveOperatorMoveNewZeroPtrNotEqualsNullTest) {
     EXPECT_NE(notExpected, notNullValue);
 }
 
-TEST(shared_ptrTest, BoolOperatorReturnsFalse) {
+TEST(shared_ptrTest, TestObjectBoolOperatorReturnsFalse) {
     my::shared_ptr<TestObject> originalPtr;
+    bool isNullValue = true;
+    if (originalPtr) {
+        isNullValue = false;
+    }
+    auto expected = true;
+
+    EXPECT_EQ(expected, isNullValue);
+}
+
+TEST(shared_ptrTest, VectorBoolOperatorReturnsFalse) {
+    my::shared_ptr<std::vector<int>> originalPtr;
     bool isNullValue = true;
     if (originalPtr) {
         isNullValue = false;
