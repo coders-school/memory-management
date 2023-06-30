@@ -478,3 +478,12 @@ TEST(shared_ptrTest, FunctionResetSharedPtrEqualsNullptr) {
 
     EXPECT_EQ(value, expected);
 }
+
+TEST(shared_ptrTest, DestructorTest) {
+    my::shared_ptr<TestObject> shared_ptr(new TestObject(20));
+    shared_ptr.~shared_ptr();
+    auto value = shared_ptr.get();
+    auto expected = nullptr;
+
+    EXPECT_EQ(value, expected);
+}
