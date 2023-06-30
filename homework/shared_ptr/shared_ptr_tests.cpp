@@ -363,7 +363,8 @@ TEST(shared_ptrTest, CopyAssignmentCounterEqualsThreeTest) {
 
 TEST(shared_ptrTest, MoveOperatorMoveOriginalPtrEqualsNullTest) {
     my::shared_ptr<TestObject> originalPtr(new TestObject(20));
-    auto newPtr = std::move(originalPtr);
+    my::shared_ptr<TestObject> newPtr(new TestObject(20));
+    newPtr = std::move(originalPtr);
     auto nullValue = originalPtr.get();
     auto expected = nullptr;
 
@@ -372,7 +373,8 @@ TEST(shared_ptrTest, MoveOperatorMoveOriginalPtrEqualsNullTest) {
 
 TEST(shared_ptrTest, MoveOperatorMoveNewPtrNotEqualsNullTest) {
     my::shared_ptr<TestObject> originalPtr(new TestObject(20));
-    auto newPtr = std::move(originalPtr);
+    my::shared_ptr<TestObject> newPtr(new TestObject(20));
+    newPtr = std::move(originalPtr);
     auto notNullValue = newPtr.get();
     auto notExpected = nullptr;
 
@@ -381,7 +383,8 @@ TEST(shared_ptrTest, MoveOperatorMoveNewPtrNotEqualsNullTest) {
 
 TEST(shared_ptrTest, MoveOperatorMoveNewZeroPtrNotEqualsNullTest) {
     my::shared_ptr<int> originalPtr(new int{0});
-    auto newPtr = std::move(originalPtr);
+    my::shared_ptr<int> newPtr(new int{0});
+    newPtr = std::move(originalPtr);
     auto notNullValue = newPtr.get();
     auto notExpected = nullptr;
 
