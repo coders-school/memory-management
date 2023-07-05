@@ -27,6 +27,15 @@ TEST(weak_ptrTest, FunctionLockWeakPtrOtherShared) {
     EXPECT_EQ(expected, value);
 }
 
+TEST(weak_ptrTest, FunctionLockMethodShouldReturnSharedPtrThatStoresManagedObject) {
+    my::shared_ptr<int> shared_ptr(new int{10});
+    my::weak_ptr<int> weak_ptr(shared_ptr);
+    auto value = weak_ptr.lock().get();
+    auto expected = shared_ptr.get();
+
+    EXPECT_EQ(expected, value);
+}
+
 TEST(weak_ptrTest, FunctionResetDifferentUseCountResults) {
     my::shared_ptr<int> shared_ptr1(new int{10});
     my::shared_ptr<int> shared_ptr2(shared_ptr1);
