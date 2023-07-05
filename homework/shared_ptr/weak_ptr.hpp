@@ -63,7 +63,7 @@ public:
         return *this;
     }
     shared_ptr<T> lock() const {
-        return expired() ? shared_ptr<T>(*this) : shared_ptr<T>();
+        return expired() ? shared_ptr<T>() : shared_ptr<T>(*this);
     }
     long use_count() const {
         if (weak_refs_) {
@@ -76,9 +76,9 @@ public:
     }
     bool expired() const {
         if (ptr_) {
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
     ~weak_ptr() {
         deleter();
