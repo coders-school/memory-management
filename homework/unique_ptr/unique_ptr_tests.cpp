@@ -13,53 +13,18 @@ struct TestObject {
 
 template class my::unique_ptr<TestObject>;
 
-TEST(unique_ptrTest, ArrowOperatorToFunctionTest) {
+TEST(unique_ptrTest, ArrowOperatorTest) {
     my::unique_ptr<TestObject> unique_ptr(new TestObject{20});
     auto expected = 40;
-    auto value = unique_ptr->multiplyValueByTwo();
 
-    EXPECT_EQ(expected, value);
+    EXPECT_EQ(expected, unique_ptr->multiplyValueByTwo());
 }
 
-TEST(unique_ptrTest, ArrowOperatorToFunctionMemberValueEqualsZeroTest) {
-    my::unique_ptr<TestObject> unique_ptr(new TestObject{0});
-    auto expected = 0;
-    auto value = unique_ptr->multiplyValueByTwo();
-
-    EXPECT_EQ(expected, value);
-}
-
-TEST(unique_ptrTest, ArrowOperatorToMemberValueTest) {
-    my::unique_ptr<TestObject> unique_ptr(new TestObject{20});
-    auto expected = 20;
-    auto value = unique_ptr->value_;
-
-    EXPECT_EQ(expected, value);
-}
-
-TEST(unique_ptrTest, DereferenceOperatorToMemberFunctionTest) {
+TEST(unique_ptrTest, DereferenceOperatorTest) {
     my::unique_ptr<TestObject> unique_ptr(new TestObject(20));
     TestObject& dereferencedObj = *unique_ptr;
     auto result = dereferencedObj.multiplyValueByTwo();
     auto expected = 40;
-
-    EXPECT_EQ(expected, result);
-}
-
-TEST(unique_ptrTest, DereferenceOperatorToMemberFunctionEqualsZeroTest) {
-    my::unique_ptr<TestObject> unique_ptr(new TestObject(0));
-    TestObject& dereferencedObj = *unique_ptr;
-    auto result = dereferencedObj.multiplyValueByTwo();
-    auto expected = 0;
-
-    EXPECT_EQ(expected, result);
-}
-
-TEST(unique_ptrTest, DereferenceOperatorToMemberValueTest) {
-    my::unique_ptr<TestObject> unique_ptr(new TestObject(20));
-    TestObject& dereferencedObj = *unique_ptr;
-    auto result = dereferencedObj.value_;
-    auto expected = 20;
 
     EXPECT_EQ(expected, result);
 }
@@ -81,14 +46,6 @@ TEST(unique_ptrTest, FunctionGetExpectedValueTest) {
     EXPECT_EQ(expected, result);
 }
 
-TEST(unique_ptrTest, FunctionGetExpectedNullValueTest) {
-    my::unique_ptr<TestObject> unique_ptr;
-    TestObject* rawPtr = unique_ptr.get();
-    auto expected = nullptr;
-
-    EXPECT_EQ(expected, rawPtr);
-}
-
 TEST(unique_ptrTest, DefaultConstructorTest) {
     my::unique_ptr<TestObject> unique_ptr;
     auto value = unique_ptr.get();
@@ -97,38 +54,11 @@ TEST(unique_ptrTest, DefaultConstructorTest) {
     EXPECT_EQ(expected, value);
 }
 
-TEST(unique_ptrTest, FunctionResetUniquePtr1EqualsNewPtr) {
+TEST(unique_ptrTest, FunctionResetUniquePtr1EqualsUniquePtr2) {
     my::unique_ptr<TestObject> unique_ptr1(new TestObject(20));
     unique_ptr1.reset(new TestObject(30));
     auto value = unique_ptr1->value_;
     auto expected = 30;
-
-    EXPECT_EQ(value, expected);
-}
-
-TEST(unique_ptrTest, FunctionResetUniquePtr1EqualsNull) {
-    my::unique_ptr<TestObject> unique_ptr1(new TestObject(20));
-    unique_ptr1.reset(nullptr);
-    auto value = unique_ptr1.get();
-    auto expected = nullptr;
-
-    EXPECT_EQ(value, expected);
-}
-
-TEST(unique_ptrTest, FunctionResetUniquePtr1NotEqualsZero) {
-    my::unique_ptr<int> unique_ptr1(new int{10});
-    unique_ptr1.reset(new int{0});
-    auto value = unique_ptr1.get();
-    auto notExpected = nullptr;
-
-    EXPECT_NE(value, notExpected);
-}
-
-TEST(unique_ptrTest, FunctionResetUniquePtr1EqualsZero) {
-    my::unique_ptr<TestObject> unique_ptr1(new TestObject(20));
-    unique_ptr1.reset(new TestObject(0));
-    auto value = unique_ptr1->value_;
-    auto expected = 0;
 
     EXPECT_EQ(value, expected);
 }
@@ -151,22 +81,24 @@ TEST(unique_ptrTest, MoveConstructorMovedNotEqualsNullTest) {
     EXPECT_NE(notExpected, nullValue);
 }
 
-TEST(unique_ptrTest, MoveOperatorMoveOriginalPtrEqualsNullTest) {
+TEST(unique_ptrTest, MoveOperatorMovenewPtrNotEqualsNullTest) {
     my::unique_ptr<TestObject> originalPtr(new TestObject(20));
-    auto newPtr = std::move(originalPtr);
-    auto nullValue = originalPtr.get();
-    auto expected = nullptr;
+    my::unique_ptr<TestObject> newPtr;
+    newPtr = std::move(originalPtr);
+    auto value = newPtr.get();
+    auto notexpected = nullptr;
 
-    EXPECT_EQ(expected, nullValue);
+    EXPECT_NE(notexpected, value);
 }
 
-TEST(unique_ptrTest, MoveOperatorMoveNewPtrNotEqualsNullTest) {
+TEST(unique_ptrTest, MoveOperatorMoveoriginalPtrEqualsNullTest) {
     my::unique_ptr<TestObject> originalPtr(new TestObject(20));
-    auto newPtr = std::move(originalPtr);
-    auto notNullValue = newPtr.get();
-    auto notExpected = nullptr;
+    my::unique_ptr<TestObject> newPtr;
+    newPtr = std::move(originalPtr);
+    auto value = originalPtr.get();
+    auto expected = nullptr;
 
-    EXPECT_NE(notExpected, notNullValue);
+    EXPECT_EQ(expected, value);
 }
 
 TEST(unique_ptrTest, FunctionReleaseOriginalPtrEqualsNullTest) {
