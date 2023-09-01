@@ -1,8 +1,6 @@
 #include <gtest/gtest.h>
 #include "unique_ptr.hpp"
 
-template class my::unique_ptr<TestObject>;
-
 struct TestObject {
     int value_;
     TestObject(int value)
@@ -12,6 +10,8 @@ struct TestObject {
         return value_ *= 2;
     }
 };
+
+template class my::unique_ptr<TestObject>;
 
 TEST(unique_ptrTest, ArrowOperatorToFunctionTest) {
     my::unique_ptr<TestObject> unique_ptr(new TestObject{20});
