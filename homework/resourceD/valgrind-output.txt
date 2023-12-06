@@ -1,0 +1,25 @@
+$ valgrind --leak-check=full -s ./resourceD d
+==22420== Memcheck, a memory error detector
+==22420== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==22420== Using Valgrind-3.16.1 and LibVEX; rerun with -h for copyright info
+==22420== Command: ./resourceD d
+==22420== 
+Using resource. Passed d
+Passed d. d is prohibited.
+==22420== 
+==22420== HEAP SUMMARY:
+==22420==     in use at exit: 1 bytes in 1 blocks
+==22420==   total heap usage: 5 allocs, 4 frees, 73,924 bytes allocated
+==22420== 
+==22420== 1 bytes in 1 blocks are definitely lost in loss record 1 of 1
+==22420==    at 0x4838DEF: operator new(unsigned long) (vg_replace_malloc.c:342)
+==22420==    by 0x10927A: main (resourceD.cpp:30)
+==22420== 
+==22420== LEAK SUMMARY:
+==22420==    definitely lost: 1 bytes in 1 blocks
+==22420==    indirectly lost: 0 bytes in 0 blocks
+==22420==      possibly lost: 0 bytes in 0 blocks
+==22420==    still reachable: 0 bytes in 0 blocks
+==22420==         suppressed: 0 bytes in 0 blocks
+==22420== 
+==22420== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
