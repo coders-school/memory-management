@@ -1,0 +1,21 @@
+==43107== Memcheck, a memory error detector
+==43107== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==43107== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
+==43107== Command: ./resourceD d
+==43107== Parent PID: 42157
+==43107== 
+==43107== 
+==43107== HEAP SUMMARY:
+==43107==     in use at exit: 1 bytes in 1 blocks
+==43107==   total heap usage: 5 allocs, 4 frees, 74,948 bytes allocated
+==43107== 
+==43107== LEAK SUMMARY:
+==43107==    definitely lost: 1 bytes in 1 blocks
+==43107==    indirectly lost: 0 bytes in 0 blocks
+==43107==      possibly lost: 0 bytes in 0 blocks
+==43107==    still reachable: 0 bytes in 0 blocks
+==43107==         suppressed: 0 bytes in 0 blocks
+==43107== Rerun with --leak-check=full to see details of leaked memory
+==43107== 
+==43107== For lists of detected and suppressed errors, rerun with: -s
+==43107== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
