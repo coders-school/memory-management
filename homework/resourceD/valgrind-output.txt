@@ -1,8 +1,8 @@
-kp@ubuntu:~/knauka/pd_sanitizer/memory-management/exercises/build$ valgrind --leak-check=full ./ResourceD d
+kp@ubuntu:~/knauka/pd_sanitizer/memory-management/exercises/build$ valgrind --leak-check=full ./resourceD d
 ==3611== Memcheck, a memory error detector
 ==3611== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
 ==3611== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
-==3611== Command: ./ResourceD d
+==3611== Command: ./resourceD d
 ==3611== 
 Using resource. Passed d
 Passed d. d is prohibited.
@@ -13,7 +13,7 @@ Passed d. d is prohibited.
 ==3611== 
 ==3611== 1 bytes in 1 blocks are definitely lost in loss record 1 of 1
 ==3611==    at 0x483BE63: operator new(unsigned long) (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3611==    by 0x109372: main (ResourceD.cpp:30)
+==3611==    by 0x109372: main (resourceD.cpp:30)
 ==3611== 
 ==3611== LEAK SUMMARY:
 ==3611==    definitely lost: 1 bytes in 1 blocks
