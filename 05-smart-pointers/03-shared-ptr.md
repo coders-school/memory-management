@@ -80,7 +80,7 @@ ___
 #include <map>
 #include <string>
 
-class Gadget {};
+struct Gadget { void use() {} };
 std::map<std::string, std::shared_ptr<Gadget>> gadgets;
 // above wouldn't compile with C++03. Why?
 
