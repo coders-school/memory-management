@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "MakeShared.hpp"
-#include "SharedPtr.hpp"
+#include "make_shared.hpp"
+#include "shared_ptr.hpp"
 
 constexpr int intTestVal = 15;
 constexpr int doubleTestVal = 1.5;

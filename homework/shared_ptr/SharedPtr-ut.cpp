@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "SharedPtr.hpp"
-#include "WeakPtr.hpp"
+#include "shared_ptr.hpp"
+#include "weak_ptr.hpp"
 
 constexpr int initValue = 5;
 constexpr int newValue = 10;

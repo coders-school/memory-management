@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "WeakPtr.hpp"
+#include "weak_ptr.hpp"
 
 constexpr int initValue = 5;
 constexpr int useCounter = 1;
