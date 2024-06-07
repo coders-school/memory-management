@@ -1,137 +1,152 @@
 #pragma once
-#include "SharedControlBlock.hpp"
-#include "WeakPtr.hpp"
 
-namespace cs {
-template <typename T>
-class WeakPtr;
+#include "control_block.hpp"
+#include "exceptions.hpp"
 
-class ExpiredWeakPtr : public std::exception {
-public:
-    explicit ExpiredWeakPtr(std::string&){};
-    explicit ExpiredWeakPtr(const char*){};
-};
+#include <cstddef>
+#include <functional>
+
+namespace coders {
 
 template <typename T>
-class SharedPtr {
+class weak_ptr;
+
+template <typename T>
+class shared_ptr {
 public:
-    SharedPtr() noexcept = default;
-    explicit SharedPtr(T* ptr);
-    SharedPtr(T* ptr, std::function<void(T*)> deleter);
-    explicit SharedPtr(const WeakPtr<T>& weakPtr);
-    ~SharedPtr();
+    template <typename Y>
+    friend class weak_ptr;
 
-    SharedPtr(const SharedPtr& otherOtr);
-    SharedPtr(SharedPtr&& otherPtr);
-    SharedPtr& operator=(const SharedPtr& otherPtr);
-    SharedPtr& operator=(SharedPtr&& otherPtr);
+    shared_ptr(T* ptr = nullptr, Deleter<T> deleter = defaultDeleter) noexcept;
+    shared_ptr(const shared_ptr& ptr) noexcept;
+    shared_ptr(shared_ptr&& ptr) noexcept;
+    explicit shared_ptr(const weak_ptr<T>& wPtr);
+    ~shared_ptr();
 
-    T& operator*() const noexcept { return *ptr_; }
-    T* operator->() const noexcept { return ptr_; }
-    T* get() const noexcept { return ptr_; }
-    void reset(
-        T* newPtr = nullptr,
-        std::function<void(T*)> newDeleter = [](T* ptr) { delete ptr; }) noexcept;
-    size_t use_count() const noexcept {
-        if (shControlBlock_ != nullptr) {
-            return shControlBlock_->getSharedRefsCount();
-        }
-        return 0;
-    }
-    explicit operator bool() const noexcept { return this->get() != nullptr; }
+    shared_ptr<T>& operator=(const shared_ptr<T>& ptr) noexcept;
+    shared_ptr<T>& operator=(shared_ptr<T>&& ptr) noexcept;
+    T& operator*() const noexcept;
+    T* operator->() const noexcept;
+
+    T* get() const noexcept;
+    void reset(T* ptr = nullptr, Deleter<T> deleter = defaultDeleter);
+    size_t use_count() const noexcept;
+    explicit operator bool() const noexcept;
 
 private:
-    T* ptr_ = nullptr;
-    SharedControlBlock<T>* shControlBlock_ = nullptr;
+    T* rawPtr_{nullptr};
+    control_block<T>* ctrl_{nullptr};
 
-    void handleSharedPtrAndControlBlockDelete();
-    explicit SharedPtr(SharedControlBlockData<T>* newBlock)
-        : ptr_(newBlock->getObj()), shControlBlock_(newBlock) {}
-
-    template <typename>
-    friend class cs::WeakPtr;
-
-    template <typename M, typename... Args>
-    friend cs::SharedPtr<M> cs::makeShared(Args&&... args);
+    void deleteStoredPointers();
 };
 
 template <typename T>
-void SharedPtr<T>::handleSharedPtrAndControlBlockDelete() {
-    if (shControlBlock_ != nullptr) {
-        shControlBlock_->decrementSharedRefsCount();
-        if (shControlBlock_->getSharedRefsCount() == 0) {
-            shControlBlock_->callDefaultDeleter();
+void shared_ptr<T>::deleteStoredPointers() {
+    if (!ctrl_) {
+        return;
+    }
+    if (ctrl_->getSharedRefs()) {
+        ctrl_->decrementSharedRefs();
+    }
+    if (!ctrl_->getSharedRefs()) {
+        ctrl_->getDeleter()(rawPtr_);
+        if (!ctrl_->getSharedRefs() && !ctrl_->getWeakRefs()) {
+            delete ctrl_;
         }
-        if (shControlBlock_->getSharedRefsCount() == 0 && shControlBlock_->getWeakRefsCount() == 0) {
-            delete shControlBlock_;
+    }
+}
+
+template <typename T>
+shared_ptr<T>::shared_ptr(T* ptr, Deleter<T> deleter) noexcept
+    : rawPtr_(ptr), ctrl_(rawPtr_ ? new control_block<T>(deleter) : new control_block<T>(0, deleter)) {}
+
+template <typename T>
+shared_ptr<T>::shared_ptr(const shared_ptr& ptr) noexcept
+    : rawPtr_(ptr.rawPtr_), ctrl_(ptr.ctrl_) {
+    if (rawPtr_) {
+        ctrl_->incrementSharedRefs();
+    }
+}
+
+template <typename T>
+shared_ptr<T>::shared_ptr(shared_ptr&& ptr) noexcept
+    : rawPtr_(ptr.rawPtr_), ctrl_(ptr.ctrl_) {
+    ptr.rawPtr_ = nullptr;
+    ptr.ctrl_ = nullptr;
+}
+
+template <typename T>
+shared_ptr<T>::shared_ptr(const weak_ptr<T>& wPtr) {
+    if (wPtr.expired()) {
+        throw coders::ExpiredWeakPtr("Expired weak pointer\n");
+    }
+    rawPtr_ = wPtr.rawPtr_;
+    ctrl_ = wPtr.ctrl_;
+    if (rawPtr_) {
+        ctrl_->incrementSharedRefs();
+    }
+}
+
+template <typename T>
+shared_ptr<T>::~shared_ptr() {
+    deleteStoredPointers();
+}
+
+template <typename T>
+shared_ptr<T>& shared_ptr<T>::operator=(const shared_ptr<T>& ptr) noexcept {
+    if (this != &ptr) {
+        deleteStoredPointers();
+        rawPtr_ = ptr.rawPtr_;
+        ctrl_ = ptr.ctrl_;
+        if (ctrl_ && rawPtr_) {
+            ctrl_->incrementSharedRefs();
         }
-    }
-}
-
-template <typename T>
-SharedPtr<T>::SharedPtr(T* ptr)
-    : ptr_(ptr), shControlBlock_(new SharedControlBlockObj<T>{ptr}) {}
-
-template <typename T>
-SharedPtr<T>::SharedPtr(T* ptr, std::function<void(T*)> deleter)
-    : ptr_(ptr), shControlBlock_(new SharedControlBlockObj<T>{ptr, deleter}) {}
-
-template <typename T>
-SharedPtr<T>::SharedPtr(const WeakPtr<T>& weakPtr)
-    : ptr_(weakPtr.ptr_), shControlBlock_(weakPtr.controlBlock_) {
-    if (weakPtr.expired()) {
-        throw cs::ExpiredWeakPtr("Expired weak pointer");
-    }
-    if (shControlBlock_ != nullptr) {
-        shControlBlock_->incrementSharedRefsCount();
-    }
-}
-
-template <typename T>
-SharedPtr<T>::~SharedPtr() {
-    handleSharedPtrAndControlBlockDelete();
-}
-
-template <typename T>
-SharedPtr<T>::SharedPtr(const SharedPtr& otherPtr)
-    : ptr_(otherPtr.ptr_), shControlBlock_(otherPtr.shControlBlock_) {
-    otherPtr.shControlBlock_->incrementSharedRefsCount();
-}
-
-template <typename T>
-SharedPtr<T>::SharedPtr(SharedPtr&& otherPtr)
-    : ptr_(otherPtr.ptr_), shControlBlock_(otherPtr.shControlBlock_) {
-    otherPtr.ptr_ = nullptr;
-    otherPtr.shControlBlock_ = nullptr;
-}
-
-template <typename T>
-SharedPtr<T>& SharedPtr<T>::operator=(const SharedPtr& otherPtr) {
-    if (&otherPtr != this) {
-        handleSharedPtrAndControlBlockDelete();
-        ptr_ = otherPtr.ptr_;
-        otherPtr.shControlBlock_->incrementSharedRefsCount();
-        shControlBlock_ = otherPtr.shControlBlock_;
     }
     return *this;
 }
 
 template <typename T>
-SharedPtr<T>& SharedPtr<T>::operator=(SharedPtr&& otherPtr) {
-    if (&otherPtr != this) {
-        handleSharedPtrAndControlBlockDelete();
-        ptr_ = otherPtr.ptr_;
-        shControlBlock_ = otherPtr.shControlBlock_;
-        otherPtr.ptr_ = nullptr;
-        otherPtr.shControlBlock_ = nullptr;
+shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr<T>&& ptr) noexcept {
+    if (this != &ptr) {
+        deleteStoredPointers();
+        rawPtr_ = ptr.rawPtr_;
+        ctrl_ = ptr.ctrl_;
+        ptr.rawPtr_ = nullptr;
+        ptr.ctrl_ = nullptr;
     }
     return *this;
 }
 
 template <typename T>
-void SharedPtr<T>::reset(T* newPtr, std::function<void(T*)> newDeleter) noexcept {
-    handleSharedPtrAndControlBlockDelete();
-    ptr_ = newPtr;
-    shControlBlock_ = new SharedControlBlockObj<T>{newPtr, newDeleter};
+T& shared_ptr<T>::operator*() const noexcept {
+    return *get();
 }
-}  // namespace cs
+
+template <typename T>
+T* shared_ptr<T>::operator->() const noexcept {
+    return get();
+}
+
+template <typename T>
+T* shared_ptr<T>::get() const noexcept {
+    return rawPtr_;
+}
+
+template <typename T>
+void shared_ptr<T>::reset(T* ptr, Deleter<T> deleter) {
+    deleteStoredPointers();
+    rawPtr_ = ptr;
+    ctrl_ = rawPtr_ ? new control_block<T>(deleter) : new control_block<T>(0, deleter);
+}
+
+template <typename T>
+size_t shared_ptr<T>::use_count() const noexcept {
+    return ctrl_->getSharedRefs();
+}
+
+template <typename T>
+shared_ptr<T>::operator bool() const noexcept {
+    return get() != nullptr;
+}
+
+}  // namespace coders
