@@ -1,57 +1,58 @@
+#pragma once
 
 namespace my {
+template <class T>
 
-template <typename T>
 class unique_ptr {
+private:
+    T* ptr_ = nullptr;
+
 public:
-    explicit unique_ptr(T* ptr = nullptr) : ptr_(ptr) {}
-
-    ~unique_ptr() {
-        delete ptr_;
+    unique_ptr()
+        : ptr_(nullptr) {}
+    unique_ptr(T* ptr)
+        : ptr_(ptr) {}
+    unique_ptr(const unique_ptr&) = delete;  // deleted copy ctor
+    unique_ptr(unique_ptr&& obj) {
+        ptr_ = obj.ptr_;
+        obj.ptr_ = nullptr;
     }
-
-    unique_ptr(const unique_ptr&) = delete;
-    unique_ptr& operator=(const unique_ptr&) = delete;
-
-    unique_ptr(unique_ptr&& other) noexcept : ptr_(other.ptr_) {
-        other.ptr_ = nullptr;
-    }
-
-    unique_ptr& operator=(unique_ptr&& other) noexcept {
-        if (this != &other) {
+    unique_ptr& operator=(const unique_ptr&) = delete;  // deleted copy assignment
+    unique_ptr& operator=(unique_ptr&& other) {
+        if (other.ptr_ != nullptr) {
             delete ptr_;
             ptr_ = other.ptr_;
             other.ptr_ = nullptr;
         }
         return *this;
     }
-
-    T& operator*() const {
-        return *ptr_;
-    }
-
-    T* operator->() const {
+    T* operator->() {
         return ptr_;
     }
-
+    T& operator*() {
+        return *(ptr_);
+    }
     T* get() const {
         return ptr_;
     }
-
     T* release() {
-        T* temp = ptr_;
+        auto newPtr = ptr_;
         ptr_ = nullptr;
-        return temp;
+        return newPtr;
     }
-
     void reset(T* newPtr = nullptr) {
-        delete ptr_;
+        T* tempPtr = ptr_;
         ptr_ = newPtr;
+        if (tempPtr != nullptr) {
+            delete tempPtr;
+            tempPtr = nullptr;
+        }
     }
-
-private:
-    T* ptr_;
+    ~unique_ptr() {
+        if (ptr_ != nullptr) {
+            delete ptr_;
+            ptr_ = nullptr;
+        }
+    }
 };
-
-} 
- 
+}  // namespace my
