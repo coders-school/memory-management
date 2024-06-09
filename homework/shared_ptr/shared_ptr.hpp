@@ -1,166 +1,125 @@
-#ifndef SHARED_PTR_HPP
-#define SHARED_PTR_HPP
-
-#include <atomic>
-#include <utility>
-#include <functional>
+#pragma once
+#include "weak_ptr.hpp"
 
 namespace my {
-
-template <typename T>
+template <class Y>
+class weak_ptr;
+template <class T>
 class shared_ptr {
+protected:
+    T* ptr_ = nullptr;
+    size_t* shared_refs_ = nullptr;
+
 public:
-    // Constructors
-    explicit shared_ptr(T* ptr = nullptr);
-    shared_ptr(const shared_ptr& other);
-    shared_ptr(shared_ptr&& other) noexcept;
-    
-    // Destructor
-    ~shared_ptr();
-    
-    // Assignment operators
-    shared_ptr& operator=(const shared_ptr& other);
-    shared_ptr& operator=(shared_ptr&& other) noexcept;
-    
-    // Member functions
-    T& operator*() const;
-    T* operator->() const;
-    T* get() const;
-    void reset(T* ptr = nullptr);
-    size_t use_count() const;
-    explicit operator bool() const;
-
-private:
-    void release();
-
-    T* ptr_;
-    struct ControlBlock {
-        std::atomic<size_t> shared_refs;
-        std::atomic<size_t> weak_refs;
-        std::function<void(T*)> deleter;
-
-        ControlBlock(T* ptr, std::function<void(T*)> del)
-            : shared_refs(1), weak_refs(0), deleter(del) {}
-    } *control_;
-};
-
-// Constructor
-template <typename T>
-shared_ptr<T>::shared_ptr(T* ptr) : ptr_(ptr) {
-    if (ptr) {
-        control_ = new ControlBlock(ptr, [](T* p) { delete p; });
-    } else {
-        control_ = nullptr;
-    }
-}
-
-// Copy constructor
-template <typename T>
-shared_ptr<T>::shared_ptr(const shared_ptr& other)
-    : ptr_(other.ptr_), control_(other.control_) {
-    if (control_) {
-        control_->shared_refs++;
-    }
-}
-
-// Move constructor
-template <typename T>
-shared_ptr<T>::shared_ptr(shared_ptr&& other) noexcept
-    : ptr_(other.ptr_), control_(other.control_) {
-    other.ptr_ = nullptr;
-    other.control_ = nullptr;
-}
-
-// Destructor
-template <typename T>
-shared_ptr<T>::~shared_ptr() {
-    release();
-}
-
-// Copy assignment
-template <typename T>
-shared_ptr<T>& shared_ptr<T>::operator=(const shared_ptr& other) {
-    if (this != &other) {
-        release();
-        ptr_ = other.ptr_;
-        control_ = other.control_;
-        if (control_) {
-            control_->shared_refs++;
+    shared_ptr()
+        : ptr_(nullptr), shared_refs_(new size_t{0}) {}
+    shared_ptr(T* ptr)
+        : ptr_(ptr), shared_refs_(new size_t{1}) {}
+    shared_ptr(const shared_ptr& obj)
+        : ptr_(obj.ptr_), shared_refs_(obj.shared_refs_) {
+        if (obj.ptr_) {
+            (*shared_refs_)++;
         }
     }
-    return *this;
-}
-
-// Move assignment
-template <typename T>
-shared_ptr<T>& shared_ptr<T>::operator=(shared_ptr&& other) noexcept {
-    if (this != &other) {
-        release();
-        ptr_ = other.ptr_;
-        control_ = other.control_;
-        other.ptr_ = nullptr;
-        other.control_ = nullptr;
+    shared_ptr(shared_ptr&& obj)
+        : ptr_(obj.ptr_), shared_refs_(obj.shared_refs_) {
+        obj.ptr_ = nullptr;
+        obj.shared_refs_ = nullptr;
     }
-    return *this;
-}
-
-// Dereference operator
-template <typename T>
-T& shared_ptr<T>::operator*() const {
-    return *ptr_;
-}
-
-// Arrow operator
-template <typename T>
-T* shared_ptr<T>::operator->() const {
-    return ptr_;
-}
-
-// Get raw pointer
-template <typename T>
-T* shared_ptr<T>::get() const {
-    return ptr_;
-}
-
-// Reset pointer
-template <typename T>
-void shared_ptr<T>::reset(T* ptr) {
-    release();
-    ptr_ = ptr;
-    if (ptr) {
-        control_ = new ControlBlock(ptr, [](T* p) { delete p; });
-    } else {
-        control_ = nullptr;
-    }
-}
-
-// Get use count
-template <typename T>
-size_t shared_ptr<T>::use_count() const {
-    return control_ ? control_->shared_refs.load() : 0;
-}
-
-// Bool conversion
-template <typename T>
-shared_ptr<T>::operator bool() const {
-    return ptr_ != nullptr;
-}
-
-// Release resources
-template <typename T>
-void shared_ptr<T>::release() {
-    if (control_) {
-        if (--control_->shared_refs == 0) {
-            control_->deleter(ptr_);
-            if (control_->weak_refs == 0) {
-                delete control_;
+    shared_ptr(const weak_ptr<T>& obj)
+        : ptr_(obj.ptr_), shared_refs_(obj.shared_refs_) {
+        if (obj.ptr_) {
+            if (obj.shared_refs_) {
+                (*shared_refs_)++;
+            } else {
+                shared_refs_ = new size_t{1};
             }
         }
     }
-    ptr_ = nullptr;
-    control_ = nullptr;
-}
+    shared_ptr& operator=(const shared_ptr& obj) {
+        if (this != &obj) {
+            if (ptr_ != obj.ptr_) {
+                deleter();
+                ptr_ = obj.ptr_;
+                shared_refs_ = obj.shared_refs_;
+                if (obj.ptr_) {
+                    (*shared_refs_)++;
+                }
+            }
+        }
+        return *this;
+    }
+    shared_ptr& operator=(shared_ptr&& obj) {
+        if (this != &obj) {
+            deleter();
+            ptr_ = obj.ptr_;
+            shared_refs_ = obj.shared_refs_;
+            obj.ptr_ = nullptr;
+            obj.shared_refs_ = nullptr;
+        }
+        return *this;
+    }
+    operator bool() const {
+        if (ptr_) {
+            return true;
+        }
+        return false;
+    }
+    T* operator->() const {
+        return ptr_;
+    }
+    T& operator*() const {
+        return *(ptr_);
+    }
+    T* get() const {
+        return ptr_;
+    }
+    void reset(T* newPtr) {
+        T* tempPtr = ptr_;
+        ptr_ = newPtr;
+        if (tempPtr != nullptr) {
+            delete tempPtr;
+            tempPtr = nullptr;
+        }
+        if (*(shared_refs_)) {
+            (*shared_refs_)--;
+        }
+    }
+    void reset() {
+        if (ptr_) {
+            delete ptr_;
+            ptr_ = nullptr;
+            if (shared_refs_) {
+                if (*(shared_refs_)) {
+                    (*shared_refs_)--;
+                }
+            }
+        }
+    }
+    long use_count() const {
+        return *shared_refs_;
+    }
+    ~shared_ptr() {
+        deleter();
+    }
 
-} // namespace my
-
-#endif // SHARED_PTR_HPP
+private:
+    void deleter() {
+        if (shared_refs_) {
+            if (*(shared_refs_) != 0) {
+                (*shared_refs_)--;
+            }
+            if ((*shared_refs_) == 0) {
+                if (ptr_) {
+                    delete ptr_;
+                    ptr_ = nullptr;
+                }
+                delete shared_refs_;
+                shared_refs_ = nullptr;
+            }
+        }
+    }
+    template <class Y>
+    friend class weak_ptr;
+};
+}  // namespace my
