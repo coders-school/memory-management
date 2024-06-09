@@ -1,64 +1,87 @@
-#include "shared_ptr.hpp"
 #include <gtest/gtest.h>
+#include "shared_ptr.hpp"
 
-template class my::shared_ptr<int>;
+using namespace my;
 
-TEST(SharedPtrTest, BasicUsage) {
-    my::shared_ptr<int> sp(new int(42));
-    EXPECT_TRUE(sp);
-    EXPECT_EQ(*sp, 42);
+TEST(SharedPtrTest, DefaultConstructor) {
+    shared_ptr<int> sp;
+    EXPECT_EQ(sp.get(), nullptr);
+    EXPECT_EQ(sp.use_count(), 0);
+    EXPECT_FALSE(sp);
+}
+
+TEST(SharedPtrTest, ConstructorWithPointer) {
+    shared_ptr<int> sp(new int(10));
+    EXPECT_NE(sp.get(), nullptr);
+    EXPECT_EQ(*sp, 10);
     EXPECT_EQ(sp.use_count(), 1);
+    EXPECT_TRUE(sp);
 }
 
 TEST(SharedPtrTest, CopyConstructor) {
-    my::shared_ptr<int> sp1(new int(42));
-    my::shared_ptr<int> sp2(sp1);
+    shared_ptr<int> sp1(new int(20));
+    shared_ptr<int> sp2(sp1);
+    EXPECT_EQ(sp1.get(), sp2.get());
     EXPECT_EQ(sp1.use_count(), 2);
     EXPECT_EQ(sp2.use_count(), 2);
 }
 
 TEST(SharedPtrTest, MoveConstructor) {
-    my::shared_ptr<int> sp1(new int(42));
-    my::shared_ptr<int> sp2(std::move(sp1));
-    EXPECT_FALSE(sp1);
-    EXPECT_TRUE(sp2);
+    shared_ptr<int> sp1(new int(30));
+    shared_ptr<int> sp2(std::move(sp1));
+    EXPECT_EQ(sp1.get(), nullptr);
+    EXPECT_EQ(sp1.use_count(), 0);
+    EXPECT_NE(sp2.get(), nullptr);
     EXPECT_EQ(sp2.use_count(), 1);
 }
 
 TEST(SharedPtrTest, CopyAssignment) {
-    my::shared_ptr<int> sp1(new int(42));
-    my::shared_ptr<int> sp2;
+    shared_ptr<int> sp1(new int(40));
+    shared_ptr<int> sp2;
     sp2 = sp1;
+    EXPECT_EQ(sp1.get(), sp2.get());
     EXPECT_EQ(sp1.use_count(), 2);
     EXPECT_EQ(sp2.use_count(), 2);
 }
 
 TEST(SharedPtrTest, MoveAssignment) {
-    my::shared_ptr<int> sp1(new int(42));
-    my::shared_ptr<int> sp2;
+    shared_ptr<int> sp1(new int(50));
+    shared_ptr<int> sp2;
     sp2 = std::move(sp1);
-    EXPECT_FALSE(sp1);
-    EXPECT_TRUE(sp2);
+    EXPECT_EQ(sp1.get(), nullptr);
+    EXPECT_EQ(sp1.use_count(), 0);
+    EXPECT_NE(sp2.get(), nullptr);
     EXPECT_EQ(sp2.use_count(), 1);
 }
 
 TEST(SharedPtrTest, Reset) {
-    my::shared_ptr<int> sp(new int(42));
-    sp.reset(new int(84));
-    EXPECT_EQ(*sp, 84);
+    shared_ptr<int> sp(new int(60));
+    sp.reset(new int(70));
+    EXPECT_NE(sp.get(), nullptr);
+    EXPECT_EQ(*sp, 70);
     EXPECT_EQ(sp.use_count(), 1);
 }
 
-TEST(SharedPtrTest, Destructor) {
-    my::shared_ptr<int> sp(new int(42));
-    {
-        my::shared_ptr<int> sp2(sp);
-        EXPECT_EQ(sp.use_count(), 2);
-    }
-    EXPECT_EQ(sp.use_count(), 1);
+TEST(SharedPtrTest, UseCount) {
+    shared_ptr<int> sp1(new int(80));
+    shared_ptr<int> sp2(sp1);
+    shared_ptr<int> sp3(sp2);
+    EXPECT_EQ(sp1.use_count(), 3);
+    EXPECT_EQ(sp2.use_count(), 3);
+    EXPECT_EQ(sp3.use_count(), 3);
 }
 
-int main(int argc, char** argv) {
+TEST(SharedPtrTest, BoolConversion) {
+    shared_ptr<int> sp1;
+    shared_ptr<int> sp2(new int(90));
+    EXPECT_FALSE(sp1);
+    EXPECT_TRUE(sp2);
+}
+
+// Explicit instantiation for coverage
+template class my::shared_ptr<int>;
+
+int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
