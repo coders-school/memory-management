@@ -1,12 +1,13 @@
 #include <iostream>
 #include <stdexcept>
+#include <memory>
 
 using namespace std;
 
 class Resource
-{ 
+{
 public:
-    void use(const char* N)
+    void use(std::unique_ptr<const char> N)
     {
         cout << "Using resource. Passed " << *N << endl;
         if (*N == 'd')
@@ -16,25 +17,24 @@ public:
     };
 };
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
-    if(argc != 2)
+    if (argc != 2)
     {
         cerr << "You need to pass 1 argument" << endl;
         exit(-1);
     }
-    const char* N = argv[1];
-    Resource* rsc = nullptr;
+
+    auto N = std::make_unique<const char>(*argv[1]);
+
     try
     {
-        rsc = new Resource();
-        rsc->use(N);
-        delete rsc;
+        std::unique_ptr<Resource> rsc = std::make_unique<Resource>();
+        rsc->use(std::move(N));
     }
-    catch (logic_error & e)
+    catch (logic_error &e)
     {
         cout << e.what() << endl;
     }
     return 0;
 }
-

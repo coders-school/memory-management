@@ -1,0 +1,27 @@
+thomas@debian0:~/Documents/Valgrind/memory-management/homework/resourceD/build$ valgrind --leak-check=full ./resourceD df
+==5214== Memcheck, a memory error detector
+==5214== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==5214== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==5214== Command: ./resourceD df
+==5214== 
+Using resource. Passed d
+Passed d. d is prohibited.
+==5214== 
+==5214== HEAP SUMMARY:
+==5214==     in use at exit: 1 bytes in 1 blocks
+==5214==   total heap usage: 5 allocs, 4 frees, 73,924 bytes allocated
+==5214== 
+==5214== 1 bytes in 1 blocks are definitely lost in loss record 1 of 1
+==5214==    at 0x4840F2F: operator new(unsigned long) (vg_replace_malloc.c:422)
+==5214==    by 0x109281: main (resourceD.cpp:30)
+==5214== 
+==5214== LEAK SUMMARY:
+==5214==    definitely lost: 1 bytes in 1 blocks
+==5214==    indirectly lost: 0 bytes in 0 blocks
+==5214==      possibly lost: 0 bytes in 0 blocks
+==5214==    still reachable: 0 bytes in 0 blocks
+==5214==         suppressed: 0 bytes in 0 blocks
+==5214== 
+==5214== For lists of detected and suppressed errors, rerun with: -s
+==5214== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+thomas@debian0:~/Documents/Valgrind/memory-management/homework/resourceD/build$ 
