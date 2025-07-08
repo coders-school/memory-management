@@ -1,13 +1,12 @@
 
 
-namespace my
-{
+namespace my {
 
-template<typename T>
-class unique_ptr
-{
+template <typename T>
+class unique_ptr {
 public:
-    unique_ptr(T* ptr) : ptr_(ptr);
+    unique_ptr(T* ptr)
+        : ptr_(ptr);
     unique_ptr(const unique_ptr&);
     ~unique_ptr();
     unique_ptr(unique_ptr&& other);
@@ -18,9 +17,9 @@ public:
     T* get() const;
     T* release();
     void reset(T* ptr);
+
 private:
     T* ptr_;
 };
 
-
-};
+};  // namespace my
