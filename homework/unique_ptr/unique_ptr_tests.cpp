@@ -1,10 +1,10 @@
 #include "gtest/gtest.h"
 #include "unique_ptr.hpp"
 
-class DefaultConstructor : public ::testing::Test
+lass DefaultConstructor : public ::testing::Test
 {
 public:
-	my::MySmartPointer<int> cut;
+	my::unique_ptr<int> cut;
 };
 
 TEST_F(DefaultConstructor, No_Initialization_Should_Return_0)
@@ -19,7 +19,7 @@ class PointerConstructor : public ::testing::Test
 {
 public:
 	PointerConstructor() : cut(new int(10)) {};
-    my::MySmartPointer<int> cut;
+    my::unique_ptr<int> cut;
 };
 
 TEST_F(PointerConstructor, Initialiazed_Should_Return_True)
@@ -35,16 +35,16 @@ class CopyConstructor : public ::testing::Test
 
 TEST_F(CopyConstructor, Destinatnion_Object_Should_Have_Value_Of_Source_Object)
 {
-    my::MySmartPointer<int> other(new int(21));
-    my::MySmartPointer<int> cut(other);
+    my::unique_ptr<int> other(new int(21));
+    my::unique_ptr<int> cut(other);
 
 	EXPECT_EQ(21, *cut.Get());
 }
 
 TEST_F(CopyConstructor, Source_Object_Should_Have_Value_Of_Zero)
 {
-    my::MySmartPointer<int> other(new int(21));
-    my::MySmartPointer<int> cut(other);
+    my::unique_ptr<int> other(new int(21));
+    my::unique_ptr<int> cut(other);
 
 	EXPECT_EQ(0, *other.Get());
 }
@@ -58,16 +58,16 @@ class MoveConstructor : public ::testing::Test
 
 TEST_F(MoveConstructor, Destinatnion_Object_Should_Have_Value_Of_Source_Object)
 {
-    my::MySmartPointer<int> other(new int(21));
-    my::MySmartPointer<int> cut(std::move(other));
+    my::unique_ptr<int> other(new int(21));
+    my::unique_ptr<int> cut(std::move(other));
 
 	EXPECT_EQ(21, *cut.Get());
 }
 
 TEST_F(MoveConstructor, Source_Object_Should_Have_Value_Of_Zero)
 {
-    my::MySmartPointer<int> other(new int(21));
-    my::MySmartPointer<int> cut(std::move(other));
+    my::unique_ptr<int> other(new int(21));
+    my::unique_ptr<int> cut(std::move(other));
 
 	EXPECT_EQ(0, *other.Get());
 }
@@ -80,7 +80,7 @@ class ReleaseMethod : public ::testing::Test
 
 TEST_F(ReleaseMethod, After_Executing_Cut_Sould_Return_Zero)
 {
-    my::MySmartPointer<int> cut(new int(21));
+    my::unique_ptr<int> cut(new int(21));
 
 	auto ptr = cut.Release();
 
@@ -89,7 +89,7 @@ TEST_F(ReleaseMethod, After_Executing_Cut_Sould_Return_Zero)
 
 TEST_F(ReleaseMethod, After_Executing_Ptr_Should_Has_Value_Of_Cut)
 {
-    my::MySmartPointer<int> cut(new int(21));
+    my::unique_ptr<int> cut(new int(21));
 
 	auto ptr = cut.Release();
 
@@ -103,7 +103,7 @@ class GetMethod : public ::testing::Test
 public:
 	GetMethod() : cut(new int(21)) {}
 
-	my::MySmartPointer<int> cut;
+	my::unique_ptr<int> cut;
 };
 
 TEST_F(GetMethod, After_Executing_Cut_Sould_Still_Hold_Old_Value)
@@ -149,8 +149,8 @@ TEST_F(ResetMethod, After_Executing_Cut_Sould_Have_New_Value)
 class CopyOperatorEqual : public ::testing::Test
 {
 public:
-    my::MySmartPointer<int> cut;
-    my::MySmartPointer<int> source;
+    my::unique_ptr<int> cut;
+    my::unique_ptr<int> source;
 
 	CopyOperatorEqual() : source(new int(35))
 	{}
@@ -175,8 +175,8 @@ TEST_F(CopyOperatorEqual, After_Executing_Source_Sould_Own_nullptr)
 class MoveOperatorEqual : public ::testing::Test
 {
 public:
-    my::MySmartPointer<int> cut;
-    my::MySmartPointer<int> source;
+    my::unique_ptr<int> cut;
+    my::unique_ptr<int> source;
 
 	MoveOperatorEqual() : source(new int(35))
 	{}
@@ -202,7 +202,7 @@ TEST_F(MoveOperatorEqual, After_Executing_Source_Sould_Own_nullptr)
 class OperatorAsterisk : public ::testing::Test
 {
 public:
-    my::MySmartPointer<int> cut;
+    my::unique_ptr<int> cut;
 
 	OperatorAsterisk() : cut(new int(35))
 	{
@@ -215,3 +215,4 @@ TEST_F(OperatorAsterisk, Pointer_Should_Has_Same_Value_As_Cut)
 
 	EXPECT_EQ(p, *cut.Get());
 }
+
