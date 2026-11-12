@@ -12,7 +12,7 @@ public:
 
     T* release();
     T* get();
-    void reset(T* other);
+    void reset(T* other = nullptr);
     unique_ptr<T>& operator=(unique_ptr<T>& other);
     unique_ptr<T>& operator=(unique_ptr<T>&& other);
     T& operator*();
