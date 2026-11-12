@@ -10,9 +10,9 @@ public:
 
     ~unique_ptr();
 
-    T* Release();
-    T* Get();
-    void Reset(T* other);
+    T* release();
+    T* get();
+    void reset(T* other);
     unique_ptr<T>& operator=(unique_ptr<T>& other);
     unique_ptr<T>& operator=(unique_ptr<T>&& other);
     T& operator*();
@@ -46,7 +46,7 @@ unique_ptr<T>::~unique_ptr() {
 }
 
 template <typename T>
-T* unique_ptr<T>::Release() {
+T* unique_ptr<T>::release() {
     T* output = nullptr;
     if (m_ptr) {
         output = m_ptr;
@@ -57,13 +57,13 @@ T* unique_ptr<T>::Release() {
 }
 
 template <typename T>
-T* unique_ptr<T>::Get() {
+T* unique_ptr<T>::get() {
     if (m_ptr)
         return m_ptr;
 }
 
 template <typename T>
-void unique_ptr<T>::Reset(T* other) {
+void unique_ptr<T>::reset(T* other) {
     if (m_ptr)
         delete m_ptr;
     m_ptr = other;
@@ -71,14 +71,14 @@ void unique_ptr<T>::Reset(T* other) {
 
 template <typename T>
 unique_ptr<T>& unique_ptr<T>::operator=(unique_ptr<T>& other) {
-    this->m_ptr = other.Release();
+    this->m_ptr = other.release();
 
     return *this;
 }
 
 template <typename T>
 inline unique_ptr<T>& unique_ptr<T>::operator=(unique_ptr<T>&& other) {
-    this->m_ptr = other.Release();
+    this->m_ptr = other.release();
 
     return *this;
 }
