@@ -1,7 +1,9 @@
 #include "gtest/gtest.h"
 #include "unique_ptr.hpp"
 
-lass DefaultConstructor : public ::testing::Test
+template class my::unique_ptr<int>;
+
+class DefaultConstructor : public ::testing::Test
 {
 public:
 	my::unique_ptr<int> cut;
