@@ -10,7 +10,7 @@ public:
 
 TEST_F(DefaultConstructor, No_Initialization_Should_Return_0)
 {
-	EXPECT_EQ(0, *cut.get());
+	EXPECT_EQ(nullptr, cut.get());
 }
 
 
@@ -47,7 +47,7 @@ TEST_F(CopyConstructor, Source_Object_Should_Have_Value_Of_Zero)
     my::unique_ptr<int> other(new int(21));
     my::unique_ptr<int> cut(other);
 
-	EXPECT_EQ(0, *other.get());
+	EXPECT_EQ(nullptr, other.get());
 }
 
 
@@ -70,7 +70,7 @@ TEST_F(MoveConstructor, Source_Object_Should_Have_Value_Of_Zero)
     my::unique_ptr<int> other(new int(21));
     my::unique_ptr<int> cut(std::move(other));
 
-	EXPECT_EQ(0, *other.get());
+	EXPECT_EQ(nullptr, other.get());
 }
 
 
@@ -85,7 +85,7 @@ TEST_F(ReleaseMethod, After_Executing_Cut_Sould_Return_Zero)
 
 	auto ptr = cut.release();
 
-	EXPECT_EQ(0, *cut.get());
+	EXPECT_EQ(nullptr, cut.get());
 }
 
 TEST_F(ReleaseMethod, After_Executing_Ptr_Should_Has_Value_Of_Cut)
@@ -168,7 +168,7 @@ TEST_F(CopyOperatorEqual, After_Executing_Source_Sould_Own_nullptr)
 {
 	cut = source;
 
-	EXPECT_EQ(0, *source.get());
+	EXPECT_EQ(nullptr, source.get());
 }
 
 
@@ -194,7 +194,7 @@ TEST_F(MoveOperatorEqual, After_Executing_Source_Sould_Own_nullptr)
 {
 	cut = source;
 
-	EXPECT_EQ(0, *source.get());
+	EXPECT_EQ(nullptr, source.get());
 }
 
 
