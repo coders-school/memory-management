@@ -58,8 +58,7 @@ T* unique_ptr<T>::release() {
 
 template <typename T>
 T* unique_ptr<T>::get() {
-    if (m_ptr)
-        return m_ptr;
+    return m_ptr;
 }
 
 template <typename T>
