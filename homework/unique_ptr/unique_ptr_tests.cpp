@@ -95,6 +95,8 @@ TEST_F(ReleaseMethod, After_Executing_Ptr_Should_Has_Value_Of_Cut)
 	auto ptr = cut.release();
 
 	EXPECT_EQ(21, *ptr);
+
+	delete ptr;
 }
 
 
