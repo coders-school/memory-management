@@ -83,7 +83,7 @@ TEST_F(ReleaseMethod, After_Executing_Cut_Sould_Return_Zero)
 {
     my::unique_ptr<int> cut(new int(21));
 
-	auto ptr = cut.release();
+	cut.release();
 
 	EXPECT_EQ(nullptr, cut.get());
 }
@@ -109,7 +109,7 @@ public:
 
 TEST_F(GetMethod, After_Executing_Cut_Sould_Still_Hold_Old_Value)
 {
-    auto ptr = cut.get();
+    cut.get();
 
 	EXPECT_EQ(21, *cut.get());
 }
