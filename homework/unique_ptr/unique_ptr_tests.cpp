@@ -1,5 +1,5 @@
-#include "unique_ptr.hpp"
 #include "gtest/gtest.h"
+#include "unique_ptr.hpp"
 
 template class my::unique_ptr<int>;
 
