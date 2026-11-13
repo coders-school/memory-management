@@ -79,4 +79,4 @@ inline T* unique_ptr<T>::operator->() {
     return m_ptr;
 }
 
-} 
+}  // namespace my
