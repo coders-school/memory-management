@@ -1,5 +1,5 @@
 Language: Cpp
-BasedOnStyle: Chromium
+BasedOnStyle: Microsoft
 UseTab: Never
 IndentWidth: 4
 TabWidth: 4
