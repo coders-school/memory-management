@@ -8,7 +8,6 @@
 // shared_ptr(&)
 // shared_ptr(&&)
 
-
 // operator=(&)
 // operator=(&&)
 
@@ -20,13 +19,13 @@ class shared_ptr
 {
 public:
     shared_ptr();
-    shared_ptr(T* ptr);
+    shared_ptr(T *ptr);
     shared_ptr(shared_ptr &other);
     shared_ptr(shared_ptr &&rref);
     ~shared_ptr();
 
     T *get() const noexcept;
-    T *release() noexcept;    
+    T *release() noexcept;
     void reset(T *other = nullptr) noexcept;
     size_t use_count() const noexcept;
 
@@ -45,10 +44,9 @@ private:
 
     T *m_ptr = nullptr;
     controlBlock *m_controlBlock = nullptr;
-    inline static std::unordered_map<T*, controlBlock*> map;
+    inline static std::unordered_map<T *, controlBlock *> map;
 
     void allocateControlBlock(T *ptr);
-
 };
 
 template <typename T>
@@ -58,9 +56,9 @@ inline shared_ptr<T>::shared_ptr()
 }
 
 template <typename T>
-inline shared_ptr<T>::shared_ptr(T* ptr)
+inline shared_ptr<T>::shared_ptr(T *ptr)
 {
-    allocateControlBlock(ptr);    
+    allocateControlBlock(ptr);
 }
 
 template <typename T>
@@ -109,7 +107,7 @@ inline T *shared_ptr<T>::release() noexcept
         m_controlBlock->m_shared_refs_count--;
         m_ptr = nullptr;
     }
-    
+
     return output;
 }
 
@@ -162,11 +160,11 @@ inline shared_ptr<T> &shared_ptr<T>::operator=(const shared_ptr<T> &other) noexc
     return *this;
 }
 
-//template <typename T>
-//inline shared_ptr<T> &shared_ptr<T>::operator=(shared_ptr<T> &&rref)
+// template <typename T>
+// inline shared_ptr<T> &shared_ptr<T>::operator=(shared_ptr<T> &&rref)
 //{
-//    
-//}
+//
+// }
 
 template <typename T>
 inline void shared_ptr<T>::allocateControlBlock(T *ptr)
@@ -187,4 +185,4 @@ inline void shared_ptr<T>::allocateControlBlock(T *ptr)
     m_controlBlock->m_shared_refs_count++;
 }
 
-}
+} // namespace my
