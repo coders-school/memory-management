@@ -28,3 +28,12 @@ TEST_F(PointerConstructor, Two_shared_pointers_use_count_should_return_2)
     EXPECT_EQ(2, cut.use_count());
 }
 
+TEST_F(PointerConstructor, Destructor_removing_one_of_two_pointers_use_count_should_return_1)
+{
+    my::shared_ptr<int> cut(temp);
+    {
+        my::shared_ptr<int> cut2(temp);
+    }
+    EXPECT_EQ(1, cut.use_count());
+}
+
