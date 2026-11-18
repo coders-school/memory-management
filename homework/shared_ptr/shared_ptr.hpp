@@ -34,6 +34,7 @@ public:
     T *operator->() const noexcept;
 
     shared_ptr<T> &operator=(const shared_ptr<T> &other) noexcept;
+    shared_ptr<T> &operator=(shared_ptr<T> &&other) noexcept;
 
 private:
     struct controlBlock
@@ -104,7 +105,7 @@ inline T *shared_ptr<T>::release() noexcept
     T *output = m_ptr;
     if (m_ptr)
     {
-        m_controlBlock->m_shared_refs_count--;
+        m_controlBlock->m_shared_refs_count--;        
         m_ptr = nullptr;
     }
 
@@ -160,11 +161,12 @@ inline shared_ptr<T> &shared_ptr<T>::operator=(const shared_ptr<T> &other) noexc
     return *this;
 }
 
-// template <typename T>
-// inline shared_ptr<T> &shared_ptr<T>::operator=(shared_ptr<T> &&rref)
-//{
-//
-// }
+template <typename T>
+inline shared_ptr<T> &shared_ptr<T>::operator=(shared_ptr<T> &&other) noexcept
+{
+    this->allocateControlBlock(other.release());
+    return *this;
+}
 
 template <typename T>
 inline void shared_ptr<T>::allocateControlBlock(T *ptr)

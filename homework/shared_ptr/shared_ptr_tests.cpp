@@ -193,3 +193,28 @@ TEST_F(AssignOperator, use_count_should_be_incremented_after_copying_value_retur
 
     EXPECT_EQ(2, ptr2.use_count());
 }
+
+
+class MoveOperator : public ::testing::Test
+{
+};
+
+TEST_F(MoveOperator, old_pointer_get_method_should_return_nullptr)
+{
+    my::shared_ptr<int> ptr1 = (new int(12));
+    my::shared_ptr<int> ptr2;
+    ptr2 = std::move(ptr1);
+
+    EXPECT_EQ(nullptr, ptr1.get());
+}
+
+TEST_F(MoveOperator, use_count_should_stay_at_old_value_after_moving)
+{
+    my::shared_ptr<int> ptr1 = (new int(12));
+    int old_counter = ptr1.use_count();
+
+    my::shared_ptr<int> ptr2;
+    ptr2 = std::move(ptr1);
+
+    EXPECT_EQ(old_counter, ptr2.use_count());
+}
