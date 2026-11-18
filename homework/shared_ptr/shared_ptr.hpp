@@ -50,13 +50,12 @@ template <typename T>
 inline shared_ptr<T>::shared_ptr(T* ptr)
 {
     allocateControlBlock(ptr);    
-    m_controlBlock->m_shared_refs_count++;
 }
 
 template <typename T>
 inline shared_ptr<T>::shared_ptr(T &&rref)
 {
-
+    allocateControlBlock(&rref);
 }
 
 template <typename T>
@@ -106,6 +105,8 @@ inline void shared_ptr<T>::allocateControlBlock(T *ptr)
         m_ptr = ptr;
         map.try_emplace(m_ptr, m_controlBlock);
     }
+
+    m_controlBlock->m_shared_refs_count++;
 }
 
 }

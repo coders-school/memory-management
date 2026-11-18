@@ -37,3 +37,10 @@ TEST_F(PointerConstructor, Destructor_removing_one_of_two_pointers_use_count_sho
     EXPECT_EQ(1, cut.use_count());
 }
 
+class MoveConstructor : public ::testing::Test {};
+
+TEST_F(MoveConstructor, One_shared_pointer_use_count_should_return_1)
+{
+    my::shared_ptr<int> cut(new int(12));
+    EXPECT_EQ(1, cut.use_count());
+}
