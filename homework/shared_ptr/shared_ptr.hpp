@@ -1,15 +1,7 @@
 #pragma once
+#include <atomic>
 #include <cstddef>
 #include <unordered_map>
-
-#include <iostream>
-
-// shared_ptr()
-// shared_ptr(&)
-// shared_ptr(&&)
-
-// operator=(&)
-// operator=(&&)
 
 namespace my
 {
@@ -81,16 +73,20 @@ inline shared_ptr<T>::shared_ptr(shared_ptr &&rref)
 template <typename T>
 inline shared_ptr<T>::~shared_ptr()
 {
-    m_controlBlock->m_shared_refs_count--;
-    if (m_controlBlock->m_shared_refs_count <= 0)
-    {
-        map.erase(map.find(m_ptr));
+    if (m_controlBlock->m_shared_refs_count > 0)
+        m_controlBlock->m_shared_refs_count--;
 
-        delete m_ptr;
-        if (m_controlBlock->m_weak_refs_count <= 0)
+    if (m_controlBlock->m_shared_refs_count == 0)
+    {
+        if (m_ptr)
+        {
+            map.erase(map.find(m_ptr));
+            delete m_ptr;
+        }
+
+        if (m_controlBlock->m_weak_refs_count == 0)
             delete m_controlBlock;
     }
-    m_ptr = nullptr;
 }
 
 template <typename T>
@@ -105,7 +101,7 @@ inline T *shared_ptr<T>::release() noexcept
     T *output = m_ptr;
     if (m_ptr)
     {
-        m_controlBlock->m_shared_refs_count--;        
+        m_controlBlock->m_shared_refs_count--;
         m_ptr = nullptr;
     }
 
