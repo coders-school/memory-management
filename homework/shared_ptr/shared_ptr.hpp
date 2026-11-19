@@ -73,20 +73,7 @@ inline shared_ptr<T>::shared_ptr(shared_ptr &&rref)
 template <typename T>
 inline shared_ptr<T>::~shared_ptr()
 {
-    if (m_controlBlock->m_shared_refs_count > 0)
-        m_controlBlock->m_shared_refs_count--;
-
-    if (m_controlBlock->m_shared_refs_count == 0)
-    {
-        if (m_ptr)
-        {
-            map.erase(map.find(m_ptr));
-            delete m_ptr;
-        }
-
-        if (m_controlBlock->m_weak_refs_count == 0)
-            delete m_controlBlock;
-    }
+    this->reset();
 }
 
 template <typename T>
@@ -114,7 +101,7 @@ inline void shared_ptr<T>::reset(T *other) noexcept
     if (m_controlBlock->m_shared_refs_count > 0)
         m_controlBlock->m_shared_refs_count--;
 
-    if (m_ptr && m_controlBlock->m_shared_refs_count == 0)
+    if (m_controlBlock->m_shared_refs_count == 0)
     {
         if (m_ptr)
         {
@@ -125,9 +112,8 @@ inline void shared_ptr<T>::reset(T *other) noexcept
             delete m_controlBlock;
     }
 
-    m_ptr = other;
-
-    allocateControlBlock(m_ptr);
+    if (other)
+        allocateControlBlock(other);
 }
 
 template <typename T>
