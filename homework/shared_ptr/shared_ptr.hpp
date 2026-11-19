@@ -93,6 +93,7 @@ inline void shared_ptr<T>::reset(T *other) noexcept
         {
             map.erase(map.find(m_ptr));
             delete m_ptr;
+            m_ptr = nullptr;
         }
         if (m_controlBlock->m_weak_refs_count == 0)
             delete m_controlBlock;
