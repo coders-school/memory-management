@@ -17,7 +17,6 @@ public:
     ~shared_ptr();
 
     T *get() const noexcept;
-    T *release() noexcept;
     void reset(T *other = nullptr) noexcept;
     size_t use_count() const noexcept;
 
@@ -83,19 +82,6 @@ inline T *shared_ptr<T>::get() const noexcept
 }
 
 template <typename T>
-inline T *shared_ptr<T>::release() noexcept
-{
-    T *output = m_ptr;
-    if (m_ptr)
-    {
-        m_controlBlock->m_shared_refs_count--;
-        m_ptr = nullptr;
-    }
-
-    return output;
-}
-
-template <typename T>
 inline void shared_ptr<T>::reset(T *other) noexcept
 {
     if (m_controlBlock->m_shared_refs_count > 0)
@@ -150,7 +136,9 @@ inline shared_ptr<T> &shared_ptr<T>::operator=(const shared_ptr<T> &other) noexc
 template <typename T>
 inline shared_ptr<T> &shared_ptr<T>::operator=(shared_ptr<T> &&other) noexcept
 {
-    this->allocateControlBlock(other.release());
+    this->allocateControlBlock(other.get());
+    other.m_ptr = nullptr;
+    other.m_controlBlock->m_shared_refs_count--;
     return *this;
 }
 

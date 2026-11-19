@@ -71,31 +71,6 @@ TEST_F(MoveConstructor, Two_shared_pointers_after_move_one_to_another_use_count_
     EXPECT_EQ(1, cut2.use_count());
 }
 
-class ReleaseMethod : public ::testing::Test
-{
-};
-
-TEST_F(ReleaseMethod, shared_ptr_use_count_should_return_zero)
-{
-    my::shared_ptr<int> cut(new int(12));
-    int *ptr = cut.release();
-    EXPECT_EQ(0, cut.use_count());
-}
-
-TEST_F(ReleaseMethod, shared_ptr_get_method_should_return_nullptr)
-{
-    my::shared_ptr<int> cut(new int(12));
-    int *ptr = cut.release();
-    EXPECT_EQ(nullptr, cut.get());
-}
-
-TEST_F(ReleaseMethod, ptr_should_return_previous_value_of_shared_ptr)
-{
-    my::shared_ptr<int> cut(new int(12));
-    int *ptr = cut.release();
-    EXPECT_EQ(12, *ptr);
-}
-
 class ResetMethod : public ::testing::Test
 {
 };
