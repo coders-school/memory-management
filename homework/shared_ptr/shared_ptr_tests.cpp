@@ -147,22 +147,22 @@ TEST_F(OperatorArrow, arrow_should_return_result_of_foo_get)
     EXPECT_EQ(2, ptr->get());
 }
 
-class AssignOperator : public ::testing::Test
+class CopyOperator : public ::testing::Test
 {
 };
 
-TEST_F(AssignOperator, use_count_should_be_incremented_after_copying_value_returned_by_source)
+TEST_F(CopyOperator, use_count_should_be_incremented_after_copying_value_returned_by_source)
 {
-    my::shared_ptr<int> ptr1 = (new int(12));
+    my::shared_ptr<int> ptr1(new int(12));
     my::shared_ptr<int> ptr2;
     ptr2 = ptr1;
 
     EXPECT_EQ(2, ptr1.use_count());
 }
 
-TEST_F(AssignOperator, use_count_should_be_incremented_after_copying_value_returned_by_destination)
+TEST_F(CopyOperator, use_count_should_be_incremented_after_copying_value_returned_by_destination)
 {
-    my::shared_ptr<int> ptr1 = (new int(12));
+    my::shared_ptr<int> ptr1(new int(12));
     my::shared_ptr<int> ptr2;
     ptr2 = ptr1;
 
@@ -175,7 +175,7 @@ class MoveOperator : public ::testing::Test
 
 TEST_F(MoveOperator, old_pointer_get_method_should_return_nullptr)
 {
-    my::shared_ptr<int> ptr1 = (new int(12));
+    my::shared_ptr<int> ptr1(new int(12));
     my::shared_ptr<int> ptr2;
     ptr2 = std::move(ptr1);
 
@@ -184,7 +184,7 @@ TEST_F(MoveOperator, old_pointer_get_method_should_return_nullptr)
 
 TEST_F(MoveOperator, use_count_should_stay_at_old_value_after_moving)
 {
-    my::shared_ptr<int> ptr1 = (new int(12));
+    my::shared_ptr<int> ptr1(new int(12));
     size_t old_counter = ptr1.use_count();
 
     my::shared_ptr<int> ptr2;

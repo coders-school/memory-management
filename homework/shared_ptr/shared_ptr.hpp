@@ -11,9 +11,9 @@ class shared_ptr
 {
 public:
     shared_ptr();
-    shared_ptr(T *ptr);
-    shared_ptr(shared_ptr &other);
-    shared_ptr(shared_ptr &&rref);
+    explicit shared_ptr(T *ptr);
+    explicit shared_ptr(shared_ptr &other);
+    explicit shared_ptr(shared_ptr &&rref);
     ~shared_ptr();
 
     T *get() const noexcept;
@@ -137,6 +137,7 @@ template <typename T>
 inline shared_ptr<T> &shared_ptr<T>::operator=(shared_ptr<T> &&other) noexcept
 {
     this->allocateControlBlock(other.get());
+
     other.m_ptr = nullptr;
     other.m_controlBlock->m_shared_refs_count--;
     return *this;
