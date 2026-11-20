@@ -3,6 +3,8 @@
 #include <cstddef>
 #include <unordered_map>
 
+#include <iostream>
+
 namespace my
 {
 
@@ -130,17 +132,26 @@ inline T *shared_ptr<T>::operator->() const noexcept
 template <typename T>
 inline shared_ptr<T> &shared_ptr<T>::operator=(const shared_ptr<T> &other) noexcept
 {
-    this->allocateControlBlock(other.get());
+    if (this->m_ptr != other.m_ptr)
+    {
+        std::cout << '!' << std::endl;
+        this->allocateControlBlock(other.get());
+    }
     return *this;
 }
 
 template <typename T>
 inline shared_ptr<T> &shared_ptr<T>::operator=(shared_ptr<T> &&other) noexcept
 {
-    this->allocateControlBlock(other.get());
+    if (this->m_ptr != other.m_ptr)
+    {
+        std::cout << '!' << std::endl;
+        this->allocateControlBlock(other.get());
 
-    other.m_ptr = nullptr;
-    other.m_controlBlock->m_shared_refs_count--;
+        other.m_ptr = nullptr;
+        other.m_controlBlock->m_shared_refs_count--;        
+    }
+
     return *this;
 }
 
