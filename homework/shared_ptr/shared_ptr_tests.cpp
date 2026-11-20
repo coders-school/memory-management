@@ -34,19 +34,19 @@ TEST_F(PointerConstructor, Destructor_removing_one_of_two_pointers_use_count_sho
 class CopyConstructor : public ::testing::Test
 {
 public:
-    int *temp = new int(10);
+ 
 };
 
 TEST_F(CopyConstructor, Two_shared_pointers_after_copy_one_to_another_use_count_for_first_should_return_2)
 {
-    my::shared_ptr<int> cut(temp);
+    my::shared_ptr<int> cut(new int(10));
     my::shared_ptr<int> cut2(cut);
     EXPECT_EQ(2, cut.use_count());
 }
 
 TEST_F(CopyConstructor, Two_shared_pointers_after_copy_one_to_another_use_count_for_second_should_return_2)
 {
-    my::shared_ptr<int> cut(temp);
+    my::shared_ptr<int> cut(new int(10));
     my::shared_ptr<int> cut2(cut);
     EXPECT_EQ(2, cut2.use_count());
 }
@@ -54,19 +54,19 @@ TEST_F(CopyConstructor, Two_shared_pointers_after_copy_one_to_another_use_count_
 class MoveConstructor : public ::testing::Test
 {
 public:
-    int *temp = new int(10);
+   
 };
 
 TEST_F(MoveConstructor, Two_shared_pointers_after_move_one_to_another_use_count_for_first_should_return_0)
 {
-    my::shared_ptr<int> cut(temp);
+    my::shared_ptr<int> cut(new int(10));
     my::shared_ptr<int> cut2(std::move(cut));
     EXPECT_EQ(0, cut.use_count());
 }
 
 TEST_F(MoveConstructor, Two_shared_pointers_after_move_one_to_another_use_count_for_second_should_return_1)
 {
-    my::shared_ptr<int> cut(temp);
+    my::shared_ptr<int> cut(new int(10));
     my::shared_ptr<int> cut2(std::move(cut));
     EXPECT_EQ(1, cut2.use_count());
 }
